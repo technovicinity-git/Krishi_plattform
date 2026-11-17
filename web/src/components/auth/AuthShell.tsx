@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 
 interface AuthShellProps {
   children: React.ReactNode;
@@ -42,15 +43,7 @@ export function AuthShell({
               {backLabel ?? t("backToKrishi")}
             </Link>
 
-            <div className="flex items-center gap-1.5 border-l border-border-light pl-6">
-              <Link href={backHref} locale="en" className="text-[12px] font-bold text-ink">
-                EN
-              </Link>
-              <span className="text-[12px] text-ink-muted" aria-hidden="true">|</span>
-              <Link href={backHref} locale="bn" className="text-[12px] text-ink-tertiary hover:text-ink">
-                বাংলা
-              </Link>
-            </div>
+            <LanguageSwitcher />
           </div>
         </div>
       </header>

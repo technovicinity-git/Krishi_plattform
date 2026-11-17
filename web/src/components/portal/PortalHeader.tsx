@@ -2,9 +2,10 @@
 
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
-import { Link, usePathname, useRouter } from "@/i18n/navigation";
+import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/cn";
 import { UserMenu } from "@/components/layout/UserMenu";
+import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 
 interface PortalHeaderProps {
   fullName: string;
@@ -18,13 +19,7 @@ export function PortalHeader({
   menuItems,
 }: PortalHeaderProps) {
   const t = useTranslations("app.userMenu");
-  const pathname = usePathname();
-  const router = useRouter();
   const locale = useLocale();
-
-  const switchLanguage = (newLocale: "bn" | "en") => {
-    router.replace(pathname, { locale: newLocale });
-  };
 
   return (
     <header className="border-b border-border-light bg-white">
@@ -54,21 +49,7 @@ export function PortalHeader({
             {t("backToKrishi")}
           </Link>
 
-          <div className="flex items-center gap-1.5 border-l border-border-light pl-5">
-            <button
-              onClick={() => switchLanguage("en")}
-              className={locale === "en" ? "text-[12px] font-bold text-ink" : "text-[12px] text-ink-tertiary hover:text-ink"}
-            >
-              EN
-            </button>
-            <span className="text-[12px] text-ink-muted" aria-hidden="true">|</span>
-            <button
-              onClick={() => switchLanguage("bn")}
-              className={locale === "bn" ? "text-[12px] font-bold text-ink" : "text-[12px] text-ink-tertiary hover:text-ink"}
-            >
-              বাংলা
-            </button>
-          </div>
+          <LanguageSwitcher />
 
           <UserMenu fullName={fullName} phone={phone} items={menuItems} logoutRedirect={locale === "bn" ? "/login" : "/en/login"} />
         </div>

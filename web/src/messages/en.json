@@ -1671,7 +1671,8 @@
       "optional": "(optional)",
       "ok": "OK",
       "close": "Close",
-      "closeDialog": "Close dialog"
+      "closeDialog": "Close dialog",
+      "language": "Language"
     },
     "createFarmer": {
       "invalidNid": "Please enter a valid NID number (10–17 digits).",

@@ -7,6 +7,7 @@ import { Logo } from "./Logo";
 import { UserMenu } from "./UserMenu";
 import { getMenuItemsForRole } from "@/lib/auth/menu-items";
 import { cn } from "@/lib/cn";
+import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 
 const NAV_LINKS = [
   { key: "investmentPlans", href: "/plans" },
@@ -96,7 +97,7 @@ export function Header({ user }: { user: HeaderUser | null }) {
               </Link>
             </>
           )}
-          <LanguageSelector pathname={pathname} />
+          <LanguageSwitcher className="ml-1" />
         </div>
 
         <button
@@ -213,7 +214,7 @@ export function Header({ user }: { user: HeaderUser | null }) {
                 </>
               )}
               <div className="pt-2">
-                <LanguageSelector pathname={pathname} />
+                <LanguageSwitcher />
               </div>
             </div>
           </div>
@@ -223,30 +224,3 @@ export function Header({ user }: { user: HeaderUser | null }) {
   );
 }
 
-function LanguageSelector({ pathname }: { pathname: string }) {
-  const router = useRouter();
-
-  return (
-    <div className="flex items-center gap-[6px] border-l border-border-light pl-5">
-      <button
-        type="button"
-        onClick={() => router.replace(pathname, { locale: "en" })}
-        className="text-[12px] font-bold text-ink"
-        aria-label="Switch to English"
-      >
-        EN
-      </button>
-      <span className="text-[12px] text-ink-muted" aria-hidden="true">
-        |
-      </span>
-      <button
-        type="button"
-        onClick={() => router.replace(pathname, { locale: "bn" })}
-        className="text-[12px] text-ink-tertiary hover:text-ink"
-        aria-label="বাংলায় দেখুন"
-      >
-        বাংলা
-      </button>
-    </div>
-  );
-}
