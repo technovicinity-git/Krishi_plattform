@@ -37,7 +37,8 @@ export async function POST(
     .eq("id", id)
     .maybeSingle();
 
-  if (!investment || (investment.offering as any).steward_id !== user.id) {
+  const offering = investment?.offering as unknown as { steward_id: string } | null;
+  if (!investment || offering?.steward_id !== user.id) {
     return NextResponse.json({ error: "Investment not found or unauthorized" }, { status: 404 });
   }
 

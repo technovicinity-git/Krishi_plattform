@@ -1,16 +1,17 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
+import type { FarmerOption, StewardInvestmentRow } from "./types";
 
 export function AssignFarmerCard({
   investment,
   farmers,
 }: {
-  investment: any;
-  farmers: any[];
+  investment: StewardInvestmentRow;
+  farmers: FarmerOption[];
 }) {
   const t = useTranslations("app.assignFarmer");
   const tst = useTranslations("app.stage");
@@ -41,8 +42,8 @@ export function AssignFarmerCard({
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || t("failed"));
       router.refresh();
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t("failed"));
       setLoading(false);
     }
   };

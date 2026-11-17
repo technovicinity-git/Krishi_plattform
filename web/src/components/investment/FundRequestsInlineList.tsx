@@ -1,11 +1,29 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 
 import { formatBDT } from "@/lib/utils";
+import { useDialog } from "@/components/ui/dialog-provider";
+
+export interface FundRequestRow {
+  id: string;
+  reference: string;
+  amount: number;
+  purpose: string;
+  status: string;
+  rejection_reason: string | null;
+  created_at: string;
+  investment: {
+    id: string;
+    farmer: { full_name: string | null } | null;
+    offering: {
+      investment_plans: { name_en: string | null; name_bn: string | null } | null;
+    } | null;
+  } | null;
+}
 
 const STATUS_STYLE: Record<string, string> = {
   pending: "bg-[#FEF6E5] text-[#C48A2E]",
@@ -18,7 +36,7 @@ export function FundRequestsInlineList({
   requests,
   showActions,
 }: {
-  requests: any[];
+  requests: FundRequestRow[];
   showActions: boolean;
 }) {
   const t = useTranslations("app.fundRequests");
@@ -27,6 +45,7 @@ export function FundRequestsInlineList({
   const tc = useTranslations("app.common");
   const locale = useLocale();
   const router = useRouter();
+  const { alert } = useDialog();
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [rejectId, setRejectId] = useState<string | null>(null);
   const [reason, setReason] = useState("");
@@ -40,12 +59,19 @@ export function FundRequestsInlineList({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action, reason }),
       });
-      if (!res.ok) throw new Error("Failed");
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error ?? t("actionFailed"));
+      }
       setRejectId(null);
       setReason("");
       router.refresh();
-    } catch {
-      alert(t("actionFailed"));
+    } catch (err) {
+      await alert({
+        title: t("actionFailed"),
+        message: err instanceof Error ? err.message : undefined,
+        variant: "danger",
+      });
     } finally {
       setLoadingId(null);
     }

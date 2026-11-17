@@ -37,8 +37,8 @@ export async function PATCH(
 
   if (!interest) return NextResponse.json({ error: "Interest not found" }, { status: 404 });
   
-  const offering = interest.offering as any;
-  if (offering.steward_id !== user.id) {
+  const offering = interest.offering as unknown as { steward_id: string } | null;
+  if (offering?.steward_id !== user.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }
 

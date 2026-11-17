@@ -1,9 +1,12 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { redirect } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { FundRequestsInlineList } from "@/components/investment/FundRequestsInlineList";
+import {
+  FundRequestsInlineList,
+  type FundRequestRow,
+} from "@/components/investment/FundRequestsInlineList";
 
 export const dynamic = "force-dynamic";
 
@@ -108,7 +111,7 @@ export default async function StewardFundRequestsPage({
         </div>
       ) : (
         <FundRequestsInlineList
-          requests={fundRequests ?? []}
+          requests={(fundRequests ?? []) as unknown as FundRequestRow[]}
           showActions={view === "pending"}
         />
       )}

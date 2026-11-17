@@ -3,6 +3,7 @@ import { getCurrentUser } from "@/lib/auth/current-user";
 import { redirect } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { AssignFarmerCard } from "@/components/steward/AssignFarmerCard";
+import type { StewardInvestmentRow } from "@/components/steward/types";
 
 export const dynamic = "force-dynamic";
 
@@ -68,7 +69,7 @@ export default async function StewardInvestmentsPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-          {investments.map((inv: any) => (
+          {(investments as unknown as StewardInvestmentRow[]).map((inv) => (
             <AssignFarmerCard
               key={inv.id}
               investment={inv}

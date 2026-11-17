@@ -1,8 +1,9 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { useLocale, useTranslations } from "next-intl";
+import type { StewardInterestRow } from "./types";
 
 interface Props {
-  interest: any;
+  interest: StewardInterestRow;
 }
 
 const STATUS_STYLE: Record<string, string> = {

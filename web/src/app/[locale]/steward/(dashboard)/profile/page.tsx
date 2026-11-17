@@ -1,0 +1,186 @@
+import { redirect } from "next/navigation";
+import { getLocale, getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
+import { getCurrentUser } from "@/lib/auth/current-user";
+import { createAdminClient } from "@/lib/supabase/admin";
+
+export const dynamic = "force-dynamic";
+
+interface NamePair {
+  name_en: string | null;
+  name_bn: string | null;
+}
+
+interface StewardProfileRow {
+  steward_type: "individual" | "organization" | null;
+  upazila: string | null;
+  categories: string[] | null;
+  experience: string | null;
+  districts: NamePair | null;
+  divisions: NamePair | null;
+}
+
+const KYC_LABEL_KEYS = {
+  not_started: "kycStatusNotStarted",
+  pending: "kycStatusPending",
+  under_review: "kycStatusUnderReview",
+  verified: "kycStatusVerified",
+  rejected: "kycStatusRejected",
+  requires_update: "kycStatusRequiresUpdate",
+} as const;
+
+export default async function StewardProfilePage() {
+  const user = await getCurrentUser();
+  if (!user) redirect("/login");
+  if (user.role !== "steward") redirect("/portal/profile");
+
+  const t = await getTranslations("app.stewardAccount");
+  const tk = await getTranslations("portal.profile");
+  const tr = await getTranslations("app.roles");
+  const ts = await getTranslations("stewardRegister.step2");
+  const bn = (await getLocale()) === "bn";
+
+  const db = createAdminClient();
+  const { data } = await db
+    .from("steward_profiles")
+    .select(
+      `
+      steward_type, upazila, categories, experience,
+      districts ( name_en, name_bn ),
+      divisions ( name_en, name_bn )
+      `,
+    )
+    .eq("user_id", user.id)
+    .maybeSingle();
+  const profile = data as unknown as StewardProfileRow | null;
+
+  const localName = (n: NamePair | null) =>
+    (bn ? n?.name_bn : n?.name_en) ?? n?.name_en ?? null;
+
+  const area = profile
+    ? [profile.upazila, localName(profile.districts), localName(profile.divisions)]
+        .filter(Boolean)
+        .join(", ")
+    : "";
+
+  const categories = (profile?.categories ?? [])
+    .map((c) => (ts.has(`categories.${c}`) ? ts(`categories.${c}`) : c))
+    .join(", ");
+
+  const kycVerified = user.kycStatus === "verified";
+
+  return (
+    <div className="flex w-full max-w-[960px] flex-col gap-6">
+      <div className="flex flex-col gap-2">
+        <h1 className="font-serif text-[28px] leading-tight text-ink lg:text-[32px]">
+          {t("title")}
+        </h1>
+        <p className="text-[14px] text-ink-secondary">{t("subtitle")}</p>
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <Card title={t("account")}>
+          <Row label={t("accountType")} value={tr("steward")} />
+          <Row label={t("fullName")} value={user.fullName ?? "—"} />
+          <Row label={t("phone")} value={user.phone ?? "—"} />
+          <Row label={t("email")} value={user.email ?? t("notProvided")} />
+          <Link
+            href="/steward/settings"
+            className="mt-2 text-[13px] font-semibold text-brand hover:underline"
+          >
+            {t("editAccount")}
+          </Link>
+        </Card>
+
+        <Card title={t("kyc")}>
+          <Row
+            label={t("kycStatus")}
+            value={tk(KYC_LABEL_KEYS[user.kycStatus] ?? "kycStatusNotStarted")}
+            accent={kycVerified}
+          />
+          {!kycVerified && (
+            <Link
+              href="/onboarding/kyc"
+              className="mt-2 inline-flex h-[42px] w-fit items-center justify-center rounded-[8px] bg-ink px-5 text-[13px] font-bold text-white hover:bg-[#2A2A2A]"
+            >
+              {user.kycStatus === "not_started"
+                ? tk("kycCta")
+                : user.kycStatus === "rejected" || user.kycStatus === "requires_update"
+                  ? tk("kycCtaResubmit")
+                  : tk("kycCtaView")}
+            </Link>
+          )}
+        </Card>
+      </div>
+
+      <Card title={t("details")}>
+        {profile ? (
+          <>
+            <Row
+              label={t("type")}
+              value={
+                profile.steward_type === "organization"
+                  ? ts("typeOrganization")
+                  : ts("typeIndividual")
+              }
+            />
+            <Row label={t("area")} value={area || "—"} />
+            <Row label={t("categories")} value={categories || "—"} />
+            {profile.experience && (
+              <div className="flex flex-col gap-1.5 pt-3">
+                <span className="text-[12px] text-ink-muted">
+                  {t("experience")}
+                </span>
+                <p className="whitespace-pre-line text-[13px] leading-[1.6] text-ink">
+                  {profile.experience}
+                </p>
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="flex flex-col items-start gap-3">
+            <p className="text-[13px] text-ink-muted">{t("noDetails")}</p>
+            <Link
+              href="/steward/register/details"
+              className="text-[13px] font-semibold text-brand hover:underline"
+            >
+              {t("completeDetails")}
+            </Link>
+          </div>
+        )}
+      </Card>
+    </div>
+  );
+}
+
+function Card({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div className="flex flex-col gap-3 rounded-2xl border border-border-light bg-white p-6">
+      <h2 className="text-[11px] font-bold uppercase tracking-[0.02em] text-ink-muted">
+        {title}
+      </h2>
+      {children}
+    </div>
+  );
+}
+
+function Row({
+  label,
+  value,
+  accent,
+}: {
+  label: string;
+  value: string;
+  accent?: boolean;
+}) {
+  return (
+    <div className="flex items-start justify-between gap-4 border-b border-border-light py-3 last:border-b-0">
+      <span className="shrink-0 text-[12px] text-ink-muted">{label}</span>
+      <span
+        className={`text-right text-[13px] font-medium ${accent ? "text-green-deep" : "text-ink"}`}
+      >
+        {value}
+      </span>
+    </div>
+  );
+}

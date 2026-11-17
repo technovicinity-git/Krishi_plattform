@@ -77,7 +77,7 @@ export function StewardSidebar() {
                   : "text-ink-secondary hover:bg-stone/60 hover:text-ink",
               )}
             >
-              KYC Verification
+              {t("items.kyc")}
             </Link>
             <button
               type="button"

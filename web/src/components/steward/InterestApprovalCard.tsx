@@ -3,9 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
+import type { StewardInterestRow } from "./types";
 
 interface Props {
-  interest: any;
+  interest: StewardInterestRow;
 }
 
 export function InterestApprovalCard({ interest }: Props) {

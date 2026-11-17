@@ -1,10 +1,11 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { redirect } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { InterestApprovalCard } from "@/components/steward/InterestApprovalCard";
 import { InterestHistoryCard } from "@/components/steward/InterestHistoryCard";
+import type { StewardInterestRow } from "@/components/steward/types";
 
 export const dynamic = "force-dynamic";
 
@@ -103,7 +104,7 @@ export default async function StewardInterestsPage({ searchParams }: PageProps) 
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-          {interests.map((interest) =>
+          {(interests as unknown as StewardInterestRow[]).map((interest) =>
             view === "pending" ? (
               <InterestApprovalCard key={interest.id} interest={interest} />
             ) : (

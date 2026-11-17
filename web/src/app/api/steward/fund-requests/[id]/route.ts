@@ -40,7 +40,9 @@ export async function PATCH(
 
   if (!fundReq) return NextResponse.json({ error: "Request not found" }, { status: 404 });
   
-  const stewardId = (fundReq.investment as any)?.offering?.steward_id;
+  const stewardId = (
+    fundReq.investment as unknown as { offering: { steward_id: string } | null } | null
+  )?.offering?.steward_id;
   if (stewardId !== user.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }

@@ -1485,7 +1485,8 @@
         "profile": "Profile",
         "logout": "Logout",
         "investments": "Investments",
-        "fundRequests": "Fund Requests"
+        "fundRequests": "Fund Requests",
+        "kyc": "KYC Verification"
       }
     }
   },
@@ -1646,6 +1647,51 @@
     }
   },
   "app": {
+    "accountSettings": {
+      "title": "Account Settings",
+      "profileTitle": "Profile",
+      "profileHint": "Update your name and email. Phone number cannot be changed.",
+      "passwordTitle": "Change Password",
+      "passwordHint": "Choose a strong password you don't use anywhere else."
+    },
+    "activation": {
+      "pendingTitle": "Activation pending",
+      "pendingBody": "The farmer must activate their account before they can log in. Share the activation link and code below. They will set their own password during activation.",
+      "devBadge": "Dev Mode",
+      "devHint": "SMS not sent — share this code with the farmer",
+      "linkLabel": "Activation link",
+      "copy": "Copy",
+      "copiedTitle": "Activation link copied",
+      "copiedMessage": "Share this link with the farmer. They will need it to activate their account along with the activation code.",
+      "copyFailedTitle": "Could not copy",
+      "resendFailedTitle": "Could not resend",
+      "tryAgain": "Please try again.",
+      "regeneratedTitle": "Activation code regenerated",
+      "regeneratedDev": "A new code has been generated. The old code no longer works.",
+      "regeneratedSms": "A new code has been sent to the farmer's phone.",
+      "regenerating": "Regenerating...",
+      "regenerate": "Regenerate Activation Code"
+    },
+    "stewardAccount": {
+      "title": "Profile",
+      "subtitle": "Your steward account and the details investors see.",
+      "account": "Account",
+      "accountType": "Account type",
+      "fullName": "Full name",
+      "phone": "Phone number",
+      "email": "Email address",
+      "notProvided": "Not provided",
+      "editAccount": "Edit account settings",
+      "details": "Steward details",
+      "type": "Steward type",
+      "area": "Operating area",
+      "categories": "Livestock categories",
+      "experience": "Experience",
+      "noDetails": "You haven't added your steward details yet.",
+      "completeDetails": "Add steward details",
+      "kyc": "Identity verification (KYC)",
+      "kycStatus": "Status"
+    },
     "assignFarmer": {
       "plan": "Plan",
       "failed": "Failed to assign",

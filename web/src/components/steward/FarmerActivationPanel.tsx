@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
 import { useDialog } from "@/components/ui/dialog-provider";
 
 interface FarmerActivationPanelProps {
@@ -10,32 +11,48 @@ interface FarmerActivationPanelProps {
   devOtp: string | null;
 }
 
+const noopSubscribe = () => () => {};
+
+/**
+ * The page origin is only known in the browser. Reading it through
+ * useSyncExternalStore renders "" on the server and during hydration, then
+ * the real origin, so server and client markup always match.
+ */
+function useOrigin(): string {
+  return useSyncExternalStore(
+    noopSubscribe,
+    () => window.location.origin,
+    () => "",
+  );
+}
+
 export function FarmerActivationPanel({
   farmerId,
   phone,
   devOtp,
 }: FarmerActivationPanelProps) {
+  const t = useTranslations("app.activation");
+  const tc = useTranslations("app.common");
+  const locale = useLocale();
   const router = useRouter();
   const { alert } = useDialog();
   const [resending, setResending] = useState(false);
 
-  const activationUrl =
-    typeof window !== "undefined"
-      ? `${window.location.origin}/farmer/activate?phone=${encodeURIComponent(phone)}`
-      : `/farmer/activate?phone=${encodeURIComponent(phone)}`;
+  // Bangla is the default locale and has no URL prefix.
+  const localePrefix = locale === "bn" ? "" : `/${locale}`;
+  const activationUrl = `${useOrigin()}${localePrefix}/farmer/activate?phone=${encodeURIComponent(phone)}`;
 
   const handleCopyUrl = async () => {
     try {
       await navigator.clipboard.writeText(activationUrl);
       await alert({
-        title: "Activation link copied",
-        message:
-          "Share this link with the farmer. They will need it to activate their account along with the activation code.",
+        title: t("copiedTitle"),
+        message: t("copiedMessage"),
         variant: "success",
       });
     } catch {
       await alert({
-        title: "Could not copy",
+        title: t("copyFailedTitle"),
         message: activationUrl,
         variant: "info",
       });
@@ -52,24 +69,22 @@ export function FarmerActivationPanel({
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         await alert({
-          title: "Could not resend",
-          message: data.error ?? "Please try again.",
+          title: t("resendFailedTitle"),
+          message: data.error ?? t("tryAgain"),
           variant: "danger",
         });
         setResending(false);
         return;
       }
       await alert({
-        title: "Activation code regenerated",
-        message: devOtp
-          ? "A new code has been generated. The old code no longer works."
-          : "A new code has been sent to the farmer's phone.",
+        title: t("regeneratedTitle"),
+        message: devOtp ? t("regeneratedDev") : t("regeneratedSms"),
         variant: "success",
       });
       router.refresh();
       setResending(false);
     } catch {
-      await alert({ title: "Network error", variant: "danger" });
+      await alert({ title: tc("networkError"), variant: "danger" });
       setResending(false);
     }
   };
@@ -78,12 +93,10 @@ export function FarmerActivationPanel({
     <div className="flex flex-col gap-5 rounded-2xl border border-[#F0D9A6] bg-[#FEF6E5] p-6">
       <div className="flex flex-col gap-2">
         <span className="text-[13px] font-bold text-[#7A5C1E]">
-          Activation pending
+          {t("pendingTitle")}
         </span>
         <p className="text-[12px] leading-[1.6] text-[#7A5C1E]">
-          The farmer must activate their account before they can log in. Share
-          the activation link and code below. They will set their own password
-          during activation.
+          {t("pendingBody")}
         </p>
       </div>
 
@@ -91,10 +104,10 @@ export function FarmerActivationPanel({
         <div className="rounded-[8px] border border-dashed border-brand bg-white px-4 py-3">
           <div className="flex items-center gap-2">
             <span className="rounded-[3px] bg-brand px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.02em] text-white">
-              Dev Mode
+              {t("devBadge")}
             </span>
             <span className="text-[11px] text-ink-secondary">
-              SMS not sent — share this code with the farmer
+              {t("devHint")}
             </span>
           </div>
           <div className="mt-1.5 text-[24px] font-bold tracking-[0.15em] text-brand">
@@ -105,7 +118,7 @@ export function FarmerActivationPanel({
 
       <div className="flex flex-col gap-2">
         <span className="text-[11px] font-bold uppercase tracking-[0.02em] text-[#7A5C1E]">
-          Activation link
+          {t("linkLabel")}
         </span>
         <div className="flex items-center gap-2">
           <code className="flex-1 truncate rounded-[6px] border border-border-light bg-white px-3 py-2.5 text-[11px] text-ink-secondary">
@@ -116,7 +129,7 @@ export function FarmerActivationPanel({
             onClick={handleCopyUrl}
             className="inline-flex h-[38px] shrink-0 items-center justify-center rounded-[6px] bg-white px-4 text-[12px] font-semibold text-ink-nav transition-colors hover:bg-stone"
           >
-            Copy
+            {t("copy")}
           </button>
         </div>
       </div>
@@ -128,7 +141,7 @@ export function FarmerActivationPanel({
           disabled={resending}
           className="inline-flex h-[42px] items-center justify-center rounded-[8px] bg-ink px-5 text-[13px] font-bold text-white transition-colors hover:bg-[#2A2A2A] disabled:opacity-60"
         >
-          {resending ? "Regenerating..." : "Regenerate Activation Code"}
+          {resending ? t("regenerating") : t("regenerate")}
         </button>
       </div>
     </div>
