@@ -16,6 +16,8 @@ interface UserMenuProps {
   phone?: string | null;
   items: MenuItem[];
   logoutRedirect?: string;
+  /** API route that clears the session (the admin one also writes an audit entry). */
+  logoutEndpoint?: string;
   avatar?: React.ReactNode;
 }
 
@@ -32,6 +34,7 @@ export function UserMenu({
   phone,
   items,
   logoutRedirect = "/login",
+  logoutEndpoint = "/api/auth/logout",
   avatar,
 }: UserMenuProps) {
   const t = useTranslations("app.userMenu");
@@ -63,7 +66,7 @@ export function UserMenu({
   const handleLogout = async () => {
     setLoggingOut(true);
     try {
-      await fetch("/api/auth/logout", { method: "POST" });
+      await fetch(logoutEndpoint, { method: "POST" });
       router.push(logoutRedirect);
       router.refresh();
     } catch {

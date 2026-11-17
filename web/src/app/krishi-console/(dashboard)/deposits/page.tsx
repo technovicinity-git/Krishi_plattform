@@ -6,6 +6,24 @@ import { formatBDT } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
+interface DepositRow {
+  id: string;
+  reference: string;
+  amount: number;
+  status: string;
+  method: string;
+  txn_id: string | null;
+  sender_number: string | null;
+  proof_path: string | null;
+  rejection_reason: string | null;
+  created_at: string;
+  investor: { full_name: string | null; phone: string | null } | null;
+  interest: {
+    reference: string;
+    offering: { investment_plans: { name_en: string | null } | null } | null;
+  } | null;
+}
+
 export default async function AdminDepositsPage({
   searchParams,
 }: {
@@ -68,7 +86,7 @@ export default async function AdminDepositsPage({
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-          {deposits.map((dep: any) => (
+          {(deposits as unknown as DepositRow[]).map((dep) => (
             <div key={dep.id} className="flex flex-col gap-4 rounded-xl border border-border-light bg-white p-6">
               <div className="flex items-start justify-between border-b border-border-light pb-3">
                 <div>
@@ -79,9 +97,9 @@ export default async function AdminDepositsPage({
                 </div>
                 <div className="text-right">
                   <div className="text-[20px] font-bold text-brand">{formatBDT(dep.amount)}</div>
-                  <div className="text-[11px] text-ink-muted">{new Date(dep.created_at).toLocaleString()}</div>
+                  <div className="text-[11px] text-ink-muted">{new Date(dep.created_at).toLocaleString("en-GB", { timeZone: "Asia/Dhaka", dateStyle: "medium", timeStyle: "short" })}</div>
                   {view === "history" && (
-                    <span className={`mt-1 inline-flex rounded px-2 py-0.5 text-[10px] font-bold uppercase ${dep.status === "approved" ? "bg-[#E8F0EA] text-green-deep" : "bg-brand-tint text-brand"}`}>
+                    <span className={`mt-1 inline-flex rounded px-2 py-0.5 text-[10px] font-bold uppercase ${dep.status === "approved" ? "bg-[#E8F0EA] text-green-deep" : "bg-[#FAF0ED] text-danger"}`}>
                       {dep.status}
                     </span>
                   )}

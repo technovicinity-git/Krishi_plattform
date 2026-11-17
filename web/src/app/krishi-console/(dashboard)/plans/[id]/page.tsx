@@ -6,7 +6,7 @@ import {
   StewardOfferingsSection,
   type OfferingRow,
 } from "@/components/admin/StewardOfferingsSection";
-import { planImageUrl } from "@/lib/admin/plan-helpers";
+import { planImageUrl, type OfferingQueryRow } from "@/lib/admin/plan-helpers";
 import { BackLink } from "@/components/ui/BackLink";
 
 export default async function EditPlanPage({
@@ -71,7 +71,9 @@ export default async function EditPlanPage({
       .order("sort_order", { ascending: true }),
   ]);
 
-  const offerings: OfferingRow[] = (offeringRows ?? []).map((row: any) => ({
+  const offerings: OfferingRow[] = (
+    (offeringRows ?? []) as unknown as OfferingQueryRow[]
+  ).map((row) => ({
     id: row.id,
     steward_id: row.users?.id ?? "",
     steward_name: row.users?.full_name ?? "—",

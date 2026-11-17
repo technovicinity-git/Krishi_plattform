@@ -4,7 +4,7 @@ import { UserMenu } from "@/components/layout/UserMenu";
 
 export function AdminHeader({ adminName }: { adminName: string }) {
   return (
-    <header className="flex h-[64px] items-center justify-between border-b border-border-light bg-white px-8">
+    <header className="flex h-[64px] items-center justify-between border-b border-border-light bg-white px-4 sm:px-8">
       <span className="text-[13px] font-medium text-ink-secondary">
         Admin Console
       </span>
@@ -16,6 +16,7 @@ export function AdminHeader({ adminName }: { adminName: string }) {
           { label: "Audit Log", href: "/krishi-console/audit" },
         ]}
         logoutRedirect="/krishi-console/login"
+        logoutEndpoint="/api/admin/auth/logout"
       />
     </header>
   );

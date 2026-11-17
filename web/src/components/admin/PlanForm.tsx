@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDialog } from "@/components/ui/dialog-provider";
 import { compressImage } from "@/lib/images/compress";
@@ -113,22 +113,25 @@ export function PlanForm({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!slugTouched && mode === "create") {
-      setSlug(slugify(nameEn));
-    }
-  }, [nameEn, slugTouched, mode]);
+  // Auto-fill the slug from the English name until the admin edits the slug.
+  const handleNameEnChange = (value: string) => {
+    setNameEn(value);
+    if (!slugTouched && mode === "create") setSlug(slugify(value));
+  };
 
   const filteredDistricts = useMemo(
     () => districts.filter((d) => d.division_id === divisionId),
     [districts, divisionId],
   );
 
-  useEffect(() => {
-    if (!divisionId) return;
-    const stillValid = filteredDistricts.some((d) => d.id === districtId);
+  // Clear the district when it doesn't belong to the newly chosen division.
+  const handleDivisionChange = (value: string) => {
+    setDivisionId(value);
+    const stillValid = districts.some(
+      (d) => d.id === districtId && d.division_id === value,
+    );
     if (!stillValid) setDistrictId("");
-  }, [divisionId, districtId, filteredDistricts]);
+  };
 
   const handleImageChange = (file: File | null) => {
     if (!file) {
@@ -231,7 +234,7 @@ export function PlanForm({
           <Field
             label="English Name"
             value={nameEn}
-            onChange={setNameEn}
+            onChange={handleNameEnChange}
             placeholder="e.g. Cow Fattening Plan"
             required
           />
@@ -340,7 +343,7 @@ export function PlanForm({
           <SelectField
             label="Division"
             value={divisionId}
-            onChange={setDivisionId}
+            onChange={handleDivisionChange}
             required
             placeholder="Choose a division"
             options={divisions.map((d) => ({ value: d.id, label: d.name_en }))}
