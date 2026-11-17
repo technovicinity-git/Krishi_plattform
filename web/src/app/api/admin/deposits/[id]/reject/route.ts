@@ -1,0 +1,51 @@
+import { NextResponse } from "next/server";
+import { z } from "zod";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { getCurrentAdmin } from "@/lib/admin/current-admin";
+import { logAdminAction } from "@/lib/admin/audit";
+
+export const runtime = "nodejs";
+
+const schema = z.object({
+  reason: z.string().min(3),
+});
+
+export async function POST(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const admin = await getCurrentAdmin();
+  if (!admin) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { id } = await params;
+  const db = createAdminClient();
+
+  const body = await request.json();
+  const parsed = schema.safeParse(body);
+  if (!parsed.success) return NextResponse.json({ error: "Reason is required" }, { status: 400 });
+
+  const { data: deposit } = await db.from("deposits").select("status, interest_id").eq("id", id).maybeSingle();
+  if (!deposit || deposit.status !== "pending") return NextResponse.json({ error: "Invalid deposit" }, { status: 400 });
+
+  // 1. Reject the deposit
+  await db.from("deposits").update({
+    status: "rejected",
+    rejection_reason: parsed.data.reason,
+    reviewed_at: new Date().toISOString(),
+    reviewed_by: admin.id,
+  }).eq("id", id);
+
+  // 2. Revert interest back to 'approved' so they can try again
+  await db.from("investment_interests").update({ status: "approved" }).eq("id", deposit.interest_id);
+
+  await logAdminAction({
+    adminId: admin.id,
+    action: "deposit.reject",
+    targetType: "deposit",
+    targetId: id,
+    metadata: { reason: parsed.data.reason },
+    request,
+  });
+
+  return NextResponse.json({ success: true });
+}

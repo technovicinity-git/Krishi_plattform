@@ -1,0 +1,69 @@
+import { NextResponse } from "next/server";
+import { z } from "zod";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { verifyPassword } from "@/lib/auth/password";
+import { setSessionCookie } from "@/lib/auth/session";
+import { toE164, isValidBDPhone } from "@/lib/auth/phone";
+
+export const runtime = "nodejs";
+
+const schema = z.object({
+  phone: z.string().trim().refine(isValidBDPhone, "Invalid phone number"),
+  password: z.string().min(1, "Password is required"),
+});
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+    const parsed = schema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: parsed.error.issues[0]?.message ?? "Invalid input" },
+        { status: 400 },
+      );
+    }
+
+    const e164 = toE164(parsed.data.phone);
+    const admin = createAdminClient();
+
+    const { data: user } = await admin
+      .from("users")
+      .select("id, role, password_hash, status")
+      .eq("phone", e164)
+      .maybeSingle();
+
+    // Generic error to prevent enumeration
+    const genericError = "Incorrect phone number or password";
+
+    if (!user || !user.password_hash) {
+      return NextResponse.json({ error: genericError }, { status: 401 });
+    }
+
+    if (user.status === "suspended" || user.status === "deleted") {
+      return NextResponse.json(
+        { error: "This account is not accessible. Contact support." },
+        { status: 403 },
+      );
+    }
+
+    const ok = await verifyPassword(parsed.data.password, user.password_hash);
+    if (!ok) {
+      return NextResponse.json({ error: genericError }, { status: 401 });
+    }
+
+    const response = NextResponse.json({
+      success: true,
+      role: user.role,
+    });
+
+    await setSessionCookie(response, {
+      sub: user.id,
+      role: user.role as "investor" | "steward" | "farmer" | "admin",
+    });
+
+    return response;
+  } catch (err) {
+    console.error("[auth/login] unexpected:", err);
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
+  }
+}

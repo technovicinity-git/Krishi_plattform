@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+@theme {
+  /* ─── Backgrounds ─────────────────────────────── */
+  --color-cream: #FAF8F5;
+  --color-stone: #EDE9E3;
+  --color-dark: #1C1A17;
+
+  /* ─── Borders / Dividers ──────────────────────── */
+  --color-border-light: #E0DBD4;
+  --color-border-divider: #DDD8D0;
+  --color-border-card: #E8E4DE;
+
+  /* ─── Text ────────────────────────────────────── */
+  --color-ink: #1A1A1A;
+  --color-ink-nav: #5A514A;
+  --color-ink-secondary: #6B6560;
+  --color-ink-tertiary: #8A8480;
+  --color-ink-muted: #A09890;
+  --color-ink-button: #3D3530;
+  --color-ink-button-muted: #736E69;
+
+  /* ─── Accents ─────────────────────────────────── */
+  --color-terracotta: #C36F52;
+  --color-green-deep: #2E5B3D;
+  --color-green-olive: #4F5D48;
+  --color-sage: #6B7763;
+  --color-camel: #C8936A;
+
+  /* ─── Typography ──────────────────────────────── */
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-serif: var(--font-dm-serif), Georgia, serif;
+
+  /* ─── Radii ───────────────────────────────────── */
+  --radius-button: 5px;
+  --radius-card: 8px;
+  --radius-card-lg: 16px;
+}
+
+/* Base */
+html {
+  background: var(--color-cream);
+  color: var(--color-ink);
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

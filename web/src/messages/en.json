@@ -1,0 +1,1643 @@
+{
+  "nav": {
+    "investmentPlans": "Investment Plans",
+    "howItWorks": "How It Works",
+    "stewards": "Stewards",
+    "about": "About",
+    "faq": "FAQ",
+    "login": "Login",
+    "explorePlans": "Explore Plans"
+  },
+  "common": {
+    "english": "EN",
+    "bangla": "বাংলা"
+  },
+  "home": {
+    "hero": {
+      "tag": "Premium Agri-Fintech · Bangladesh",
+      "headlineLine1": "Invest in livestock.",
+      "headlineLine2": "Follow every step.",
+      "headlineLine3": "Share the outcome.",
+      "paragraph": "Krishi connects verified digital investors with professional stewards and certified partner farmers across Bangladesh.",
+      "ctaPrimary": "Explore Investment Plans",
+      "ctaSecondary": "How It Works",
+      "imageAlt": "Healthy cattle grazing on a green field in Bangladesh",
+      "metricInvestedLabel": "Total Invested Value",
+      "metricAssetsLabel": "Verified Cattle Assets",
+      "metricHealthLabel": "Health Trust Rate"
+    },
+    "ecosystem": {
+      "eyebrow": "A Transparent Investment Ecosystem",
+      "heading": "Connecting capital to local soil",
+      "steps": {
+        "investor": { "title": "Investor", "description": "Selects a verified livestock plan, reviews allocation details, and commits capital — entirely digital." },
+        "platform": { "title": "Krishi Platform", "description": "Allocates assets, secures custom insurance and smart contracts for structured fund separation." },
+        "steward": { "title": "Verified Steward", "description": "Monitors feeding schedules, conducts biosecurity inspections, and logs verified health updates." },
+        "farmer": { "title": "Partner Farmer", "description": "Provides daily on-ground care on certified premium grasslands across regional clusters." },
+        "distribution": { "title": "Profit Distribution", "description": "Livestock sold at optimal seasonal cycles. Capital and net returns distributed automatically." }
+      }
+    },
+    "opportunities": {
+      "eyebrow": "Live Assets",
+      "heading": "Current Investment Opportunities",
+      "subtitle": "Every animal is sourced from vetted native stocks and monitored by regional animal scientists.",
+      "estimatedReturnLabel": "Estimated Return",
+      "investmentPerUnitLabel": "Investment per Unit",
+      "months": "months",
+      "empty": "No live plans yet.",
+      "viewAll": "View all plans",
+      "plans": {
+        "cowFattening": { "title": "Cow Fattening Plan", "meta": "Gazipur Regional Cluster · 6 Months", "status": "Accepting Investors", "return": "15–20%", "unit": "৳1,00,000", "breakdown": "Animal ৳50k + Care ৳50k", "imageAlt": "Healthy brown dairy cow in a modern barn" },
+        "goatRearing": { "title": "Goat Rearing Plan", "meta": "Mymensingh Regional Cluster · 4 Months", "status": "Accepting Investors", "return": "12–18%", "unit": "৳40,000", "breakdown": "Animal ৳20k + Care ৳20k", "imageAlt": "Black Bengal goat eating fresh leaves" },
+        "buffaloFattening": { "title": "Buffalo Fattening Plan", "meta": "Rajshahi Regional Cluster · 8 Months", "status": "Coming Soon", "return": "18–25%", "unit": "৳1,50,000", "breakdown": "Animal ৳80k + Care ৳70k", "imageAlt": "Black water buffalo near a river delta" }
+      }
+    },
+    "transparency": {
+      "eyebrow": "Where does your money go?",
+      "heading": "Not a penny remains unmonitored",
+      "paragraph": "Krishi operates on structured separation of funds. Out of every ৳1,00,000 unit, the animal cost is locked at purchase. The care fund is held in escrow, released only when local farmers submit photo-verified logs of food and medical requirements.",
+      "checklist": {
+        "item1": "Biosecure medical emergency reserve locked at the time of purchase",
+        "item2": "Food expenses tied directly to verified local commodity market rates",
+        "item3": "Steward verification required before releasing each monthly care payout"
+      },
+      "breakdown": {
+        "label": "Unit Allocation Breakdown",
+        "total": "৳1,00,000 per Unit",
+        "rows": {
+          "animal": { "title": "Animal Purchase Fund", "amount": "৳50,000 · 50%", "note": "Sent directly to verified partner farm pools" },
+          "care": { "title": "Fodder, Care & Medical Escrow", "amount": "৳40,000 · 40%", "note": "Disbursed monthly based on verified health updates" },
+          "reserve": { "title": "Emergency Risk Reserve", "amount": "৳10,000 · 10%", "note": "Platform-level custom pool protection" }
+        }
+      }
+    },
+    "lifecycle": {
+      "eyebrow": "Transparency In Motion",
+      "heading": "Your Premium Livestock Lifecycle",
+      "stages": {
+        "capital": { "title": "Capital Allocated", "description": "Your capital secures a specific animal tag and enters structured escrow. No pooling." },
+        "onboarded": { "title": "Livestock Onboarded", "description": "Steward confirms bio-tagging and registers the animal under your portfolio ID." },
+        "updates": { "title": "Monthly Updates", "description": "Live feeds, photo logs, and veterinary records visible in your investor portal." },
+        "sale": { "title": "Optimal Sale Timing", "description": "Market-ready at peak of regional trade season for maximum return on capital." },
+        "settlement": { "title": "Settlement & Returns", "description": "Capital and net returns settled automatically to your verified Krishi wallet." }
+      }
+    },
+    "dashboard": {
+      "eyebrow": "Investor Portal",
+      "heading": "Monitor real lives from your phone",
+      "paragraph": "Access your secure investor portal. View veterinary reports, check feed schedules, and see actual photos uploaded directly by your assigned Steward — at any time.",
+      "imageAlt": "Krishi investor portal dashboard preview"
+    },
+    "trust": {
+      "eyebrow": "Verification Protocol",
+      "heading": "Built on trust and verification",
+      "subtitle": "Every participant, transaction, and animal is validated before capital moves.",
+      "items": {
+        "kyc": { "title": "Mandatory KYC Protocols", "description": "All investors and farming partners undergo strict NID validation and banking checks before any capital is allocated." },
+        "participants": { "title": "Verified Participants", "description": "Stewards are vetted agricultural graduates or veterinarians with certified experience in regional husbandry." },
+        "escrow": { "title": "Structured Escrow Process", "description": "No capital is held loosely. Daily expenditure is drawn from specific care funds based on approved verification tags." },
+        "photoUpdates": { "title": "Regular Photo Updates", "description": "Farmers upload weekly time-stamped images with biosecure tag markers to prove actual livestock growth states." },
+        "expenseApprovals": { "title": "Controlled Expense Approvals", "description": "Steward checks verify fodder weight and vaccine certificates before any veterinary fund payout is authorised." },
+        "settlements": { "title": "Transparent Settlements", "description": "After the matured sale, market receipts are posted for full investor audit access at settlement." }
+      }
+    },
+    "riskDisclosure": {
+      "label": "Regulatory Risk Disclosure",
+      "title": "Understanding Livestock Investment Risk",
+      "body": "Livestock investment involves physical biological assets. Animals may face illness, mortality, or natural stress due to climate shifts. Expected returns represent educated estimations based on historical seasonal cycles and local market trends, and are not legally guaranteed. Final profit outcomes are calculated and finalized at point of settlement."
+    },
+    "whyKrishi": {
+      "eyebrow": "Why invest with Krishi",
+      "heading": "Bridging digital trust and soil",
+      "imageAlt": "Bangladeshi farmer holding fresh hay in a modern dairy farm",
+      "items": {
+        "tracking": { "title": "Know Where Your Money Goes", "description": "Exact ledger tracking. Every diagnostic test, vaccination, and feed batch purchase is logged the moment it occurs." },
+        "journey": { "title": "Follow the Actual Journey", "description": "No abstract financial derivatives. Watch a live animal grow from early seasonal stages to market maturation." },
+        "sharing": { "title": "Structured Profit Sharing", "description": "Standard commercial margin models ensure farmers, stewards, and digital investors are compensated transparently." }
+      }
+    },
+    "faq": {
+      "eyebrow": "Information Centre",
+      "heading": "Frequently Asked Questions",
+      "paragraph": "Everything you need to know before committing capital to a livestock plan.",
+      "items": {
+        "q1": { "question": "How does livestock investment work?", "answer": "You purchase livestock unit plans. Krishi allocates physical biological assets tag-linked under strict veterinary supervision and partner farmers who share final trade revenues." },
+        "q2": { "question": "Is the estimated return guaranteed?", "answer": "No. Livestock investments involve physical biological risk. Expected returns are seasonal market projections; actual returns are distributed upon optimized sale." },
+        "q3": { "question": "What happens if an animal becomes sick?", "answer": "Each unit carries custom insurance. Our reserve fund covers treatment costs and certified veterinarians intervene immediately under Steward monitoring." },
+        "q4": { "question": "How are care expenses approved?", "answer": "Farmers must upload diagnostic verification or photo logs of feed requirements, vetted by digital stewards before escrow release." },
+        "q5": { "question": "When do I receive my returns?", "answer": "At the end of the predefined plan maturation cycle (e.g. 6 months for cow fattening), the asset is traded and capital + profits settle directly to your Krishi wallet." }
+      }
+    },
+    "finalCta": {
+      "eyebrow": "Ready to Begin?",
+      "heading": "Ready to invest in real assets?",
+      "paragraph": "Join thousands of modern digital investors backing local agriculture in Bangladesh. Start with a single verified livestock unit.",
+      "ctaPrimary": "Explore Investment Plans",
+      "ctaSecondary": "Learn How Krishi Works",
+      "footnote": "Minimum investment starts from ৳40,000. All funds held in regulated accounts."
+    }
+  },
+  "howItWorks": {
+    "hero": {
+      "tag": "How Krishi Works",
+      "headingLine1": "From Your Investment",
+      "headingLine2": "to Real Livestock.",
+      "subline": "Understand every step of the journey — from choosing an opportunity to the final sale and settlement.",
+      "paragraph": "Krishi connects investors with professional livestock managers, bringing financial transparency and visibility to certified partner farmers across Bangladesh.",
+      "ctaPrimary": "Explore Investment Plans",
+      "ctaSecondary": "Meet Our Stewards",
+      "imageAlt": "Bangladeshi farmer with Sahiwal cattle grazing at sunset"
+    },
+    "journey": {
+      "tag": "The Krishi Journey",
+      "heading": "One Investment. A Journey You Can Follow.",
+      "steps": {
+        "explore": { "title": "Explore", "description": "Browse open livestock plans" },
+        "express": { "title": "Express Interest", "description": "Reserve units digitally" },
+        "approved": { "title": "Get Approved", "description": "Brief vetting review" },
+        "kyc": { "title": "Complete KYC", "description": "Verify profile & NID" },
+        "deposit": { "title": "Deposit Funds", "description": "Secure escrow payment" },
+        "assigned": { "title": "Livestock Assigned", "description": "Tag allocated to batch" },
+        "care": { "title": "Purchase & Care", "description": "On-ground farm transfer" },
+        "updates": { "title": "Track Updates", "description": "Monthly biometric reports" },
+        "sale": { "title": "Seasonal Sale", "description": "Traded at peak market cycle" },
+        "settlement": { "title": "Settlement", "description": "Capital & ROI to wallet" }
+      }
+    },
+    "stepExplore": {
+      "tag": "01 — Explore",
+      "heading": "Start With an Opportunity That Makes Sense to You.",
+      "paragraph": "Investors can browse available livestock investment plans and review key information before deciding whether to express interest.",
+      "parametersLabel": "Key Parameters Under Review",
+      "parameters": {
+        "unit": { "label": "Investment per Unit", "value": "Determines minimum capital required" },
+        "duration": { "label": "Duration", "value": "Asset lock-in period (typically 4–8 months)" },
+        "roi": { "label": "Estimated ROI", "value": "Projections based on historical regional trade cycles" },
+        "location": { "label": "Location", "value": "Vetted agricultural regional clusters across Bangladesh" },
+        "category": { "label": "Livestock Category", "value": "Breeds (Sahiwal, Red Chittagong, Local Native)" },
+        "availability": { "label": "Availability", "value": "Total batch capacity vs. remaining units" }
+      },
+      "preview": {
+        "title": "Cow Fattening Plan",
+        "meta": "Gazipur Regional Cluster · 6 Months",
+        "returnLabel": "Estimated Return",
+        "returnValue": "15–20%",
+        "roiNote": "Estimated ROI — Not Guaranteed",
+        "unitLabel": "Investment per Unit",
+        "unitValue": "৳1,00,000",
+        "breakdown": "Animal ৳50k + Care ৳50k"
+      }
+    },
+    "stepInterest": {
+      "tag": "02 — Express Interest",
+      "heading": "Tell Us Which Opportunity Interests You.",
+      "paragraph": "Expressing interest is the first interactive step. It allows our dedicated customer experience stewards to pre-allocate availability and contact you directly.",
+      "form": {
+        "title": "Express Interest",
+        "fullName": "Full Name",
+        "fullNamePlaceholder": "Tariqul Islam",
+        "phone": "Phone Number",
+        "phonePlaceholder": "+880 1712-XXXXXX",
+        "plan": "Investment Plan",
+        "planValue": "Cow Fattening Plan — 6 Months",
+        "units": "Number of Units",
+        "unitsValue": "2 Units (৳2,00,000)",
+        "message": "Optional Message",
+        "messagePlaceholder": "Looking forward to supporting regional cattle farms.",
+        "submit": "Submit Interest"
+      },
+      "notice": {
+        "title": "Onboarding Notice",
+        "body": "Your submitted interest is manually reviewed by a steward before formal investment onboarding begins. This ensures strict limits on cattle clusters are never oversubscribed."
+      }
+    },
+    "stepOnboarding": {
+      "tag": "03 — Get Ready to Invest",
+      "heading": "Complete Your Investor Onboarding.",
+      "items": {
+        "phone": { "title": "Phone Verification", "description": "Secure your account with active OTP validation" },
+        "kyc": { "title": "KYC Verification", "description": "Submit standard national identification details" },
+        "withdrawal": { "title": "Withdrawal Preference", "description": "Link your verified bank account or mobile wallet" },
+        "deposit": { "title": "Fund Deposit", "description": "Initiate structured escrow allocation" }
+      },
+      "infoCard": {
+        "title": "Required Identification Information",
+        "paragraph": "To comply with regional financial security standards, our administrators verify the following credentials before unlocking investment gates:",
+        "items": {
+          "name": "Full Name matching official documents",
+          "phone": "Mobile Phone with OTP accessibility",
+          "email": "Personal Email Address for statement delivery",
+          "nid": "Bangladeshi NID (National Identification Number)",
+          "address": "Current Residential Address mapping",
+          "photo": "Clear Portrait Photo for facial validation"
+        }
+      }
+    },
+    "stepDeposit": {
+      "tag": "04 — Fund Your Investment",
+      "heading": "Deposit Your Investment and Activate Your Units.",
+      "paragraph": "Once your onboarding details are fully vetted and approved, you can complete payment through our certified regional channel partner. All capital is transferred directly into structured escrow accounts dedicated to your selected batch.",
+      "paymentNotice": {
+        "title": "Authorized Payment Integration",
+        "body": "Secure processing handled natively via SSLCommerz supporting major local banks and mobile payment gateways (bKash, Nagad)."
+      },
+      "unitCard": {
+        "label": "Structured Unit Sizes",
+        "title": "৳1,00,000 per Unit",
+        "rows": {
+          "one":   { "units": "1 Unit", "description": "Corresponds to 1 physical livestock animal", "amount": "৳1,00,000" },
+          "two":   { "units": "2 Units", "description": "Corresponds to 2 independent physical animals", "amount": "৳2,00,000" },
+          "five":  { "units": "5 Units", "description": "Corresponds to 5 independent physical animals", "amount": "৳5,00,000" }
+        }
+      }
+    },
+    "stepRealAnimal": {
+      "tag": "05 — Real Livestock",
+      "heading": "Your Investment Unit Represents a Real Animal.",
+      "paragraph": "Unlike abstract derivatives, each unit you hold corresponds directly to an active physical bio-tagged animal inside our regional cluster.",
+      "batchCard": {
+        "label": "Your Digital Portfolio",
+        "batchId": "Batch KR-INV-000125",
+        "units": "2 Units Allocated",
+        "amount": "৳2,00,000",
+        "description": "This digital capital is structured and divided. The platform immediately matches your transaction to procure physical animals on active grasslands."
+      },
+      "animals": {
+        "sahiwal": { "name": "Sahiwal (Male)", "tag": "KR-COW-001", "farmerLabel": "Assigned Farmer", "farmer": "Abul Kashem", "stewardLabel": "Assigned Steward", "steward": "Dr. Rashid (Vet Graduate)", "weightLabel": "Current Weight", "weight": "380kg" },
+        "redChittagong": { "name": "Red Chittagong (Male)", "tag": "KR-COW-002", "farmerLabel": "Assigned Farmer", "farmer": "Rahima Khatun", "stewardLabel": "Assigned Steward", "steward": "Dr. Rashid (Vet Graduate)", "weightLabel": "Current Weight", "weight": "340kg" }
+      }
+    },
+    "stepPeople": {
+      "tag": "06 — People Behind the Investment",
+      "heading": "Farmers Care for the Livestock. Stewards Coordinate the Journey.",
+      "paragraph": "A clear separation of daily caretaking and rigorous financial oversight creates a secure framework for growth.",
+      "farmer": {
+        "role": "Professional Partner Farmer",
+        "subrole": "On-Ground Custody",
+        "description": "Responsible for the daily on-ground care of your assigned livestock within certified regional farm clusters. Farmers ensure proper feeding, pasture health, and physical security.",
+        "items": {
+          "care": "Day-to-day feeding, shelter maintenance, and biological security",
+          "logs": "Logs feed intake and updates physical weight statistics",
+          "trade": "Co-authorizes regional trade and optimal harvest cycles"
+        }
+      },
+      "steward": {
+        "role": "Verified Agricultural Steward",
+        "subrole": "Operational Oversight",
+        "description": "Assigned veterinarians and agronomists who oversee livestock parameters, approve escrow fund drawdowns, and verify farmer update records. They represent the investor's interests locally.",
+        "items": {
+          "audit": "Conducts regular health audits and verified biometric tagging",
+          "escrow": "Reviews fodder bills and releases monthly care escrow payouts",
+          "reports": "Delivers unbiased monthly health reports and verified photos"
+        }
+      },
+      "flowLabel": "Structured Ecosystem Controls · Transparent Flow",
+      "flow": {
+        "investor": { "title": "Digital Investor", "subtitle": "Commits Capital" },
+        "escrow": { "title": "Krishi Escrow", "subtitle": "Secures Funds" },
+        "steward": { "title": "Expert Steward", "subtitle": "Audits Operations" },
+        "farmer": { "title": "Partner Farmer", "subtitle": "Daily Animal Care" },
+        "livestock": { "title": "Real Livestock", "subtitle": "Physical Assets" }
+      }
+    },
+    "stepPurchaseCare": {
+      "tag": "07 — Purchase & Care",
+      "heading": "Track What Happens After Purchase.",
+      "paragraph": "Every investment unit is split transparently between initial animal acquisition and structured operational care reserves.",
+      "animalCard": {
+        "title": "Animal Allocation",
+        "description": "Capital secured exclusively for procuring verified healthy livestock.",
+        "plannedLabel": "Planned Allocation",
+        "plannedValue": "৳50,000",
+        "actualLabel": "Actual Purchase Cost",
+        "actualValue": "৳48,500",
+        "remainingLabel": "Remaining Allocation (Credited)",
+        "remainingValue": "৳1,500",
+        "barPrimaryLabel": "97% Asset Cost",
+        "barSecondaryLabel": "3% Ledger Balance"
+      },
+      "careCard": {
+        "title": "Care & Escrow Allocation",
+        "description": "Escrowed operational reserve for feeding, diagnostics, vaccines, and insurance.",
+        "poolLabel": "Care & Emergency Pool",
+        "poolValue": "৳50,000",
+        "usedLabel": "Care Used to Date",
+        "usedValue": "৳6,500",
+        "remainingLabel": "Care Remaining",
+        "remainingValue": "৳43,500",
+        "barPrimaryLabel": "13% Expended",
+        "barSecondaryLabel": "87% Safe Escrow"
+      },
+      "notice": {
+        "title": "Escrow Cost Protection",
+        "body": "Actual livestock purchase costs may differ from the planned allocation depending on regional auction indices. Krishi securely records actual costs down to the single decimal and keeps the real-time financial history transparently visible in your portfolio."
+      }
+    },
+    "stepUpdates": {
+      "tag": "08 — Follow the Journey",
+      "heading": "See How Your Livestock Is Progressing.",
+      "paragraph": "We provide structural bi-weekly biometric reporting, vet logs, and visual proof of your animal assets.",
+      "animal": {
+        "tag": "KR-COW-001",
+        "stage": "Growing & Care",
+        "summary": "Initial Weight: 385 kg · Current Weight: 420 kg · Gain: +35 kg",
+        "cta": "View Investment Updates"
+      },
+      "events": {
+        "purchased": { "date": "12 Sep 2026", "title": "Animal Purchased", "description": "Sourced from native Pabna stocks, quarantine cleared, bio-tag secured." },
+        "health":    { "date": "28 Sep 2026", "title": "Steward Health Check", "description": "Verified healthy and adapting well to Gazipur grassland feed schedules." },
+        "weight":    { "date": "15 Oct 2026", "title": "Weight Update", "description": "Biometric scale reading recorded at 420 kg (+35 kg gain since inception)." },
+        "care":      { "date": "02 Nov 2026", "title": "Escrow Care Update", "description": "Routine veterinary vaccination for FMD administered under vet supervision." }
+      },
+      "imageAlt": "Sahiwal cattle grazing on a Bangladeshi farm field"
+    },
+    "stepExpenses": {
+      "tag": "09 — Expenses",
+      "heading": "Every Care Expense Has a Trail.",
+      "paragraph": "Farmers request funds, local stewards verify receipts, and transactions populate directly on your dashboard. No hidden administration overheads.",
+      "process": {
+        "request":  { "title": "Farmer Requests Fodder or Medicine", "description": "Farmer logs a request inside the Krishi app specifying the item and local store quote." },
+        "review":   { "title": "Steward Reviews & Vets Quotation", "description": "Veterinarian Steward audits the price validity and issues direct micro-approval." },
+        "payout":   { "title": "Authorized Payout Released", "description": "Specific care escrow funds disburse directly to regional vendor accounts." },
+        "recorded": { "title": "Transaction Permanently Recorded", "description": "The ledger logs the purchase receipt, invoice, and photo evidence." }
+      },
+      "ledger": {
+        "voucher": "Voucher #KS-LEDG-8102",
+        "status": "Approved",
+        "itemLabel": "Expense Item",
+        "itemValue": "Deworming Medicine Supplement",
+        "amountLabel": "Amount",
+        "amountValue": "৳1,000",
+        "dateLabel": "Date",
+        "dateValue": "12 Oct 2026",
+        "verifiedLabel": "Verified By",
+        "verifiedValue": "Dr. Rashid (Vet)",
+        "invoiceNote": "✓ Supporting invoice & photo attached",
+        "viewProof": "View Proof"
+      }
+    },
+    "stepSale": {
+      "tag": "10 — Sale & Maturation",
+      "heading": "When the Livestock Is Sold, the Numbers Become Final.",
+      "paragraph": "At the optimal weight maturation and peak market demand cycle, your assigned livestock is traded on monitored wholesale markets.",
+      "table": {
+        "title": "Maturation Settlement Log",
+        "asset": "Asset: KR-COW-001",
+        "revenueLabel": "Gross Sale Revenue (Peak Market Trade)",
+        "revenueValue": "৳72,000",
+        "purchaseLabel": "Less: Actual Animal Purchase Cost",
+        "purchaseValue": "-৳48,500",
+        "careLabel": "Less: Cumulative Care Expenses",
+        "careValue": "-৳6,500",
+        "profitLabel": "Calculated Net Profit",
+        "profitValue": "৳17,000"
+      },
+      "formula": {
+        "title": "Formula for Net Profit",
+        "description": "Our net returns are derived transparently from real commercial trade. Net profit equals the final marketplace sale revenue minus actual purchase cost and approved care escrow drawdowns.",
+        "equation": "Actual Profit = Sale Revenue − Eligible Costs",
+        "footnote": "*Illustrative example based on average regional Cow Fattening cycle data."
+      }
+    },
+    "profitSharing": {
+      "tag": "Profit Sharing",
+      "heading": "Actual Profit Is Shared According to the Defined Structure.",
+      "paragraph": "Every stakeholder's incentive is aligned with the health and successful outcome of the livestock.",
+      "info": {
+        "title": "Structured Revenue Sharing Model",
+        "description": "Once the livestock matures and is sold, final actual profits are distributed according to our predefined transparent framework. This ensures fair reward distribution across the agricultural chain.",
+        "items": {
+          "farmer": "60% of actual profits go directly to the Partner Farmer",
+          "investor": "30% of actual profits settle directly to the Investor",
+          "platform": "5% of actual profits to the Operational Platform",
+          "steward": "5% of actual profits go to the Veterinarian Steward"
+        },
+        "footnote": "Note: Pre-completion estimates are seasonal market projections, not legally guaranteed returns."
+      },
+      "chart": {
+        "title": "Actual Profit Distribution Split",
+        "rows": {
+          "farmer": { "label": "Partner Farmer Share", "value": "60%" },
+          "investor": { "label": "Digital Investor Share", "value": "30%" },
+          "platform": { "label": "Krishi Platform Operational fee", "value": "5%" },
+          "steward": { "label": "Veterinary Steward fee", "value": "5%" }
+        },
+        "disclaimer": "*Percentages apply strictly to NET ACTUAL PROFIT, not the original seed investment."
+      }
+    },
+    "settlement": {
+      "tag": "Settlement",
+      "heading": "Your Investment Is Settled After the Final Outcome.",
+      "paragraph": "At cycle maturation, your primary capital plus your designated share of actual profit settles securely back into your wallet.",
+      "explanation": {
+        "title": "Maturation Settlement Calculation",
+        "paragraph": "Upon optimized seasonal wholesale auction, Krishi releases all remaining care escrow balances and profit percentages natively into your digital portal for seamless regional banking checkout.",
+        "footnote": "*Illustrative example only. Krishi never utilizes terms like 'guaranteed returns', 'earn', or 'fixed interest'."
+      },
+      "math": {
+        "principalLabel": "Original Unit Principal",
+        "principalValue": "৳1,00,000",
+        "shareLabel": "Investor Share of Profit (30%)",
+        "shareValue": "+৳7,050",
+        "totalLabel": "Total Settlement Wallet payout",
+        "totalValue": "৳1,07,050"
+      }
+    },
+    "visibility": {
+      "tag": "Portfolio Visibility",
+      "heading": "Unprecedented Visibility Throughout the Journey.",
+      "paragraph": "No black boxes. Access verified records of everything happening with your agricultural assets.",
+      "items": {
+        "investment":   { "title": "Investment Details", "description": "Principal allocation, lock-in duration, and regional cluster tracking logs." },
+        "livestock":    { "title": "Livestock Information", "description": "Physical biometric tagging metadata, breed origin, and quarantine clearance." },
+        "purchase":     { "title": "Purchase Records", "description": "Verifiable procurement price index, age certificates, and health parameters." },
+        "photos":       { "title": "Photos & Updates", "description": "Time-stamped pasture images uploaded directly by your expert regional Steward." },
+        "expenses":     { "title": "Expense History", "description": "Itemized feed invoices, medicinal supplement records, and vet checkups." },
+        "sale":         { "title": "Sale Information", "description": "Final wholesale marketplace trade receipts and maturation weight statistics." },
+        "transactions": { "title": "Transactions", "description": "Secure escrow fund payouts and real-time ledger accounting history." },
+        "documents":    { "title": "Documents", "description": "Regulated platform agreements, unit assignment deeds, and security certificates." },
+        "reports":      { "title": "Reports", "description": "Comprehensive monthly performance and biosecure audit paperwork downloads." },
+        "settlement":   { "title": "Settlement Information", "description": "Full breakdown of wallet payouts, profit shares, and operational fee ledgers." }
+      }
+    },
+    "faqPreview": {
+      "tag": "Information Centre",
+      "heading": "Still Have Questions?",
+      "items": {
+        "q1": { "question": "What is an investment unit?", "answer": "An investment unit represents a single share in a specific, physical biological livestock animal. Your unit is securely back-allocated on our digital ledger to ensure strict 1-to-1 asset tracking." },
+        "q2": { "question": "Are estimated returns guaranteed?", "answer": "No. Livestock investments carry biological risk, meaning that disease, climate, or trade index shifts can impact yields. Estimates are based strictly on historical regional performance." },
+        "q3": { "question": "How is my livestock tracked?", "answer": "Each animal carries a custom biosecure RFID ear tag. Stewards use these tags to physically match, record weights, log vet checks, and authorize monthly escrow payouts." },
+        "q4": { "question": "Who takes care of the livestock?", "answer": "Daily custody and care are handled by vetted partner farmers with certified grassland facilities, overseen by professional veterinary Stewards." },
+        "q5": { "question": "How are expenses approved?", "answer": "Farmers upload digital invoices and weight certificates inside our portal. Veterinarian Stewards manually inspect these claims before any escrow care capital is authorized." },
+        "q6": { "question": "When is profit calculated?", "answer": "Net profits are finalized only at the maturation sale point, calculated directly as final marketplace sale revenue minus total purchase and care ledger costs." },
+        "q7": { "question": "How can I withdraw funds?", "answer": "At maturation settlement, your principal capital and profit shares settle directly into your Krishi wallet, allowing checkout to verified Bangladeshi banks or mobile wallets." }
+      },
+      "moreHelp": "Need more help?",
+      "viewAll": "View All FAQs"
+    },
+    "finalCta": {
+      "eyebrow": "Understand the Journey",
+      "heading": "Understand the Journey. Then Explore the Opportunities.",
+      "paragraph": "Take a closer look at available livestock investment plans and see how each opportunity works. Connect your digital capital to verified Bangladeshi soil today.",
+      "ctaPrimary": "Explore Investment Plans",
+      "ctaSecondary": "Meet Our Stewards",
+      "footnote": "Minimum investment starts from ৳40,000. All platform-level escrow funds are regulated."
+    }
+  },
+  "plansPage": {
+    "hero": {
+      "tag": "Investment Opportunities",
+      "heading": "Find an investment that fits your goals",
+      "paragraph": "Explore livestock opportunities managed by verified stewards and professional partners. Each opportunity has a defined investment unit, duration, and estimated return.",
+      "trust1": "Verified Opportunities",
+      "trust2": "Transparent Structure",
+      "trust3": "Regular Updates"
+    },
+    "filters": {
+      "search": "Search investment plans",
+      "categoryLabel": "Livestock",
+      "categoryAll": "All Categories",
+      "categoryCow": "Cow",
+      "categoryGoat": "Goat",
+      "categoryBuffalo": "Buffalo",
+      "categorySheep": "Sheep",
+      "divisionLabel": "Division",
+      "divisionAll": "All Divisions",
+      "durationLabel": "Duration",
+      "durationAny": "Any Duration",
+      "durationShort": "Under 4 months",
+      "durationMedium": "4–6 months",
+      "durationLong": "7+ months",
+      "roiLabel": "ROI",
+      "roiAny": "Any Return",
+      "statusLabel": "Status",
+      "statusOpen": "Open Plans",
+      "statusAll": "All Status",
+      "sortByLabel": "Sort By",
+      "sortRecommended": "Recommended",
+      "activeFiltersLabel": "Active Filters:",
+      "clearAll": "Clear all",
+      "showing": "Showing {shown} of {total} opportunities"
+    },
+    "statuses": {
+      "accepting": "Accepting Investors",
+      "comingSoon": "Coming Soon",
+      "fullyFunded": "Fully Funded"
+    },
+    "card": {
+      "estimatedReturn": "Estimated Return",
+      "investmentPerUnit": "Investment per Unit",
+      "fundingProgress": "Funding Progress",
+      "viewOpportunity": "View Opportunity",
+      "registerInterest": "Register Interest",
+      "launchesSoon": "Launches Soon",
+      "fullyFunded": "Fully Funded"
+    },
+    "plans": {
+      "cowFattening": {
+        "title": "Cow Fattening Plan",
+        "meta": "Gazipur Regional Cluster · 6 Months",
+        "return": "15–20%",
+        "unit": "৳1,00,000",
+        "breakdown": "Animal ৳50k + Care ৳50k",
+        "fundingValue": "7 of 15 Units"
+      },
+      "goatRearing": {
+        "title": "Goat Rearing Plan",
+        "meta": "Mymensingh Regional Cluster · 4 Months",
+        "return": "12–18%",
+        "unit": "৳40,000",
+        "breakdown": "Animal ৳20k + Care ৳20k",
+        "fundingValue": "4 of 10 Units"
+      },
+      "buffaloFattening": {
+        "title": "Buffalo Fattening Plan",
+        "meta": "Rajshahi Regional Cluster · 8 Months",
+        "return": "18–25%",
+        "unit": "৳1,50,000",
+        "breakdown": "Animal ৳80k + Care ৳70k",
+        "fundingValue": "Launches Soon"
+      },
+      "premiumCowFattening": {
+        "title": "Premium Cow Fattening",
+        "meta": "Chattogram Regional Cluster · 6 Months",
+        "return": "20–28%",
+        "unit": "৳2,00,000",
+        "breakdown": "Animal ৳100k + Care ৳100k",
+        "fundingValue": "2 of 5 Units"
+      },
+      "sheepRearing": {
+        "title": "Sheep Rearing Plan",
+        "meta": "Sylhet Regional Cluster · 5 Months",
+        "return": "14–20%",
+        "unit": "৳60,000",
+        "breakdown": "Animal ৳30k + Care ৳30k",
+        "fundingValue": "5 of 25 Units"
+      },
+      "goatFattening": {
+        "title": "Goat Fattening Plan",
+        "meta": "Khulna Regional Cluster · 3 Months",
+        "return": "10–15%",
+        "unit": "৳30,000",
+        "breakdown": "Animal ৳15k + Care ৳15k",
+        "fundingValue": "Fully Funded"
+      }
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "trust": {
+      "eyebrow": "Verification & Governance",
+      "heading": "Invest with clarity",
+      "items": {
+        "allocation": {
+          "title": "Know your allocation",
+          "description": "Your committed funds map to a single bio-tagged live animal pool. No complex financial derivative pools or hidden asset layers."
+        },
+        "track": {
+          "title": "Track your livestock",
+          "description": "Access complete live dashboard logs of weekly growth markers, biosecurity status, and veterinarian inspection reports."
+        },
+        "care": {
+          "title": "Verified care approvals",
+          "description": "Capital earmarked for food and treatment sits securely in trust, disbursed only upon digital verification by regional Stewards."
+        },
+        "settlement": {
+          "title": "Transparent settlement",
+          "description": "At point of seasonal maturity, trade receipt audits are issued directly to your investor wallet instantly."
+        }
+      }
+    },
+    "riskDisclosure": {
+      "label": "Regulatory Risk Disclosure",
+      "title": "Understanding Livestock Investment Risk",
+      "body": "Investment returns are estimates based on historical seasonal cycles and local trade trends, not legally guaranteed. Livestock investments involve physical biological assets subject to operational, climate, veterinary, and regional market risks. Please review the specific opportunity documents and risk disclosures in detail before participating."
+    }
+  },
+    "planDetail": {
+    "breadcrumbs": {
+      "home": "Investment Plans"
+    },
+    "hero": {
+      "statusBadge": "Accepting Investors",
+      "eyebrow": "Cattle · Cox's Bazar Regional Cluster",
+      "paragraph": "A structured 6-month livestock fattening programme managed by verified stewards and certified partner farmers. Each investment unit funds the acquisition and professional care of one head of cattle through to market-ready sale.",
+      "metrics": {
+        "durationLabel": "Duration",
+        "returnLabel": "Est. Return",
+        "unitsLabel": "Units Available"
+      },
+      "verification": "Every animal is sourced from vetted native stocks and monitored by regional animal scientists."
+    },
+    "allocation": {
+      "eyebrow": "Where does your money go?",
+      "heading": "Where your investment goes",
+      "paragraph": "Krishi operates with structured separation of funds. Out of every ৳1,00,000 unit, the animal cost is locked immediately at purchase, and care funds are managed through protected escrows.",
+      "animal": {
+        "title": "Animal Acquisition Fund",
+        "amount": "৳50,000 · 50%",
+        "note": "Sent directly to verified partner farm pools for livestock purchase."
+      },
+      "care": {
+        "title": "Care & Emergency Escrow",
+        "amount": "৳50,000 · 50%",
+        "note": "Held in escrow, released through the platform approval process for verified operational expenses like vet care, feed supplement, and biosecurity tag checks."
+      }
+    },
+    "lifecycle": {
+      "eyebrow": "Chronological Process",
+      "heading": "How the investment works",
+      "steps": {
+        "investment": { "title": "Investment", "description": "Digital investor selects the plan and registers unit allocation" },
+        "funds": { "title": "Funds Deposited", "description": "Capital is separated safely into escrow accounts" },
+        "farmerAssigned": { "title": "Farmer Assigned", "description": "A vetted regional livestock professional is paired with the cattle" },
+        "purchased": { "title": "Animal Purchased", "description": "Certified native cattle is bought and bio-tagged" },
+        "growing": { "title": "Growing & Updates", "description": "Follow regular vet records and growth updates in real-time" },
+        "saleTiming": { "title": "Optimal Sale Timing", "description": "Cattle is sold at trade peaks to maximize calculated net returns" },
+        "profitCalc": { "title": "Profit Calculated", "description": "Total sale receipts are consolidated and verified by platform" },
+        "settlement": { "title": "Settlement", "description": "Original investment plus calculated net returns return automatically" }
+      }
+    },
+    "estimatedReturn": {
+      "eyebrow": "Financial Projections",
+      "heading": "Estimated return",
+      "value": "15–20%",
+      "label": "Projected Net Return",
+      "description": "Estimated return is based on historical seasonal market trends and projected operational costs. Returns are estimates, not guarantees. Actual ROI is calculated after livestock sale and final settlement.",
+      "table": {
+        "beforeLabel": "Before Completion",
+        "beforeValue": "Estimated ROI (Seasonal projection)",
+        "afterLabel": "After Sale & Settlement",
+        "afterValue": "Actual ROI (Settled directly to your wallet)"
+      },
+      "footnote": "*Actual results depend on livestock purchase cost, care expenses, sale price, market conditions, and other applicable factors."
+    },
+    "profitSharing": {
+      "eyebrow": "Ecosystem Structure",
+      "heading": "Transparent profit distribution",
+      "paragraph": "Upon maturation and sale, the calculated profit (sale price minus purchase cost and verified care expenses) is distributed transparently across our ecosystem.",
+      "rows": {
+        "farmer": { "label": "Farmer Share", "value": "60%" },
+        "investor": { "label": "Investor Share", "value": "30%" },
+        "platform": { "label": "Platform Fee", "value": "5%" },
+        "steward": { "label": "Steward Fee", "value": "5%" }
+      },
+      "footnote": "Note: These percentages apply to the calculated profit after the initial investment is returned. They are not percentages of the final sale price."
+    },
+    "realConnection": {
+      "eyebrow": "On-Ground Visibility",
+      "heading": "Connected to real livestock",
+      "paragraph": "Each investment unit represents one physical animal tracked through the Krishi platform. After your investment is processed and a farmer is assigned, you can follow your livestock through regular updates, photos, and progress reports.",
+      "imageAlt": "Cattle eating high-protein green fodder inside a certified modern farm in Bangladesh",
+      "checklistLabel": "Full transparency throughout",
+      "items": {
+        "photos": "Livestock photos & real-time updates",
+        "receipt": "Original purchase receipt details",
+        "ledgers": "Fodder, care & medical expense ledgers",
+        "checkApproval": "Steward monthly check approval history",
+        "biosecurity": "Biosecurity tag verification logs",
+        "sale": "Maturation trade & sale price details",
+        "settlement": "Automatic final settlement updates"
+      }
+    },
+    "journey": {
+      "eyebrow": "Interactive Journey Preview",
+      "heading": "Follow the journey",
+      "events": {
+        "purchased": { "date": "12 Sep", "title": "Livestock purchased", "description": "Animal bio-tagged and registered securely under portfolio ID", "loggedBy": "Logged by: Steward Rashid" },
+        "health": { "date": "18 Sep", "title": "Health update", "description": "Initial veterinarian diagnostics and vaccination schedule completed", "loggedBy": "Logged by: Dr. Rashid (Gazipur Hub)" },
+        "feeding": { "date": "02 Oct", "title": "Feeding update", "description": "Feed schedule established, organic grass feed supplements introduced", "loggedBy": "Logged by: Steward Rashid" },
+        "progress": { "date": "20 Oct", "title": "Progress check-in", "description": "Weight gain tracking accurately at +1.2kg per day. Photos uploaded.", "loggedBy": "Logged by: Steward Rashid" }
+      }
+    },
+    "expenses": {
+      "eyebrow": "Consolidated Ledgers",
+      "heading": "Every expense is recorded",
+      "headers": {
+        "category": "Expense Category",
+        "amount": "Amount"
+      },
+      "rows": {
+        "medicine": { "title": "Medicine & Deworming (FMD vaccination)", "note": "Animal KS-1021 · 12 Sep · Receipt approved by Dr. Rashid", "amount": "৳1,000" },
+        "feed": { "title": "High-Protein Grass & Grain Feed Supplement", "note": "Animal KS-1021 · 25 Sep · Supplier receipt logged by Farmer", "amount": "৳2,500" }
+      }
+    },
+    "people": {
+      "eyebrow": "On-Ground Personnel",
+      "heading": "Managed by verified professionals",
+      "steward": {
+        "role": "Steward",
+        "name": "Rashidul Islam",
+        "badge": "Verified Steward",
+        "bio": "Agricultural graduate with 5+ years livestock management experience. Vetted and monitored regularly by Krishi central husbandry scientists."
+      },
+      "farmer": {
+        "role": "Farmer",
+        "name": "Anwar Hossain",
+        "badge": "Certified Partner",
+        "bio": "Certified partner farmer with an established cattle operations. Vetted for security, space constraints, and quality pasture standards."
+      }
+    },
+    "sidebar": {
+      "heading": "Invest in this opportunity",
+      "investmentPerUnitLabel": "Investment per Unit",
+      "unitSelectorLabel": "Select Investment Units",
+      "totalCapitalLabel": "Total Capital",
+      "unitLabel": "Unit",
+      "unitsLabel": "Units",
+      "allocationLabel": "Allocation Breakdowns",
+      "allocationValue": "Animal ৳50k + Care ৳50k",
+      "showInterest": "Show Interest",
+      "contactSupport": "Contact Support",
+      "legalNote": "By showing interest you are not making a binding commitment. Our expert team will contact you to guide you through the next steps."
+    },
+    "documents": {
+      "heading": "Important Documents",
+      "view": "VIEW",
+      "items": {
+        "terms": "Investment Terms",
+        "risk": "Risk Disclosure & Policies",
+        "infoSheet": "Opportunity Information Sheet"
+      }
+    },
+    "riskCard": {
+      "heading": "Risk Disclosure",
+      "body": "Investment returns are estimates based on projected market conditions and are not guaranteed. Livestock investments involve biological assets subject to veterinary, climate, and operational risks."
+    },
+    "finalCta": {
+      "eyebrow": "Back a real farm today",
+      "heading": "Ready to explore this opportunity?",
+      "paragraph": "Review the investment structure, details, and transparency protocols. Submit your interest online to receive a full portfolio prospectus.",
+      "ctaPrimary": "Show Interest",
+      "ctaSecondary": "Back to Investment Plans"
+    },
+    "related": {
+      "eyebrow": "Diversify your Portfolio",
+      "heading": "Explore other opportunities"
+    }
+  },
+    "stewardsPage": {
+    "hero": {
+      "tag": "Our Stewards",
+      "headingLine1": "Meet the People Behind",
+      "headingLine2": "the Journey.",
+      "paragraph": "Stewards help coordinate farmers, livestock care and investment operations throughout the journey.",
+      "ctaPrimary": "Explore Investment Plans",
+      "ctaSecondary": "How Krishi Works",
+      "imageAlt": "Bangladeshi farmer with Sahiwal cattle grazing at sunset"
+    },
+    "intro": {
+      "tag": "Rooted in Local Knowledge",
+      "headingLine1": "Local Knowledge.",
+      "headingLine2": "Responsible Coordination.",
+      "paragraph1": "Krishi works with stewards who coordinate local farming operations and help keep each livestock investment moving through its journey.",
+      "paragraph2": "Farmers provide daily livestock care. Stewards coordinate the relationship between farmers, livestock care and investment operations through Krishi — rather than personally carrying out all farming activities."
+    },
+    "directory": {
+      "tag": "Steward Directory",
+      "heading": "Meet Our Stewards",
+      "disclaimer": "Illustrative directory records, ratings and reviews for design only. Images show agricultural context, not verified steward portraits.",
+      "searchPlaceholder": "Search Stewards",
+      "locationLabel": "Location",
+      "locationAll": "All Locations",
+      "categoryLabel": "Livestock Category",
+      "categoryAll": "All Categories",
+      "emptyState": "No stewards match your filters. Try clearing them.",
+      "categories": {
+        "cattle": "Cattle",
+        "goats": "Goats",
+        "sheep": "Sheep",
+        "buffalo": "Buffalo",
+        "dumba": "Dumba",
+        "garoleSheep": "Garole Sheep",
+        "other": "Other"
+      },
+      "card": {
+        "ratingCount": "{count} investor reviews",
+        "noReviews": "No reviews yet",
+        "livestockFocus": "Livestock focus",
+        "viewProfile": "View Profile"
+      },
+      "types": {
+        "individual": "Individual Steward",
+        "organization": "Steward Organization",
+        "roleFarmer": "Farmer",
+        "roleVeterinarian": "Veterinarian",
+        "roleAgronomist": "Agronomist"
+      }
+    },
+    "journey": {
+      "tag": "The People Behind It",
+      "heading": "Where Stewards Fit In",
+      "paragraph": "Stewards coordinate the operational relationship between farmers, livestock and investment activities.",
+      "link": "See How Krishi Works",
+      "chain": {
+        "investor": "Investor",
+        "krishi": "Krishi",
+        "steward": "Steward",
+        "farmer": "Farmer",
+        "livestock": "Livestock"
+      }
+    },
+    "visibility": {
+      "heading": "Helping Keep the Journey Visible.",
+      "items": {
+        "coordination": { "title": "Coordination", "description": "Stewards help coordinate farmers and investment operations." },
+        "oversight": { "title": "Oversight", "description": "Investment-related operational activities are reviewed through the platform." },
+        "updates": { "title": "Updates", "description": "Livestock progress and relevant information are recorded and shared with investors." },
+        "accountability": { "title": "Accountability", "description": "Important operational actions and financial activities are recorded within the platform." }
+      }
+    },
+    "finalCta": {
+      "eyebrow": "Ready to Begin?",
+      "headingLine1": "Explore the",
+      "headingLine2": "Opportunities They Help",
+      "headingLine3": "Manage.",
+      "paragraph": "Discover available livestock investment plans and learn how each opportunity works.",
+      "ctaPrimary": "Explore Investment Plans",
+      "ctaSecondary": "How Krishi Works"
+    }
+  },
+    "stewardProfile": {
+    "hero": {
+      "tag": "Steward",
+      "types": {
+        "individual": "Individual Steward",
+        "organization": "Steward Organization",
+        "roleFarmer": "Farmer",
+        "roleVeterinarian": "Veterinarian",
+        "roleAgronomist": "Agronomist"
+      },
+      "ratingCount": "{count} investor reviews",
+      "ctaPrimary": "Explore Investment Opportunities",
+      "ctaSecondary": "Back to Stewards",
+      "illustrativeNote": "Illustrative profile and rating · design only",
+      "imageCaption": "Agricultural context · not a verified portrait"
+    },
+    "about": {
+      "tag": "About the Steward",
+      "headingLine1": "Local knowledge.",
+      "headingLine2": "Responsible coordination.",
+      "bioLabel": "About {name}"
+    },
+    "glance": {
+      "heading": "At a Glance",
+      "fields": {
+        "operatingArea": "Operating Area",
+        "livestockFocus": "Livestock Focus",
+        "stewardType": "Steward Type",
+        "currentOpportunities": "Current Opportunities"
+      },
+      "types": {
+        "individual": "Individual Steward",
+        "organization": "Steward Organization"
+      }
+    },
+    "reviews": {
+      "heading": "Investor Reviews",
+      "subheading": "Hear from investors who have worked with this steward.",
+      "summaryLabel": "Investor Feedback",
+      "reviewCount": "{count} investor reviews",
+      "summaryNote": "Reviews are submitted by investors who have invested through this steward.",
+      "emptyState": "No reviews yet. Reviews will appear here after investors complete an investment cycle with this steward.",
+      "viewAll": "View All Reviews",
+      "illustrativeNote": "Illustrative ratings and reviews for design only — no real investor feedback."
+    },
+    "opportunities": {
+      "tag": "Current Investment Opportunities",
+      "heading": "Current Investment Opportunities",
+      "paragraph": "Explore livestock investment plans currently coordinated by this steward.",
+      "illustrativeNote": "Illustrative opportunity data and steward associations for design only — not live availability or historical performance.",
+      "illustrativeBadge": "Illustrative Plan",
+      "emptyState": "No current investment opportunities. Check back later."
+    },
+    "support": {
+      "heading": "How This Steward Supports the Journey",
+      "items": {
+        "coordination": { "title": "Coordination", "description": "Coordinates farmers and livestock activities." },
+        "monitoring": { "title": "Monitoring", "description": "Helps keep livestock activity visible through regular updates." },
+        "expense": { "title": "Expense Oversight", "description": "Reviews and coordinates eligible livestock expenses." },
+        "sale": { "title": "Sale Coordination", "description": "Coordinates the livestock sale process." }
+      }
+    },
+    "finalCta": {
+      "eyebrow": "Ready to Begin?",
+      "headingLine1": "Explore the Investment",
+      "headingLine2": "Opportunities They Help",
+      "headingLine3": "Coordinate.",
+      "paragraph": "Discover available livestock investment plans currently coordinated through Krishi.",
+      "ctaPrimary": "Explore Investment Plans",
+      "ctaSecondary": "View Other Stewards"
+    }
+  },
+    "aboutPage": {
+    "hero": {
+      "tag": "About Krishi",
+      "headingLine1": "Building a more",
+      "headingLine2": "transparent way to invest in livestock.",
+      "paragraph": "Krishi connects investors with local stewards and partner farmers to participate in livestock investment opportunities, while making the journey visible from investment to sale.",
+      "ctaPrimary": "Explore Investment Plans",
+      "ctaSecondary": "How Krishi Works",
+      "imageAlt": "Bangladeshi farmer holding fresh hay in a modern dairy farm"
+    },
+    "whyKrishi": {
+      "eyebrow": "Why Krishi",
+      "headingLine1": "Livestock investment has",
+      "headingLine2": "always depended on trust.",
+      "paragraph": "Traditional livestock investment can provide limited visibility into money allocation, associated livestock, progress, expenses, sale and the final outcome.",
+      "purpose": "Krishi was designed to make more of that journey visible."
+    },
+    "connected": {
+      "headingLine1": "One platform.",
+      "headingLine2": "Multiple people.",
+      "headingLine3": "One connected journey.",
+      "stages": {
+        "investor": { "title": "Investor", "description": "Provides investment capital and follows the investment journey." },
+        "krishi": { "title": "Krishi", "description": "Provides the platform, records, workflows and visibility connecting the participants." },
+        "steward": { "title": "Steward", "description": "Coordinates local livestock operations and works with farmers." },
+        "farmer": { "title": "Farmer", "description": "Cares for the livestock and records relevant activities and expenses." },
+        "livestock": { "title": "Livestock", "description": "The physical asset associated with the investment." }
+      }
+    },
+    "lifecycle": {
+      "eyebrow": "The Investment Journey",
+      "heading": "From investment to outcome, the journey stays connected.",
+      "stages": {
+        "investment": "Investment",
+        "deposited": "Funds Deposited",
+        "assigned": "Farmer Assigned",
+        "purchased": "Animal Purchased",
+        "growing": "Growing & Care",
+        "updates": "Updates",
+        "sale": "Sale",
+        "settlement": "Settlement"
+      },
+      "paragraph": "Each investment can be connected to individual livestock and followed through key stages of the investment lifecycle."
+    },
+    "transparency": {
+      "eyebrow": "Transparency",
+      "heading": "Designed so the journey stays visible.",
+      "items": {
+        "records": { "title": "Investment Records", "description": "Follow investment and livestock records throughout the journey." },
+        "updates": { "title": "Livestock Updates", "description": "Photos, notes and progress information help keep livestock activity visible." },
+        "expenses": { "title": "Expense Records", "description": "Eligible livestock expenses can be recorded and reviewed." },
+        "sale": { "title": "Sale & Settlement", "description": "Sale information and final calculations are recorded before settlement." }
+      }
+    },
+    "clearRoles": {
+      "eyebrow": "Clear Roles",
+      "heading": "Trust starts with clear roles.",
+      "roles": {
+        "investor": { "title": "Investor", "description": "Provides investment capital and follows the investment journey." },
+        "steward": { "title": "Steward", "description": "Coordinates local livestock operations and works with farmers." },
+        "farmer": { "title": "Farmer", "description": "Cares for livestock and records relevant activities." }
+      },
+      "paragraph": "Relevant participants complete the required KYC and onboarding process before participating in applicable platform activities.",
+      "imageAlt": "Bangladeshi farmer with Sahiwal cattle grazing at sunset"
+    },
+    "allocation": {
+      "eyebrow": "Investment Allocation",
+      "heading": "Know what your investment is allocated toward.",
+      "items": {
+        "animal": { "title": "Animal Allocation", "description": "The expected portion of the investment intended for acquiring the livestock unit." },
+        "care": { "title": "Care & Emergency Allocation", "description": "The expected budget for eligible livestock care and emergency-related expenses." },
+        "record": { "title": "Investment Record", "description": "The investment remains connected to its investment batch and associated livestock throughout the journey." }
+      }
+    },
+    "realLivestock": {
+      "eyebrow": "Real-World Livestock",
+      "heading": "Built for real world livestock, not just numbers.",
+      "paragraph": "Behind each digital investment is a real livestock lifecycle involving purchase, care, updates, expenses, sale and settlement.",
+      "imageAlt": "Healthy cattle grazing on a green field in Bangladesh"
+    },
+    "principles": {
+      "headingLine1": "How we think about",
+      "headingLine2": "responsibility.",
+      "items": {
+        "transparency": { "title": "Transparency", "description": "Make the investment journey easier to understand and follow." },
+        "accountability": { "title": "Accountability", "description": "Keep responsibilities and relevant activities visible." },
+        "localKnowledge": { "title": "Local Knowledge", "description": "Work with people who understand livestock and the local farming environment." },
+        "participation": { "title": "Responsible Participation", "description": "Present opportunities clearly, including uncertainty and risk." }
+      }
+    },
+    "honestReturns": {
+      "headingLine1": "We don't promise what",
+      "headingLine2": "livestock cannot guarantee.",
+      "paragraph": "Livestock investment outcomes can vary based on animal health, market conditions, purchase and sale prices, care costs and other circumstances.",
+      "qualification": "Estimated ROI is an estimate, not a guaranteed return.",
+      "link": "Read the Risk Disclosure"
+    },
+    "isIsNot": {
+      "isLabel": "Krishi is",
+      "isItems": {
+        "platform": "A platform connecting investors with livestock investment opportunities",
+        "tracking": "A system for tracking investment and livestock journeys",
+        "stewards": "A platform connecting investors, stewards and farmers",
+        "updates": "A place to make relevant updates and records more visible"
+      },
+      "isNotLabel": "Krishi is not",
+      "isNotItems": {
+        "guarantee": "A guarantee of investment returns",
+        "judgment": "A replacement for independent financial judgment",
+        "promise": "A promise that every livestock investment will be profitable"
+      }
+    },
+    "meetStewards": {
+      "eyebrow": "The People Behind the Journey",
+      "heading": "Meet the people behind the journey.",
+      "paragraph": "Explore the stewards who coordinate livestock activities across Krishi opportunities.",
+      "cta": "Meet Our Stewards →"
+    },
+    "finalCta": {
+      "eyebrow": "Ready to Explore",
+      "headingLine1": "Understand the journey.",
+      "headingLine2": "Then explore the opportunity.",
+      "paragraph": "Explore how Krishi works, meet the stewards behind current opportunities, or browse available livestock investment plans.",
+      "ctaPrimary": "Explore Investment Plans",
+      "ctaSecondary": "How Krishi Works",
+      "ctaTertiary": "Meet Our Stewards"
+    }
+  },
+    "authShell": {
+    "backToKrishi": "Back to Krishi",
+    "footerCopyright": "© 2026 Krishi Platform Limited.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Use",
+    "show": "Show",
+    "hide": "Hide",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "uploadHint": "JPG, PNG or PDF up to {max}MB",
+    "fileTooLarge": "File is larger than {max}MB"
+  },
+    "auth": {
+    "login": {
+      "eyebrow": "Login · Sign In",
+      "heading": "Log in to Krishi.",
+      "subheading": "Welcome back. Enter your phone number and password to continue.",
+      "phoneLabel": "Phone Number",
+      "phonePlaceholder": "1XXX XXX XXX",
+      "phoneHelper": "Enter your 10-digit number without the leading 0.",
+      "passwordLabel": "Password",
+      "forgotPassword": "Forgot password?",
+      "submit": "Log In",
+      "submitting": "Logging in...",
+      "noAccount": "Don't have an account?",
+      "createAccount": "Create one",
+      "adminLink": "Admin login →"
+    },
+    "register": {
+      "eyebrow": "Investor Registration",
+      "heading": "Create your Krishi account.",
+      "subheading": "Start your journey with Krishi. You can complete your identity verification after creating your account.",
+      "fullNameLabel": "Full Name",
+      "fullNamePlaceholder": "Enter your full name",
+      "phoneLabel": "Phone Number",
+      "phonePlaceholder": "1XXX XXX XXX",
+      "phoneHelper": "Enter your 10-digit number without the leading 0.",
+      "emailLabel": "Email Address",
+      "emailPlaceholder": "Enter your email address",
+      "passwordLabel": "Password",
+      "passwordHelper": "Use at least 8 characters with at least one letter and one number.",
+      "confirmPasswordLabel": "Confirm Password",
+      "agreePrefix": "I agree to the",
+      "termsLink": "Terms of Use",
+      "and": "and",
+      "privacyLink": "Privacy Policy",
+      "submit": "Create Investor Account",
+      "submitting": "Creating account...",
+      "haveAccount": "Already have an account?",
+      "loginLink": "Log In",
+      "passwordMismatch": "Passwords do not match.",
+      "agreementRequired": "Please agree to the Terms of Use and Privacy Policy."
+    },
+    "otp": {
+      "eyebrow": "Login · 02 Verify",
+      "heading": "OTP Verification",
+      "subheading": "Enter the 6-digit verification code sent to your phone.",
+      "codeSentTo": "Code sent to",
+      "codeLabel": "6-digit verification code",
+      "pasteHint": "You can paste all six digits.",
+      "submit": "Verify & Continue",
+      "submitting": "Verifying...",
+      "didNotReceive": "Didn't receive the code?",
+      "resend": "Resend Code",
+      "resendIn": "Resend Code · Resend in {seconds}",
+      "changePhone": "Change Phone Number"
+    },
+    "forgot": {
+      "eyebrow": "Password Recovery · 01 Phone",
+      "heading": "Forgot Password",
+      "subheading": "Enter the phone number associated with your Krishi account and we'll send you a verification code.",
+      "phoneLabel": "Phone Number",
+      "phonePlaceholder": "1XXX XXX XXX",
+      "phoneHelper": "Enter your 10-digit number without the leading 0.",
+      "submit": "Send OTP",
+      "submitting": "Sending...",
+      "infoTitle": "Verify first, then reset",
+      "infoBody": "Enter the SMS verification code on the next step. Once verified, you can create a new password.",
+      "backToLogin": "Back to Login"
+    },
+    "reset": {
+      "otpEyebrow": "Password Recovery · 02 Verify",
+      "otpHeading": "Enter verification code",
+      "otpSubheading": "We sent a 6-digit code to your phone.",
+      "codeSentTo": "Code sent to",
+      "codeLabel": "6-digit verification code",
+      "pasteHint": "You can paste all six digits.",
+      "otpSubmit": "Verify Code",
+      "otpSubmitting": "Verifying...",
+      "didNotReceive": "Didn't receive the code?",
+      "resend": "Resend Code",
+      "resendIn": "Resend Code · Resend in {seconds}",
+      "pwEyebrow": "Password Recovery · 03 Reset",
+      "pwHeading": "Create a new password.",
+      "pwSubheading": "Your verification code has been accepted. Choose a new password for your Krishi account.",
+      "newPasswordLabel": "New Password",
+      "confirmPasswordLabel": "Confirm New Password",
+      "passwordHelper": "Use at least 8 characters with at least one letter and one number.",
+      "pwSubmit": "Update Password",
+      "pwSubmitting": "Updating...",
+      "afterResetNote": "After updating your password, return to Login to sign in with your phone number and new password.",
+      "backToLogin": "Back to Login",
+      "passwordMismatch": "Passwords do not match.",
+      "changeCode": "Change code"
+    }
+  },
+    "interest": {
+    "express": {
+      "planEyebrow": "Cattle · Cox's Bazar Regional Cluster · 6 Months",
+      "planTitle": "Cow Fattening Plan",
+      "estimatedReturnLabel": "Estimated Return",
+      "perUnitCostLabel": "Per Unit Cost",
+      "selectUnitsLabel": "Select Intended Units",
+      "unit": "Unit",
+      "units": "Units",
+      "totalLabel": "Total Intended Investment",
+      "allocationLabel": "Fund Breakdown Allocation",
+      "planNote": "Each unit funds one head of cattle through a complete fattening cycle.",
+      "heading": "Express your interest",
+      "subheading": "Tell us how you'd like to participate. We'll review your interest and guide you through the next steps.",
+      "fullNameLabel": "Full Name",
+      "fullNamePlaceholder": "e.g. Tanvir Rahman",
+      "phoneLabel": "Phone Number",
+      "phonePlaceholder": "1712345678",
+      "emailLabel": "Email Address",
+      "emailPlaceholder": "Optional — used for important updates",
+      "messageLabel": "Message",
+      "messagePlaceholder": "Any questions or preferences?",
+      "agree1": "I understand that submitting interest does not guarantee approval or final unit allocation.",
+      "agree2": "I understand that livestock investment returns are estimates and are not guaranteed.",
+      "agree3": "I agree to receive important updates regarding my interest and investment.",
+      "riskLink": "Risk Disclosure Policy",
+      "termsLink": "Terms of Investment",
+      "submit": "Submit Interest",
+      "submitting": "Submitting...",
+      "backLink": "Back to Opportunity",
+      "privacyNote": "Your information is used safely to process your interest and coordinate onboarding logistics.",
+      "agreementsRequired": "Please confirm all three agreements before submitting."
+    },
+    "received": {
+      "heading": "Interest received",
+      "description": "Thank you for your interest in the Cow Fattening Plan. Our team will review your request and contact you regarding the next steps.",
+      "referenceLabel": "Reference: KR-INT-000125",
+      "badgeLabel": "Under Review",
+      "rowOpportunity": "Opportunity",
+      "rowIntendedUnits": "Intended Units",
+      "rowIntendedInvestment": "Intended Investment",
+      "primaryAction": "Return to Investment Plans",
+      "secondaryAction": "View Opportunity",
+      "tertiaryNote": "Approval is not guaranteed. Our team will review your interest and contact you regarding the next steps.",
+      "backLabel": "Back to Investment Plans"
+    },
+    "submitted": {
+      "heading": "Interest already submitted",
+      "description": "You already have an active interest request under review for this opportunity.",
+      "referenceLabel": "Reference: KR-INT-000125",
+      "badgeLabel": "Under Review",
+      "rowOpportunity": "Opportunity",
+      "rowRequestedUnits": "Requested Units",
+      "rowSubmissionDate": "Submission Date",
+      "primaryAction": "View Opportunity",
+      "secondaryAction": "Explore Other Opportunities",
+      "backLabel": "Back to Investment Plans"
+    },
+    "approved": {
+      "heading": "Your interest has been approved",
+      "description": "Your interest in the Cow Fattening Plan has been approved. Continue your investor onboarding to complete the next steps.",
+      "referenceLabel": "Reference ID: KR-INT-000125",
+      "badgeLabel": "Approved",
+      "rowApprovedPlan": "Approved Plan",
+      "rowAllocatedUnits": "Allocated Units",
+      "rowTotalInvestment": "Total Investment Amount",
+      "primaryAction": "Continue Onboarding",
+      "secondaryAction": "Return to Investment Plans",
+      "tertiaryNote": "Complete your onboarding to activate your investment.",
+      "backLabel": "Back to Investment Plans"
+    },
+    "notApproved": {
+      "heading": "Interest not approved at this time",
+      "description": "After reviewing your interest in this opportunity, we are unable to proceed with your request at this time.",
+      "referenceLabel": "Reference: KR-INT-000125",
+      "badgeLabel": "Not Approved",
+      "rowOpportunity": "Opportunity",
+      "rowIntendedUnits": "Intended Units",
+      "rowIntendedInvestment": "Intended Investment",
+      "primaryAction": "Explore Other Plans",
+      "secondaryAction": "Contact Support",
+      "tertiaryNote": "If you believe this decision was made in error, please reach out to our support team.",
+      "backLabel": "Back to Investment Plans"
+    }
+  },
+    "onboarding": {
+    "shell": {
+      "exitDefault": "Save draft & exit"
+    },
+    "progress": {
+      "label": "Onboarding Stage Progress",
+      "step": "Step",
+      "items": {
+        "phone": "Phone Verification",
+        "kyc": "KYC Verification",
+        "withdrawal": "Withdrawal Preference",
+        "deposit": "Fund Deposit"
+      },
+      "status": {
+        "done": "Completed",
+        "active": "Action Required",
+        "upcoming": "Upcoming phase"
+      }
+    },
+    "context": {
+      "label": "Onboarding Context",
+      "unit": "Unit",
+      "units": "Units",
+      "totalLabel": "Total Investment"
+    },
+    "batch": {
+      "reference": "Reference",
+      "planLabel": "Selected opportunity",
+      "unitsLabel": "Allocated Units",
+      "depositLabel": "Required Deposit",
+      "unit": "Unit",
+      "units": "Units"
+    },
+    "step1": {
+      "exitLabel": "Cancel Onboarding",
+      "asideHeading": "Onboarding Step 1",
+      "asideParagraph": "Welcome to Krishi. To activate your approved units and secure your investment, we need you to complete a brief 4-step onboarding process.",
+      "form": {
+        "heading": "Phone Verification",
+        "subheading": "Verify your phone number to secure your investor account. We will send a one-time verification code via SMS.",
+        "fullNameLabel": "Full Name (As shown in NID)",
+        "phoneLabel": "Phone Number",
+        "emailLabel": "Email Address",
+        "agreeUpdates": "I agree to receive important updates regarding my interest and investment.",
+        "otpWillBeSentTo": "A verification code will be sent to {phone}",
+        "sendOtp": "Send OTP",
+        "codeLabel": "Enter verification code",
+        "resendOtp": "Resend OTP",
+        "resendIn": "Resend in {seconds}",
+        "verifyAndContinue": "Verify & Continue to KYC",
+        "verifying": "Verifying...",
+        "securityNote": "Your data is encrypted securely. By clicking continue you agree to Krishi's Privacy Policy."
+      }
+    },
+    "step2": {
+      "exitLabel": "Save draft & exit",
+      "asideHeading": "Onboarding Step 2",
+      "asideParagraph": "Complete your identity verification to continue.",
+      "form": {
+        "heading": "Identity Verification",
+        "banner": "Please ensure your details match your NID exactly to avoid verification delays.",
+        "section1Title": "1. National ID Verification",
+        "docTypeLabel": "Document Type",
+        "docTypeNid": "National ID Card (NID)",
+        "nidLabel": "National ID (NID) Number",
+        "nidPlaceholder": "e.g. 19901592401000325",
+        "uploadFront": "Upload NID Front Side",
+        "uploadBack": "Upload NID Back Side",
+        "uploadProfile": "Upload Profile Photo",
+        "section2Title": "2. Investor Address Details",
+        "presentAddressLabel": "Present Address",
+        "presentAddressPlaceholder": "House No, Road, Area, Dhaka",
+        "permanentAddressLabel": "Permanent Address (As in NID)",
+        "permanentAddressPlaceholder": "Village/Holding, Post Office, Upazila, District",
+        "submit": "Save & Continue to Withdrawal Preference",
+        "submitting": "Saving...",
+        "securityNote": "Your data is submitted securely and is only shared with authorized parties for verification purposes."
+      }
+    },
+    "step3": {
+      "exitLabel": "Save draft & exit",
+      "asideHeading": "Onboarding Step 3",
+      "asideParagraph": "Choose your preferred account for receiving approved withdrawals.",
+      "form": {
+        "heading": "Withdrawal Preference",
+        "subheading": "Choose your preferred account for receiving approved withdrawals. You can select either mobile wallet or bank transfer.",
+        "mobileTitle": "Mobile Banking",
+        "mobileDescription": "Receive withdrawals to your mobile wallet.",
+        "bankTitle": "Bank Transfer",
+        "bankDescription": "Receive withdrawals to your bank account.",
+        "popular": "Popular",
+        "mfsLabel": "Mobile Financial Service Operator",
+        "mobileLabel": "Mobile Account Number",
+        "mobilePlaceholder": "01712345678",
+        "mobileHelper": "Your mobile wallet must be active.",
+        "holderLabel": "Account Holder Name",
+        "bankNameLabel": "Bank Name",
+        "bankNamePlaceholder": "e.g. Dutch-Bangla Bank Limited",
+        "bankAccountLabel": "Bank Account Number",
+        "bankAccountPlaceholder": "Enter your account number",
+        "bankBranchLabel": "Branch Name",
+        "bankBranchPlaceholder": "e.g. Gulshan Branch",
+        "bankRoutingLabel": "Routing Number",
+        "bankRoutingPlaceholder": "9-digit routing number",
+        "submit": "Save & Continue to Deposit",
+        "submitting": "Saving...",
+        "note": "Withdrawal preferences can be updated from your dashboard after onboarding."
+      }
+    },
+    "step4": {
+      "exitLabel": "Cancel Onboarding",
+      "asideHeading": "Onboarding Step 4",
+      "asideParagraph": "Complete your investment deposit securely through our payment gateway.",
+      "batchStatus": "Pending Payment",
+      "form": {
+        "heading": "Fund Deposit",
+        "subheading": "Complete your investment deposit securely through our payment gateway.",
+        "requiredDepositLabel": "Required Deposit",
+        "redirectNote": "You will be redirected to our secure payment gateway (SSLCommerz) to complete your deposit. Multiple payment methods including credit/debit cards, mobile banking, and internet banking are supported.",
+        "submit": "Proceed to Secure Payment",
+        "redirecting": "Redirecting...",
+        "securityNote": "Your payment is processed securely through SSLCommerz. Do not share your payment credentials with anyone."
+      }
+    }
+  },
+    "join": {
+    "eyebrow": "Join Krishi",
+    "heading": "Choose your account type.",
+    "subheading": "Choose the way you'll participate in Krishi.",
+    "investorTitle": "INVESTOR",
+    "investorDescription": "Create your account to explore and participate in livestock investment opportunities.",
+    "investorNote": "Create your account first. Complete KYC separately.",
+    "investorCta": "Create Investor Account",
+    "stewardTitle": "STEWARD",
+    "stewardDescription": "Apply to manage livestock operations and coordinate with farmers through Krishi.",
+    "stewardNote": "Steward operations require Admin approval and completed KYC.",
+    "stewardCta": "Apply as a Steward",
+    "farmerTitle": "Joining as a Farmer?",
+    "farmerBody": "Farmer accounts are created or invited by a Steward. Follow the activation instructions from your Steward, then log in with your phone number and password.",
+    "haveAccount": "Already have an account?",
+    "loginLink": "Log In"
+  },
+  "stewardRegister": {
+    "stepper": {
+      "step1": "01 Account",
+      "step2": "02 Steward Details",
+      "current": "Current step",
+      "next": "Next step",
+      "completed": "Completed"
+    },
+    "step1": {
+      "eyebrow": "Steward Application",
+      "heading": "Create your Steward account.",
+      "subheading": "Start with your contact details. Next, tell us about your stewardship.",
+      "fullNameLabel": "Full Name / Primary Contact",
+      "fullNamePlaceholder": "Enter your full name",
+      "phoneLabel": "Phone Number",
+      "phonePlaceholder": "1XXX XXX XXX",
+      "phoneHelper": "Enter your 10-digit number without the leading 0.",
+      "emailLabel": "Email Address",
+      "emailPlaceholder": "Enter your email address",
+      "passwordLabel": "Password",
+      "passwordHelper": "Use at least 8 characters with at least one letter and one number.",
+      "confirmPasswordLabel": "Confirm Password",
+      "agreePrefix": "I agree to the",
+      "termsLink": "Terms of Use",
+      "and": "and",
+      "privacyLink": "Privacy Policy",
+      "submit": "Continue",
+      "submitting": "Continuing...",
+      "infoBox": "Registration and KYC are separate. Steward operations require both Admin approval of your application and completed KYC.",
+      "haveAccount": "Already have an account?",
+      "loginLink": "Log In",
+      "passwordMismatch": "Passwords do not match.",
+      "agreementRequired": "Please agree to the Terms of Use and Privacy Policy."
+    },
+    "step2": {
+      "stepperStep1": "01 Account",
+      "stepperStep2": "02 Steward Details",
+      "stepperCurrent": "Current step",
+      "stepperCompleted": "Completed",
+      "heading": "Tell us about your stewardship.",
+      "subheading": "This information helps Krishi understand your operating area and livestock experience before reviewing your application.",
+      "typeLabel": "Steward Type",
+      "typeIndividual": "Individual",
+      "typeOrganization": "Organization",
+      "fullNameLabel": "Full Name",
+      "fullNamePlaceholder": "Name from Step 1",
+      "fullNameHelper": "Carried forward from your account details. You can edit this name.",
+      "divisionLabel": "Operating Division",
+      "divisionPlaceholder": "Select division",
+      "districtLabel": "District",
+      "districtPlaceholder": "Select division first",
+      "upazilaLabel": "Upazila / Thana",
+      "upazilaPlaceholder": "Select district first",
+      "locationHelper": "Choose a division, then its district and upazila / thana.",
+      "categoriesLabel": "Livestock Categories",
+      "categoriesHelper": "Select all that apply.",
+      "categories": {
+        "cattle": "Cattle",
+        "goats": "Goats",
+        "sheep": "Sheep",
+        "dumba": "Dumba",
+        "garoleSheep": "Garole Sheep",
+        "other": "Other"
+      },
+      "experienceLabel": "Brief Experience / Background",
+      "experiencePlaceholder": "Tell us about your livestock experience and background.",
+      "infoNote": "Submitting your application starts Admin review. KYC is a separate step. Steward operations become available only after both approval and KYC are complete.",
+      "submit": "Submit Steward Application",
+      "submitting": "Submitting...",
+      "back": "Back"
+    }
+  },
+    "stewardPortal": {
+    "sidebar": {
+      "stewardConsole": "Steward Console",
+      "comingSoon": "Coming Soon",
+      "locked": "Locked",
+      "items": {
+        "dashboard": "Dashboard",
+        "farmers": "Farmers",
+        "settings": "Settings",
+        "interests": "Interests",
+        "livestock": "Livestock",
+        "expenses": "Expense Requests",
+        "sales": "Sales",
+        "reports": "Reports",
+        "profile": "Profile",
+        "logout": "Logout",
+        "investments": "Investments",
+        "fundRequests": "Fund Requests"
+      }
+    }
+  },
+  "stewardSubmitted": {
+    "eyebrow": "Application Submitted",
+    "heading": "Your Steward application has been submitted.",
+    "subheading": "Your application is now pending Admin review. You can continue managing your profile and KYC while your application is under review.",
+    "cardLabel": "Application submitted",
+    "cardStatus": "Pending Admin Review",
+    "whatNextTitle": "What happens next?",
+    "whatNextBody": "Your Steward application will be reviewed by Admin. Steward operations remain unavailable until both Admin approval and KYC are complete.",
+    "goToProfile": "Go to Profile",
+    "backToKrishi": "Back to Krishi"
+  },
+  "adminLogin": {
+    "eyebrow": "Administrator Access",
+    "heading": "Admin Login",
+    "subheading": "Sign in with your administrator credentials.",
+    "emailLabel": "Email Address",
+    "emailPlaceholder": "admin@krishi.com.bd",
+    "passwordLabel": "Password",
+    "submit": "Log In",
+    "submitting": "Logging in...",
+    "backToUserLogin": "Back to user login",
+    "securityNote": "Administrator access is monitored. Only authorized personnel may sign in."
+  },
+  "farmerActivate": {
+    "eyebrow": "Farmer Account Activation",
+    "heading": "Set up your Krishi account.",
+    "subheading": "Your steward has created a Krishi account for you. Set your password to activate it.",
+    "invitedBy": "Invited by",
+    "stewardName": "Rahman Agro Stewardship",
+    "phoneLabel": "Phone Number",
+    "fullNameLabel": "Full Name",
+    "fullNamePlaceholder": "Enter your full name",
+    "fullNameHelper": "Use the name shown on your National ID.",
+    "passwordLabel": "Password",
+    "passwordHelper": "Use at least 8 characters with at least one letter and one number.",
+    "confirmPasswordLabel": "Confirm Password",
+    "submit": "Activate Account",
+    "submitting": "Activating...",
+    "alreadyActivated": "Already activated?",
+    "loginLink": "Log In",
+    "passwordMismatch": "Passwords do not match."
+  },
+    "portal": {
+      "header": {
+        "badge": "Portal",
+        "backToKrishi": "Back to Krishi"
+      },
+      "sidebar": {
+        "yourAccount": "Your Account",
+        "availableAfterKyc": "Available After KYC",
+        "locked": "Locked",
+        "items": {
+          "dashboard": "Dashboard",
+          "interests": "My Interests", 
+          "profile": "Profile",
+          "kyc": "KYC",
+          "accountSettings": "Account Settings",
+          "logout": "Logout",
+          "investments": "Investments",
+          "livestock": "Livestock",
+          "wallet": "Wallet",
+          "transactions": "Transactions",
+          "reports": "Reports"
+        }
+      },
+      "profile": {
+        "heading": "Profile & Account",
+        "kycEyebrow": "Investor Account",
+        "kycHeading": "Complete your KYC to unlock Krishi.",
+        "kycHeadingVerified": "Your identity is verified.",
+        "kycParagraph": "Your account is ready. Complete your identity verification to access the rest of the platform.",
+        "kycParagraphVerified": "You have full access to Krishi. Your documents were reviewed and approved.",
+        "kycStatusPrefix": "KYC Status:",
+        "kycStatusNotStarted": "Not Started",
+        "kycStatusPending": "Under Review",
+        "kycStatusUnderReview": "Under Review",
+        "kycStatusVerified": "Verified",
+        "kycStatusRejected": "Rejected",
+        "kycStatusRequiresUpdate": "Requires Update",
+        "kycCta": "Complete KYC",
+        "kycCtaResubmit": "Resubmit KYC",
+        "kycCtaView": "View KYC Submission",
+        "kycNote": "Profile, KYC, Account Settings and Logout are available now. Other platform features remain locked until KYC is completed.",
+        "detailsHeading": "Your account details",
+        "detailsSubheading": "Illustrative profile · registration information only",
+        "detailAccountType": "Account type",
+        "detailAccountTypeValue": "Investor",
+        "detailFullName": "Full name",
+        "detailFullNameValue": "Your registered name",
+        "detailPhone": "Phone number",
+        "detailPhoneValue": "+880 1XXX XXX XXX",
+        "detailEmail": "Email address",
+        "detailEmailValue": "Not provided",
+        "withdrawalEyebrow": "Withdrawal Preference",
+        "withdrawalHeadingSet": "Your withdrawal account is set.",
+        "withdrawalHeadingUnset": "Set your withdrawal account.",
+        "withdrawalParagraphSet": "Approved returns will be sent to this account after settlement.",
+        "withdrawalParagraphUnset": "Choose how you'd like to receive approved returns after your investment cycle settles.",
+        "withdrawalCta": "Set Withdrawal Preference",
+        "withdrawalCtaEdit": "Edit Withdrawal Preference",
+        "withdrawalLockedNote": "Withdrawal preference can be set after your KYC is verified."
+      }
+    },
+      "errors": {
+      "invalidCredentials": "Incorrect phone number or password.",
+      "alreadyRegistered": "This phone number is already registered.",
+      "invalidOtp": "Invalid or expired verification code.",
+      "rateLimited": "Too many attempts. Please wait a moment.",
+      "network": "Network error. Please check your connection and try again.",
+      "generic": "Something went wrong. Please try again."
+    },
+    
+  "planCard": {
+    "viewOpportunity": "View Opportunity",
+    "registerInterest": "Register Interest"
+  },
+  "footer": {
+    "description": "A premium livestock investment platform connecting certified local farms to sophisticated digital capital across Bangladesh.",
+    "columns": {
+      "investment": {
+        "title": "Investment",
+        "links": {
+          "cow": "Cow Fattening Plan",
+          "goat": "Goat Rearing Plan",
+          "buffalo": "Buffalo Plans",
+          "corporate": "Corporate Portfolios",
+          "all": "All plans"
+        }
+      },
+      "resources": {
+        "title": "Resources",
+        "links": {
+          "howItWorks": "How It Works",
+          "stewardVetting": "Steward Vetting",
+          "veterinary": "Veterinary Security",
+          "faq": "FAQ Support"
+        }
+      },
+      "company": {
+        "title": "Company",
+        "links": {
+          "about": "About Krishi",
+          "legal": "Legal & Licensing",
+          "press": "Press Editorial",
+          "contact": "Contact & Careers"
+        }
+      }
+    },
+    "bottom": {
+      "copyright": "© 2026 Krishi Platform Limited. All rights reserved.",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Investment",
+      "madeIn": "Made with Care in Bangladesh"
+    }
+  }
+}

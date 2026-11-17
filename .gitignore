@@ -1,0 +1,49 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build outputs
+.next/
+out/
+build/
+dist/
+
+# Environment (NEVER commit)
+# Matches .env, .env.local, .env.production, .env.development.local, etc.
+# in every folder (root, web/, supabase/ ...).
+.env
+.env.*
+**/.env
+**/.env.*
+.env.keys
+# Template only — must contain placeholders, never real values.
+!.env.example
+!**/.env.example
+
+# Supabase
+supabase/.branches
+supabase/.temp
+
+# Flutter / Dart (for mobile/, later)
+.dart_tool/
+.packages
+build/
+*.iml
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local notes for this machine. May contain account phone numbers.
+# Do not commit.
+/local/
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea/
