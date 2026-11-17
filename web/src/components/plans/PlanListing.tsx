@@ -1,11 +1,11 @@
 "use client";
 
-import { useMemo, useState, useEffect, useTransition } from "react";
+import { useId, useMemo, useRef, useState, useEffect, useTransition } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { Container } from "@/components/ui/Container";
 import { PlanCard } from "@/components/plans/PlanCard";
-import { ChevronDownIcon, SearchIcon, XCircleIcon } from "@/components/icons";
+import { CheckIcon, ChevronDownIcon, SearchIcon, XCircleIcon } from "@/components/icons";
 import type { OfferingListItem } from "@/lib/public/plans";
 
 interface PlanListingProps {
@@ -87,7 +87,7 @@ export function PlanListing({ items, total, page, hasMore }: PlanListingProps) {
               e.preventDefault();
               updateParam("search", searchInput.trim() || null);
             }}
-            className="flex h-10 w-full items-center gap-2.5 rounded-[6px] border border-border-light bg-white px-4 sm:w-[280px]"
+            className="flex h-[54px] w-full items-center gap-2.5 rounded-[6px] border border-border-light bg-white px-4 transition-colors focus-within:border-ink-tertiary hover:border-ink-tertiary sm:w-[280px]"
           >
             <SearchIcon className="text-ink-tertiary" />
             <input
@@ -118,14 +118,14 @@ export function PlanListing({ items, total, page, hasMore }: PlanListingProps) {
             onChange={(v) => updateParam("division", v)}
             options={[
               { value: "all", label: t("filters.divisionAll") },
-              { value: "dhaka", label: "Dhaka" },
-              { value: "chattogram", label: "Chattogram" },
-              { value: "khulna", label: "Khulna" },
-              { value: "mymensingh", label: "Mymensingh" },
-              { value: "rajshahi", label: "Rajshahi" },
-              { value: "sylhet", label: "Sylhet" },
-              { value: "barishal", label: "Barishal" },
-              { value: "rangpur", label: "Rangpur" },
+              { value: "dhaka", label: tpl("division.dhaka") },
+              { value: "chattogram", label: tpl("division.chattogram") },
+              { value: "khulna", label: tpl("division.khulna") },
+              { value: "mymensingh", label: tpl("division.mymensingh") },
+              { value: "rajshahi", label: tpl("division.rajshahi") },
+              { value: "sylhet", label: tpl("division.sylhet") },
+              { value: "barishal", label: tpl("division.barishal") },
+              { value: "rangpur", label: tpl("division.rangpur") },
             ]}
           />
 
@@ -179,7 +179,10 @@ export function PlanListing({ items, total, page, hasMore }: PlanListingProps) {
               />
             )}
             {division !== "all" && (
-              <Chip label={division} onRemove={() => updateParam("division", null)} />
+              <Chip
+                label={tpl.has(`division.${division}`) ? tpl(`division.${division}`) : division}
+                onRemove={() => updateParam("division", null)}
+              />
             )}
             {duration !== "any" && (
               <Chip
@@ -344,23 +347,140 @@ function FilterSelect({
   onChange: (v: string) => void;
   options: { value: string; label: string }[];
 }) {
+  const [open, setOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const listId = useId();
+
+  const selectedIndex = Math.max(
+    0,
+    options.findIndex((o) => o.value === value),
+  );
+  const selected = options[selectedIndex];
+
+  // Close on outside click
+  useEffect(() => {
+    if (!open) return;
+    const onDocClick = (e: MouseEvent) => {
+      if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", onDocClick);
+    return () => document.removeEventListener("mousedown", onDocClick);
+  }, [open]);
+
+  const openList = () => {
+    setActiveIndex(selectedIndex);
+    setOpen(true);
+  };
+
+  const choose = (index: number) => {
+    const opt = options[index];
+    setOpen(false);
+    buttonRef.current?.focus();
+    if (opt && opt.value !== value) onChange(opt.value);
+  };
+
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (!open) {
+      if (["ArrowDown", "ArrowUp", "Enter", " "].includes(e.key)) {
+        e.preventDefault();
+        openList();
+      }
+      return;
+    }
+    switch (e.key) {
+      case "ArrowDown":
+        e.preventDefault();
+        setActiveIndex((i) => Math.min(options.length - 1, i + 1));
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        setActiveIndex((i) => Math.max(0, i - 1));
+        break;
+      case "Home":
+        e.preventDefault();
+        setActiveIndex(0);
+        break;
+      case "End":
+        e.preventDefault();
+        setActiveIndex(options.length - 1);
+        break;
+      case "Enter":
+      case " ":
+        e.preventDefault();
+        choose(activeIndex);
+        break;
+      case "Escape":
+      case "Tab":
+        setOpen(false);
+        break;
+    }
+  };
+
   return (
-    <div className="relative flex h-[54px] min-w-[120px] flex-1 flex-col justify-center rounded-[6px] border border-border-light bg-white py-3 pl-4 pr-10 lg:flex-initial">
-      <span className="text-[10px] font-medium uppercase leading-none text-ink-muted">
-        {label}
-      </span>
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="mt-1 w-full appearance-none bg-transparent text-[13px] font-semibold leading-none text-ink focus:outline-none"
+    <div
+      ref={wrapRef}
+      className="relative min-w-[140px] flex-1 lg:flex-initial"
+    >
+      <button
+        ref={buttonRef}
+        type="button"
+        onClick={() => (open ? setOpen(false) : openList())}
+        onKeyDown={onKeyDown}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-controls={listId}
+        className={`flex h-[54px] w-full items-center justify-between gap-3 rounded-[6px] border bg-white pl-4 pr-3 text-left transition-colors hover:border-ink-tertiary focus:outline-none focus-visible:ring-2 focus-visible:ring-sage/40 ${
+          open ? "border-ink-tertiary" : "border-border-light"
+        }`}
       >
-        {options.map((opt) => (
-          <option key={opt.value} value={opt.value}>
-            {opt.label}
-          </option>
-        ))}
-      </select>
-      <ChevronDownIcon className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-tertiary" />
+        <span className="flex min-w-0 flex-col gap-1">
+          <span className="text-[10px] font-medium uppercase leading-none tracking-[0.02em] text-ink-muted">
+            {label}
+          </span>
+          <span className="truncate text-[13px] font-semibold leading-none text-ink">
+            {selected?.label}
+          </span>
+        </span>
+        <ChevronDownIcon
+          className={`h-4 w-4 shrink-0 text-ink-tertiary transition-transform duration-150 ${
+            open ? "rotate-180" : ""
+          }`}
+        />
+      </button>
+
+      {open && (
+        <ul
+          id={listId}
+          role="listbox"
+          aria-label={label}
+          className="absolute left-0 top-full z-30 mt-1.5 max-h-[280px] w-full min-w-[200px] overflow-y-auto rounded-[8px] border border-border-light bg-white py-1.5 shadow-[0_12px_32px_-8px_rgba(0,0,0,0.18)]"
+        >
+          {options.map((opt, i) => {
+            const isSelected = opt.value === value;
+            const isActive = i === activeIndex;
+            return (
+              <li
+                key={opt.value}
+                role="option"
+                aria-selected={isSelected}
+                onMouseEnter={() => setActiveIndex(i)}
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => choose(i)}
+                className={`mx-1.5 flex cursor-pointer items-center justify-between gap-3 rounded-[5px] px-3 py-2.5 text-[13px] ${
+                  isActive ? "bg-stone" : ""
+                } ${isSelected ? "font-semibold text-terracotta" : "text-ink"}`}
+              >
+                <span className="truncate">{opt.label}</span>
+                {isSelected && <CheckIcon className="h-3 w-3 shrink-0" />}
+              </li>
+            );
+          })}
+        </ul>
+      )}
     </div>
   );
 }

@@ -2015,7 +2015,17 @@
       "breakdown": "Animal {animal} + Care {care}",
       "decreaseUnits": "Decrease units",
       "increaseUnits": "Increase units",
-      "noResults": "No opportunities match your filters."
+      "noResults": "No opportunities match your filters.",
+      "division": {
+        "dhaka": "Dhaka",
+        "chattogram": "Chattogram",
+        "khulna": "Khulna",
+        "mymensingh": "Mymensingh",
+        "rajshahi": "Rajshahi",
+        "sylhet": "Sylhet",
+        "barishal": "Barishal",
+        "rangpur": "Rangpur"
+      }
     },
     "profileForm": {
       "failed": "Failed to save",

@@ -2014,7 +2014,17 @@
       "breakdown": "পশু {animal} + পরিচর্যা {care}",
       "decreaseUnits": "ইউনিট কমান",
       "increaseUnits": "ইউনিট বাড়ান",
-      "noResults": "আপনার ফিল্টারের সাথে মেলে এমন কোনো সুযোগ নেই।"
+      "noResults": "আপনার ফিল্টারের সাথে মেলে এমন কোনো সুযোগ নেই।",
+      "division": {
+        "dhaka": "ঢাকা",
+        "chattogram": "চট্টগ্রাম",
+        "khulna": "খুলনা",
+        "mymensingh": "ময়মনসিংহ",
+        "rajshahi": "রাজশাহী",
+        "sylhet": "সিলেট",
+        "barishal": "বরিশাল",
+        "rangpur": "রংপুর"
+      }
     },
     "profileForm": {
       "failed": "সংরক্ষণ করা যায়নি",
