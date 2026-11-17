@@ -78,11 +78,11 @@ export function DepositForm({ interestId, expectedAmount }: { interestId: string
         <label className="text-[13px] font-semibold text-ink-nav">{t("paymentMethod")}</label>
         <div className="mt-2 flex gap-6">
           <label className="flex items-center gap-2 text-[13px] cursor-pointer">
-            <input type="radio" checked={method === "mfs"} onChange={() => setMethod("mfs")} className="accent-terracotta" />
+            <input type="radio" checked={method === "mfs"} onChange={() => setMethod("mfs")} className="accent-brand" />
             {t("mobileWallet")}
           </label>
           <label className="flex items-center gap-2 text-[13px] cursor-pointer">
-            <input type="radio" checked={method === "bank"} onChange={() => setMethod("bank")} className="accent-terracotta" />
+            <input type="radio" checked={method === "bank"} onChange={() => setMethod("bank")} className="accent-brand" />
             {t("bankTransfer")}
           </label>
         </div>

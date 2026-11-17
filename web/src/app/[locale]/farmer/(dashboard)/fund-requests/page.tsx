@@ -11,7 +11,7 @@ const STATUS_STYLE: Record<string, string> = {
   pending: "bg-[#FEF6E5] text-[#C48A2E]",
   approved: "bg-[#E8F0EA] text-green-deep",
   disbursed: "bg-[#E8F0EA] text-green-deep",
-  rejected: "bg-[#FAF0ED] text-terracotta",
+  rejected: "bg-[#FAF0ED] text-danger",
 };
 
 export default async function FarmerFundRequestsPage() {
@@ -111,7 +111,7 @@ export default async function FarmerFundRequestsPage() {
                     <span className="text-[10px] uppercase text-ink-muted">
                       {tf("amount")}
                     </span>
-                    <div className="font-bold text-terracotta">
+                    <div className="font-bold text-brand">
                       {formatBDT(r.amount)}
                     </div>
                   </div>
@@ -126,7 +126,7 @@ export default async function FarmerFundRequestsPage() {
                 <div className="mt-3 border-t border-border-light pt-3">
                   <Link
                     href={`/farmer/investments/${inv?.id}`}
-                    className="text-[12px] font-semibold text-terracotta hover:underline"
+                    className="text-[12px] font-semibold text-brand hover:underline"
                   >
                     {tf("viewInvestment")}
                   </Link>

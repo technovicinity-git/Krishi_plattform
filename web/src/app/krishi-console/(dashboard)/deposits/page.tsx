@@ -45,7 +45,7 @@ export default async function AdminDepositsPage({
         <Link
           href="/krishi-console/deposits"
           className={`-mb-px border-b-2 px-4 py-2.5 text-[13px] font-semibold transition-colors ${
-            view === "pending" ? "border-terracotta text-ink" : "border-transparent text-ink-muted hover:text-ink"
+            view === "pending" ? "border-brand text-ink" : "border-transparent text-ink-muted hover:text-ink"
           }`}
         >
           Pending Review
@@ -53,7 +53,7 @@ export default async function AdminDepositsPage({
         <Link
           href="/krishi-console/deposits?view=history"
           className={`-mb-px border-b-2 px-4 py-2.5 text-[13px] font-semibold transition-colors ${
-            view === "history" ? "border-terracotta text-ink" : "border-transparent text-ink-muted hover:text-ink"
+            view === "history" ? "border-brand text-ink" : "border-transparent text-ink-muted hover:text-ink"
           }`}
         >
           History
@@ -78,10 +78,10 @@ export default async function AdminDepositsPage({
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-[20px] font-bold text-terracotta">{formatBDT(dep.amount)}</div>
+                  <div className="text-[20px] font-bold text-brand">{formatBDT(dep.amount)}</div>
                   <div className="text-[11px] text-ink-muted">{new Date(dep.created_at).toLocaleString()}</div>
                   {view === "history" && (
-                    <span className={`mt-1 inline-flex rounded px-2 py-0.5 text-[10px] font-bold uppercase ${dep.status === "approved" ? "bg-[#E8F0EA] text-green-deep" : "bg-[#F5EBE6] text-terracotta"}`}>
+                    <span className={`mt-1 inline-flex rounded px-2 py-0.5 text-[10px] font-bold uppercase ${dep.status === "approved" ? "bg-[#E8F0EA] text-green-deep" : "bg-brand-tint text-brand"}`}>
                       {dep.status}
                     </span>
                   )}
@@ -117,7 +117,7 @@ export default async function AdminDepositsPage({
                       href={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/deposit-proofs/${dep.proof_path}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-terracotta hover:underline"
+                      className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-brand hover:underline"
                     >
                       View Attachment
                     </a>

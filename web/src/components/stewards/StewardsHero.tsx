@@ -28,7 +28,7 @@ export function StewardsHero() {
             <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:items-center">
               <Link
                 href="/plans"
-                className="inline-flex items-center justify-center rounded-[5px] bg-terracotta px-7 py-4 text-[15px] font-bold leading-none text-white transition-colors hover:bg-[#B3634A]"
+                className="inline-flex items-center justify-center rounded-[5px] bg-brand px-7 py-4 text-[15px] font-bold leading-none text-white transition-colors hover:bg-brand-hover"
               >
                 {t("ctaPrimary")}
               </Link>

@@ -93,7 +93,7 @@ export default async function OnboardingWizardPage({
             <p className="mt-2 text-[13px] text-ink-secondary">
               {t("kycBody")}
             </p>
-            <Link href={`/${locale}/onboarding/kyc`} className="mt-6 inline-flex h-[48px] w-full items-center justify-center rounded bg-terracotta text-[14px] font-bold text-white hover:bg-[#B85A3F]">
+            <Link href={`/${locale}/onboarding/kyc`} className="mt-6 inline-flex h-[48px] w-full items-center justify-center rounded bg-brand text-[14px] font-bold text-white hover:bg-brand-hover">
               {t("kycCta")}
             </Link>
           </div>
@@ -106,7 +106,7 @@ export default async function OnboardingWizardPage({
             <p className="mt-2 text-[13px] text-ink-secondary">
               {t("withdrawalBody")}
             </p>
-            <Link href={`/${locale}/onboarding/withdrawal`} className="mt-6 inline-flex h-[48px] w-full items-center justify-center rounded bg-terracotta text-[14px] font-bold text-white hover:bg-[#B85A3F]">
+            <Link href={`/${locale}/onboarding/withdrawal`} className="mt-6 inline-flex h-[48px] w-full items-center justify-center rounded bg-brand text-[14px] font-bold text-white hover:bg-brand-hover">
               {t("withdrawalCta")}
             </Link>
           </div>
@@ -172,10 +172,10 @@ export default async function OnboardingWizardPage({
 function StepIcon({ n, label, active, done }: { n: number, label: string, active: boolean, done: boolean }) {
   return (
     <div className="flex flex-col items-center gap-2">
-      <div className={`flex h-8 w-8 items-center justify-center rounded-full text-[12px] font-bold ${done ? "bg-green-deep text-white" : active ? "bg-terracotta text-white" : "bg-stone text-ink-muted"}`}>
+      <div className={`flex h-8 w-8 items-center justify-center rounded-full text-[12px] font-bold ${done ? "bg-green-deep text-white" : active ? "bg-brand text-white" : "bg-stone text-ink-muted"}`}>
         {done ? "✓" : n}
       </div>
-      <span className={`text-[10px] font-semibold uppercase ${active ? "text-terracotta" : "text-ink-muted"}`}>{label}</span>
+      <span className={`text-[10px] font-semibold uppercase ${active ? "text-brand" : "text-ink-muted"}`}>{label}</span>
     </div>
   );
 }

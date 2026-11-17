@@ -16,7 +16,7 @@ function Stepper({ step }: { step: 1 | 2 }) {
         <div className="flex items-center gap-2">
           <span
             className={`text-[11px] font-bold uppercase tracking-[0.02em] ${
-              step === 1 ? "text-terracotta" : "text-ink-muted"
+              step === 1 ? "text-brand" : "text-ink-muted"
             }`}
           >
             {t("step1")}
@@ -25,13 +25,13 @@ function Stepper({ step }: { step: 1 | 2 }) {
             {step === 1 ? t("current") : t("completed")}
           </span>
         </div>
-        <div className={`h-0.5 w-full rounded ${step === 1 ? "bg-terracotta" : "bg-stone"}`} />
+        <div className={`h-0.5 w-full rounded ${step === 1 ? "bg-brand" : "bg-stone"}`} />
       </div>
       <div className="flex flex-col gap-1.5">
         <div className="flex items-center gap-2">
           <span
             className={`text-[11px] font-bold uppercase tracking-[0.02em] ${
-              step === 2 ? "text-terracotta" : "text-ink-muted"
+              step === 2 ? "text-brand" : "text-ink-muted"
             }`}
           >
             {t("step2")}
@@ -40,7 +40,7 @@ function Stepper({ step }: { step: 1 | 2 }) {
             {step === 2 ? t("current") : t("next")}
           </span>
         </div>
-        <div className={`h-0.5 w-full rounded ${step === 2 ? "bg-terracotta" : "bg-stone"}`} />
+        <div className={`h-0.5 w-full rounded ${step === 2 ? "bg-brand" : "bg-stone"}`} />
       </div>
     </div>
   );
@@ -166,11 +166,11 @@ export function StewardRegisterForm() {
         />
         <FormCheckbox id="terms" checked={agreed} onChange={setAgreed}>
           {t("agreePrefix")}{" "}
-          <Link href="/terms" className="font-semibold text-terracotta underline">
+          <Link href="/terms" className="font-semibold text-brand underline">
             {t("termsLink")}
           </Link>{" "}
           {t("and")}{" "}
-          <Link href="/privacy" className="font-semibold text-terracotta underline">
+          <Link href="/privacy" className="font-semibold text-brand underline">
             {t("privacyLink")}
           </Link>
           .
@@ -186,7 +186,7 @@ export function StewardRegisterForm() {
       <button
         type="submit"
         disabled={submitting}
-        className="inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-[8px] bg-terracotta text-[15px] font-bold text-white transition-colors hover:bg-[#B3634A] disabled:opacity-60"
+        className="inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-[8px] bg-brand text-[15px] font-bold text-white transition-colors hover:bg-brand-hover disabled:opacity-60"
       >
         {submitting ? t("submitting") : t("submit")}
         {!submitting && <span aria-hidden="true">→</span>}
@@ -199,7 +199,7 @@ export function StewardRegisterForm() {
       <div className="border-t border-border-light pt-6 text-center">
         <p className="text-[13px] text-ink-secondary">
           {t("haveAccount")}{" "}
-          <Link href="/login" className="font-semibold text-terracotta hover:underline">
+          <Link href="/login" className="font-semibold text-brand hover:underline">
             {t("loginLink")}
           </Link>
         </p>

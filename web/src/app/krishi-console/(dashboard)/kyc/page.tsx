@@ -24,8 +24,8 @@ const STATUS_STYLE: Record<string, string> = {
   pending: "bg-[#FEF6E5] text-[#C48A2E]",
   under_review: "bg-[#FEF6E5] text-[#C48A2E]",
   verified: "bg-[#E8F0EA] text-green-deep",
-  rejected: "bg-[#FAF0ED] text-terracotta",
-  requires_update: "bg-[#FAF0ED] text-terracotta",
+  rejected: "bg-[#FAF0ED] text-danger",
+  requires_update: "bg-[#FAF0ED] text-danger",
   not_started: "bg-stone text-ink-muted",
 };
 
@@ -175,7 +175,7 @@ export default async function KycQueuePage({
                     <td className="px-5 py-4 text-right">
                       <Link
                         href={`/krishi-console/kyc/${p.id}`}
-                        className="text-[12px] font-semibold text-terracotta hover:underline"
+                        className="text-[12px] font-semibold text-brand hover:underline"
                       >
                         Review →
                       </Link>

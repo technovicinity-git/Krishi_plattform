@@ -136,7 +136,7 @@ export function UserMenu({
               type="button"
               onClick={handleLogout}
               disabled={loggingOut}
-              className="mt-1 rounded-[6px] border-t border-border-light px-3 pt-3 pb-2.5 text-left text-[13px] font-medium text-terracotta transition-colors hover:bg-[#FAF0ED] disabled:opacity-60"
+              className="mt-1 rounded-[6px] border-t border-border-light px-3 pt-3 pb-2.5 text-left text-[13px] font-medium text-danger transition-colors hover:bg-[#FAF0ED] disabled:opacity-60"
             >
               {loggingOut ? t("signingOut") : t("signOut")}
             </button>

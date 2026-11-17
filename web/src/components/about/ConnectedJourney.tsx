@@ -34,13 +34,13 @@ export function ConnectedJourney() {
                   <div
                     className={`flex w-full flex-row items-center gap-6 rounded-[8px] border px-6 py-5 ${
                       isHighlighted
-                        ? "border-terracotta bg-cream"
+                        ? "border-brand bg-cream"
                         : "border-border-light bg-white"
                     }`}
                   >
                     <span
                       className={`w-[130px] shrink-0 font-serif text-[22px] leading-tight ${
-                        isHighlighted ? "text-terracotta" : "text-ink"
+                        isHighlighted ? "text-brand" : "text-ink"
                       }`}
                     >
                       {t(`stages.${key}.title`)}
@@ -50,7 +50,7 @@ export function ConnectedJourney() {
                     </span>
                   </div>
                   {!isLast && (
-                    <span className="text-terracotta" aria-hidden="true">
+                    <span className="text-brand" aria-hidden="true">
                       <ArrowDownIcon />
                     </span>
                   )}

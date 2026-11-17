@@ -25,7 +25,7 @@ export function DocumentsPanel() {
             </span>
             <button
               type="button"
-              className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-terracotta"
+              className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-brand"
             >
               {t("view")}
               <ExternalLinkIcon />

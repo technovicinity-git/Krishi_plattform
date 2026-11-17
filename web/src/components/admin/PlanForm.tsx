@@ -287,7 +287,7 @@ export function PlanForm({
         <div className="flex flex-col gap-2">
           <label className="text-[13px] font-semibold text-ink-nav">
             Cover Image{" "}
-            {mode === "create" && <span className="text-terracotta">*</span>}
+            {mode === "create" && <span className="text-brand">*</span>}
           </label>
           <div className="flex items-start gap-4">
             {imagePreview ? (
@@ -505,7 +505,7 @@ function Field({
     <div className="flex flex-col gap-2">
       <label className="text-[13px] font-semibold text-ink-nav">
         {label}
-        {required && <span className="ml-1 text-terracotta">*</span>}
+        {required && <span className="ml-1 text-danger">*</span>}
       </label>
       <input
         type={type}
@@ -542,7 +542,7 @@ function SelectField({
     <div className="flex flex-col gap-2">
       <label className="text-[13px] font-semibold text-ink-nav">
         {label}
-        {required && <span className="ml-1 text-terracotta">*</span>}
+        {required && <span className="ml-1 text-danger">*</span>}
       </label>
       <select
         value={value}

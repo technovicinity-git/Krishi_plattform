@@ -17,7 +17,7 @@ const TYPE_COLORS: Record<string, string> = {
   fund_disbursed: "bg-[#E8F0EA] text-green-deep",
   purchase: "bg-[#FEF6E5] text-[#C48A2E]",
   expense: "bg-stone text-ink-muted",
-  health_check: "bg-[#FAF0ED] text-terracotta",
+  health_check: "bg-brand-tint text-brand",
   photo_update: "bg-stone text-ink-muted",
   note: "bg-stone text-ink-muted",
   sale: "bg-[#E8F0EA] text-green-deep",
@@ -48,7 +48,7 @@ export function UpdatesList({
               className="flex gap-3 border-b border-border-light pb-4 last:border-b-0 last:pb-0"
             >
               <div className="flex flex-col items-center pt-1">
-                <div className="h-2 w-2 rounded-full bg-terracotta" />
+                <div className="h-2 w-2 rounded-full bg-brand" />
               </div>
               <div className="flex-1">
                 <div className="flex flex-wrap items-center gap-2">

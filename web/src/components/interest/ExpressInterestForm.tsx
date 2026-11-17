@@ -189,7 +189,7 @@ export function ExpressInterestForm({ offering, planName, currentUser }: Props) 
               <div className="text-[10px] uppercase text-ink-muted">
                 {te("estimatedReturnLabel")}
               </div>
-              <div className="mt-1 text-[18px] font-bold text-terracotta">
+              <div className="mt-1 text-[18px] font-bold text-brand">
                 {offering.roiMin}–{offering.roiMax}%
               </div>
             </div>
@@ -332,14 +332,14 @@ export function ExpressInterestForm({ offering, planName, currentUser }: Props) 
           <div className="flex items-center gap-3 text-[12px] text-ink-muted">
             <Link
               href="/risk-disclosure"
-              className="text-terracotta hover:underline"
+              className="text-brand hover:underline"
             >
               {t("riskDisclosure")}
             </Link>
             <span>·</span>
             <Link
               href="/terms-of-investment"
-              className="text-terracotta hover:underline"
+              className="text-brand hover:underline"
             >
               {te("termsLink")}
             </Link>
@@ -354,7 +354,7 @@ export function ExpressInterestForm({ offering, planName, currentUser }: Props) 
           <button
             type="submit"
             disabled={submitting}
-            className="inline-flex h-[52px] items-center justify-center rounded-[4px] bg-terracotta text-[14px] font-bold text-white transition-colors hover:bg-[#B85A3F] disabled:opacity-60"
+            className="inline-flex h-[52px] items-center justify-center rounded-[4px] bg-brand text-[14px] font-bold text-white transition-colors hover:bg-brand-hover disabled:opacity-60"
           >
             {submitting ? t("submitting") : t("submit")}
           </button>
@@ -394,7 +394,7 @@ function Field({
     <div className="flex flex-col gap-2">
       <label className="text-[13px] font-semibold text-ink-nav">
         {label}
-        {required && <span className="ml-1 text-terracotta">*</span>}
+        {required && <span className="ml-1 text-danger">*</span>}
       </label>
       <div className="relative flex items-center">
         {prefix && (
@@ -431,7 +431,7 @@ function Checkbox({
         type="checkbox"
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
-        className="mt-0.5 h-4 w-4 shrink-0 rounded border-border-light accent-terracotta"
+        className="mt-0.5 h-4 w-4 shrink-0 rounded border-border-light accent-brand"
       />
       <span className="text-[13px] leading-[1.55] text-ink-secondary">
         {label}

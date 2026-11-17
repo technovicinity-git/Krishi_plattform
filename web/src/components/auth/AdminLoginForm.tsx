@@ -23,7 +23,7 @@ export function AdminLoginForm() {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-8">
       <div className="flex flex-col gap-3">
-        <span className="text-[11px] font-semibold uppercase tracking-[0.02em] text-terracotta">
+        <span className="text-[11px] font-semibold uppercase tracking-[0.02em] text-brand">
           {t("eyebrow")}
         </span>
         <h1 className="font-serif text-[36px] leading-[1.1] text-ink lg:text-[42px]">
@@ -66,7 +66,7 @@ export function AdminLoginForm() {
       <div className="border-t border-border-light pt-6 text-center">
         <Link
           href="/login"
-          className="text-[13px] font-semibold text-terracotta hover:underline"
+          className="text-[13px] font-semibold text-brand hover:underline"
         >
           {t("backToUserLogin")}
         </Link>

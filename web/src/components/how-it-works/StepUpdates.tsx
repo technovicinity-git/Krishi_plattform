@@ -50,12 +50,12 @@ export function StepUpdates() {
                           {t(`events.${key}.date`)}
                         </span>
                         <span className={`h-2 w-2 rounded-full ${
-                          isHighlight ? "bg-terracotta" : "bg-border-divider"
+                          isHighlight ? "bg-brand" : "bg-border-divider"
                         }`} />
                       </div>
                       <div className="flex flex-1 flex-col gap-1 border-l border-border-light pl-4">
                         <span className={`text-[15px] font-bold ${
-                          isHighlight ? "text-terracotta" : "text-ink"
+                          isHighlight ? "text-brand" : "text-ink"
                         }`}>
                           {t(`events.${key}.title`)}
                         </span>

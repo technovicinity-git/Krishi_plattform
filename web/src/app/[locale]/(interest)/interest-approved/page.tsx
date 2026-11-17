@@ -19,9 +19,9 @@ export default function InterestApprovedPage() {
         rows={[
           { label: t("rowApprovedPlan"), value: "Cow Fattening Plan" },
           { label: t("rowAllocatedUnits"), value: "2 Units" },
-          { label: t("rowTotalInvestment"), value: "৳2,00,000", valueTone: "terracotta" },
+          { label: t("rowTotalInvestment"), value: "৳2,00,000", valueTone: "brand" },
         ]}
-        primaryAction={{ label: t("primaryAction"), href: "/onboarding/phone", variant: "terracotta" }}
+        primaryAction={{ label: t("primaryAction"), href: "/onboarding/phone", variant: "brand" }}
         secondaryAction={{ label: t("secondaryAction"), href: "/plans" }}
         tertiaryNote={t("tertiaryNote")}
       />

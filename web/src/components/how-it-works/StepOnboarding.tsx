@@ -29,7 +29,7 @@ export function StepOnboarding() {
                   key={key}
                   className="flex items-center gap-5 rounded-[8px] border border-border-light bg-cream p-6"
                 >
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-stone text-[14px] font-bold text-terracotta">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-stone text-[14px] font-bold text-brand">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <div className="flex flex-col gap-1">

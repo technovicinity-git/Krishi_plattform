@@ -11,7 +11,7 @@ const STATUS_STYLE: Record<string, string> = {
   pending: "bg-[#FEF6E5] text-[#C48A2E]",
   approved: "bg-[#E8F0EA] text-green-deep",
   disbursed: "bg-[#E8F0EA] text-green-deep",
-  rejected: "bg-[#FAF0ED] text-terracotta",
+  rejected: "bg-[#FAF0ED] text-danger",
 };
 
 export function FundRequestsInlineList({
@@ -112,7 +112,7 @@ export function FundRequestsInlineList({
                 <span className="text-[10px] uppercase text-ink-muted">
                   {t("amount")}
                 </span>
-                <div className="font-bold text-terracotta">
+                <div className="font-bold text-brand">
                   {formatBDT(r.amount)}
                 </div>
               </div>
@@ -127,7 +127,7 @@ export function FundRequestsInlineList({
             <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-border-light pt-3">
               <Link
                 href={`/steward/investments/${inv?.id}`}
-                className="text-[12px] font-semibold text-terracotta hover:underline"
+                className="text-[12px] font-semibold text-brand hover:underline"
               >
                 {t("viewInvestment")}
               </Link>

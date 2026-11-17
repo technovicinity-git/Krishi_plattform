@@ -69,7 +69,7 @@ export function FarmerSidebar() {
               type="button"
               onClick={handleLogout}
               disabled={loggingOut}
-              className="mt-2 rounded-[6px] px-3 py-2.5 text-left text-[14px] font-medium text-terracotta transition-colors hover:bg-[#FAF0ED] disabled:opacity-60"
+              className="mt-2 rounded-[6px] px-3 py-2.5 text-left text-[14px] font-medium text-danger transition-colors hover:bg-[#FAF0ED] disabled:opacity-60"
             >
               {loggingOut ? "Signing out..." : t("logout")}
             </button>

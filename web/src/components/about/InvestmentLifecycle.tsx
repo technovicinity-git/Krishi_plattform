@@ -24,11 +24,11 @@ export function InvestmentLifecycle() {
             {STAGES.map((key, i) => (
               <div key={key} className="flex flex-col gap-4 border-t border-border-divider pt-6">
                 <div className="flex items-center justify-between">
-                  <span className="text-[13px] font-semibold text-terracotta">
+                  <span className="text-[13px] font-semibold text-brand">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   {i < STAGES.length - 1 && (
-                    <span className="hidden text-[18px] leading-none text-terracotta lg:inline" aria-hidden="true">
+                    <span className="hidden text-[18px] leading-none text-brand lg:inline" aria-hidden="true">
                       →
                     </span>
                   )}

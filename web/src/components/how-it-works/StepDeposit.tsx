@@ -58,7 +58,7 @@ export function StepDeposit() {
                       {t(`unitCard.rows.${key}.description`)}
                     </span>
                   </div>
-                  <span className="text-[18px] font-bold text-terracotta">
+                  <span className="text-[18px] font-bold text-brand">
                     {t(`unitCard.rows.${key}.amount`)}
                   </span>
                 </div>

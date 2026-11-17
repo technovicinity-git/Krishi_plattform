@@ -115,7 +115,7 @@ export default async function AdminStewardsPage({
                   status === "approved"
                     ? "bg-[#E8F0EA] text-green-deep"
                     : status === "rejected"
-                      ? "bg-[#FAF0ED] text-terracotta"
+                      ? "bg-[#FAF0ED] text-danger"
                       : "bg-[#FEF6E5] text-[#C48A2E]";
                 return (
                   <tr
@@ -141,7 +141,7 @@ export default async function AdminStewardsPage({
                     <td className="px-5 py-4 text-right">
                       <Link
                         href={`/krishi-console/stewards/${s.id}`}
-                        className="text-[12px] font-semibold text-terracotta hover:underline"
+                        className="text-[12px] font-semibold text-brand hover:underline"
                       >
                         Review →
                       </Link>

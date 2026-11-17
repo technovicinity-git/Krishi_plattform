@@ -12,7 +12,7 @@ export function HonestReturns() {
     <Section size="lg" className="bg-stone">
       <Container>
         <div className="flex flex-col gap-10">
-          <div className="h-0.5 w-12 bg-terracotta" />
+          <div className="h-0.5 w-12 bg-brand" />
           <div className="grid grid-cols-1 gap-16 lg:grid-cols-2 lg:gap-20">
             <Heading as="h2" size="section">
               {t("headingLine1")}
@@ -28,7 +28,7 @@ export function HonestReturns() {
               </p>
               <Link
                 href="/risk-disclosure"
-                className="inline-flex items-center gap-1 text-[14px] font-semibold text-terracotta hover:underline"
+                className="inline-flex items-center gap-1 text-[14px] font-semibold text-brand hover:underline"
               >
                 {t("link")}
                 <ChevronRightIcon className="h-3.5 w-3.5" />

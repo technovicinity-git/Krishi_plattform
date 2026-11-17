@@ -88,16 +88,16 @@ export function FarmerActivationPanel({
       </div>
 
       {devOtp && (
-        <div className="rounded-[8px] border border-dashed border-terracotta bg-white px-4 py-3">
+        <div className="rounded-[8px] border border-dashed border-brand bg-white px-4 py-3">
           <div className="flex items-center gap-2">
-            <span className="rounded-[3px] bg-terracotta px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.02em] text-white">
+            <span className="rounded-[3px] bg-brand px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.02em] text-white">
               Dev Mode
             </span>
             <span className="text-[11px] text-ink-secondary">
               SMS not sent — share this code with the farmer
             </span>
           </div>
-          <div className="mt-1.5 text-[24px] font-bold tracking-[0.15em] text-terracotta">
+          <div className="mt-1.5 text-[24px] font-bold tracking-[0.15em] text-brand">
             {devOtp}
           </div>
         </div>

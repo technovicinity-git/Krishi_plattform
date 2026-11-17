@@ -24,7 +24,7 @@ export function Principles() {
                 key={key}
                 className="flex items-start gap-6 border-t border-border-divider py-6"
               >
-                <span className="w-10 shrink-0 text-[11px] font-semibold uppercase tracking-[0.02em] text-terracotta">
+                <span className="w-10 shrink-0 text-[11px] font-semibold uppercase tracking-[0.02em] text-brand">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <div className="flex flex-col gap-2">

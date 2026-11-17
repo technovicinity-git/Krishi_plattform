@@ -76,7 +76,7 @@ export default async function FarmerDashboard() {
                 {isAwaitingPurchase && (
                   <div className="mt-2 rounded-lg border border-[#F0C9C0] bg-[#FAF0ED] p-4 text-center">
                     <p className="text-[12px] text-[#A13D2B] font-semibold mb-2">{t("actionRequired")}</p>
-                    <Link href={`/farmer/investments/${inv.id}`} className="inline-flex h-[40px] w-full items-center justify-center rounded bg-terracotta text-[13px] font-bold text-white hover:bg-[#B85A3F]">
+                    <Link href={`/farmer/investments/${inv.id}`} className="inline-flex h-[40px] w-full items-center justify-center rounded bg-brand text-[13px] font-bold text-white hover:bg-brand-hover">
                       {t("actionCta")}
                     </Link>
                   </div>

@@ -31,7 +31,7 @@ export function StageTimeline({ currentStage }: { currentStage: string }) {
                     done
                       ? "bg-green-deep text-white"
                       : active
-                        ? "bg-terracotta text-white"
+                        ? "bg-brand text-white"
                         : "bg-stone text-ink-muted"
                   }`}
                 >
@@ -39,7 +39,7 @@ export function StageTimeline({ currentStage }: { currentStage: string }) {
                 </div>
                 <span
                   className={`mt-1.5 whitespace-nowrap text-[9px] font-semibold uppercase ${
-                    active ? "text-terracotta" : "text-ink-muted"
+                    active ? "text-brand" : "text-ink-muted"
                   }`}
                 >
                   {t(s)}

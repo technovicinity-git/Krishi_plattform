@@ -18,8 +18,8 @@ const STATUS_STYLE: Record<string, string> = {
   pending: "bg-[#FEF6E5] text-[#C48A2E]",
   under_review: "bg-[#FEF6E5] text-[#C48A2E]",
   verified: "bg-[#E8F0EA] text-green-deep",
-  rejected: "bg-[#FAF0ED] text-terracotta",
-  requires_update: "bg-[#FAF0ED] text-terracotta",
+  rejected: "bg-[#FAF0ED] text-danger",
+  requires_update: "bg-[#FAF0ED] text-danger",
   not_started: "bg-stone text-ink-muted",
 };
 
@@ -176,7 +176,7 @@ export default async function KycReviewPage({
                       href={doc.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group block overflow-hidden rounded-[8px] border border-border-light bg-stone transition-colors hover:border-terracotta"
+                      className="group block overflow-hidden rounded-[8px] border border-border-light bg-stone transition-colors hover:border-brand"
                     >
                       {image ? (
                         // eslint-disable-next-line @next/next/no-img-element
@@ -190,7 +190,7 @@ export default async function KycReviewPage({
                           <span className="text-[13px] font-semibold text-ink">
                             PDF Document
                           </span>
-                          <span className="text-[11px] text-terracotta group-hover:underline">
+                          <span className="text-[11px] text-brand group-hover:underline">
                             Click to open →
                           </span>
                         </div>

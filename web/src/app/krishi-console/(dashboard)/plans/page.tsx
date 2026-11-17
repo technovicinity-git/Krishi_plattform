@@ -8,7 +8,7 @@ const STATUS_STYLE: Record<string, string> = {
   draft: "bg-stone text-ink-muted",
   open: "bg-[#E8F0EA] text-green-deep",
   coming_soon: "bg-[#FEF6E5] text-[#C48A2E]",
-  fully_funded: "bg-[#F5EBE6] text-terracotta",
+  fully_funded: "bg-brand-tint text-brand",
   closed: "bg-stone text-ink-muted",
 };
 
@@ -188,7 +188,7 @@ export default async function AdminPlansPage() {
                           ) : null}
                         </span>
                       ) : (
-                        <span className="text-[10px] font-semibold uppercase text-terracotta">
+                        <span className="text-[10px] font-semibold uppercase text-brand">
                           None — hidden
                         </span>
                       )}
@@ -203,7 +203,7 @@ export default async function AdminPlansPage() {
                     <td className="px-5 py-3 text-right">
                       <Link
                         href={`/krishi-console/plans/${plan.id}`}
-                        className="text-[12px] font-semibold text-terracotta hover:underline"
+                        className="text-[12px] font-semibold text-brand hover:underline"
                       >
                         Edit →
                       </Link>

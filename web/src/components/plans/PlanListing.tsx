@@ -203,7 +203,7 @@ export function PlanListing({ items, total, page, hasMore }: PlanListingProps) {
               <button
                 type="button"
                 onClick={clearAll}
-                className="text-[13px] font-semibold text-terracotta hover:underline"
+                className="text-[13px] font-semibold text-brand hover:underline"
               >
                 {t("filters.clearAll")}
               </button>
@@ -472,7 +472,7 @@ function FilterSelect({
                 onClick={() => choose(i)}
                 className={`mx-1.5 flex cursor-pointer items-center justify-between gap-3 rounded-[5px] px-3 py-2.5 text-[13px] ${
                   isActive ? "bg-stone" : ""
-                } ${isSelected ? "font-semibold text-terracotta" : "text-ink"}`}
+                } ${isSelected ? "font-semibold text-brand" : "text-ink"}`}
               >
                 <span className="truncate">{opt.label}</span>
                 {isSelected && <CheckIcon className="h-3 w-3 shrink-0" />}

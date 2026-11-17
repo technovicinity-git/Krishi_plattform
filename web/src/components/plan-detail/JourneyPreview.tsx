@@ -22,7 +22,7 @@ export function JourneyPreview() {
             key={key}
             className="flex items-start gap-5 rounded-[8px] border border-border-light bg-white p-5"
           >
-            <span className="w-[70px] shrink-0 text-[14px] font-bold text-terracotta">
+            <span className="w-[70px] shrink-0 text-[14px] font-bold text-brand">
               {t(`events.${key}.date`)}
             </span>
             <div className="flex flex-1 flex-col gap-1">

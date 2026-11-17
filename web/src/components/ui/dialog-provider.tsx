@@ -168,7 +168,7 @@ function Dialog({
 
   const accent = {
     default: { ring: "bg-stone text-ink", btn: "bg-ink hover:bg-[#2A2A2A]" },
-    danger: { ring: "bg-[#FAF0ED] text-terracotta", btn: "bg-terracotta hover:bg-[#B3634A]" },
+    danger: { ring: "bg-[#FAF0ED] text-danger", btn: "bg-danger hover:bg-[#8A2F20]" },
     success: { ring: "bg-[#E8F0EA] text-green-deep", btn: "bg-green-deep hover:bg-[#24492F]" },
     info: { ring: "bg-stone text-ink", btn: "bg-ink hover:bg-[#2A2A2A]" },
   }[variant];

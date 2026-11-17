@@ -10,7 +10,7 @@ const STATUS_STYLE: Record<string, string> = {
   pending: "bg-[#FEF6E5] text-[#C48A2E]",
   approved: "bg-[#E8F0EA] text-green-deep",
   disbursed: "bg-[#E8F0EA] text-green-deep",
-  rejected: "bg-[#FAF0ED] text-terracotta",
+  rejected: "bg-[#FAF0ED] text-danger",
 };
 
 export function FundRequestsList({ requests, isSteward = false }: { requests: any[], isSteward?: boolean }) {

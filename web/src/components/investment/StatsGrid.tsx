@@ -17,7 +17,7 @@ export function StatsGrid({ items }: StatsGridProps) {
           </div>
           <div
             className={`mt-1 text-[18px] font-bold ${
-              item.accent ? "text-terracotta" : "text-ink"
+              item.accent ? "text-brand" : "text-ink"
             }`}
           >
             {item.value}

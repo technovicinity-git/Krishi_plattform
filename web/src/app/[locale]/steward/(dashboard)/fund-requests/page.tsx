@@ -80,7 +80,7 @@ export default async function StewardFundRequestsPage({
           href="/steward/fund-requests"
           className={`-mb-px border-b-2 px-4 py-2.5 text-[13px] font-semibold transition-colors ${
             view === "pending"
-              ? "border-terracotta text-ink"
+              ? "border-brand text-ink"
               : "border-transparent text-ink-muted hover:text-ink"
           }`}
         >
@@ -90,7 +90,7 @@ export default async function StewardFundRequestsPage({
           href="/steward/fund-requests?view=history"
           className={`-mb-px border-b-2 px-4 py-2.5 text-[13px] font-semibold transition-colors ${
             view === "history"
-              ? "border-terracotta text-ink"
+              ? "border-brand text-ink"
               : "border-transparent text-ink-muted hover:text-ink"
           }`}
         >

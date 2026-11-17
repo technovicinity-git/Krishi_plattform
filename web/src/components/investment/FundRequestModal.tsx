@@ -87,7 +87,7 @@ export function FundRequestModal({ investmentId, onClose }: { investmentId: stri
 
           <div className="flex gap-2">
             <button type="button" onClick={onClose} className="flex-1 rounded border border-border-light py-2 text-[13px] font-semibold text-ink-secondary">{tc("cancel")}</button>
-            <button type="submit" disabled={loading || !amount} className="flex-1 rounded bg-terracotta py-2 text-[13px] font-bold text-white disabled:opacity-50">
+            <button type="submit" disabled={loading || !amount} className="flex-1 rounded bg-brand py-2 text-[13px] font-bold text-white disabled:opacity-50">
               {loading ? t("sending") : t("submit")}
             </button>
           </div>

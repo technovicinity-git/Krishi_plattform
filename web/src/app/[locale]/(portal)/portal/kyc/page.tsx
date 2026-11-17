@@ -21,8 +21,8 @@ const STATUS_STYLE: Record<string, string> = {
   pending: "bg-[#FEF6E5] text-[#C48A2E]",
   under_review: "bg-[#FEF6E5] text-[#C48A2E]",
   verified: "bg-[#E8F0EA] text-green-deep",
-  rejected: "bg-[#FAF0ED] text-terracotta",
-  requires_update: "bg-[#FAF0ED] text-terracotta",
+  rejected: "bg-[#FAF0ED] text-danger",
+  requires_update: "bg-[#FAF0ED] text-danger",
 };
 
 export default async function PortalKycPage() {
@@ -98,7 +98,7 @@ export default async function PortalKycPage() {
           </p>
           <Link
             href="/onboarding/kyc"
-            className="inline-flex h-[48px] w-fit items-center justify-center rounded-[8px] bg-terracotta px-6 text-[14px] font-bold text-white transition-colors hover:bg-[#B3634A]"
+            className="inline-flex h-[48px] w-fit items-center justify-center rounded-[8px] bg-brand px-6 text-[14px] font-bold text-white transition-colors hover:bg-brand-hover"
           >
             {t("startCta")}
           </Link>
@@ -107,7 +107,7 @@ export default async function PortalKycPage() {
 
       {showResubmit && (
         <div className="flex flex-col gap-4 rounded-2xl border border-[#F0C9C0] bg-[#FAF0ED] p-8">
-          <h2 className="font-serif text-[24px] leading-tight text-terracotta">
+          <h2 className="font-serif text-[24px] leading-tight text-danger">
             {t("rejectedTitle")}
           </h2>
           {kyc?.rejection_reason && (
@@ -117,7 +117,7 @@ export default async function PortalKycPage() {
           )}
           <Link
             href="/onboarding/kyc"
-            className="inline-flex h-[48px] w-fit items-center justify-center rounded-[8px] bg-terracotta px-6 text-[14px] font-bold text-white transition-colors hover:bg-[#B3634A]"
+            className="inline-flex h-[48px] w-fit items-center justify-center rounded-[8px] bg-brand px-6 text-[14px] font-bold text-white transition-colors hover:bg-brand-hover"
           >
             {t("resubmitCta")}
           </Link>
@@ -172,7 +172,7 @@ function DocPreview({ label, url, emptyLabel }: { label: string; url: string | n
           href={url}
           target="_blank"
           rel="noopener noreferrer"
-          className="block overflow-hidden rounded-[8px] border border-border-light bg-stone hover:border-terracotta"
+          className="block overflow-hidden rounded-[8px] border border-border-light bg-stone hover:border-brand"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={url} alt={label} className="h-[180px] w-full object-cover" />

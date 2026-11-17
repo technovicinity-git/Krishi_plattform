@@ -39,7 +39,7 @@ export function StewardProfileHero({ steward }: { steward: Steward }) {
               </span>
               {steward.ratingAvg && (
                 <span className="flex items-center gap-2 text-[13px] text-ink-secondary">
-                  <StarIcon className="h-3.5 w-3.5 text-terracotta" />
+                  <StarIcon className="h-3.5 w-3.5 text-brand" />
                   <span className="font-semibold text-ink">
                     {steward.ratingAvg.toFixed(1)}
                   </span>
@@ -58,7 +58,7 @@ export function StewardProfileHero({ steward }: { steward: Steward }) {
             <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:items-center">
               <Link
                 href="/plans"
-                className="inline-flex items-center justify-center gap-2 rounded-[5px] bg-terracotta px-7 py-4 text-[15px] font-bold leading-none text-white transition-colors hover:bg-[#B3634A]"
+                className="inline-flex items-center justify-center gap-2 rounded-[5px] bg-brand px-7 py-4 text-[15px] font-bold leading-none text-white transition-colors hover:bg-brand-hover"
               >
                 {t("ctaPrimary")}
                 <ArrowRightIcon />

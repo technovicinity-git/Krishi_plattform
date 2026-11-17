@@ -138,11 +138,11 @@ export function RegisterForm() {
         />
         <FormCheckbox id="terms" checked={agreed} onChange={setAgreed}>
           {t("agreePrefix")}{" "}
-          <Link href="/terms" className="font-semibold text-terracotta underline">
+          <Link href="/terms" className="font-semibold text-brand underline">
             {t("termsLink")}
           </Link>{" "}
           {t("and")}{" "}
-          <Link href="/privacy" className="font-semibold text-terracotta underline">
+          <Link href="/privacy" className="font-semibold text-brand underline">
             {t("privacyLink")}
           </Link>
           .
@@ -158,7 +158,7 @@ export function RegisterForm() {
       <button
         type="submit"
         disabled={submitting}
-        className="inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-[8px] bg-terracotta text-[15px] font-bold text-white transition-colors hover:bg-[#B3634A] disabled:opacity-60"
+        className="inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-[8px] bg-brand text-[15px] font-bold text-white transition-colors hover:bg-brand-hover disabled:opacity-60"
       >
         {submitting ? t("submitting") : t("submit")}
         {!submitting && <span aria-hidden="true">→</span>}
@@ -167,7 +167,7 @@ export function RegisterForm() {
       <div className="border-t border-border-light pt-6 text-center">
         <p className="text-[13px] text-ink-secondary">
           {t("haveAccount")}{" "}
-          <Link href="/login" className="font-semibold text-terracotta hover:underline">
+          <Link href="/login" className="font-semibold text-brand hover:underline">
             {t("loginLink")}
           </Link>
         </p>

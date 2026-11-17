@@ -11,7 +11,7 @@ export function EstimatedReturn({ roiMin, roiMax }: Props) {
   return (
     <div className="rounded-2xl border border-border-light bg-white p-8">
       <h2 className="font-serif text-[24px] text-ink">{t("heading")}</h2>
-      <div className="mt-2 text-[40px] font-bold text-terracotta">
+      <div className="mt-2 text-[40px] font-bold text-brand">
         {roiMin}–{roiMax}%
       </div>
       <p className="mt-2 text-[13px] text-ink-muted">

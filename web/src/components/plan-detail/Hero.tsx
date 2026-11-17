@@ -80,7 +80,7 @@ export function Hero({ offering, title }: HeroProps) {
               <Metric
                 label={t("metrics.returnLabel")}
                 value={`${offering.roiMin}–${offering.roiMax}%`}
-                valueColor="text-terracotta"
+                valueColor="text-brand"
               />
               <Metric
                 label={t("metrics.unitsLabel")}

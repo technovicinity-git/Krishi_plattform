@@ -50,7 +50,7 @@ export default async function AdminDashboardPage() {
           const card = (
             <div
               className={`flex flex-col gap-1 rounded-2xl border bg-white p-6 transition-colors ${
-                s.highlight ? "border-terracotta" : "border-border-light"
+                s.highlight ? "border-brand" : "border-border-light"
               } ${s.href ? "hover:bg-stone" : ""}`}
             >
               <span className="text-[11px] font-semibold uppercase tracking-[0.02em] text-ink-muted">

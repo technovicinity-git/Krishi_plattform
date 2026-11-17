@@ -4,7 +4,7 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 
 const ROWS = [
   { key: "farmer", barColor: "bg-green-deep", width: "60%" },
-  { key: "investor", barColor: "bg-terracotta", width: "30%" },
+  { key: "investor", barColor: "bg-brand", width: "30%" },
   { key: "platform", barColor: "bg-ink", width: "5%" },
   { key: "steward", barColor: "bg-green-olive", width: "5%" },
 ] as const;

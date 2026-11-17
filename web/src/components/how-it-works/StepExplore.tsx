@@ -71,7 +71,7 @@ export function StepExplore() {
                 <span className="text-[28px] font-bold leading-tight text-ink">
                   {t("preview.returnValue")}
                 </span>
-                <span className="text-[11px] italic text-terracotta">
+                <span className="text-[11px] italic text-brand">
                   {t("preview.roiNote")}
                 </span>
               </div>

@@ -39,7 +39,7 @@ export async function Opportunities() {
               <p className="text-[14px] text-ink-secondary">{t("empty")}</p>
               <Link
                 href="/plans"
-                className="mt-4 inline-flex text-[13px] font-semibold text-terracotta hover:underline"
+                className="mt-4 inline-flex text-[13px] font-semibold text-brand hover:underline"
               >
                 {t("viewAll")}
               </Link>

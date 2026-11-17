@@ -37,8 +37,8 @@ export function StepSale() {
 
               <div className="flex flex-col gap-4">
                 <Row label={t("table.revenueLabel")} value={t("table.revenueValue")} />
-                <Row label={t("table.purchaseLabel")} value={t("table.purchaseValue")} valueColor="text-terracotta" />
-                <Row label={t("table.careLabel")} value={t("table.careValue")} valueColor="text-terracotta" />
+                <Row label={t("table.purchaseLabel")} value={t("table.purchaseValue")} valueColor="text-brand" />
+                <Row label={t("table.careLabel")} value={t("table.careValue")} valueColor="text-brand" />
                 <div className="h-px w-full bg-border-divider" />
                 <div className="flex items-baseline justify-between gap-4">
                   <span className="text-[16px] font-bold text-green-olive">

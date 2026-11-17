@@ -45,7 +45,7 @@ const STATUS_STYLE: Record<string, string> = {
   approved: "bg-[#E8F0EA] text-green-deep",
   paused: "bg-stone text-ink-muted",
   closed: "bg-stone text-ink-muted",
-  rejected: "bg-[#F5EBE6] text-terracotta",
+  rejected: "bg-[#FAF0ED] text-danger",
 };
 
 export function StewardOfferingsSection({
@@ -413,7 +413,7 @@ export function StewardOfferingsSection({
         </p>
       )}
       {stewards.length === 0 && (
-        <p className="text-[11px] text-terracotta">
+        <p className="text-[11px] text-brand">
           No approved stewards exist yet. Approve a steward first in the Stewards
           section.
         </p>
@@ -435,7 +435,7 @@ function ActionButton({
 }) {
   const styles: Record<string, string> = {
     primary: "border-[#D6E5D3] bg-[#EEF5EB] text-[#2F5C2A] hover:bg-[#E2EEDE]",
-    danger: "border-[#F0C9C0] bg-[#FAF0ED] text-[#A13D2B] hover:bg-[#F5E5DF]",
+    danger: "border-[#F0C9C0] bg-[#FAF0ED] text-[#A13D2B] hover:bg-[#FAF0ED]",
     neutral: "border-border-light bg-white text-ink-nav hover:bg-stone",
   };
   return (

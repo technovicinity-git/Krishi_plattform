@@ -10,7 +10,7 @@ const STATUS_STYLE: Record<string, string> = {
   submitted: "bg-[#FEF6E5] text-[#C48A2E]",
   under_review: "bg-[#FEF6E5] text-[#C48A2E]",
   approved: "bg-[#E8F0EA] text-green-deep",
-  not_approved: "bg-[#F5EBE6] text-terracotta",
+  not_approved: "bg-[#FAF0ED] text-danger",
   onboarding: "bg-[#E8F0EA] text-green-deep",
   converted: "bg-[#E8F0EA] text-green-deep",
   expired: "bg-stone text-ink-muted",
@@ -68,7 +68,7 @@ export default async function InvestorInterestsPage() {
           </p>
           <Link
             href="/plans"
-            className="mt-4 inline-flex h-[44px] items-center justify-center rounded-[4px] bg-terracotta px-6 text-[13px] font-semibold text-white hover:bg-[#B85A3F]"
+            className="mt-4 inline-flex h-[44px] items-center justify-center rounded-[4px] bg-brand px-6 text-[13px] font-semibold text-white hover:bg-brand-hover"
           >
             {t("explorePlans")}
           </Link>
@@ -135,7 +135,7 @@ export default async function InvestorInterestsPage() {
                     <td className="px-5 py-3 text-right">
                       <Link
                         href={`/interest/${interest.reference}`}
-                        className="text-[12px] font-semibold text-terracotta hover:underline"
+                        className="text-[12px] font-semibold text-brand hover:underline"
                       >
                         {t("view")}
                       </Link>

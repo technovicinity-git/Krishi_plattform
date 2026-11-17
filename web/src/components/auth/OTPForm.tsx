@@ -96,16 +96,16 @@ export function OTPForm() {
       </div>
 
       {devOtp && (
-        <div className="rounded-[8px] border-2 border-dashed border-terracotta bg-[#FAF0ED] px-4 py-3">
+        <div className="rounded-[8px] border-2 border-dashed border-brand bg-brand-tint px-4 py-3">
           <div className="flex items-center gap-2">
-            <span className="rounded-[3px] bg-terracotta px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.02em] text-white">
+            <span className="rounded-[3px] bg-brand px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.02em] text-white">
               Dev Mode
             </span>
             <span className="text-[12px] text-ink-secondary">
               SMS not sent — OTP for testing:
             </span>
           </div>
-          <div className="mt-1.5 text-[24px] font-bold tracking-[0.15em] text-terracotta">
+          <div className="mt-1.5 text-[24px] font-bold tracking-[0.15em] text-brand">
             {devOtp}
           </div>
         </div>
@@ -128,7 +128,7 @@ export function OTPForm() {
       <button
         type="submit"
         disabled={!isComplete || submitting}
-        className="inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-[8px] bg-terracotta text-[15px] font-bold text-white transition-colors hover:bg-[#B3634A] disabled:opacity-60"
+        className="inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-[8px] bg-brand text-[15px] font-bold text-white transition-colors hover:bg-brand-hover disabled:opacity-60"
       >
         {submitting ? t("submitting") : t("submit")}
         {!submitting && <span aria-hidden="true">→</span>}
@@ -153,7 +153,7 @@ export function OTPForm() {
 
         <Link
           href="/login"
-          className="text-center text-[13px] font-semibold text-terracotta hover:underline"
+          className="text-center text-[13px] font-semibold text-brand hover:underline"
         >
           {t("changePhone")}
         </Link>

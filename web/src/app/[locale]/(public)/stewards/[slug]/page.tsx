@@ -73,7 +73,7 @@ export default async function StewardProfilePage({
                 </div>
                 <p className="text-[13px] text-ink-secondary">{operatingArea}</p>
                 <div className="flex items-center gap-1.5 text-[13px] font-medium text-ink-muted">
-                  <StarIcon className="h-3.5 w-3.5 text-terracotta" />
+                  <StarIcon className="h-3.5 w-3.5 text-brand" />
                   {t("noReviews")}
                 </div>
               </div>
@@ -84,7 +84,7 @@ export default async function StewardProfilePage({
               <div className="flex flex-wrap gap-3 pt-2">
                 <Link
                   href="/plans"
-                  className="inline-flex h-[48px] items-center justify-center rounded-[4px] bg-terracotta px-6 text-[13px] font-bold text-white hover:bg-[#B85A3F]"
+                  className="inline-flex h-[48px] items-center justify-center rounded-[4px] bg-brand px-6 text-[13px] font-bold text-white hover:bg-brand-hover"
                 >
                   {t("exploreOpportunities")}
                 </Link>
@@ -326,7 +326,7 @@ export default async function StewardProfilePage({
             <div className="flex flex-wrap justify-center gap-3 pt-2">
               <Link
                 href="/plans"
-                className="inline-flex h-[48px] items-center justify-center rounded-[4px] bg-terracotta px-6 text-[13px] font-bold text-white hover:bg-[#B85A3F]"
+                className="inline-flex h-[48px] items-center justify-center rounded-[4px] bg-brand px-6 text-[13px] font-bold text-white hover:bg-brand-hover"
               >
                 {t("explorePlans")}
               </Link>
@@ -368,7 +368,7 @@ function SupportCard({
 }) {
   return (
     <div className="rounded-xl border border-border-light bg-white p-6">
-      <span className="text-[11px] font-bold text-terracotta">{n}</span>
+      <span className="text-[11px] font-bold text-brand">{n}</span>
       <h3 className="mt-2 text-[15px] font-semibold text-ink">{title}</h3>
       <p className="mt-1 text-[13px] leading-[1.6] text-ink-secondary">
         {body}

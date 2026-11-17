@@ -26,7 +26,7 @@ export function StewardsJourney() {
             </p>
             <Link
               href="/how-it-works"
-              className="inline-flex items-center gap-1.5 text-[14px] font-semibold text-terracotta transition-colors hover:text-[#B3634A]"
+              className="inline-flex items-center gap-1.5 text-[14px] font-semibold text-brand transition-colors hover:text-brand-hover"
             >
               {t("link")}
               <ChevronRightIcon className="h-3.5 w-3.5" />
@@ -43,20 +43,20 @@ export function StewardsJourney() {
                   <div
                     className={`flex w-full items-center justify-center rounded-[8px] border px-4 py-4 text-center ${
                       isSteward
-                        ? "border-terracotta bg-cream"
+                        ? "border-brand bg-cream"
                         : "border-border-light bg-white"
                     }`}
                   >
                     <span
                       className={`font-serif text-[22px] leading-tight ${
-                        isSteward ? "text-terracotta" : "text-ink"
+                        isSteward ? "text-brand" : "text-ink"
                       }`}
                     >
                       {t(`chain.${key}`)}
                     </span>
                   </div>
                   {!isLast && (
-                    <span className="text-[20px] leading-none text-terracotta" aria-hidden="true">
+                    <span className="text-[20px] leading-none text-brand" aria-hidden="true">
                       ↓
                     </span>
                   )}

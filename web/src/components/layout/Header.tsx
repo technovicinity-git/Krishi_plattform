@@ -62,7 +62,7 @@ export function Header({ user }: { user: HeaderUser | null }) {
                 className={cn(
                   "border-b-2 pb-1 text-[13px] leading-none transition-colors",
                   active
-                    ? "border-terracotta font-semibold text-terracotta"
+                    ? "border-brand font-semibold text-brand"
                     : "border-transparent font-medium text-ink-nav hover:text-ink",
                 )}
               >
@@ -90,7 +90,7 @@ export function Header({ user }: { user: HeaderUser | null }) {
               </Link>
               <Link
                 href="/plans"
-                className="inline-flex items-center rounded-[4px] bg-terracotta px-[22px] py-[11px] text-[13px] font-semibold leading-none text-white transition-colors hover:bg-[#B3634A]"
+                className="inline-flex items-center rounded-[4px] bg-brand px-[22px] py-[11px] text-[13px] font-semibold leading-none text-white transition-colors hover:bg-brand-hover"
               >
                 {t("explorePlans")}
               </Link>
@@ -146,7 +146,7 @@ export function Header({ user }: { user: HeaderUser | null }) {
                     className={cn(
                       "text-[15px]",
                       active
-                        ? "font-semibold text-terracotta"
+                        ? "font-semibold text-brand"
                         : "font-medium text-ink-nav",
                     )}
                   >
@@ -188,7 +188,7 @@ export function Header({ user }: { user: HeaderUser | null }) {
                       type="button"
                       onClick={handleMobileLogout}
                       disabled={loggingOut}
-                      className="mt-2 rounded-[6px] border-t border-border-light py-3 text-left text-[14px] font-medium text-terracotta hover:text-[#8A2F20] disabled:opacity-60"
+                      className="mt-2 rounded-[6px] border-t border-border-light py-3 text-left text-[14px] font-medium text-danger hover:text-[#8A2F20] disabled:opacity-60"
                     >
                       {loggingOut ? tu("signingOut") : tu("signOut")}
                     </button>
@@ -206,7 +206,7 @@ export function Header({ user }: { user: HeaderUser | null }) {
                   <Link
                     href="/plans"
                     onClick={() => setMobileOpen(false)}
-                    className="inline-flex items-center justify-center rounded-[4px] bg-terracotta px-6 py-3 text-[14px] font-semibold text-white"
+                    className="inline-flex items-center justify-center rounded-[4px] bg-brand px-6 py-3 text-[14px] font-semibold text-white"
                   >
                     {t("explorePlans")}
                   </Link>

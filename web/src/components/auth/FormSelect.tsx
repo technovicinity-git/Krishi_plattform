@@ -40,7 +40,7 @@ export function FormSelect({
     <div className={cn("flex flex-col gap-2", className)}>
       <label htmlFor={name} className="text-[14px] font-semibold text-ink-nav">
         {label}
-        {required && <span className="ml-1 text-terracotta">*</span>}
+        {required && <span className="ml-1 text-danger">*</span>}
         {optional && (
           <span className="ml-1 text-[12px] font-normal text-ink-muted">{tc("optional")}</span>
         )}

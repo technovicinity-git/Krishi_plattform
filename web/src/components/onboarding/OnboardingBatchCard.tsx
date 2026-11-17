@@ -37,7 +37,7 @@ export function OnboardingBatchCard({
         <Row label={t("planLabel")} value={planTitle} />
         <Row label={t("unitsLabel")} value={`${units} ${units === 1 ? t("unit") : t("units")}`} />
         <div className="border-t border-border-light pt-2">
-          <Row label={t("depositLabel")} value={format(deposit)} valueTone="terracotta" valueSize="lg" />
+          <Row label={t("depositLabel")} value={format(deposit)} valueTone="brand" valueSize="lg" />
         </div>
       </div>
     </div>
@@ -52,7 +52,7 @@ function Row({
 }: {
   label: string;
   value: string;
-  valueTone?: "default" | "terracotta";
+  valueTone?: "default" | "brand";
   valueSize?: "default" | "lg";
 }) {
   return (
@@ -60,10 +60,10 @@ function Row({
       <span className="text-[13px] text-ink-secondary">{label}</span>
       <span
         className={
-          valueTone === "terracotta"
+          valueTone === "brand"
             ? valueSize === "lg"
-              ? "text-[20px] font-bold text-terracotta"
-              : "text-[14px] font-semibold text-terracotta"
+              ? "text-[20px] font-bold text-brand"
+              : "text-[14px] font-semibold text-brand"
             : "text-[14px] font-semibold text-ink"
         }
       >

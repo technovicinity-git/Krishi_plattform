@@ -28,11 +28,11 @@ export function StepPeople() {
 
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             <RoleCard
-              icon={<UserIcon className="text-terracotta" />}
+              icon={<UserIcon className="text-brand" />}
               iconBg="bg-stone"
               role={t("farmer.role")}
               subrole={t("farmer.subrole")}
-              subroleColor="text-terracotta"
+              subroleColor="text-brand"
               description={t("farmer.description")}
               items={FARMER_ITEMS.map((k) => t(`farmer.items.${k}`))}
             />
@@ -57,7 +57,7 @@ export function StepPeople() {
                 <div key={key} className="flex items-center gap-2 md:gap-4">
                   <div className="flex flex-col items-center gap-2 text-center">
                     <span className={`text-[14px] font-bold ${
-                      key === "escrow" ? "text-terracotta"
+                      key === "escrow" ? "text-brand"
                       : key === "steward" || key === "livestock" ? "text-green-olive"
                       : "text-ink"
                     }`}>

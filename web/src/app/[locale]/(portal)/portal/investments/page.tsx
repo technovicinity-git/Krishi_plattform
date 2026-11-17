@@ -46,7 +46,7 @@ export default async function InvestorInvestmentsPage() {
           </p>
           <Link
             href="/plans"
-            className="mt-4 inline-flex h-[44px] items-center justify-center rounded-[4px] bg-terracotta px-6 text-[13px] font-semibold text-white hover:bg-[#B85A3F]"
+            className="mt-4 inline-flex h-[44px] items-center justify-center rounded-[4px] bg-brand px-6 text-[13px] font-semibold text-white hover:bg-brand-hover"
           >
             {t("explorePlans")}
           </Link>
@@ -86,7 +86,7 @@ export default async function InvestorInvestmentsPage() {
                   </div>
                   <div className="flex items-center justify-between text-[13px]">
                     <span className="text-ink-muted">{t("estRoi")}</span>
-                    <span className="font-semibold text-terracotta">
+                    <span className="font-semibold text-brand">
                       {plan?.estimated_roi_min}–{plan?.estimated_roi_max}%
                     </span>
                   </div>

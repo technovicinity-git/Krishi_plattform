@@ -94,7 +94,7 @@ export function KycForm() {
       </div>
 
       <div className="flex flex-col gap-4">
-        <h3 className="text-[13px] font-bold uppercase tracking-[0.02em] text-terracotta">
+        <h3 className="text-[13px] font-bold uppercase tracking-[0.02em] text-brand">
           {t("section1Title")}
         </h3>
 
@@ -131,7 +131,7 @@ export function KycForm() {
       </div>
 
       <div className="flex flex-col gap-4">
-        <h3 className="text-[13px] font-bold uppercase tracking-[0.02em] text-terracotta">
+        <h3 className="text-[13px] font-bold uppercase tracking-[0.02em] text-brand">
           {t("section2Title")}
         </h3>
 
@@ -163,7 +163,7 @@ export function KycForm() {
       <button
         type="submit"
         disabled={submitting}
-        className="inline-flex h-[52px] w-full items-center justify-center rounded-[8px] bg-terracotta text-[15px] font-bold text-white transition-colors hover:bg-[#B3634A] disabled:opacity-60"
+        className="inline-flex h-[52px] w-full items-center justify-center rounded-[8px] bg-brand text-[15px] font-bold text-white transition-colors hover:bg-brand-hover disabled:opacity-60"
       >
         {submitting ? t("submitting") : t("submit")}
       </button>

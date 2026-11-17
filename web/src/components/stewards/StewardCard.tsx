@@ -65,7 +65,7 @@ export function StewardCard({ steward }: { steward: StewardListItem }) {
 
           {steward.ratingAvg ? (
             <span className="flex items-center gap-1.5 text-[13px] font-semibold text-ink">
-              <StarIcon className="h-3.5 w-3.5 text-terracotta" />
+              <StarIcon className="h-3.5 w-3.5 text-brand" />
               {steward.ratingAvg.toFixed(1)} ·{" "}
               {t("card.ratingCount", { count: steward.ratingCount })}
             </span>

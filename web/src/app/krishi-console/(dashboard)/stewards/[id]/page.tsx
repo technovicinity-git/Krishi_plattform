@@ -38,7 +38,7 @@ export default async function AdminStewardDetailPage({
     status === "approved"
       ? "bg-[#E8F0EA] text-green-deep"
       : status === "rejected"
-        ? "bg-[#FAF0ED] text-terracotta"
+        ? "bg-[#FAF0ED] text-danger"
         : "bg-[#FEF6E5] text-[#C48A2E]";
 
   return (

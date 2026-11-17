@@ -22,7 +22,7 @@ export function Hero() {
                 {t("headingLine2")}
               </Heading>
 
-              <p className="font-serif text-[20px] leading-[1.3] text-terracotta lg:text-[24px]">
+              <p className="font-serif text-[20px] leading-[1.3] text-brand lg:text-[24px]">
                 {t("subline")}
               </p>
 
@@ -33,7 +33,7 @@ export function Hero() {
               <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:items-center">
                 <Link
                   href="/plans"
-                  className="inline-flex items-center justify-center rounded-[5px] bg-terracotta px-8 py-4 text-[14px] font-semibold leading-none text-white transition-colors hover:bg-[#B3634A]"
+                  className="inline-flex items-center justify-center rounded-[5px] bg-brand px-8 py-4 text-[14px] font-semibold leading-none text-white transition-colors hover:bg-brand-hover"
                 >
                   {t("ctaPrimary")}
                 </Link>

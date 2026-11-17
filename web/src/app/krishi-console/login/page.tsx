@@ -17,7 +17,7 @@ export default async function AdminLoginPage() {
     <div className="flex min-h-screen flex-col items-center justify-center bg-stone px-6 py-12">
       <div className="w-full max-w-[440px] rounded-2xl border border-border-light bg-white p-10">
         <div className="mb-8 flex flex-col gap-2">
-          <span className="text-[11px] font-semibold uppercase tracking-[0.02em] text-terracotta">
+          <span className="text-[11px] font-semibold uppercase tracking-[0.02em] text-brand">
             Internal Access
           </span>
           <h1 className="font-serif text-[28px] leading-tight text-ink">

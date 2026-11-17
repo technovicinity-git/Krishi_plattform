@@ -194,13 +194,13 @@ function DocPreview({
           href={url}
           target="_blank"
           rel="noopener noreferrer"
-          className="group block overflow-hidden rounded-[8px] border border-border-light bg-stone hover:border-terracotta"
+          className="group block overflow-hidden rounded-[8px] border border-border-light bg-stone hover:border-brand"
         >
           {isImage ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={url} alt={label} className="h-[160px] w-full object-cover" />
           ) : (
-            <div className="flex h-[160px] items-center justify-center text-[12px] font-semibold text-terracotta">
+            <div className="flex h-[160px] items-center justify-center text-[12px] font-semibold text-brand">
               Open PDF →
             </div>
           )}

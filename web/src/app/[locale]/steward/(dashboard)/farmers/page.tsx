@@ -147,7 +147,7 @@ export default async function StewardFarmersPage({
                     <td className="px-5 py-4 text-right">
                       <Link
                         href={`/steward/farmers/${f.id}`}
-                        className="text-[12px] font-semibold text-terracotta hover:underline"
+                        className="text-[12px] font-semibold text-brand hover:underline"
                       >
                         {t("view")}
                       </Link>

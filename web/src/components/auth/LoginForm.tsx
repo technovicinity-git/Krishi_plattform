@@ -99,7 +99,7 @@ export function LoginForm() {
         <div className="-mt-2 flex justify-end">
           <Link
             href="/forgot-password"
-            className="text-[13px] font-semibold text-terracotta hover:underline"
+            className="text-[13px] font-semibold text-brand hover:underline"
           >
             {t("forgotPassword")}
           </Link>
@@ -115,7 +115,7 @@ export function LoginForm() {
       <button
         type="submit"
         disabled={submitting}
-        className="inline-flex h-[52px] w-full items-center justify-center rounded-[8px] bg-terracotta text-[15px] font-bold text-white transition-colors hover:bg-[#B3634A] disabled:opacity-60"
+        className="inline-flex h-[52px] w-full items-center justify-center rounded-[8px] bg-brand text-[15px] font-bold text-white transition-colors hover:bg-brand-hover disabled:opacity-60"
       >
         {submitting ? t("submitting") : t("submit")}
       </button>
@@ -123,7 +123,7 @@ export function LoginForm() {
       <div className="flex flex-col items-center gap-3 border-t border-border-light pt-6">
         <p className="text-[13px] text-ink-secondary">
           {t("noAccount")}{" "}
-          <Link href="/register" className="font-semibold text-terracotta hover:underline">
+          <Link href="/register" className="font-semibold text-brand hover:underline">
             {t("createAccount")}
           </Link>
         </p>

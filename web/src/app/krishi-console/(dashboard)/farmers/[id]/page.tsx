@@ -108,7 +108,7 @@ export default async function AdminFarmerDetailPage({
               <div className="mt-2">
                 <Link
                   href={`/krishi-console/stewards/${steward.id}`}
-                  className="text-[12px] font-semibold text-terracotta hover:underline"
+                  className="text-[12px] font-semibold text-brand hover:underline"
                 >
                   View steward →
                 </Link>

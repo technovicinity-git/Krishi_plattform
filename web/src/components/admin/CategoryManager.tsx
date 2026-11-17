@@ -154,7 +154,7 @@ export function CategoryManager({ categories }: { categories: Category[] }) {
                     type="button"
                     onClick={() => handleToggleActive(cat)}
                     disabled={busyId === cat.id}
-                    className="text-[12px] font-semibold text-terracotta hover:underline disabled:opacity-60"
+                    className="text-[12px] font-semibold text-brand hover:underline disabled:opacity-60"
                   >
                     {busyId === cat.id
                       ? "…"
@@ -485,7 +485,7 @@ function Field({
     <div className="flex flex-col gap-2">
       <label className="text-[13px] font-semibold text-ink-nav">
         {label}
-        {required && <span className="ml-1 text-terracotta">*</span>}
+        {required && <span className="ml-1 text-danger">*</span>}
       </label>
       <input
         type={type}

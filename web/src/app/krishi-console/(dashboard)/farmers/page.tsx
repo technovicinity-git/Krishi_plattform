@@ -163,7 +163,7 @@ export default async function AdminFarmersPage({
                     <td className="px-5 py-4 text-right">
                       <Link
                         href={`/krishi-console/farmers/${farmer.id}`}
-                        className="text-[12px] font-semibold text-terracotta hover:underline"
+                        className="text-[12px] font-semibold text-brand hover:underline"
                       >
                         View →
                       </Link>

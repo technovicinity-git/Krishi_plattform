@@ -50,7 +50,7 @@ export default async function StewardDashboardPage() {
         <Link
           href="/steward/farmers?filter=pending"
           className={`flex flex-col gap-1 rounded-2xl border bg-white p-6 transition-colors hover:bg-stone ${
-            (pendingCount ?? 0) > 0 ? "border-terracotta" : "border-border-light"
+            (pendingCount ?? 0) > 0 ? "border-brand" : "border-border-light"
           }`}
         >
           <span className="text-[11px] font-semibold uppercase tracking-[0.02em] text-ink-muted">

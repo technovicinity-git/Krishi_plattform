@@ -7,7 +7,7 @@ interface Props {
 
 const STATUS_STYLE: Record<string, string> = {
   approved: "bg-[#E8F0EA] text-green-deep",
-  not_approved: "bg-[#F5EBE6] text-terracotta",
+  not_approved: "bg-[#FAF0ED] text-danger",
   onboarding: "bg-[#FEF6E5] text-[#C48A2E]",
   converted: "bg-[#E8F0EA] text-green-deep",
   expired: "bg-stone text-ink-muted",

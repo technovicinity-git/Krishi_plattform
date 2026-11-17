@@ -32,7 +32,7 @@ export default async function InterestStatusPage({
         <div
           className={`flex h-16 w-16 items-center justify-center rounded-full ${
             isRejected
-              ? "bg-[#F5EBE6] text-terracotta"
+              ? "bg-[#FAF0ED] text-danger"
               : "bg-[#EEF5EB] text-green-deep"
           }`}
         >
@@ -122,7 +122,7 @@ export default async function InterestStatusPage({
         {isApproved && (
           <Link
             href={`/onboarding/${interest.reference}`}
-            className="inline-flex h-[52px] items-center justify-center rounded-[4px] bg-terracotta text-[14px] font-bold text-white hover:bg-[#B85A3F]"
+            className="inline-flex h-[52px] items-center justify-center rounded-[4px] bg-brand text-[14px] font-bold text-white hover:bg-brand-hover"
             >
             {t("continueOnboarding")}
             </Link>
@@ -130,7 +130,7 @@ export default async function InterestStatusPage({
         {isRejected && (
           <Link
             href="/plans"
-            className="inline-flex h-[52px] items-center justify-center rounded-[4px] bg-terracotta text-[14px] font-bold text-white hover:bg-[#B85A3F]"
+            className="inline-flex h-[52px] items-center justify-center rounded-[4px] bg-brand text-[14px] font-bold text-white hover:bg-brand-hover"
           >
             {t("exploreOtherPlans")}
           </Link>
@@ -173,7 +173,7 @@ function Row({
           bold
             ? "font-mono font-semibold text-ink"
             : accent
-              ? "font-bold text-terracotta"
+              ? "font-bold text-brand"
               : "font-medium text-ink"
         }`}
       >
@@ -198,13 +198,13 @@ function Step({
     <div
       className={`rounded-[8px] border p-4 ${
         active
-          ? "border-terracotta bg-[#FAF0ED]"
+          ? "border-brand bg-brand-tint"
           : "border-border-light bg-white"
       }`}
     >
       <div
         className={`text-[10px] font-bold uppercase tracking-[0.02em] ${
-          active ? "text-terracotta" : "text-ink-muted"
+          active ? "text-brand" : "text-ink-muted"
         }`}
       >
         {label}
