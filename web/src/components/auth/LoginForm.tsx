@@ -129,9 +129,21 @@ export function LoginForm() {
         </p>
         <Link
           href="/krishi-console/login"
-          className="text-[12px] text-ink-muted hover:text-ink"
+          className="group inline-flex items-center gap-1 rounded-full px-2 py-1 text-[12px] font-medium text-ink-muted transition-colors hover:text-brand focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/40"
         >
           {t("adminLink")}
+          <svg
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+            className="h-3 w-3 transition-transform duration-150 group-hover:translate-x-0.5"
+          >
+            <path d="M6 3.5L10.5 8 6 12.5" />
+          </svg>
         </Link>
       </div>
     </form>

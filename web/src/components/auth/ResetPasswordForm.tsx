@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { passwordSchema } from "@/lib/auth/schemas";
+import { BackButton } from "@/components/ui/BackLink";
 import { OTPInput } from "./OTPInput";
 import { FormPasswordInput } from "./FormPasswordInput";
 
@@ -265,18 +266,15 @@ export function ResetPasswordForm() {
       </button>
 
       <div className="flex justify-center border-t border-border-light pt-6">
-        <button
-          type="button"
+        <BackButton
           onClick={() => {
             setStep("otp");
             setCode(Array(6).fill(""));
             setError(null);
           }}
-          className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-ink-nav hover:text-ink"
         >
-          <span aria-hidden="true">←</span>
           {t("changeCode")}
-        </button>
+        </BackButton>
       </div>
     </form>
   );

@@ -2,11 +2,12 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Link, useRouter } from "@/i18n/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { useDialog } from "@/components/ui/dialog-provider";
 import { FormInput } from "./FormInput";
 import { FormSelect } from "./FormSelect";
 import { FormTextarea } from "./FormTextarea";
+import { BackLink } from "@/components/ui/BackLink";
 
 interface Division {
   id: string;
@@ -286,13 +287,7 @@ export function StewardDetailsForm({
       </button>
 
       <div>
-        <Link
-          href="/steward/register"
-          className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-ink-nav hover:text-ink"
-        >
-          <span aria-hidden="true">←</span>
-          {t("back")}
-        </Link>
+        <BackLink href="/steward/register">{t("back")}</BackLink>
       </div>
     </form>
   );

@@ -2,6 +2,7 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
+import { BackLink } from "@/components/ui/BackLink";
 
 interface AuthShellProps {
   children: React.ReactNode;
@@ -35,13 +36,7 @@ export function AuthShell({
           </Link>
 
           <div className="flex items-center gap-6">
-            <Link
-              href={backHref}
-              className="inline-flex items-center gap-1.5 text-[13px] font-medium text-ink-nav hover:text-ink"
-            >
-              <span aria-hidden="true">←</span>
-              {backLabel ?? t("backToKrishi")}
-            </Link>
+            <BackLink href={backHref}>{backLabel ?? t("backToKrishi")}</BackLink>
 
             <LanguageSwitcher />
           </div>

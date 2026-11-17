@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { BackLink } from "@/components/ui/BackLink";
 
 interface OnboardingShellProps {
   children: React.ReactNode;
@@ -34,13 +35,7 @@ export function OnboardingShell({
               className="object-contain object-left"
             />
           </Link>
-          <Link
-            href="/portal/profile"
-            className="inline-flex items-center gap-1.5 text-[13px] font-medium text-ink-nav hover:text-ink"
-          >
-            <span aria-hidden="true">←</span>
-            {exitLabel ?? t("exitDefault")}
-          </Link>
+          <BackLink href="/portal/profile">{exitLabel ?? t("exitDefault")}</BackLink>
         </div>
       </header>
 

@@ -1,9 +1,9 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/current-admin";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getSignedKycUrls } from "@/lib/admin/storage";
 import { KycReviewActions } from "@/components/admin/KycReviewActions";
+import { BackLink } from "@/components/ui/BackLink";
 
 const STATUS_LABEL: Record<string, string> = {
   not_started: "Not Started",
@@ -82,13 +82,7 @@ export default async function KycReviewPage({
     <div className="flex flex-col gap-6">
       {/* Back + header */}
       <div className="flex flex-col gap-3">
-        <Link
-          href="/krishi-console/kyc"
-          className="inline-flex w-fit items-center gap-1.5 text-[12px] font-semibold text-ink-secondary hover:text-ink"
-        >
-          <span aria-hidden="true">←</span>
-          Back to KYC Queue
-        </Link>
+        <BackLink href="/krishi-console/kyc" localized={false}>Back to KYC Queue</BackLink>
 
         <div className="flex items-center justify-between gap-4">
           <h1 className="font-serif text-[28px] leading-tight text-ink">

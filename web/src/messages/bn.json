@@ -1089,7 +1089,7 @@
       "submitting": "লগইন হচ্ছে...",
       "noAccount": "অ্যাকাউন্ট নেই?",
       "createAccount": "তৈরি করুন",
-      "adminLink": "অ্যাডমিন লগইন →"
+      "adminLink": "অ্যাডমিন লগইন"
     },
     "register": {
       "eyebrow": "বিনিয়োগকারী নিবন্ধন",
@@ -1870,8 +1870,8 @@
       "rejectedNote": "আপনার অনুরোধ সম্পর্কে কোনো প্রশ্ন থাকলে সাপোর্টে যোগাযোগ করুন।"
     },
     "investmentDetail": {
-      "backToInvestments": "← বিনিয়োগে ফিরে যান",
-      "backToAssignments": "← দায়িত্বে ফিরে যান",
+      "backToInvestments": "বিনিয়োগে ফিরে যান",
+      "backToAssignments": "দায়িত্বে ফিরে যান",
       "invested": "বিনিয়োগকৃত",
       "units": "ইউনিট",
       "estReturn": "আনুমানিক রিটার্ন",
@@ -2088,6 +2088,7 @@
       "expired": "মেয়াদোত্তীর্ণ"
     },
     "stewardFarmer": {
+      "addTitle": "কৃষক যোগ করুন",
       "back": "কৃষকদের তালিকায় ফিরে যান",
       "farmer": "কৃষক",
       "active": "সক্রিয়",

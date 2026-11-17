@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { Link, useRouter } from "@/i18n/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { phoneSchema } from "@/lib/auth/schemas";
 import { toE164 } from "@/lib/auth/phone";
 import { FormInput } from "./FormInput";
+import { BackLink } from "@/components/ui/BackLink";
 
 export function ForgotPasswordForm() {
   const t = useTranslations("auth.forgot");
@@ -102,13 +103,7 @@ export function ForgotPasswordForm() {
       </div>
 
       <div className="flex justify-center border-t border-border-light pt-6">
-        <Link
-          href="/login"
-          className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-ink-nav hover:text-ink"
-        >
-          <span aria-hidden="true">←</span>
-          {t("backToLogin")}
-        </Link>
+        <BackLink href="/login">{t("backToLogin")}</BackLink>
       </div>
     </form>
   );

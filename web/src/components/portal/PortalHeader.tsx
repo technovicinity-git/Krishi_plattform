@@ -6,6 +6,7 @@ import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/cn";
 import { UserMenu } from "@/components/layout/UserMenu";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
+import { BackLink } from "@/components/ui/BackLink";
 
 interface PortalHeaderProps {
   fullName: string;
@@ -41,13 +42,9 @@ export function PortalHeader({
         </div>
 
         <div className="flex items-center gap-5">
-          <Link
-            href="/"
-            className="hidden items-center gap-1.5 text-[13px] font-medium text-ink-nav hover:text-ink sm:inline-flex"
-          >
-            <span aria-hidden="true">←</span>
-            {t("backToKrishi")}
-          </Link>
+          <div className="hidden sm:block">
+            <BackLink href="/">{t("backToKrishi")}</BackLink>
+          </div>
 
           <LanguageSwitcher />
 

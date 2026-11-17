@@ -1,6 +1,7 @@
 import { useTranslations } from "next-intl";
 import { AuthCard } from "@/components/auth/AuthCard";
 import { Link } from "@/i18n/navigation";
+import { BackLink } from "@/components/ui/BackLink";
 
 export default function StewardSubmittedPage() {
   const t = useTranslations("stewardSubmitted");
@@ -50,13 +51,7 @@ export default function StewardSubmittedPage() {
         </Link>
 
         <div className="border-t border-border-light pt-6">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-ink-nav hover:text-ink"
-          >
-            <span aria-hidden="true">←</span>
-            {t("backToKrishi")}
-          </Link>
+          <BackLink href="/">{t("backToKrishi")}</BackLink>
         </div>
       </div>
     </AuthCard>

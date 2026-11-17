@@ -1,8 +1,8 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/current-admin";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { StewardApprovalActions } from "@/components/admin/StewardApprovalActions";
+import { BackLink } from "@/components/ui/BackLink";
 
 function formatDateTime(iso: string | null): string {
   if (!iso) return "—";
@@ -44,13 +44,7 @@ export default async function AdminStewardDetailPage({
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-3">
-        <Link
-          href="/krishi-console/stewards"
-          className="inline-flex w-fit items-center gap-1.5 text-[12px] font-semibold text-ink-secondary hover:text-ink"
-        >
-          <span aria-hidden="true">←</span>
-          Back to Stewards
-        </Link>
+        <BackLink href="/krishi-console/stewards" localized={false}>Back to Stewards</BackLink>
         <div className="flex items-center justify-between gap-4">
           <h1 className="font-serif text-[28px] leading-tight text-ink">
             {steward.full_name ?? "Steward"}

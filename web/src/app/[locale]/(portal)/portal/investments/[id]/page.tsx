@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/auth/current-user";
@@ -6,6 +5,7 @@ import { getInvestmentDetail } from "@/lib/investments/detail";
 import { StageTimeline } from "@/components/investment/StageTimeline";
 import { StatsGrid, formatBDT } from "@/components/investment/StatsGrid";
 import { UpdatesList } from "@/components/investment/UpdatesList";
+import { BackLink } from "@/components/ui/BackLink";
 
 export const dynamic = "force-dynamic";
 
@@ -30,12 +30,7 @@ export default async function InvestorInvestmentDetailPage({
   return (
     <div className="mx-auto flex w-full max-w-[960px] flex-col gap-6">
       <div className="flex flex-col gap-2">
-        <Link
-          href="/portal/investments"
-          className="text-[12px] font-semibold text-ink-secondary hover:text-ink"
-        >
-          {t("backToInvestments")}
-        </Link>
+        <BackLink href="/portal/investments">{t("backToInvestments")}</BackLink>
         <div className="flex items-center justify-between gap-4">
           <div>
             <span className="font-mono text-[11px] font-bold text-ink-muted">

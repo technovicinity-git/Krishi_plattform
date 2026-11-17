@@ -1,9 +1,9 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { FarmerActivationPanel } from "@/components/steward/FarmerActivationPanel";
+import { BackLink } from "@/components/ui/BackLink";
 
 function formatDateTime(iso: string | null, locale: string): string {
   if (!iso) return "—";
@@ -66,13 +66,7 @@ export default async function StewardFarmerDetailPage({
   return (
     <div className="flex w-full max-w-[960px] flex-col gap-6">
       <div className="flex flex-col gap-3">
-        <Link
-          href="/steward/farmers"
-          className="inline-flex w-fit items-center gap-1.5 text-[12px] font-semibold text-ink-secondary hover:text-ink"
-        >
-          <span aria-hidden="true">←</span>
-          {t("back")}
-        </Link>
+        <BackLink href="/steward/farmers">{t("back")}</BackLink>
         <div className="flex flex-wrap items-center justify-between gap-4">
           <h1 className="font-serif text-[28px] leading-tight text-ink">
             {farmer.full_name ?? t("farmer")}

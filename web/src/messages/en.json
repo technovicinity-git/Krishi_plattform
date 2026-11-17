@@ -1089,7 +1089,7 @@
       "submitting": "Logging in...",
       "noAccount": "Don't have an account?",
       "createAccount": "Create one",
-      "adminLink": "Admin login →"
+      "adminLink": "Admin login"
     },
     "register": {
       "eyebrow": "Investor Registration",
@@ -1871,8 +1871,8 @@
       "rejectedNote": "Contact support if you have questions about your request."
     },
     "investmentDetail": {
-      "backToInvestments": "← Back to Investments",
-      "backToAssignments": "← Back to Assignments",
+      "backToInvestments": "Back to Investments",
+      "backToAssignments": "Back to Assignments",
       "invested": "Invested",
       "units": "Units",
       "estReturn": "Est. Return",
@@ -2089,6 +2089,7 @@
       "expired": "Expired"
     },
     "stewardFarmer": {
+      "addTitle": "Add Farmer",
       "back": "Back to Farmers",
       "farmer": "Farmer",
       "active": "Active",
