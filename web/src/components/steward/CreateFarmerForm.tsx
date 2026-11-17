@@ -2,10 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 import { useDialog } from "@/components/ui/dialog-provider";
 import { FormInput } from "@/components/auth/FormInput";
 
 export function CreateFarmerForm() {
+  const t = useTranslations("app.createFarmer");
+  const tc = useTranslations("app.common");
   const router = useRouter();
   const { alert } = useDialog();
 
@@ -21,11 +24,11 @@ export function CreateFarmerForm() {
     setError(null);
 
     if (nidNumber.trim().length < 10) {
-      setError("Please enter a valid NID number (10–17 digits).");
+      setError(t("invalidNid"));
       return;
     }
     if (presentAddress.trim().length < 5) {
-      setError("Please enter a valid present address.");
+      setError(t("invalidAddress"));
       return;
     }
 
@@ -45,22 +48,21 @@ export function CreateFarmerForm() {
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok) {
-        setError(data.error ?? "Failed to create farmer account");
+        setError(data.error ?? t("failed"));
         setSubmitting(false);
         return;
       }
 
       await alert({
-        title: "Farmer account created",
-        message:
-          "An activation SMS will be sent to the farmer's phone. They will set their own password when they first log in.",
+        title: t("createdTitle"),
+        message: t("createdMessage"),
         variant: "success",
       });
 
       router.push("/steward/farmers");
       router.refresh();
     } catch {
-      setError("Network error. Please try again.");
+      setError(t("networkError"));
       setSubmitting(false);
     }
   };
@@ -72,51 +74,50 @@ export function CreateFarmerForm() {
     >
       <div className="flex flex-col gap-3">
         <h2 className="font-serif text-[20px] leading-tight text-ink">
-          Farmer details
+          {t("heading")}
         </h2>
         <p className="text-[13px] leading-[1.6] text-ink-secondary">
-          The farmer will receive an SMS with activation instructions. They
-          will set their own password on first login.
+          {t("intro")}
         </p>
       </div>
 
       <div className="flex flex-col gap-5">
         <FormInput
-          label="Full Name (as per NID)"
+          label={t("fullName")}
           name="fullName"
           value={fullName}
           onChange={setFullName}
-          placeholder="e.g. Abdul Karim"
+          placeholder={t("fullNamePlaceholder")}
           required
           autoComplete="off"
         />
         <FormInput
-          label="Phone Number"
+          label={t("phone")}
           name="phone"
           type="tel"
           prefix="+880"
           value={phone}
           onChange={setPhone}
           placeholder="1XXX XXX XXX"
-          helper="Enter the 10-digit number without the leading 0."
+          helper={t("phoneHelper")}
           required
           autoComplete="off"
         />
         <FormInput
-          label="NID Number"
+          label={t("nid")}
           name="nidNumber"
           value={nidNumber}
           onChange={setNidNumber}
-          placeholder="10–17 digits"
+          placeholder={t("nidPlaceholder")}
           required
           autoComplete="off"
         />
         <FormInput
-          label="Present Address"
+          label={t("address")}
           name="presentAddress"
           value={presentAddress}
           onChange={setPresentAddress}
-          placeholder="Village, Post Office, Upazila, District"
+          placeholder={t("addressPlaceholder")}
           required
           autoComplete="off"
         />
@@ -135,14 +136,14 @@ export function CreateFarmerForm() {
           disabled={submitting}
           className="inline-flex h-[46px] items-center justify-center rounded-[8px] border border-border-light bg-white px-6 text-[13px] font-semibold text-ink-nav hover:bg-stone disabled:opacity-60"
         >
-          Cancel
+          {tc("cancel")}
         </button>
         <button
           type="submit"
           disabled={submitting}
           className="inline-flex h-[46px] items-center justify-center rounded-[8px] bg-ink px-8 text-[13px] font-bold text-white hover:bg-[#2A2A2A] disabled:opacity-60"
         >
-          {submitting ? "Creating..." : "Create Farmer Account"}
+          {submitting ? t("creating") : t("submit")}
         </button>
       </div>
     </form>

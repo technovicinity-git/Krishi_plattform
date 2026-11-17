@@ -29,6 +29,7 @@ const LOCKED_ITEMS: NavItem[] = [
 
 export function PortalSidebar() {
   const t = useTranslations("portal.sidebar");
+  const tu = useTranslations("app.userMenu");
   const pathname = usePathname();
   const router = useRouter();
   const [loggingOut, setLoggingOut] = useState(false);
@@ -79,7 +80,7 @@ export function PortalSidebar() {
               disabled={loggingOut}
               className="flex items-center gap-2.5 rounded-[6px] px-3 py-2.5 text-left text-[14px] font-medium text-ink-secondary transition-colors hover:bg-stone/60 hover:text-ink disabled:opacity-60"
             >
-              {loggingOut ? "Signing out..." : t("items.logout")}
+              {loggingOut ? tu("signingOut") : t("items.logout")}
             </button>
           </nav>
         </div>

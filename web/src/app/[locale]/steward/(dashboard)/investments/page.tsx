@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { redirect } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -9,6 +10,7 @@ export default async function StewardInvestmentsPage() {
   const user = await getCurrentUser();
   if (!user || user.role !== "steward") redirect("/login");
 
+  const t = await getTranslations("app.stewardInvestments");
   const db = createAdminClient();
 
   // Step 1: fetch all offerings for this steward
@@ -30,7 +32,7 @@ export default async function StewardInvestmentsPage() {
           farmer:users!farmer_id ( full_name ),
           offering:steward_plan_offerings!offering_id (
             id,
-            investment_plans ( name_en )
+            investment_plans ( name_en, name_bn )
           )
           `,
         )
@@ -51,18 +53,17 @@ export default async function StewardInvestmentsPage() {
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
         <h1 className="font-serif text-[28px] leading-tight text-ink">
-          Active Investments
+          {t("title")}
         </h1>
         <p className="text-[13px] text-ink-secondary">
-          Manage active batches, assign farmers, and track progress.
+          {t("subtitle")}
         </p>
       </div>
 
       {!investments || investments.length === 0 ? (
         <div className="rounded-2xl border border-border-light bg-white px-8 py-16 text-center">
           <p className="text-[14px] text-ink-secondary">
-            You don&apos;t have any active investments yet. This appears once an
-            investor completes a deposit on one of your offerings.
+            {t("empty")}
           </p>
         </div>
       ) : (

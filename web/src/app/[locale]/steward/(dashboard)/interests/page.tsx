@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { redirect } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -27,6 +28,7 @@ export default async function StewardInterestsPage({ searchParams }: PageProps) 
 
   const db = createAdminClient();
 
+  const t = await getTranslations("app.stewardInterests");
   const { data: myOfferings } = await db
     .from("steward_plan_offerings")
     .select("id")
@@ -39,10 +41,10 @@ export default async function StewardInterestsPage({ searchParams }: PageProps) 
       <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-2">
           <h1 className="font-serif text-[28px] leading-tight text-ink">
-            Incoming Interests
+            {t("title")}
           </h1>
           <p className="text-[13px] text-ink-secondary">
-            You are not offering any plans yet. Add an offering first.
+            {t("noOfferings")}
           </p>
         </div>
       </div>
@@ -70,10 +72,10 @@ export default async function StewardInterestsPage({ searchParams }: PageProps) 
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
         <h1 className="font-serif text-[28px] leading-tight text-ink">
-          Incoming Interests
+          {t("title")}
         </h1>
         <p className="text-[13px] text-ink-secondary">
-          Review pending interests and track past decisions.
+          {t("subtitle")}
         </p>
       </div>
 
@@ -82,12 +84,12 @@ export default async function StewardInterestsPage({ searchParams }: PageProps) 
         <TabLink
           href="/steward/interests"
           active={view === "pending"}
-          label="Pending"
+          label={t("pending")}
         />
         <TabLink
           href="/steward/interests?view=history"
           active={view === "history"}
-          label="History"
+          label={t("history")}
         />
       </div>
 
@@ -95,8 +97,8 @@ export default async function StewardInterestsPage({ searchParams }: PageProps) 
         <div className="rounded-2xl border border-border-light bg-white px-8 py-16 text-center">
           <p className="text-[14px] text-ink-secondary">
             {view === "pending"
-              ? "No pending interests at the moment."
-              : "No past interests yet."}
+              ? t("emptyPending")
+              : t("emptyHistory")}
           </p>
         </div>
       ) : (

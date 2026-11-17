@@ -1,20 +1,10 @@
 import Link from "next/link";
+import { getLocale, getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { redirect } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 export const dynamic = "force-dynamic";
-
-const STATUS_LABEL: Record<string, string> = {
-  submitted: "Submitted",
-  under_review: "Under Review",
-  approved: "Approved",
-  not_approved: "Not Approved",
-  onboarding: "Onboarding",
-  converted: "Active Investment",
-  expired: "Expired",
-  cancelled: "Cancelled",
-};
 
 const STATUS_STYLE: Record<string, string> = {
   submitted: "bg-[#FEF6E5] text-[#C48A2E]",
@@ -27,9 +17,9 @@ const STATUS_STYLE: Record<string, string> = {
   cancelled: "bg-stone text-ink-muted",
 };
 
-function formatDate(iso: string | null): string {
+function formatDate(iso: string | null, locale: string): string {
   if (!iso) return "—";
-  return new Date(iso).toLocaleDateString("en-GB", {
+  return new Date(iso).toLocaleDateString(locale === "bn" ? "bn-BD" : "en-GB", {
     day: "2-digit",
     month: "short",
     year: "numeric",
@@ -42,6 +32,8 @@ export default async function InvestorInterestsPage() {
     redirect("/login");
   }
 
+  const t = await getTranslations("app.myInterests");
+  const locale = await getLocale();
   const db = createAdminClient();
 
   const { data: interests } = await db
@@ -62,24 +54,23 @@ export default async function InvestorInterestsPage() {
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
         <h1 className="font-serif text-[28px] leading-tight text-ink">
-          My Interests
+          {t("title")}
         </h1>
         <p className="text-[13px] text-ink-secondary">
-          Plans you have expressed interest in. Click any entry to see its
-          current status.
+          {t("subtitle")}
         </p>
       </div>
 
       {!interests || interests.length === 0 ? (
         <div className="rounded-2xl border border-border-light bg-white px-8 py-16 text-center">
           <p className="text-[14px] text-ink-secondary">
-            You haven&apos;t expressed interest in any plans yet.
+            {t("empty")}
           </p>
           <Link
             href="/plans"
             className="mt-4 inline-flex h-[44px] items-center justify-center rounded-[4px] bg-terracotta px-6 text-[13px] font-semibold text-white hover:bg-[#B85A3F]"
           >
-            Explore Investment Plans →
+            {t("explorePlans")}
           </Link>
         </div>
       ) : (
@@ -88,33 +79,35 @@ export default async function InvestorInterestsPage() {
             <thead className="border-b border-border-light bg-stone">
               <tr>
                 <th className="px-5 py-3 text-left text-[11px] font-bold uppercase tracking-[0.02em] text-ink-muted">
-                  Reference
+                  {t("reference")}
                 </th>
                 <th className="px-5 py-3 text-left text-[11px] font-bold uppercase tracking-[0.02em] text-ink-muted">
-                  Plan
+                  {t("plan")}
                 </th>
                 <th className="px-5 py-3 text-center text-[11px] font-bold uppercase tracking-[0.02em] text-ink-muted">
-                  Units
+                  {t("units")}
                 </th>
                 <th className="px-5 py-3 text-left text-[11px] font-bold uppercase tracking-[0.02em] text-ink-muted">
-                  Status
+                  {t("status")}
                 </th>
                 <th className="px-5 py-3 text-left text-[11px] font-bold uppercase tracking-[0.02em] text-ink-muted">
-                  Submitted
+                  {t("submitted")}
                 </th>
                 <th className="px-5 py-3 text-right text-[11px] font-bold uppercase tracking-[0.02em] text-ink-muted">
-                  Actions
+                  {t("actions")}
                 </th>
               </tr>
             </thead>
             <tbody>
               {interests.map((interest: any) => {
+                const plan = interest.offering?.investment_plans;
                 const planName =
-                  interest.offering?.investment_plans?.name_en ??
-                  "Unknown plan";
+                  (locale === "bn" ? plan?.name_bn : plan?.name_en) ??
+                  plan?.name_en ??
+                  t("unknownPlan");
                 const style =
                   STATUS_STYLE[interest.status] ?? "bg-stone text-ink-muted";
-                const label = STATUS_LABEL[interest.status] ?? interest.status;
+                const label = t.has(`statusLabel.${interest.status}`) ? t(`statusLabel.${interest.status}`) : interest.status;
                 return (
                   <tr
                     key={interest.id}
@@ -137,14 +130,14 @@ export default async function InvestorInterestsPage() {
                       </span>
                     </td>
                     <td className="px-5 py-3 text-[12px] text-ink-secondary">
-                      {formatDate(interest.created_at)}
+                      {formatDate(interest.created_at, locale)}
                     </td>
                     <td className="px-5 py-3 text-right">
                       <Link
                         href={`/interest/${interest.reference}`}
                         className="text-[12px] font-semibold text-terracotta hover:underline"
                       >
-                        View →
+                        {t("view")}
                       </Link>
                     </td>
                   </tr>

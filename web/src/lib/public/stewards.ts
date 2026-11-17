@@ -31,7 +31,7 @@ export async function listPublicStewards(opts: {
       id, full_name,
       steward_profiles ( steward_type, experience, division_id, district_id, upazila, categories,
         divisions ( slug, name_en ),
-        districts ( slug, name_en )
+        districts ( slug, name_en, name_bn )
       ),
       steward_plan_offerings!steward_id ( id, status )
       `,
@@ -89,7 +89,7 @@ export async function findPublicStewardBySlug(idOrSlug: string) {
       id, full_name,
       steward_profiles ( steward_type, experience, division_id, district_id, upazila, categories,
         divisions ( slug, name_en ),
-        districts ( slug, name_en )
+        districts ( slug, name_en, name_bn )
       ),
       steward_plan_offerings!steward_id (
         id, status, units_offered, units_funded,
@@ -99,7 +99,7 @@ export async function findPublicStewardBySlug(idOrSlug: string) {
           estimated_roi_min, estimated_roi_max, status,
           livestock_categories ( slug, name_en ),
           divisions ( slug, name_en ),
-          districts ( slug, name_en )
+          districts ( slug, name_en, name_bn )
         )
       )
       `,

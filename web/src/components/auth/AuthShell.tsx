@@ -16,15 +16,16 @@ export function AuthShell({
   backLabel,
 }: AuthShellProps) {
   const t = useTranslations("authShell");
+  const tu = useTranslations("app.userMenu");
 
   return (
     <div className="flex min-h-screen flex-col bg-cream">
       <header className="border-b border-border-light bg-cream">
         <div className="mx-auto flex w-full max-w-[1440px] items-center justify-between px-6 py-4 sm:px-10 lg:px-20">
-          <Link href="/" aria-label="Krishi — home" className="relative block h-10 w-32">
+          <Link href="/" aria-label={tu("home")} className="relative block h-10 w-32">
             <Image
               src="/logo.png"
-              alt="Krishi"
+              alt={tu("brand")}
               fill
               priority
               sizes="128px"

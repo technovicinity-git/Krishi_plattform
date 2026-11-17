@@ -1,3 +1,5 @@
+import { useLocale, useTranslations } from "next-intl";
+
 interface Update {
   id: string;
   updateType: string;
@@ -21,32 +23,23 @@ const TYPE_COLORS: Record<string, string> = {
   sale: "bg-[#E8F0EA] text-green-deep",
 };
 
-const TYPE_LABEL: Record<string, string> = {
-  stage_change: "Stage",
-  fund_request: "Fund Request",
-  fund_disbursed: "Disbursement",
-  purchase: "Purchase",
-  expense: "Expense",
-  health_check: "Health",
-  photo_update: "Photo",
-  note: "Note",
-  sale: "Sale",
-};
-
 export function UpdatesList({
   updates,
-  emptyMessage = "No updates yet.",
+  emptyMessage,
 }: {
   updates: Update[];
   emptyMessage?: string;
 }) {
+  const t = useTranslations("app.updates");
+  const tr = useTranslations("app.roles");
+  const locale = useLocale();
   return (
     <div className="rounded-xl border border-border-light bg-white p-6">
       <h2 className="text-[11px] font-bold uppercase tracking-[0.02em] text-ink-muted">
-        Updates & Activity
+        {t("heading")}
       </h2>
       {updates.length === 0 ? (
-        <p className="mt-4 text-[13px] text-ink-muted">{emptyMessage}</p>
+        <p className="mt-4 text-[13px] text-ink-muted">{emptyMessage ?? t("empty")}</p>
       ) : (
         <div className="mt-4 flex flex-col gap-4">
           {updates.map((u) => (
@@ -64,10 +57,10 @@ export function UpdatesList({
                       TYPE_COLORS[u.updateType] ?? "bg-stone text-ink-muted"
                     }`}
                   >
-                    {TYPE_LABEL[u.updateType] ?? u.updateType}
+                    {t.has(`type.${u.updateType}`) ? t(`type.${u.updateType}`) : u.updateType}
                   </span>
                   <span className="text-[11px] text-ink-muted">
-                    {new Date(u.createdAt).toLocaleDateString("en-GB", {
+                    {new Date(u.createdAt).toLocaleDateString(locale === "bn" ? "bn-BD" : "en-GB", {
                       day: "2-digit",
                       month: "short",
                       year: "numeric",
@@ -75,7 +68,7 @@ export function UpdatesList({
                   </span>
                   {u.authorRole && (
                     <span className="text-[10px] uppercase text-ink-muted">
-                      · {u.authorRole}
+                      · {tr.has(u.authorRole) ? tr(u.authorRole) : u.authorRole}
                     </span>
                   )}
                 </div>

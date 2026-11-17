@@ -8,6 +8,7 @@ import { OTPInput } from "./OTPInput";
 
 export function OTPForm() {
   const t = useTranslations("auth.otp");
+  const tErr = useTranslations("errors");
   const router = useRouter();
   const searchParams = useSearchParams();
   const phone = searchParams.get("phone") ?? "";
@@ -55,7 +56,7 @@ export function OTPForm() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error ?? t("errors.invalidOtp"));
+        setError(data.error ?? tErr("invalidOtp"));
         setSubmitting(false);
         return;
       }
@@ -63,7 +64,7 @@ export function OTPForm() {
       router.push("/portal/profile");
       router.refresh();
     } catch {
-      setError(t("errors.network"));
+      setError(tErr("network"));
       setSubmitting(false);
     }
   };

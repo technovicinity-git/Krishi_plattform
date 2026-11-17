@@ -12,6 +12,7 @@ import { useDialog } from "@/components/ui/dialog-provider";
 
 export function RegisterForm() {
   const t = useTranslations("auth.register");
+  const tErr = useTranslations("errors");
   const router = useRouter();
   const { alert } = useDialog();
 
@@ -36,7 +37,7 @@ export function RegisterForm() {
       confirmPassword,
     });
     if (!parsed.success) {
-      setError(parsed.error.issues[0]?.message ?? t("errors.generic"));
+      setError(parsed.error.issues[0]?.message ?? tErr("generic"));
       return;
     }
     if (!agreed) {
@@ -59,7 +60,7 @@ export function RegisterForm() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error ?? t("errors.generic"));
+        setError(data.error ?? tErr("generic"));
         setSubmitting(false);
         return;
       }
@@ -67,7 +68,7 @@ export function RegisterForm() {
       const e164 = toE164(phone);
       router.push(`/verify-otp?phone=${encodeURIComponent(e164)}`);
     } catch {
-      setError(t("errors.network"));
+      setError(tErr("network"));
       setSubmitting(false);
     }
   };

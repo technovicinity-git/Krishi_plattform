@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { compressImage } from "@/lib/images/compress";
 import { createClient } from "@/lib/supabase/client";
 
 export function DepositForm({ interestId, expectedAmount }: { interestId: string, expectedAmount: number }) {
+  const t = useTranslations("app.deposit");
   const router = useRouter();
   const supabase = createClient();
 
@@ -21,8 +23,8 @@ export function DepositForm({ interestId, expectedAmount }: { interestId: string
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (method === "bank" && !txnId) return setError("Transaction ID is required.");
-    if (method === "mfs" && !senderNumber) return setError("Sender number is required.");
+    if (method === "bank" && !txnId) return setError(t("txnRequired"));
+    if (method === "mfs" && !senderNumber) return setError(t("senderRequired"));
 
     setLoading(true);
     setError(null);
@@ -37,7 +39,7 @@ export function DepositForm({ interestId, expectedAmount }: { interestId: string
           .from("deposit-proofs")
           .upload(fileName, compressed);
 
-        if (uploadError) throw new Error(uploadError.message || "Failed to upload proof");
+        if (uploadError) throw new Error(uploadError.message || t("uploadFailed"));
         proofPath = fileName;
       }
 
@@ -60,7 +62,7 @@ export function DepositForm({ interestId, expectedAmount }: { interestId: string
 
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || "Failed to submit");
+        throw new Error(data.error || t("submitFailed"));
       }
 
       router.refresh();
@@ -73,28 +75,28 @@ export function DepositForm({ interestId, expectedAmount }: { interestId: string
   return (
     <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-5 border-t border-border-light pt-6">
       <div>
-        <label className="text-[13px] font-semibold text-ink-nav">Payment Method</label>
+        <label className="text-[13px] font-semibold text-ink-nav">{t("paymentMethod")}</label>
         <div className="mt-2 flex gap-6">
           <label className="flex items-center gap-2 text-[13px] cursor-pointer">
             <input type="radio" checked={method === "mfs"} onChange={() => setMethod("mfs")} className="accent-terracotta" />
-            Mobile Wallet
+            {t("mobileWallet")}
           </label>
           <label className="flex items-center gap-2 text-[13px] cursor-pointer">
             <input type="radio" checked={method === "bank"} onChange={() => setMethod("bank")} className="accent-terracotta" />
-            Bank Transfer
+            {t("bankTransfer")}
           </label>
         </div>
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div>
-          <label className="text-[13px] font-semibold text-ink-nav">Amount to Send (BDT)</label>
+          <label className="text-[13px] font-semibold text-ink-nav">{t("amountToSend")}</label>
           <div className="mt-1 flex h-[44px] w-full items-center rounded-[8px] border border-border-light bg-stone px-3 text-[14px] font-bold text-ink">
             ৳{expectedAmount.toLocaleString("en-IN")}
           </div>
         </div>
         <div>
-          <label className="text-[13px] font-semibold text-ink-nav">Deposit Date</label>
+          <label className="text-[13px] font-semibold text-ink-nav">{t("depositDate")}</label>
           <input
             type="date"
             value={depositDate}
@@ -106,41 +108,41 @@ export function DepositForm({ interestId, expectedAmount }: { interestId: string
 
       {method === "mfs" ? (
         <div>
-          <label className="text-[13px] font-semibold text-ink-nav">Sender Mobile Number</label>
+          <label className="text-[13px] font-semibold text-ink-nav">{t("senderNumber")}</label>
           <input
             type="text"
             value={senderNumber}
             onChange={(e) => setSenderNumber(e.target.value)}
-            placeholder="e.g. 01712345678"
+            placeholder={t("senderPlaceholder")}
             className="mt-1 h-[44px] w-full rounded-[8px] border border-border-light bg-cream px-3 text-[13px] focus:border-sage focus:outline-none"
           />
         </div>
       ) : (
         <div>
-          <label className="text-[13px] font-semibold text-ink-nav">Transaction ID (TXN)</label>
+          <label className="text-[13px] font-semibold text-ink-nav">{t("txnId")}</label>
           <input
             type="text"
             value={txnId}
             onChange={(e) => setTxnId(e.target.value)}
-            placeholder="e.g. 9F2A1B3C"
+            placeholder={t("txnPlaceholder")}
             className="mt-1 h-[44px] w-full rounded-[8px] border border-border-light bg-cream px-3 text-[13px] focus:border-sage focus:outline-none"
           />
         </div>
       )}
 
       <div>
-        <label className="text-[13px] font-semibold text-ink-nav">Additional Note (Optional)</label>
+        <label className="text-[13px] font-semibold text-ink-nav">{t("note")}</label>
         <input
           type="text"
           value={note}
           onChange={(e) => setNote(e.target.value)}
-          placeholder="Any reference or note"
+          placeholder={t("notePlaceholder")}
           className="mt-1 h-[44px] w-full rounded-[8px] border border-border-light bg-cream px-3 text-[13px] focus:border-sage focus:outline-none"
         />
       </div>
 
       <div>
-        <label className="text-[13px] font-semibold text-ink-nav">Upload Payment Proof (Optional)</label>
+        <label className="text-[13px] font-semibold text-ink-nav">{t("proof")}</label>
         <input
           type="file"
           accept="image/*"
@@ -156,7 +158,7 @@ export function DepositForm({ interestId, expectedAmount }: { interestId: string
         disabled={loading}
         className="mt-2 h-[48px] rounded bg-ink text-[14px] font-bold text-white hover:bg-[#2A2A2A] disabled:opacity-60"
       >
-        {loading ? "Submitting..." : "Submit Deposit for Review"}
+        {loading ? t("submitting") : t("submit")}
       </button>
     </form>
   );

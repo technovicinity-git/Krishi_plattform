@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { getLocale } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { findPublicStewardBySlug } from "@/lib/public/stewards";
 import { Container } from "@/components/ui/Container";
 import { Badge } from "@/components/ui/Badge";
@@ -33,6 +33,8 @@ export default async function StewardProfilePage({
   if (!steward) notFound();
 
   const locale = await getLocale();
+  const t = await getTranslations("app.stewardProfile");
+  const bn = locale === "bn";
   const profile = Array.isArray(steward.steward_profiles)
     ? steward.steward_profiles[0]
     : steward.steward_profiles;
@@ -44,12 +46,12 @@ export default async function StewardProfilePage({
   );
 
   const operatingArea = profile
-    ? [profile.upazila, profile.districts?.name_en].filter(Boolean).join(", ")
-    : "Bangladesh";
+    ? [profile.upazila, (bn ? profile.districts?.name_bn : null) ?? profile.districts?.name_en].filter(Boolean).join(", ")
+    : t("bangladesh");
 
   const categories: string[] = profile?.categories ?? [];
   const experience: string = profile?.experience ?? "";
-  const stewardName = steward.full_name ?? "Steward";
+  const stewardName = steward.full_name ?? t("steward");
   const isOrg = profile?.steward_type === "organization";
 
   return (
@@ -61,36 +63,36 @@ export default async function StewardProfilePage({
             <div className="flex flex-col gap-6">
               <div className="flex flex-col gap-3">
                 <span className="text-[11px] font-semibold uppercase tracking-[0.02em] text-green-olive">
-                  Steward
+                  {t("steward")}
                 </span>
                 <h1 className="font-serif text-[36px] leading-[1.1] text-ink sm:text-[44px] lg:text-[52px]">
                   {stewardName}
                 </h1>
                 <div className="text-[13px] font-semibold text-sage">
-                  {isOrg ? "Steward Organization" : "Individual Steward"}
+                  {isOrg ? t("typeOrgLong") : t("typeIndividualLong")}
                 </div>
                 <p className="text-[13px] text-ink-secondary">{operatingArea}</p>
                 <div className="flex items-center gap-1.5 text-[13px] font-medium text-ink-muted">
                   <StarIcon className="h-3.5 w-3.5 text-terracotta" />
-                  No reviews yet
+                  {t("noReviews")}
                 </div>
               </div>
               <p className="max-w-[560px] text-[15px] leading-[1.65] text-ink-secondary">
                 {experience ||
-                  "Coordinates livestock care and investment operations in this region."}
+                  t("defaultExperience")}
               </p>
               <div className="flex flex-wrap gap-3 pt-2">
                 <Link
                   href="/plans"
                   className="inline-flex h-[48px] items-center justify-center rounded-[4px] bg-terracotta px-6 text-[13px] font-bold text-white hover:bg-[#B85A3F]"
                 >
-                  Explore Investment Opportunities →
+                  {t("exploreOpportunities")}
                 </Link>
                 <Link
                   href="/stewards"
                   className="inline-flex h-[48px] items-center justify-center rounded-[4px] border border-border-light px-6 text-[13px] font-semibold text-ink-nav hover:bg-stone"
                 >
-                  Back to Stewards
+                  {t("backToStewards")}
                 </Link>
               </div>
             </div>
@@ -115,10 +117,10 @@ export default async function StewardProfilePage({
             <div className="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
               <div>
                 <span className="text-[11px] font-semibold uppercase tracking-[0.02em] text-green-olive">
-                  About the Steward
+                  {t("aboutEyebrow")}
                 </span>
                 <h2 className="mt-3 font-serif text-[28px] leading-tight text-ink md:text-[36px]">
-                  Local knowledge. Responsible coordination.
+                  {t("aboutHeading")}
                 </h2>
               </div>
               <div>
@@ -135,20 +137,20 @@ export default async function StewardProfilePage({
       <section className="bg-cream py-16">
         <Container>
           <h2 className="font-serif text-[28px] leading-tight text-ink md:text-[36px]">
-            At a Glance
+            {t("atAGlance")}
           </h2>
           <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <GlanceCard label="Operating Area" value={operatingArea} />
+            <GlanceCard label={t("operatingArea")} value={operatingArea} />
             <GlanceCard
-              label="Livestock Focus"
+              label={t("livestockFocus")}
               value={categories.length ? categories.join(", ") : "—"}
             />
             <GlanceCard
-              label="Steward Type"
-              value={isOrg ? "Organization" : "Individual"}
+              label={t("stewardType")}
+              value={isOrg ? t("typeOrg") : t("typeIndividual")}
             />
             <GlanceCard
-              label="Current Opportunities"
+              label={t("currentOpportunities")}
               value={String(activeOfferings.length)}
             />
           </div>
@@ -159,18 +161,18 @@ export default async function StewardProfilePage({
       <section className="bg-stone/40 py-16">
         <Container>
           <h2 className="font-serif text-[28px] leading-tight text-ink md:text-[36px]">
-            Investor Reviews
+            {t("reviewsHeading")}
           </h2>
           <p className="mt-2 text-[13px] text-ink-secondary">
-            Hear from investors who have worked with this steward.
+            {t("reviewsSubtitle")}
           </p>
           <div className="mt-8 rounded-2xl border border-border-light bg-white p-10 text-center">
             <StarIcon className="mx-auto h-8 w-8 text-ink-muted/40" />
             <p className="mt-3 text-[14px] font-semibold text-ink-secondary">
-              No reviews yet
+              {t("noReviews")}
             </p>
             <p className="mt-1 text-[12px] text-ink-muted">
-              Reviews from investors will appear here once a plan completes.
+              {t("reviewsEmpty")}
             </p>
           </div>
         </Container>
@@ -181,21 +183,20 @@ export default async function StewardProfilePage({
         <Container>
           <div className="flex flex-col gap-4">
             <span className="text-[11px] font-semibold uppercase tracking-[0.02em] text-green-olive">
-              Current Investment Opportunities
+              {t("opportunitiesEyebrow")}
             </span>
             <h2 className="font-serif text-[28px] leading-tight text-ink md:text-[36px]">
-              Plans offered by {stewardName}
+              {t("plansBy", { name: stewardName })}
             </h2>
             <p className="text-[13px] text-ink-secondary">
-              Explore livestock investment plans currently coordinated by this
-              steward.
+              {t("plansSubtitle")}
             </p>
           </div>
 
           {activeOfferings.length === 0 ? (
             <div className="mt-8 rounded-2xl border border-dashed border-border-light bg-stone p-12 text-center">
               <p className="text-[14px] font-semibold text-ink-secondary">
-                No active opportunities at the moment.
+                {t("noOpportunities")}
               </p>
             </div>
           ) : (
@@ -228,12 +229,12 @@ export default async function StewardProfilePage({
                         />
                       ) : (
                         <div className="flex h-full items-center justify-center text-[12px] text-ink-muted">
-                          No image
+                          {t("noImage")}
                         </div>
                       )}
                       <div className="absolute right-4 top-4">
                         <Badge variant="approved">
-                          Accepting Investors
+                          {t("acceptingInvestors")}
                         </Badge>
                       </div>
                     </div>
@@ -243,13 +244,13 @@ export default async function StewardProfilePage({
                           {planName}
                         </h3>
                         <p className="mt-1 text-[12px] text-ink-muted">
-                          {plan.districts?.name_en} · {plan.duration_months}{" "}
-                          months
+                          {(bn ? plan.districts?.name_bn : null) ?? plan.districts?.name_en} ·{" "}
+                          {t("months", { count: plan.duration_months })}
                         </p>
                       </div>
                       <div className="border-y border-stone py-3">
                         <span className="text-[11px] font-semibold uppercase leading-none tracking-[0.02em] text-ink-muted">
-                          Estimated ROI
+                          {t("estimatedRoi")}
                         </span>
                         <div className="mt-1 text-[22px] font-bold text-ink">
                           {plan.estimated_roi_min}–{plan.estimated_roi_max}%
@@ -257,7 +258,7 @@ export default async function StewardProfilePage({
                       </div>
                       <div>
                         <span className="text-[11px] font-semibold uppercase leading-none tracking-[0.02em] text-ink-muted">
-                          Investment per Unit
+                          {t("perUnit")}
                         </span>
                         <div className="mt-1 text-[20px] font-bold text-ink">
                           {formatBDT(Number(plan.unit_price))}
@@ -267,7 +268,7 @@ export default async function StewardProfilePage({
                         href={`/plans/${offeringSlug}`}
                         className="mt-1 inline-flex h-[44px] w-full items-center justify-center rounded-[4px] bg-ink text-[13px] font-semibold text-white hover:bg-[#2A2A2A]"
                       >
-                        View Plan →
+                        {t("viewPlan")}
                       </Link>
                     </div>
                   </article>
@@ -282,28 +283,28 @@ export default async function StewardProfilePage({
       <section className="bg-stone/40 py-16">
         <Container>
           <h2 className="font-serif text-[28px] leading-tight text-ink md:text-[36px]">
-            How This Steward Supports the Journey
+            {t("supportHeading")}
           </h2>
           <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
             <SupportCard
               n="01"
-              title="Coordination"
-              body="Coordinates farmers and livestock activities."
+              title={t("support1Title")}
+              body={t("support1Body")}
             />
             <SupportCard
               n="02"
-              title="Monitoring"
-              body="Helps keep livestock activity visible through regular updates."
+              title={t("support2Title")}
+              body={t("support2Body")}
             />
             <SupportCard
               n="03"
-              title="Expense Oversight"
-              body="Reviews and coordinates eligible livestock expenses."
+              title={t("support3Title")}
+              body={t("support3Body")}
             />
             <SupportCard
               n="04"
-              title="Sale Coordination"
-              body="Coordinates the livestock sale process."
+              title={t("support4Title")}
+              body={t("support4Body")}
             />
           </div>
         </Container>
@@ -314,27 +315,26 @@ export default async function StewardProfilePage({
         <Container>
           <div className="mx-auto flex max-w-[820px] flex-col items-center gap-6 text-center">
             <span className="text-[11px] font-semibold uppercase tracking-[0.02em] text-white/60">
-              Ready to Begin?
+              {t("ctaEyebrow")}
             </span>
             <h2 className="font-serif text-[32px] leading-[1.15] text-white md:text-[48px]">
-              Explore the Investment Opportunities They Help Coordinate.
+              {t("ctaHeading")}
             </h2>
             <p className="max-w-[620px] text-[14px] leading-[1.65] text-white/70">
-              Discover available livestock investment plans currently
-              coordinated through Krishi.
+              {t("ctaBody")}
             </p>
             <div className="flex flex-wrap justify-center gap-3 pt-2">
               <Link
                 href="/plans"
                 className="inline-flex h-[48px] items-center justify-center rounded-[4px] bg-terracotta px-6 text-[13px] font-bold text-white hover:bg-[#B85A3F]"
               >
-                Explore Investment Plans
+                {t("explorePlans")}
               </Link>
               <Link
                 href="/stewards"
                 className="inline-flex h-[48px] items-center justify-center rounded-[4px] border border-white/30 px-6 text-[13px] font-semibold text-white hover:bg-white/10"
               >
-                View Other Stewards
+                {t("otherStewards")}
               </Link>
             </div>
           </div>

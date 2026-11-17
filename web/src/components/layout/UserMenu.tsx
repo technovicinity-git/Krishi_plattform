@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/cn";
 
 interface MenuItem {
@@ -33,6 +34,7 @@ export function UserMenu({
   logoutRedirect = "/login",
   avatar,
 }: UserMenuProps) {
+  const t = useTranslations("app.userMenu");
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
@@ -136,7 +138,7 @@ export function UserMenu({
               disabled={loggingOut}
               className="mt-1 rounded-[6px] border-t border-border-light px-3 pt-3 pb-2.5 text-left text-[13px] font-medium text-terracotta transition-colors hover:bg-[#FAF0ED] disabled:opacity-60"
             >
-              {loggingOut ? "Signing out..." : "Sign out"}
+              {loggingOut ? t("signingOut") : t("signOut")}
             </button>
           </nav>
         </div>

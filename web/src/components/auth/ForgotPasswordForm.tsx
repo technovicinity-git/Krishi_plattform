@@ -9,6 +9,8 @@ import { FormInput } from "./FormInput";
 
 export function ForgotPasswordForm() {
   const t = useTranslations("auth.forgot");
+  const tErr = useTranslations("errors");
+  const tf = useTranslations("app.forms");
   const router = useRouter();
 
   const [phone, setPhone] = useState("");
@@ -21,7 +23,7 @@ export function ForgotPasswordForm() {
 
     const parsed = phoneSchema.safeParse(phone);
     if (!parsed.success) {
-      setError(parsed.error.issues[0]?.message ?? t("errors.generic"));
+      setError(parsed.error.issues[0]?.message ?? tErr("generic"));
       return;
     }
 
@@ -37,7 +39,7 @@ export function ForgotPasswordForm() {
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok) {
-        setError(data.error ?? "Unable to send code");
+        setError(data.error ?? tf("sendCodeFailed"));
         setSubmitting(false);
         return;
       }
@@ -45,7 +47,7 @@ export function ForgotPasswordForm() {
       const e164 = toE164(phone);
       router.push(`/reset-password?phone=${encodeURIComponent(e164)}`);
     } catch {
-      setError(t("errors.network"));
+      setError(tErr("network"));
       setSubmitting(false);
     }
   };

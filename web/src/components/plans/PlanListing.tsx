@@ -2,7 +2,7 @@
 
 import { useMemo, useState, useEffect, useTransition } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Container } from "@/components/ui/Container";
 import { PlanCard } from "@/components/plans/PlanCard";
 import { ChevronDownIcon, SearchIcon, XCircleIcon } from "@/components/icons";
@@ -17,6 +17,7 @@ interface PlanListingProps {
 
 export function PlanListing({ items, total, page, hasMore }: PlanListingProps) {
   const t = useTranslations("plansPage");
+  const tpl = useTranslations("app.planText");
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -220,7 +221,7 @@ export function PlanListing({ items, total, page, hasMore }: PlanListingProps) {
         ) : (
           <div className="rounded-[8px] border border-border-light bg-stone p-12 text-center">
             <p className="text-[14px] font-semibold text-ink-secondary">
-              No opportunities match your filters.
+              {tpl("noResults")}
             </p>
           </div>
         )}
@@ -256,10 +257,11 @@ export function PlanListing({ items, total, page, hasMore }: PlanListingProps) {
 
 function OfferingCard({ item }: { item: OfferingListItem }) {
   const t = useTranslations("plansPage");
+  const tp = useTranslations("app.planText");
+  const bn = useLocale() === "bn";
+  const planName = bn ? item.planNameBn : item.planNameEn;
 
-  const fundingValue = `${
-    item.unitsFunded
-  } of ${item.unitsOffered} Units`;
+  const fundingValue = tp("unitsOf", { funded: item.unitsFunded, total: item.unitsOffered });
   const percentage =
     item.unitsOffered > 0 ? (item.unitsFunded / item.unitsOffered) * 100 : 0;
 
@@ -307,18 +309,16 @@ function OfferingCard({ item }: { item: OfferingListItem }) {
   return (
     <PlanCard
       image={imageUrl}
-      imageAlt={item.planNameEn}
-      title={item.planNameEn}
-      meta={`${item.districtNameEn} · ${item.durationMonths} months · ${item.steward.name}`}
+      imageAlt={planName}
+      title={planName}
+      meta={`${bn ? item.districtNameBn : item.districtNameEn} · ${tp("months", { count: item.durationMonths })} · ${item.steward.name}`}
       status={statusLabel}
       statusVariant={statusVariant}
       estimatedReturn={`${item.roiMin}–${item.roiMax}%`}
       estimatedReturnLabel={t("card.estimatedReturn")}
       investmentPerUnit={`৳${money(item.unitPrice)}`}
       investmentPerUnitLabel={t("card.investmentPerUnit")}
-      breakdown={`Animal ৳${money(item.animalAllocation)} + Care ৳${money(
-        item.careAllocation,
-      )}`}
+      breakdown={tp("breakdown", { animal: `৳${money(item.animalAllocation)}`, care: `৳${money(item.careAllocation)}` })}
       fundingProgress={{
         label: t("card.fundingProgress"),
         value: fundingValue,

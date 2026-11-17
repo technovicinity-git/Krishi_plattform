@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getLocale, getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { FarmerActivationPanel } from "@/components/steward/FarmerActivationPanel";
 
-function formatDateTime(iso: string | null): string {
+function formatDateTime(iso: string | null, locale: string): string {
   if (!iso) return "—";
-  return new Date(iso).toLocaleString("en-GB", {
+  return new Date(iso).toLocaleString(locale === "bn" ? "bn-BD" : "en-GB", {
     day: "2-digit",
     month: "short",
     year: "numeric",
@@ -24,6 +25,9 @@ export default async function StewardFarmerDetailPage({
   if (!user) return null;
 
   const { id } = await params;
+  const t = await getTranslations("app.stewardFarmer");
+  const ts = await getTranslations("app.status");
+  const locale = await getLocale();
   const db = createAdminClient();
 
   const { data: farmer } = await db
@@ -67,11 +71,11 @@ export default async function StewardFarmerDetailPage({
           className="inline-flex w-fit items-center gap-1.5 text-[12px] font-semibold text-ink-secondary hover:text-ink"
         >
           <span aria-hidden="true">←</span>
-          Back to Farmers
+          {t("back")}
         </Link>
         <div className="flex flex-wrap items-center justify-between gap-4">
           <h1 className="font-serif text-[28px] leading-tight text-ink">
-            {farmer.full_name ?? "Farmer"}
+            {farmer.full_name ?? t("farmer")}
           </h1>
           <span
             className={`inline-flex items-center rounded-[4px] px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.02em] ${
@@ -80,7 +84,7 @@ export default async function StewardFarmerDetailPage({
                 : "bg-[#FEF6E5] text-[#C48A2E]"
             }`}
           >
-            {isActive ? "Active" : "Pending Activation"}
+            {isActive ? t("active") : t("pendingActivation")}
           </span>
         </div>
       </div>
@@ -96,17 +100,17 @@ export default async function StewardFarmerDetailPage({
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <div className="flex flex-col gap-3 rounded-2xl border border-border-light bg-white p-6">
           <h2 className="text-[11px] font-bold uppercase tracking-[0.02em] text-ink-muted">
-            Contact
+            {t("contact")}
           </h2>
-          <Row label="Full Name" value={farmer.full_name ?? "—"} />
-          <Row label="Phone" value={farmer.phone ?? "—"} />
-          <Row label="Email" value={farmer.email ?? "—"} />
-          <Row label="Added" value={formatDateTime(farmer.created_at)} />
+          <Row label={t("fullName")} value={farmer.full_name ?? "—"} />
+          <Row label={t("phone")} value={farmer.phone ?? "—"} />
+          <Row label={t("email")} value={farmer.email ?? "—"} />
+          <Row label={t("added")} value={formatDateTime(farmer.created_at, locale)} />
           <Row
-            label="Activated"
+            label={t("activated")}
             value={
               farmer.phone_verified_at
-                ? formatDateTime(farmer.phone_verified_at)
+                ? formatDateTime(farmer.phone_verified_at, locale)
                 : "—"
             }
           />
@@ -114,17 +118,17 @@ export default async function StewardFarmerDetailPage({
 
         <div className="flex flex-col gap-3 rounded-2xl border border-border-light bg-white p-6">
           <h2 className="text-[11px] font-bold uppercase tracking-[0.02em] text-ink-muted">
-            KYC Draft
+            {t("kycDraft")}
           </h2>
           {kyc ? (
             <>
-              <Row label="Status" value={kyc.status} />
-              <Row label="NID Number" value={kyc.nid_number ?? "—"} />
-              <Row label="Present Address" value={kyc.present_address ?? "—"} />
+              <Row label={t("status")} value={ts.has(kyc.status) ? ts(kyc.status) : kyc.status} />
+              <Row label={t("nidNumber")} value={kyc.nid_number ?? "—"} />
+              <Row label={t("presentAddress")} value={kyc.present_address ?? "—"} />
             </>
           ) : (
             <p className="text-[13px] text-ink-muted">
-              No KYC record for this farmer yet.
+              {t("noKyc")}
             </p>
           )}
         </div>
@@ -132,9 +136,7 @@ export default async function StewardFarmerDetailPage({
 
       <div className="rounded-2xl border border-border-light bg-stone/40 p-6">
         <p className="text-[13px] leading-[1.6] text-ink-secondary">
-          Livestock assignment, updates, expense approvals, and sales
-          coordination for this farmer will appear here as we build the
-          stewardship workflow.
+          {t("comingSoon")}
         </p>
       </div>
     </div>
@@ -148,4 +150,4 @@ function Row({ label, value }: { label: string; value: string }) {
       <span className="text-right text-[13px] font-medium text-ink">{value}</span>
     </div>
   );
-}d
+}

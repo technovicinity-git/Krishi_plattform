@@ -38,6 +38,8 @@ export function StewardDetailsForm({
   districts: District[];
 }) {
   const t = useTranslations("stewardRegister.step2");
+  const tf = useTranslations("app.forms");
+  const tcm = useTranslations("app.common");
   const router = useRouter();
   const { alert } = useDialog();
 
@@ -72,10 +74,10 @@ export function StewardDetailsForm({
     e.preventDefault();
     setError(null);
 
-    if (!divisionId) return setError("Please choose a division.");
-    if (!districtId) return setError("Please choose a district.");
-    if (categories.length === 0) return setError("Select at least one livestock category.");
-    if (experience.trim().length < 10) return setError("Please describe your experience (at least 10 characters).");
+    if (!divisionId) return setError(tf("chooseDivision"));
+    if (!districtId) return setError(tf("chooseDistrict"));
+    if (categories.length === 0) return setError(tf("chooseCategory"));
+    if (experience.trim().length < 10) return setError(tf("describeExperience"));
 
     setSubmitting(true);
 
@@ -96,7 +98,7 @@ export function StewardDetailsForm({
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok) {
-        setError(data.error ?? "Failed to submit");
+        setError(data.error ?? tf("failedSubmit"));
         setSubmitting(false);
         return;
       }
@@ -104,7 +106,7 @@ export function StewardDetailsForm({
       router.push("/steward/submitted");
       router.refresh();
     } catch {
-      setError("Network error. Please try again.");
+      setError(tcm("networkError"));
       setSubmitting(false);
     }
   };

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
 
 import { formatBDT } from "@/lib/utils";
 
@@ -20,6 +21,11 @@ export function FundRequestsInlineList({
   requests: any[];
   showActions: boolean;
 }) {
+  const t = useTranslations("app.fundRequests");
+  const tp = useTranslations("app.purpose");
+  const ts = useTranslations("app.status");
+  const tc = useTranslations("app.common");
+  const locale = useLocale();
   const router = useRouter();
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [rejectId, setRejectId] = useState<string | null>(null);
@@ -39,7 +45,7 @@ export function FundRequestsInlineList({
       setReason("");
       router.refresh();
     } catch {
-      alert("Failed to process request");
+      alert(t("actionFailed"));
     } finally {
       setLoadingId(null);
     }
@@ -49,9 +55,10 @@ export function FundRequestsInlineList({
     <div className="flex flex-col gap-3">
       {requests.map((r) => {
         const inv = r.investment;
+        const plan = inv?.offering?.investment_plans;
         const planName =
-          inv?.offering?.investment_plans?.name_en ?? "Unknown plan";
-        const farmerName = inv?.farmer?.full_name ?? "Unknown farmer";
+          (locale === "bn" ? plan?.name_bn : plan?.name_en) ?? plan?.name_en ?? t("unknownPlan");
+        const farmerName = inv?.farmer?.full_name ?? t("unknownFarmer");
 
         return (
           <div
@@ -64,7 +71,7 @@ export function FundRequestsInlineList({
                   {r.reference}
                 </span>
                 <div className="mt-0.5 text-[12px] text-ink-secondary">
-                  {new Date(r.created_at).toLocaleDateString("en-GB", {
+                  {new Date(r.created_at).toLocaleDateString(locale === "bn" ? "bn-BD" : "en-GB", {
                     day: "2-digit",
                     month: "short",
                     year: "numeric",
@@ -76,34 +83,34 @@ export function FundRequestsInlineList({
                   STATUS_STYLE[r.status] ?? "bg-stone text-ink-muted"
                 }`}
               >
-                {r.status}
+                {ts.has(r.status) ? ts(r.status) : r.status}
               </span>
             </div>
 
             <div className="mt-3 grid grid-cols-2 gap-3 text-[13px] md:grid-cols-4">
               <div>
                 <span className="text-[10px] uppercase text-ink-muted">
-                  Farmer
+                  {t("farmer")}
                 </span>
                 <div className="font-semibold text-ink">{farmerName}</div>
               </div>
               <div>
                 <span className="text-[10px] uppercase text-ink-muted">
-                  Plan
+                  {t("plan")}
                 </span>
                 <div className="font-semibold text-ink">{planName}</div>
               </div>
               <div>
                 <span className="text-[10px] uppercase text-ink-muted">
-                  Purpose
+                  {t("purpose")}
                 </span>
                 <div className="font-semibold capitalize text-ink">
-                  {r.purpose.replace(/_/g, " ")}
+                  {tp.has(r.purpose) ? tp(r.purpose) : r.purpose.replace(/_/g, " ")}
                 </div>
               </div>
               <div>
                 <span className="text-[10px] uppercase text-ink-muted">
-                  Amount
+                  {t("amount")}
                 </span>
                 <div className="font-bold text-terracotta">
                   {formatBDT(r.amount)}
@@ -113,7 +120,7 @@ export function FundRequestsInlineList({
 
             {r.status === "rejected" && r.rejection_reason && (
               <div className="mt-3 rounded bg-[#FAF0ED] p-2 text-[11px] text-[#A13D2B]">
-                <strong>Rejected:</strong> {r.rejection_reason}
+                <strong>{t("rejectedLabel")}</strong> {r.rejection_reason}
               </div>
             )}
 
@@ -122,7 +129,7 @@ export function FundRequestsInlineList({
                 href={`/steward/investments/${inv?.id}`}
                 className="text-[12px] font-semibold text-terracotta hover:underline"
               >
-                View investment →
+                {t("viewInvestment")}
               </Link>
 
               {showActions && (
@@ -131,7 +138,7 @@ export function FundRequestsInlineList({
                     <div className="flex flex-col items-end gap-1">
                       <input
                         type="text"
-                        placeholder="Reason for rejection"
+                        placeholder={t("rejectReason")}
                         value={reason}
                         onChange={(e) => setReason(e.target.value)}
                         className="h-[32px] w-[220px] rounded border border-[#F0C9C0] px-2 text-[12px]"
@@ -142,7 +149,7 @@ export function FundRequestsInlineList({
                           disabled={loadingId === r.id || !reason}
                           className="rounded bg-[#A13D2B] px-3 py-1 text-[11px] font-bold text-white disabled:opacity-50"
                         >
-                          Confirm
+                          {tc("confirm")}
                         </button>
                         <button
                           onClick={() => {
@@ -151,7 +158,7 @@ export function FundRequestsInlineList({
                           }}
                           className="rounded border border-border-light px-3 py-1 text-[11px] font-semibold text-ink-secondary"
                         >
-                          Cancel
+                          {tc("cancel")}
                         </button>
                       </div>
                     </div>
@@ -162,14 +169,14 @@ export function FundRequestsInlineList({
                         disabled={loadingId === r.id}
                         className="rounded border border-border-light px-3 py-1.5 text-[11px] font-semibold text-ink-secondary hover:bg-stone disabled:opacity-50"
                       >
-                        Reject
+                        {tc("reject")}
                       </button>
                       <button
                         onClick={() => handleAction(r.id, "approve")}
                         disabled={loadingId === r.id}
                         className="rounded bg-ink px-3 py-1.5 text-[11px] font-bold text-white hover:bg-[#2A2A2A] disabled:opacity-50"
                       >
-                        {loadingId === r.id ? "..." : "Approve"}
+                        {loadingId === r.id ? "..." : tc("approve")}
                       </button>
                     </div>
                   )}

@@ -2,8 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 export function FundRequestModal({ investmentId, onClose }: { investmentId: string, onClose: () => void }) {
+  const t = useTranslations("app.fundRequest");
+  const tp = useTranslations("app.purpose");
+  const tc = useTranslations("app.common");
   const router = useRouter();
   const [amount, setAmount] = useState("");
   const [purpose, setPurpose] = useState("animal_purchase");
@@ -28,7 +32,7 @@ export function FundRequestModal({ investmentId, onClose }: { investmentId: stri
         }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to submit");
+      if (!res.ok) throw new Error(data.error || t("failed"));
       
       onClose();
       router.refresh();
@@ -41,26 +45,26 @@ export function FundRequestModal({ investmentId, onClose }: { investmentId: stri
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
-        <h2 className="font-serif text-[22px] text-ink">Request Funds</h2>
-        <p className="mt-1 text-[12px] text-ink-muted">Ask your steward for funds to cover investment expenses.</p>
+        <h2 className="font-serif text-[22px] text-ink">{t("title")}</h2>
+        <p className="mt-1 text-[12px] text-ink-muted">{t("subtitle")}</p>
 
         <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-4">
           <div>
-            <label className="text-[12px] font-semibold text-ink-nav">Purpose</label>
+            <label className="text-[12px] font-semibold text-ink-nav">{t("purpose")}</label>
             <select
               value={purpose}
               onChange={(e) => setPurpose(e.target.value)}
               className="mt-1 h-[40px] w-full rounded border border-border-light bg-cream px-3 text-[13px]"
             >
-              <option value="animal_purchase">Animal Purchase</option>
-              <option value="feed">Feed</option>
-              <option value="medical">Medical / Veterinary</option>
-              <option value="transport">Transport</option>
-              <option value="other">Other</option>
+              <option value="animal_purchase">{tp("animal_purchase")}</option>
+              <option value="feed">{tp("feed")}</option>
+              <option value="medical">{tp("medical")}</option>
+              <option value="transport">{tp("transport")}</option>
+              <option value="other">{tp("other")}</option>
             </select>
           </div>
           <div>
-            <label className="text-[12px] font-semibold text-ink-nav">Amount (BDT)</label>
+            <label className="text-[12px] font-semibold text-ink-nav">{t("amount")}</label>
             <input
               type="number"
               required
@@ -70,7 +74,7 @@ export function FundRequestModal({ investmentId, onClose }: { investmentId: stri
             />
           </div>
           <div>
-            <label className="text-[12px] font-semibold text-ink-nav">Note (Optional)</label>
+            <label className="text-[12px] font-semibold text-ink-nav">{t("note")}</label>
             <textarea
               value={note}
               onChange={(e) => setNote(e.target.value)}
@@ -82,9 +86,9 @@ export function FundRequestModal({ investmentId, onClose }: { investmentId: stri
           {error && <p className="text-[12px] text-[#A13D2B]">{error}</p>}
 
           <div className="flex gap-2">
-            <button type="button" onClick={onClose} className="flex-1 rounded border border-border-light py-2 text-[13px] font-semibold text-ink-secondary">Cancel</button>
+            <button type="button" onClick={onClose} className="flex-1 rounded border border-border-light py-2 text-[13px] font-semibold text-ink-secondary">{tc("cancel")}</button>
             <button type="submit" disabled={loading || !amount} className="flex-1 rounded bg-terracotta py-2 text-[13px] font-bold text-white disabled:opacity-50">
-              {loading ? "Sending..." : "Submit Request"}
+              {loading ? t("sending") : t("submit")}
             </button>
           </div>
         </form>

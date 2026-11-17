@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useDialog } from "@/components/ui/dialog-provider";
 
 interface ProfileEditFormProps {
@@ -15,6 +16,8 @@ export function ProfileEditForm({
   initialEmail,
   phone,
 }: ProfileEditFormProps) {
+  const t = useTranslations("app.profileForm");
+  const tc = useTranslations("app.common");
   const router = useRouter();
   const { alert } = useDialog();
   const [fullName, setFullName] = useState(initialFullName);
@@ -36,19 +39,19 @@ export function ProfileEditForm({
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok) {
-        setError(data.error ?? "Failed to save");
+        setError(data.error ?? t("failed"));
         setSubmitting(false);
         return;
       }
 
       await alert({
-        title: "Profile updated",
+        title: t("updated"),
         variant: "success",
       });
       router.refresh();
       setSubmitting(false);
     } catch {
-      setError("Network error. Please try again.");
+      setError(tc("networkError"));
       setSubmitting(false);
     }
   };
@@ -57,7 +60,7 @@ export function ProfileEditForm({
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="flex flex-col gap-2">
-          <label className="text-[13px] font-semibold text-ink-nav">Full Name</label>
+          <label className="text-[13px] font-semibold text-ink-nav">{t("fullName")}</label>
           <input
             type="text"
             value={fullName}
@@ -67,7 +70,7 @@ export function ProfileEditForm({
           />
         </div>
         <div className="flex flex-col gap-2">
-          <label className="text-[13px] font-semibold text-ink-nav">Phone Number</label>
+          <label className="text-[13px] font-semibold text-ink-nav">{t("phone")}</label>
           <input
             type="text"
             value={phone}
@@ -75,18 +78,18 @@ export function ProfileEditForm({
             className="h-[42px] w-full rounded-[8px] border border-border-light bg-stone px-3 text-[13px] text-ink-muted"
           />
           <p className="text-[11px] text-ink-muted">
-            Phone number cannot be changed. Contact support if needed.
+            {t("phoneLocked")}
           </p>
         </div>
         <div className="flex flex-col gap-2 sm:col-span-2">
           <label className="text-[13px] font-semibold text-ink-nav">
-            Email Address <span className="text-[11px] font-normal text-ink-muted">(optional)</span>
+            {t("email")} <span className="text-[11px] font-normal text-ink-muted">{tc("optional")}</span>
           </label>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@example.com"
+            placeholder={t("emailPlaceholder")}
             className="h-[42px] w-full rounded-[8px] border border-border-light bg-cream px-3 text-[13px] text-ink placeholder:text-ink-muted focus:border-sage focus:outline-none"
           />
         </div>
@@ -104,7 +107,7 @@ export function ProfileEditForm({
           disabled={submitting}
           className="inline-flex h-[42px] items-center justify-center rounded-[8px] bg-ink px-6 text-[13px] font-bold text-white hover:bg-[#2A2A2A] disabled:opacity-60"
         >
-          {submitting ? "Saving..." : "Save Changes"}
+          {submitting ? tc("saving") : t("save")}
         </button>
       </div>
     </form>

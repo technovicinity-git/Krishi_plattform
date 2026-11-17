@@ -24,6 +24,7 @@ export interface HeaderUser {
 
 export function Header({ user }: { user: HeaderUser | null }) {
   const t = useTranslations("nav");
+  const tu = useTranslations("app.userMenu");
   const pathname = usePathname();
   const locale = useLocale();
   const router = useRouter();
@@ -74,7 +75,7 @@ export function Header({ user }: { user: HeaderUser | null }) {
         <div className="hidden items-center gap-5 lg:flex">
           {user ? (
             <UserMenu
-              fullName={user.fullName ?? "User"}
+              fullName={user.fullName ?? tu("user")}
               phone={user.phone}
               items={menuItems}
               logoutRedirect={`/${locale}/login`}
@@ -100,7 +101,7 @@ export function Header({ user }: { user: HeaderUser | null }) {
 
         <button
           type="button"
-          aria-label={mobileOpen ? "Close menu" : "Open menu"}
+          aria-label={mobileOpen ? tu("closeMenu") : tu("openMenu")}
           aria-expanded={mobileOpen}
           onClick={() => setMobileOpen((v) => !v)}
           className="inline-flex h-10 w-10 items-center justify-center text-ink lg:hidden"
@@ -163,7 +164,7 @@ export function Header({ user }: { user: HeaderUser | null }) {
                     </span>
                     <div className="flex flex-col">
                       <span className="text-[13px] font-semibold text-ink">
-                        {user.fullName ?? "User"}
+                        {user.fullName ?? tu("user")}
                       </span>
                       {user.phone && (
                         <span className="text-[11px] text-ink-muted">
@@ -189,7 +190,7 @@ export function Header({ user }: { user: HeaderUser | null }) {
                       disabled={loggingOut}
                       className="mt-2 rounded-[6px] border-t border-border-light py-3 text-left text-[14px] font-medium text-terracotta hover:text-[#8A2F20] disabled:opacity-60"
                     >
-                      {loggingOut ? "Signing out..." : "Sign out"}
+                      {loggingOut ? tu("signingOut") : tu("signOut")}
                     </button>
                   </div>
                 </>

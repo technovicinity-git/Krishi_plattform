@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { getLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { DepositForm } from "@/components/onboarding/DepositForm";
@@ -24,7 +24,7 @@ export default async function OnboardingWizardPage({
     .select(`
       id, status, requested_units, reference,
       offering:steward_plan_offerings!offering_id (
-        investment_plans ( name_en, unit_price )
+        investment_plans ( name_en, name_bn, unit_price )
       )
     `)
     .eq("reference", reference)
@@ -60,25 +60,27 @@ export default async function OnboardingWizardPage({
   // Fetch active platform accounts for the deposit step
   const { data: accounts } = await db.from("platform_accounts").select("*").eq("is_active", true);
 
-  const planName = interest.offering?.investment_plans?.name_en ?? "Investment Plan";
+  const t = await getTranslations("app.onboardingWizard");
+  const plan = interest.offering?.investment_plans;
+  const planName = (locale === "bn" ? plan?.name_bn : plan?.name_en) ?? plan?.name_en ?? t("defaultPlanName");
   const unitPrice = Number(interest.offering?.investment_plans?.unit_price ?? 0);
   const totalAmount = unitPrice * interest.requested_units;
 
   return (
     <div className="mx-auto max-w-[720px] px-6 py-12">
       <div className="mb-8 text-center">
-        <h1 className="font-serif text-[32px] text-ink">Investment Readiness</h1>
+        <h1 className="font-serif text-[32px] text-ink">{t("title")}</h1>
         <p className="mt-2 text-[14px] text-ink-secondary">
-          Complete the required steps to activate your investment in {planName}.
+          {t("subtitle", { plan: planName })}
         </p>
       </div>
 
       {/* Stepper */}
       <div className="mb-10 grid grid-cols-4 gap-2">
-        <StepIcon n={1} label="KYC" active={currentStep === 1} done={currentStep > 1} />
-        <StepIcon n={2} label="Withdrawal" active={currentStep === 2} done={currentStep > 2} />
-        <StepIcon n={3} label="Deposit" active={currentStep === 3} done={currentStep > 3} />
-        <StepIcon n={4} label="Activation" active={currentStep === 4} done={currentStep > 4} />
+        <StepIcon n={1} label={t("stepKyc")} active={currentStep === 1} done={currentStep > 1} />
+        <StepIcon n={2} label={t("stepWithdrawal")} active={currentStep === 2} done={currentStep > 2} />
+        <StepIcon n={3} label={t("stepDeposit")} active={currentStep === 3} done={currentStep > 3} />
+        <StepIcon n={4} label={t("stepActivation")} active={currentStep === 4} done={currentStep > 4} />
       </div>
 
       {/* Content based on step */}
@@ -87,12 +89,12 @@ export default async function OnboardingWizardPage({
         {/* Step 1: KYC */}
         {currentStep === 1 && (
           <div className="text-center">
-            <h2 className="font-serif text-[24px] text-ink">Account KYC Required</h2>
+            <h2 className="font-serif text-[24px] text-ink">{t("kycTitle")}</h2>
             <p className="mt-2 text-[13px] text-ink-secondary">
-              Verify your identity to proceed with the deposit.
+              {t("kycBody")}
             </p>
             <Link href={`/${locale}/onboarding/kyc`} className="mt-6 inline-flex h-[48px] w-full items-center justify-center rounded bg-terracotta text-[14px] font-bold text-white hover:bg-[#B85A3F]">
-              Go to Account KYC →
+              {t("kycCta")}
             </Link>
           </div>
         )}
@@ -100,12 +102,12 @@ export default async function OnboardingWizardPage({
         {/* Step 2: Withdrawal Preference */}
         {currentStep === 2 && (
           <div className="text-center">
-            <h2 className="font-serif text-[24px] text-ink">Withdrawal Preference</h2>
+            <h2 className="font-serif text-[24px] text-ink">{t("withdrawalTitle")}</h2>
             <p className="mt-2 text-[13px] text-ink-secondary">
-              Where should we send your returns and principal?
+              {t("withdrawalBody")}
             </p>
             <Link href={`/${locale}/onboarding/withdrawal`} className="mt-6 inline-flex h-[48px] w-full items-center justify-center rounded bg-terracotta text-[14px] font-bold text-white hover:bg-[#B85A3F]">
-              Setup Withdrawal Method →
+              {t("withdrawalCta")}
             </Link>
           </div>
         )}
@@ -113,15 +115,18 @@ export default async function OnboardingWizardPage({
         {/* Step 3: Deposit */}
         {currentStep === 3 && (
           <div>
-            <h2 className="font-serif text-[24px] text-ink">Fund Your Investment</h2>
+            <h2 className="font-serif text-[24px] text-ink">{t("depositTitle")}</h2>
             <p className="mt-2 text-[13px] text-ink-secondary">
-              Transfer exactly <strong className="text-ink">৳{totalAmount.toLocaleString("en-IN")}</strong> to one of the platform accounts below, then enter the Transaction ID (TXN).
+              {t.rich("depositBody", {
+                amount: `৳${totalAmount.toLocaleString("en-IN")}`,
+                strong: (chunks) => <strong className="text-ink">{chunks}</strong>,
+              })}
             </p>
             
             <div className="mt-6 flex flex-col gap-3">
               {accounts?.map((acc) => (
                 <div key={acc.id} className="rounded-lg border border-border-light bg-cream p-4">
-                  <div className="text-[11px] font-bold uppercase text-ink-muted">{acc.method === "mfs" ? acc.provider : "Bank Transfer"}</div>
+                  <div className="text-[11px] font-bold uppercase text-ink-muted">{acc.method === "mfs" ? acc.provider : t("bankTransfer")}</div>
                   <div className="text-[15px] font-semibold text-ink">{acc.account_number}</div>
                   <div className="text-[12px] text-ink-secondary">{acc.account_name} {acc.branch_name ? `(${acc.branch_name})` : ""}</div>
                 </div>
@@ -138,9 +143,9 @@ export default async function OnboardingWizardPage({
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#FEF6E5] text-[#C48A2E]">
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
             </div>
-            <h2 className="mt-4 font-serif text-[24px] text-ink">Deposit Under Review</h2>
+            <h2 className="mt-4 font-serif text-[24px] text-ink">{t("reviewTitle")}</h2>
             <p className="mt-2 text-[13px] text-ink-secondary">
-              We received your deposit submission (TXN: {deposit?.txn_id}). Our admin team is verifying the transfer.
+              {t("reviewBody", { txn: deposit?.txn_id ?? "" })}
             </p>
           </div>
         )}
@@ -151,10 +156,10 @@ export default async function OnboardingWizardPage({
              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#EEF5EB] text-green-deep">
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12.5l4 4 10-10"/></svg>
             </div>
-            <h2 className="mt-4 font-serif text-[24px] text-ink">Investment Active</h2>
-            <p className="mt-2 text-[13px] text-ink-secondary">Your deposit was approved!</p>
+            <h2 className="mt-4 font-serif text-[24px] text-ink">{t("activeTitle")}</h2>
+            <p className="mt-2 text-[13px] text-ink-secondary">{t("activeBody")}</p>
             <Link href={`/${locale}/portal/investments`} className="mt-6 inline-flex h-[48px] w-full items-center justify-center rounded bg-ink text-[14px] font-bold text-white hover:bg-[#2A2A2A]">
-              Go to Dashboard
+              {t("goToDashboard")}
             </Link>
           </div>
         )}

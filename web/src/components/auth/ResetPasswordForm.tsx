@@ -12,6 +12,9 @@ type Step = "otp" | "password";
 
 export function ResetPasswordForm() {
   const t = useTranslations("auth.reset");
+  const tErr = useTranslations("errors");
+  const tf = useTranslations("app.forms");
+  const tcm = useTranslations("app.common");
   const router = useRouter();
   const searchParams = useSearchParams();
   const phone = searchParams.get("phone") ?? "";
@@ -61,7 +64,7 @@ export function ResetPasswordForm() {
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok) {
-        setError(data.error ?? t("errors.invalidOtp"));
+        setError(data.error ?? tErr("invalidOtp"));
         setSubmitting(false);
         return;
       }
@@ -71,7 +74,7 @@ export function ResetPasswordForm() {
       setSubmitting(false);
       setStep("password");
     } catch {
-      setError("Network error. Please try again.");
+      setError(tcm("networkError"));
       setSubmitting(false);
     }
   };
@@ -82,7 +85,7 @@ export function ResetPasswordForm() {
 
     const parsed = passwordSchema.safeParse(password);
     if (!parsed.success) {
-      setError(parsed.error.issues[0]?.message ?? t("errors.generic"));
+      setError(parsed.error.issues[0]?.message ?? tErr("generic"));
       return;
     }
     if (password !== confirmPassword) {
@@ -100,7 +103,7 @@ export function ResetPasswordForm() {
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok) {
-        setError(data.error ?? "Failed to update password");
+        setError(data.error ?? tf("failedPassword"));
         setSubmitting(false);
         return;
       }
@@ -108,7 +111,7 @@ export function ResetPasswordForm() {
       router.push("/login?reset=success");
       router.refresh();
     } catch {
-      setError("Network error. Please try again.");
+      setError(tcm("networkError"));
       setSubmitting(false);
     }
   };

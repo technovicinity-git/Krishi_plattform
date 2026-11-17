@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { createAdminClient } from "@/lib/supabase/admin";
 
@@ -6,6 +7,7 @@ export default async function StewardDashboardPage() {
   const user = await getCurrentUser();
   if (!user) return null;
 
+  const t = await getTranslations("app.stewardHome");
   const db = createAdminClient();
 
   const { count: farmerCount } = await db
@@ -25,10 +27,10 @@ export default async function StewardDashboardPage() {
     <div className="flex w-full max-w-[960px] flex-col gap-8">
       <div className="flex flex-col gap-2">
         <h1 className="font-serif text-[28px] leading-tight text-ink lg:text-[32px]">
-          Welcome, {user.fullName ?? "Steward"}
+          {t("welcome", { name: user.fullName ?? t("steward") })}
         </h1>
         <p className="text-[14px] text-ink-secondary">
-          Your steward console. Manage farmers and coordinate livestock operations.
+          {t("subtitle")}
         </p>
       </div>
 
@@ -38,7 +40,7 @@ export default async function StewardDashboardPage() {
           className="flex flex-col gap-1 rounded-2xl border border-border-light bg-white p-6 transition-colors hover:bg-stone"
         >
           <span className="text-[11px] font-semibold uppercase tracking-[0.02em] text-ink-muted">
-            Total Farmers
+            {t("totalFarmers")}
           </span>
           <span className="font-serif text-[36px] leading-none text-ink">
             {farmerCount ?? 0}
@@ -52,7 +54,7 @@ export default async function StewardDashboardPage() {
           }`}
         >
           <span className="text-[11px] font-semibold uppercase tracking-[0.02em] text-ink-muted">
-            Pending Activation
+            {t("pendingActivation")}
           </span>
           <span className="font-serif text-[36px] leading-none text-ink">
             {pendingCount ?? 0}
@@ -64,23 +66,23 @@ export default async function StewardDashboardPage() {
           className="flex flex-col items-start justify-center gap-2 rounded-2xl border border-border-light bg-ink p-6 text-white transition-colors hover:bg-[#2A2A2A]"
         >
           <span className="text-[11px] font-semibold uppercase tracking-[0.02em] text-white/70">
-            Quick Action
+            {t("quickAction")}
           </span>
           <span className="font-serif text-[20px] leading-tight">
-            + Add a Farmer
+            {t("addFarmer")}
           </span>
         </Link>
       </div>
 
       <div className="rounded-2xl border border-border-light bg-white p-6">
         <h2 className="font-serif text-[18px] leading-tight text-ink">
-          Coming next for you
+          {t("comingNext")}
         </h2>
         <ul className="mt-3 flex flex-col gap-1.5 text-[13px] text-ink-secondary">
-          <li>• Assign livestock to your farmers</li>
-          <li>• Review farmer-submitted updates</li>
-          <li>• Approve or reject care expense requests</li>
-          <li>• Coordinate seasonal livestock sales</li>
+          <li>• {t("next1")}</li>
+          <li>• {t("next2")}</li>
+          <li>• {t("next3")}</li>
+          <li>• {t("next4")}</li>
         </ul>
       </div>
     </div>

@@ -23,7 +23,9 @@ export interface InvestmentDetail {
     careAllocation: number;
     imagePath: string | null;
     categoryName: string;
+    categoryNameBn: string;
     districtName: string;
+    districtNameBn: string;
   };
   fundRequests: Array<{
     id: string;
@@ -73,8 +75,8 @@ export async function getInvestmentDetail(
           name_en, name_bn, duration_months,
           estimated_roi_min, estimated_roi_max,
           unit_price, animal_allocation, care_allocation, image_path,
-          livestock_categories ( name_en ),
-          districts ( name_en )
+          livestock_categories ( name_en, name_bn ),
+          districts ( name_en, name_bn )
         )
       )
       `,
@@ -163,7 +165,9 @@ export async function getInvestmentDetail(
       careAllocation: Number(plan?.care_allocation ?? 0),
       imagePath: plan?.image_path ?? null,
       categoryName: plan?.livestock_categories?.name_en ?? "—",
+      categoryNameBn: plan?.livestock_categories?.name_bn ?? plan?.livestock_categories?.name_en ?? "—",
       districtName: plan?.districts?.name_en ?? "—",
+      districtNameBn: plan?.districts?.name_bn ?? plan?.districts?.name_en ?? "—",
     },
     fundRequests: (fundReqs ?? []).map((r) => ({
       id: r.id,

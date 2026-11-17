@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
+import { getLocale, getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { getInvestmentDetail } from "@/lib/investments/detail";
 import { StageTimeline } from "@/components/investment/StageTimeline";
@@ -24,6 +25,12 @@ export default async function FarmerInvestmentDetailPage({
   // Ensure this farmer is actually assigned to this investment
   if (!inv || inv.farmer?.id !== user.id) notFound();
 
+  const t = await getTranslations("app.investmentDetail");
+  const tst = await getTranslations("app.stage");
+  const locale = await getLocale();
+  const bn = locale === "bn";
+  const planName = bn ? inv.offering.planNameBn : inv.offering.planNameEn;
+
   return (
     <div className="mx-auto flex w-full max-w-[960px] flex-col gap-6 pb-20">
       {/* Header */}
@@ -32,7 +39,7 @@ export default async function FarmerInvestmentDetailPage({
           href="/farmer"
           className="text-[12px] font-semibold text-ink-secondary hover:text-ink"
         >
-          ← Back to Assignments
+          {t("backToAssignments")}
         </Link>
         <div className="flex items-center justify-between gap-4">
           <div>
@@ -40,11 +47,11 @@ export default async function FarmerInvestmentDetailPage({
               {inv.reference}
             </span>
             <h1 className="mt-1 font-serif text-[28px] text-ink">
-              {inv.offering.planNameEn}
+              {planName}
             </h1>
           </div>
           <span className="inline-flex rounded bg-[#FEF6E5] px-2.5 py-1 text-[10px] font-bold uppercase text-[#C48A2E]">
-            {inv.currentStage.replace(/_/g, " ")}
+            {tst.has(inv.currentStage) ? tst(inv.currentStage) : inv.currentStage.replace(/_/g, " ")}
           </span>
         </div>
       </div>
@@ -55,11 +62,11 @@ export default async function FarmerInvestmentDetailPage({
       {/* Stats */}
       <StatsGrid
         items={[
-          { label: "Units", value: `${inv.units}` },
-          { label: "Animal Budget", value: formatBDT(inv.stats.animalBudgetTotal) },
-          { label: "Care Budget", value: formatBDT(inv.stats.careBudgetTotal) },
+          { label: t("units"), value: `${inv.units}` },
+          { label: t("animalBudget"), value: formatBDT(inv.stats.animalBudgetTotal) },
+          { label: t("careBudget"), value: formatBDT(inv.stats.careBudgetTotal) },
           {
-            label: "Care Used",
+            label: t("careUsed"),
             value: formatBDT(inv.stats.careBudgetUsed),
             accent: true,
           },
@@ -78,15 +85,15 @@ export default async function FarmerInvestmentDetailPage({
       {/* Investment Details */}
       <div className="rounded-xl border border-border-light bg-white p-6">
         <h2 className="text-[11px] font-bold uppercase tracking-[0.02em] text-ink-muted">
-          Investment Details
+          {t("details")}
         </h2>
         <div className="mt-3 flex flex-col gap-2 text-[13px]">
-          <Row label="Plan" value={inv.offering.planNameEn} />
-          <Row label="Category" value={inv.offering.categoryName} />
-          <Row label="District" value={inv.offering.districtName} />
-          <Row label="Duration" value={`${inv.offering.durationMonths} months`} />
-          <Row label="Steward" value={inv.steward.fullName ?? "—"} />
-          <Row label="Investor" value={inv.investor.fullName ?? "—"} />
+          <Row label={t("plan")} value={planName} />
+          <Row label={t("category")} value={bn ? inv.offering.categoryNameBn : inv.offering.categoryName} />
+          <Row label={t("district")} value={bn ? inv.offering.districtNameBn : inv.offering.districtName} />
+          <Row label={t("duration")} value={t("months", { count: inv.offering.durationMonths })} />
+          <Row label={t("steward")} value={inv.steward.fullName ?? "—"} />
+          <Row label={t("investor")} value={inv.investor.fullName ?? "—"} />
         </div>
       </div>
     </div>

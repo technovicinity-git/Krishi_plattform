@@ -10,6 +10,8 @@ import { OTPInput } from "./OTPInput";
 
 export function FarmerActivateForm() {
   const t = useTranslations("farmerActivate");
+  const tf = useTranslations("app.forms");
+  const tcm = useTranslations("app.common");
   const router = useRouter();
   const searchParams = useSearchParams();
   const phoneFromUrl = searchParams.get("phone") ?? "";
@@ -66,7 +68,7 @@ export function FarmerActivateForm() {
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok) {
-        setError(data.error ?? "Failed to activate account");
+        setError(data.error ?? tf("failedActivate"));
         setSubmitting(false);
         return;
       }
@@ -74,7 +76,7 @@ export function FarmerActivateForm() {
       router.push("/farmer");
       router.refresh();
     } catch {
-      setError("Network error. Please try again.");
+      setError(tcm("networkError"));
       setSubmitting(false);
     }
   };
@@ -95,14 +97,14 @@ export function FarmerActivateForm() {
 
       {!hasPhone && (
         <FormInput
-          label="Phone Number"
+          label={tf("phoneLabel")}
           name="phone"
           type="tel"
           prefix="+880"
           value={phone}
           onChange={setPhone}
           required
-          helper="Enter the phone number your steward registered for you."
+          helper={tf("farmerPhoneHelper")}
         />
       )}
 
@@ -110,7 +112,7 @@ export function FarmerActivateForm() {
         <>
           <div className="flex flex-col gap-1">
             <span className="text-[13px] text-ink-secondary">
-              Activating account for
+              {tf("activatingFor")}
             </span>
             <span className="text-[16px] font-semibold text-ink">
               +880 {phone.replace(/^0/, "")}

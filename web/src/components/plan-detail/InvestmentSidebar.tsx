@@ -7,6 +7,7 @@ import type { OfferingListItem } from "@/lib/public/plans";
 
 export function InvestmentSidebar({ offering }: { offering: OfferingListItem }) {
   const t = useTranslations("planDetail.sidebar");
+  const tp = useTranslations("app.planText");
   const [units, setUnits] = useState(1);
 
   const total = offering.unitPrice * units;
@@ -49,7 +50,7 @@ export function InvestmentSidebar({ offering }: { offering: OfferingListItem }) 
             onClick={() => setUnits((u) => Math.max(1, u - 1))}
             className="text-[18px] font-bold text-ink-secondary hover:text-ink disabled:opacity-30"
             disabled={units <= 1}
-            aria-label="Decrease units"
+            aria-label={tp("decreaseUnits")}
           >
             −
           </button>
@@ -61,7 +62,7 @@ export function InvestmentSidebar({ offering }: { offering: OfferingListItem }) 
             onClick={() => setUnits((u) => Math.min(maxUnits, u + 1))}
             className="text-[18px] font-bold text-ink-secondary hover:text-ink disabled:opacity-30"
             disabled={units >= maxUnits}
-            aria-label="Increase units"
+            aria-label={tp("increaseUnits")}
           >
             +
           </button>

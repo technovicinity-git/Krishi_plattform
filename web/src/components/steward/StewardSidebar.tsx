@@ -23,6 +23,7 @@ const LOCKED = [
 
 export function StewardSidebar() {
   const t = useTranslations("stewardPortal.sidebar");
+  const tu = useTranslations("app.userMenu");
   const pathname = usePathname();
   const router = useRouter();
   const [loggingOut, setLoggingOut] = useState(false);
@@ -84,7 +85,7 @@ export function StewardSidebar() {
               disabled={loggingOut}
               className="rounded-[6px] px-3 py-2.5 text-left text-[14px] font-medium text-ink-secondary transition-colors hover:bg-stone/60 hover:text-ink disabled:opacity-60"
             >
-              {loggingOut ? "Signing out..." : t("items.logout")}
+              {loggingOut ? tu("signingOut") : t("items.logout")}
             </button>
           </nav>
         </div>

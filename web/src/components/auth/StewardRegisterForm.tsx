@@ -48,6 +48,8 @@ function Stepper({ step }: { step: 1 | 2 }) {
 
 export function StewardRegisterForm() {
   const t = useTranslations("stewardRegister.step1");
+  const tf = useTranslations("app.forms");
+  const tcm = useTranslations("app.common");
   const router = useRouter();
   const { alert } = useDialog();
 
@@ -84,7 +86,7 @@ export function StewardRegisterForm() {
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok) {
-        setError(data.error ?? "Failed to create account");
+        setError(data.error ?? tf("failedCreate"));
         setSubmitting(false);
         return;
       }
@@ -92,7 +94,7 @@ export function StewardRegisterForm() {
       router.push("/steward/register/details");
       router.refresh();
     } catch {
-      setError("Network error. Please try again.");
+      setError(tcm("networkError"));
       setSubmitting(false);
     }
   };

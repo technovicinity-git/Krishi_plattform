@@ -17,6 +17,8 @@ interface WithdrawalFormProps {
 
 export function WithdrawalForm({ initial }: WithdrawalFormProps) {
   const t = useTranslations("onboarding.step3.form");
+  const tf = useTranslations("app.forms");
+  const tcm = useTranslations("app.common");
   const router = useRouter();
 
   const [method, setMethod] = useState<Method>(initial?.method ?? "mobile");
@@ -64,7 +66,7 @@ export function WithdrawalForm({ initial }: WithdrawalFormProps) {
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok) {
-        setError(data.error ?? "Failed to save");
+        setError(data.error ?? tf("failedSave"));
         setSubmitting(false);
         return;
       }
@@ -72,7 +74,7 @@ export function WithdrawalForm({ initial }: WithdrawalFormProps) {
       router.push("/portal/profile?withdrawal=saved");
       router.refresh();
     } catch {
-      setError("Network error. Please try again.");
+      setError(tcm("networkError"));
       setSubmitting(false);
     }
   };

@@ -4,6 +4,7 @@ import { Link } from "@/i18n/navigation";
 
 export default function StewardSubmittedPage() {
   const t = useTranslations("stewardSubmitted");
+  const tf = useTranslations("app.forms");
 
   return (
     <AuthCard>
@@ -44,7 +45,7 @@ export default function StewardSubmittedPage() {
           href="/steward"
           className="inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-[8px] bg-terracotta text-[15px] font-bold text-white transition-colors hover:bg-[#B3634A]"
         >
-          Go to Steward Console
+          {tf("goToStewardConsole")}
           <span aria-hidden="true">→</span>
         </Link>
 

@@ -11,6 +11,8 @@ import { compressImage } from "@/lib/images/compress";
 
 export function KycForm() {
   const t = useTranslations("onboarding.step2.form");
+  const tf = useTranslations("app.forms");
+  const tcm = useTranslations("app.common");
   const router = useRouter();
 
   const [docType, setDocType] = useState("nid");
@@ -27,15 +29,15 @@ export function KycForm() {
     setError(null);
 
     if (!nidNumber.trim() || nidNumber.length < 10) {
-      setError("Please enter a valid NID number");
+      setError(tf("invalidNid"));
       return;
     }
     if (!presentAddress.trim() || !permanentAddress.trim()) {
-      setError("Please enter both addresses");
+      setError(tf("bothAddresses"));
       return;
     }
     if (!nidFront || !nidBack) {
-      setError("Both NID sides are required");
+      setError(tf("bothNidSides"));
       return;
     }
 
@@ -63,7 +65,7 @@ export function KycForm() {
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok) {
-        setError(data.error ?? "Failed to submit KYC");
+        setError(data.error ?? tf("failedKyc"));
         setSubmitting(false);
         return;
       }
@@ -72,7 +74,7 @@ export function KycForm() {
       router.refresh();
     } catch (err) {
       console.error(err);
-      setError("Network error. Please try again.");
+      setError(tcm("networkError"));
       setSubmitting(false);
     }
   };

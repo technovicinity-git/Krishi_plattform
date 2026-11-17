@@ -1,18 +1,15 @@
 import Link from "next/link";
+import { getLocale, getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { createAdminClient } from "@/lib/supabase/admin";
 
-const FILTERS = [
-  { key: "all", label: "All" },
-  { key: "pending", label: "Pending Activation" },
-  { key: "active", label: "Active" },
-] as const;
+const FILTERS = [{ key: "all" }, { key: "pending" }, { key: "active" }] as const;
 
 type FilterKey = (typeof FILTERS)[number]["key"];
 
-function formatDate(iso: string | null): string {
+function formatDate(iso: string | null, locale: string): string {
   if (!iso) return "—";
-  return new Date(iso).toLocaleDateString("en-GB", {
+  return new Date(iso).toLocaleDateString(locale === "bn" ? "bn-BD" : "en-GB", {
     day: "2-digit",
     month: "short",
     year: "numeric",
@@ -32,6 +29,8 @@ export default async function StewardFarmersPage({
     ? (params.filter as FilterKey)
     : "all";
 
+  const t = await getTranslations("app.stewardFarmers");
+  const locale = await getLocale();
   const db = createAdminClient();
 
   let query = db
@@ -54,17 +53,17 @@ export default async function StewardFarmersPage({
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-1">
           <h1 className="font-serif text-[28px] leading-tight text-ink">
-            Farmers
+            {t("title")}
           </h1>
           <p className="text-[13px] text-ink-secondary">
-            Farmers assigned to your stewardship.
+            {t("subtitle")}
           </p>
         </div>
         <Link
           href="/steward/farmers/new"
           className="inline-flex h-[42px] w-fit items-center justify-center rounded-[8px] bg-ink px-5 text-[13px] font-bold text-white hover:bg-[#2A2A2A]"
         >
-          + Add Farmer
+          {t("addFarmer")}
         </Link>
       </div>
 
@@ -81,7 +80,7 @@ export default async function StewardFarmersPage({
                   : "border-transparent text-ink-secondary hover:text-ink"
               }`}
             >
-              {f.label}
+              {t(`filter.${f.key}`)}
             </Link>
           );
         })}
@@ -90,11 +89,10 @@ export default async function StewardFarmersPage({
       {!farmers || farmers.length === 0 ? (
         <div className="rounded-2xl border border-border-light bg-white px-8 py-16 text-center">
           <p className="text-[14px] text-ink-secondary">
-            No farmers in this view yet.
+            {t("empty")}
           </p>
           <p className="mt-2 text-[12px] text-ink-muted">
-            Click <strong>Add Farmer</strong> to create an account. The farmer
-            will receive an activation SMS.
+            {t.rich("emptyHint", { strong: (chunks) => <strong>{chunks}</strong> })}
           </p>
         </div>
       ) : (
@@ -103,19 +101,19 @@ export default async function StewardFarmersPage({
             <thead className="border-b border-border-light bg-stone">
               <tr>
                 <th className="px-5 py-3 text-left text-[11px] font-bold uppercase tracking-[0.02em] text-ink-muted">
-                  Farmer
+                  {t("colFarmer")}
                 </th>
                 <th className="px-5 py-3 text-left text-[11px] font-bold uppercase tracking-[0.02em] text-ink-muted">
-                  Phone
+                  {t("colPhone")}
                 </th>
                 <th className="px-5 py-3 text-left text-[11px] font-bold uppercase tracking-[0.02em] text-ink-muted">
-                  Status
+                  {t("colStatus")}
                 </th>
                 <th className="px-5 py-3 text-left text-[11px] font-bold uppercase tracking-[0.02em] text-ink-muted">
-                  Added
+                  {t("colAdded")}
                 </th>
                 <th className="px-5 py-3 text-right text-[11px] font-bold uppercase tracking-[0.02em] text-ink-muted">
-                  Actions
+                  {t("colActions")}
                 </th>
               </tr>
             </thead>
@@ -140,18 +138,18 @@ export default async function StewardFarmersPage({
                       <span
                         className={`inline-flex items-center rounded-[4px] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.02em] ${style}`}
                       >
-                        {active ? "Active" : "Pending Activation"}
+                        {active ? t("filter.active") : t("filter.pending")}
                       </span>
                     </td>
                     <td className="px-5 py-4 text-[13px] text-ink-secondary">
-                      {formatDate(f.created_at)}
+                      {formatDate(f.created_at, locale)}
                     </td>
                     <td className="px-5 py-4 text-right">
                       <Link
                         href={`/steward/farmers/${f.id}`}
                         className="text-[12px] font-semibold text-terracotta hover:underline"
                       >
-                        View →
+                        {t("view")}
                       </Link>
                     </td>
                   </tr>

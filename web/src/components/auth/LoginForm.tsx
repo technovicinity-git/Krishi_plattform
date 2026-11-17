@@ -9,6 +9,7 @@ import { FormPasswordInput } from "./FormPasswordInput";
 
 export function LoginForm() {
   const t = useTranslations("auth.login");
+  const tErr = useTranslations("errors");
   const router = useRouter();
 
   const [phone, setPhone] = useState("");
@@ -22,7 +23,7 @@ export function LoginForm() {
 
     const parsed = loginSchema.safeParse({ phone, password });
     if (!parsed.success) {
-      setError(parsed.error.issues[0]?.message ?? t("errors.generic"));
+      setError(parsed.error.issues[0]?.message ?? tErr("generic"));
       return;
     }
 
@@ -38,7 +39,7 @@ export function LoginForm() {
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok) {
-        setError(data.error ?? t("errors.invalidCredentials"));
+        setError(data.error ?? tErr("invalidCredentials"));
         setSubmitting(false);
         return;
       }
@@ -55,7 +56,7 @@ export function LoginForm() {
       router.push(target);
       router.refresh();
     } catch {
-      setError(t("errors.network"));
+      setError(tErr("network"));
       setSubmitting(false);
     }
   };
