@@ -35,6 +35,7 @@ Run from `web/`:
 | `npm run build` / `npm start` | Production build / serve |
 | `npm run lint` | ESLint (`eslint-config-next`) |
 | `npm run db:migrate` | Apply pending SQL migrations |
+| `npm run db:status` | List applied and pending migrations without applying anything |
 | `npm run seed:admin -- <email> <password> [name]` | Create or update an admin (password 12+ chars) |
 
 Root `package.json` has Supabase CLI wrappers (`db:start`, `db:push`, `db:types`, …). The team runs migrations with the custom script instead because the CLI hit a scoped-token permission bug (see `web/scripts/README.md`). Note that root `supabase/config.toml` and `web/supabase/migrations/` sit in different folders.
@@ -44,6 +45,8 @@ Root `package.json` has Supabase CLI wrappers (`db:start`, `db:push`, `db:types`
 - Location: `web/supabase/migrations/YYYYMMDDHHMMSS_description.sql`
 - `migrate.mjs` applies files in filename order. Each file runs in its own transaction, under a Postgres advisory lock, over TLS.
 - Applied files are recorded in `_migrations` with a SHA-256 checksum. **Never edit an applied migration**: the runner will refuse to continue. Add a new file instead.
+- The checksum is taken with LF line endings, so Windows (CRLF) and Unix checkouts of the same file match. Older rows recorded from a CRLF checkout are recognised and upgraded automatically.
+- The scripts read `web/.env` and then `web/.env.local` (either may be missing; `.env.local` wins).
 - To add one: create the file, write plain SQL, run `npm run db:migrate`.
 
 ## Conventions

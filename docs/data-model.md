@@ -2,7 +2,7 @@
 
 The schema is defined by the SQL files in `web/supabase/migrations/` (20 migrations, applied in filename order). All tables live in `public`. Every table has RLS **enabled**, and the app accesses them through the service role (see [architecture.md](architecture.md)).
 
-> ⚠️ Several tables the code depends on (`investments`, `deposits`, `fund_requests`, `expenses`, `investment_updates`, `platform_accounts`) **have no migration in this repo**. They were probably created by hand in the Supabase dashboard. Their columns below are **inferred from code**. See [known-gaps.md](known-gaps.md).
+`investments`, `deposits`, `fund_requests`, `expenses`, `investment_updates` and `platform_accounts` were first created by hand in the Supabase dashboard. `20261016000001_baseline_untracked_tables.sql` now creates them (copied from the live schema), so a database built from the migrations alone matches production.
 
 ## Entity relationships
 
@@ -32,7 +32,7 @@ otp_codes, dev_otps         (keyed by phone)
 admin_audit_log, admin_login_attempts
 _migrations, _smoke_test    (tooling)
 
-* = no migration in repo
+* = created by the baseline migration (20261016000001)
 ```
 
 ## Tables
@@ -125,16 +125,16 @@ Partial unique indexes allow only one *active* interest (`submitted`, `under_rev
 
 **`notifications`** (`20261118000003_notifications.sql`): in-app notifications for investors, stewards and farmers. `kind` + `params` (reference, amount, plan/planBn, name, reason, title) are rendered in the reader's language from `app.notify.<kind>` messages; `href` is an unprefixed app path; `read_at` marks it read. Created with `notify()` in `web/src/lib/notifications/notify.ts`, which never throws.
 
-### Tables without migrations (inferred from code)
+### Tables from the baseline migration (20261016000001)
 
-| Table | Key columns used in code | Statuses / stages seen |
-|-------|--------------------------|------------------------|
-| `deposits` | `id`, `reference`, `investor_id`, `interest_id`, `amount`, `method` (`bank`/`mfs`), `txn_id`, `sender_number`, `deposit_date`, `note`, `proof_path`, `status`, `reviewed_by`, `reviewed_at` | `pending` → `approved` \| rejected |
-| `investments` | `id`, `reference`, `interest_id`, `investor_id`, `offering_id`, `farmer_id`, `units`, `amount`, `status`, `current_stage`, `created_at` | status `active`; stages `awaiting_farmer` → `awaiting_purchase` → `purchased` → … `completed` / `settled` |
-| `fund_requests` | `id`, `reference`, `investment_id`, `farmer_id`, `amount`, `purpose`, `status`, `rejection_reason`, `reviewed_by`, `reviewed_at` | purpose: `animal_purchase`, `feed`, `medical`, `transport`, `other`; status `pending` → `approved`/`rejected` (detail code also expects `disbursed`) |
-| `expenses` | `investment_id`, `farmer_id`, `amount`, `category`, `description`, `receipt_path`, `status` | `pending` → `approved` |
-| `investment_updates` | `investment_id`, `author_id`, `author_role`, `update_type`, `title`, `body`, `amount`, `photo_path` | types: `fund_request`, `fund_disbursed`, `expense`, `note` |
-| `platform_accounts` | `is_active` and display fields | Krishi's receiving accounts |
+| Table | Key columns | Statuses / stages |
+|-------|-------------|-------------------|
+| `deposits` | `reference` (`KR-PAY-000001`), `investor_id`, `interest_id`, `amount` (computed server-side from the plan), `method` (`bank`/`mfs`), `txn_id`, `sender_number`, `deposit_date`, `note`, `proof_path` (private bucket), `reviewed_by`, `reviewed_at`, `rejection_reason` | `pending` → `approved` \| `rejected` |
+| `investments` | `reference` (`KR-INV-000001`), `interest_id`, `investor_id`, `offering_id`, `farmer_id`, `units`, `amount`, `status`, `current_stage` | status `active` → `completed` (or `cancelled`); stage `awaiting_farmer` → `awaiting_purchase` → `growing_care` → `sale_pending` → `sold` → `settled` |
+| `fund_requests` | `reference` (`KR-REQ-00001`), `investment_id`, `farmer_id`, `amount`, `purpose`, `rejection_reason`, `reviewed_by`, `reviewed_at` | purpose: `animal_purchase`, `feed`, `medical`, `transport`, `other`; status `pending` → `approved` \| `rejected` (`disbursed` allowed but unused) |
+| `expenses` | `investment_id`, `fund_request_id`, `farmer_id`, `amount`, `category`, `description`, `receipt_path`, `rejection_reason`, `reviewed_by` | `pending` → `approved` \| `rejected` (steward) |
+| `investment_updates` | `investment_id`, `author_id`, `author_role`, `update_type`, `title`, `body`, `amount`, `photo_path`, `metadata` | types: `stage_change`, `photo_update`, `health_check`, `expense`, `fund_request`, `fund_disbursed`, `purchase`, `note`, `sale`, `settlement` |
+| `platform_accounts` | `method` (`bank`/`mfs`), `provider`, `account_name`, `account_number`, `branch_name`, `routing_number`, `is_active` | Krishi's receiving accounts |
 
 ### Auth and ops
 

@@ -13,7 +13,7 @@ Found while reading the codebase on 2026-11-17. Ordered by priority.
 
 ## 🟠 Schema and data integrity
 
-1. **Missing migrations.** `investments`, `deposits`, `fund_requests`, `expenses`, `investment_updates` and `platform_accounts` are used by the code but no migration creates them. A fresh environment built from migrations will not work. Run `supabase db pull` or write migrations from the live schema.
+1. ~~Missing migrations~~ — fixed 2026-11-18: `20261016000001_baseline_untracked_tables.sql` creates the hand-made tables and storage buckets. A database built from all migrations was checked to match the live schema column for column.
 2. **Duplicate deposit-approval routes.** `/api/deposits/[id]/approve` and `/api/admin/deposits/[id]/approve` both exist. Only the admin route increments `steward_plan_offerings.units_funded`. Delete the legacy route or make the two the same.
 3. **No transactions in multi-step writes.** Deposit approval updates the deposit, the interest, the investment and the offering in separate calls. A failure partway leaves inconsistent state, e.g. a deposit marked approved with no investment. The `units_funded` increment is a read-then-write and can race. Move these into a Postgres function (RPC).
 4. **No overselling guard at interest or deposit time.** Interest checks `requested_units ≤ units_offered`, not the remaining `units_offered − units_funded`. The DB CHECK constraint will reject the final increment, but only after the deposit is already approved.
@@ -22,8 +22,6 @@ Found while reading the codebase on 2026-11-17. Ordered by priority.
 ## 🟡 Feature gaps
 
 - **SMS delivery** for OTPs is a `TODO` everywhere.
-- **Investment lifecycle after `awaiting_purchase`:** nothing records the purchase, health updates, sale, settlement, profit split or payout.
-- **Expense approval:** expenses are created as `pending`, but no route approves them, and the investment detail only counts approved expenses.
 - **Fund disbursement:** the detail code treats `disbursed` as a status, but the steward route only sets `approved`/`rejected`.
 - **Admin console:** offerings default to `approved` when the admin creates them, and stewards have no self-serve way to propose offerings (`pending_approval` exists in the schema but is unused).
 - **No automated tests** and no CI configuration.

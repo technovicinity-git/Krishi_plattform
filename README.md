@@ -89,6 +89,7 @@ Run from `web/`:
 | `npm run build` / `npm start` | Production build / serve |
 | `npm run lint` | ESLint |
 | `npm run db:migrate` | Apply pending SQL migrations from `web/supabase/migrations/` |
+| `npm run db:status` | Show applied and pending migrations without changing anything |
 | `npm run seed:admin -- <email> <password> [name]` | Create or update an admin (password 12+ characters) |
 
 Never edit a migration that has already been applied. Add a new file instead. See [docs/development.md](docs/development.md) for details.

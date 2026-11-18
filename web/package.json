@@ -7,8 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "db:migrate": "node --env-file=.env.local scripts/migrate.mjs",
-    "seed:admin": "node --env-file=.env.local scripts/seed-admin.mjs"
+    "db:migrate": "node --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/migrate.mjs",
+    "db:status": "node --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/migrate.mjs --status",
+    "seed:admin": "node --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/seed-admin.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
