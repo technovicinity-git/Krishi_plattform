@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/current-user";
+import { notify } from "@/lib/notifications/notify";
 
 export const runtime = "nodejs";
 
@@ -32,7 +33,7 @@ export async function PATCH(
   const { data: expense } = await db
     .from("expenses")
     .select(`
-      id, investment_id, amount, category,
+      id, investment_id, amount, category, farmer_id,
       investment:investments!investment_id (
         offering:steward_plan_offerings!offering_id ( steward_id )
       )
@@ -79,6 +80,11 @@ export async function PATCH(
       title: "Expense not accepted",
       body: `৳${amount.toLocaleString("en-IN")} for ${String(expense.category).replace(/_/g, " ")} was not accepted. Reason: ${reason}`,
     });
+    await notify(
+      "expense_rejected",
+      { userId: expense.farmer_id, href: `/farmer/investments/${expense.investment_id}` },
+      { amount, reason },
+    );
   }
 
   return NextResponse.json({ success: true });

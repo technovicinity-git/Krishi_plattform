@@ -3,6 +3,8 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
+import { NotificationBell } from "@/components/notifications/NotificationBell";
+import { getUnreadCount } from "@/lib/notifications/read";
 
 export default async function FarmerDashboardLayout({
   children,
@@ -26,8 +28,11 @@ export default async function FarmerDashboardLayout({
       .eq("status", "pending"),
   ]);
 
+  const unreadNotifications = await getUnreadCount(user.id);
+
   return (
     <DashboardShell
+      headerActions={<NotificationBell initialUnread={unreadNotifications} allHref="/farmer/notifications" />}
       locale={locale}
       roleLabel={tr("farmer")}
       title={tp("farmerTitle")}

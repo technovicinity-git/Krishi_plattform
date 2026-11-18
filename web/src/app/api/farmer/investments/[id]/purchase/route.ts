@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { uploadUpdatePhoto } from "@/lib/investments/photos";
+import { notify, investmentParties } from "@/lib/notifications/notify";
 
 export const runtime = "nodejs";
 
@@ -95,6 +96,15 @@ export async function POST(
     photo_path: photo.path,
     metadata: { animals, from_stage: "awaiting_purchase", to_stage: "growing_care" },
   });
+
+  const parties = await investmentParties(inv.id);
+  if (parties) {
+    const params = { reference: parties.reference, plan: parties.plan, planBn: parties.planBn, amount: total_cost };
+    await notify("purchase_confirmed", [
+      { userId: parties.investorId, href: `/portal/investments/${inv.id}` },
+      { userId: parties.stewardId, href: `/steward/investments/${inv.id}` },
+    ], params);
+  }
 
   return NextResponse.json({ success: true });
 }

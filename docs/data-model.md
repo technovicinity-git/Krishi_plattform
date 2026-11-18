@@ -123,6 +123,8 @@ Partial unique indexes allow only one *active* interest (`submitted`, `under_rev
 
 **`withdrawal_requests`**: `KR-WD-000001`. Copies the user's `withdrawal_preferences` at request time. `status`: `pending` → `paid` (admin records `payout_txn_id`) | `rejected` (admin, with reason) | `cancelled` (user). Created by `request_withdrawal()`, which locks per user, checks the minimum (`WITHDRAWAL_MIN` in `web/src/lib/wallet/config.ts`) and the balance, and holds the amount. Closed by `close_withdrawal()`, which returns the money unless paid.
 
+**`notifications`** (`20261118000003_notifications.sql`): in-app notifications for investors, stewards and farmers. `kind` + `params` (reference, amount, plan/planBn, name, reason, title) are rendered in the reader's language from `app.notify.<kind>` messages; `href` is an unprefixed app path; `read_at` marks it read. Created with `notify()` in `web/src/lib/notifications/notify.ts`, which never throws.
+
 ### Tables without migrations (inferred from code)
 
 | Table | Key columns used in code | Statuses / stages seen |

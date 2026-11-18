@@ -26,6 +26,8 @@ export interface DashboardShellProps {
   logoutEndpoint?: string;
   logoutRedirect: string;
   labels: { signOut: string; signingOut: string; home: string; brand: string };
+  /** Extra header controls before the language switch, e.g. a notification bell. */
+  headerActions?: React.ReactNode;
 }
 
 /**
@@ -46,6 +48,7 @@ export function DashboardShell({
   logoutEndpoint = "/api/auth/logout",
   logoutRedirect,
   labels,
+  headerActions,
 }: DashboardShellProps) {
   const localized = locale !== undefined;
   // The avatar menu uses plain links, so add the /en prefix ourselves.
@@ -80,7 +83,8 @@ export function DashboardShell({
             </span>
           </div>
 
-          <div className="flex items-center gap-3 sm:gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
+            {headerActions}
             {localized && <LanguageSwitcher className="hidden sm:inline-flex" />}
             <UserMenu
               fullName={user.fullName}

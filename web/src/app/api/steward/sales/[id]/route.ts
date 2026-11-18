@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/current-user";
+import { notify, investmentParties } from "@/lib/notifications/notify";
 
 export const runtime = "nodejs";
 
@@ -92,6 +93,25 @@ export async function PATCH(
     amount: approve ? amount : null,
     metadata: { reference: sale.reference, action },
   });
+
+  const parties = await investmentParties(sale.investment_id);
+  if (parties) {
+    const params = { reference: sale.reference, amount, plan: parties.plan, planBn: parties.planBn };
+    if (approve) {
+      await notify("sale_confirmed", { userId: parties.farmerId, href: `/farmer/investments/${sale.investment_id}` }, params);
+      await notify(
+        "sale_confirmed_investor",
+        { userId: parties.investorId, href: `/portal/investments/${sale.investment_id}` },
+        params,
+      );
+    } else {
+      await notify(
+        "sale_rejected",
+        { userId: parties.farmerId, href: `/farmer/investments/${sale.investment_id}` },
+        { ...params, reason },
+      );
+    }
+  }
 
   return NextResponse.json({ success: true });
 }

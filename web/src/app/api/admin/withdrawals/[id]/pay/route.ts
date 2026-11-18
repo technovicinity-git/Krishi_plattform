@@ -3,6 +3,8 @@ import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentAdmin } from "@/lib/admin/current-admin";
 import { logAdminAction } from "@/lib/admin/audit";
+import { notify } from "@/lib/notifications/notify";
+import { walletHref } from "@/lib/notifications/wallet-href";
 
 export const runtime = "nodejs";
 
@@ -42,6 +44,16 @@ export async function POST(
     }
     console.error("[admin/withdrawals/pay] failed:", error);
     return NextResponse.json({ error: "Could not mark as paid" }, { status: 500 });
+  }
+
+  const { data: w } = await createAdminClient()
+    .from("withdrawal_requests")
+    .select("reference, amount, user:users!user_id ( id, role )")
+    .eq("id", id)
+    .maybeSingle();
+  if (w) {
+    const owner = w.user as unknown as { id: string; role: string } | null;
+    await notify("withdrawal_paid", { userId: owner?.id, href: walletHref(owner?.role) }, { reference: w.reference, amount: Number(w.amount) });
   }
 
   await logAdminAction({

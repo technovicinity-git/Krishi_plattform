@@ -22,7 +22,8 @@ export type NavIconName =
   | "history"
   | "coins"
   | "logout"
-  | "lock";
+  | "lock"
+  | "bell";
 
 const PATHS: Record<NavIconName, React.ReactNode> = {
   home: (
@@ -139,6 +140,12 @@ const PATHS: Record<NavIconName, React.ReactNode> = {
     <>
       <rect x="5" y="9" width="10" height="7.5" rx="1.25" />
       <path d="M7 9V6.75a3 3 0 016 0V9" />
+    </>
+  ),
+  bell: (
+    <>
+      <path d="M5 13.5V9a5 5 0 0110 0v4.5l1.5 1.5h-13L5 13.5z" />
+      <path d="M8.5 17a1.75 1.75 0 003 0" />
     </>
   ),
 };

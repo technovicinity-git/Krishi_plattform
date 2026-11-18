@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentAdmin } from "@/lib/admin/current-admin";
 import { logAdminAction } from "@/lib/admin/audit";
+import { notify } from "@/lib/notifications/notify";
 
 export const runtime = "nodejs";
 
@@ -52,6 +53,8 @@ export async function POST(
     console.error("[admin/stewards/reject] update failed:", error);
     return NextResponse.json({ error: "Failed to reject" }, { status: 500 });
   }
+
+  await notify("steward_rejected", { userId: id, href: "/steward" }, { reason: parsed.data.reason });
 
   await logAdminAction({
     adminId: admin.id,

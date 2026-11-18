@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentAdmin } from "@/lib/admin/current-admin";
 import { logAdminAction } from "@/lib/admin/audit";
 import { previewSettlement } from "@/lib/investments/settle";
+import { notify, investmentParties } from "@/lib/notifications/notify";
 
 export const runtime = "nodejs";
 
@@ -82,6 +83,22 @@ export async function POST(
     amount: b.investorPayout,
     metadata: { reference: preview.sale.reference, settlement_id: settlementId },
   });
+
+  const parties = await investmentParties(preview.sale.investmentId);
+  if (parties) {
+    const params = { reference: parties.reference, plan: parties.plan, planBn: parties.planBn };
+    await notify(
+      "settled_investor",
+      { userId: parties.investorId, href: "/portal/wallet" },
+      { ...params, amount: b.investorPayout },
+    );
+    if (b.farmerShare > 0) {
+      await notify("settled_share", { userId: parties.farmerId, href: "/farmer/wallet" }, { ...params, amount: b.farmerShare });
+    }
+    if (b.stewardShare > 0) {
+      await notify("settled_share", { userId: parties.stewardId, href: "/steward/wallet" }, { ...params, amount: b.stewardShare });
+    }
+  }
 
   await logAdminAction({
     adminId: admin.id,

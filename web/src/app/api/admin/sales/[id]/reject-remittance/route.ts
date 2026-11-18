@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentAdmin } from "@/lib/admin/current-admin";
 import { logAdminAction } from "@/lib/admin/audit";
+import { notify } from "@/lib/notifications/notify";
 
 export const runtime = "nodejs";
 
@@ -36,7 +37,7 @@ export async function POST(
     .update({ status: "awaiting_remittance", remit_rejection_reason: parsed.data.reason })
     .eq("id", id)
     .eq("status", "remittance_submitted")
-    .select("id, investment_id, reference");
+    .select("id, investment_id, reference, farmer_id, sale_amount");
 
   if (error) {
     console.error("[admin/sales/reject-remittance] failed:", error);
@@ -55,6 +56,12 @@ export async function POST(
     title: "Sale payment not received",
     body: `Krishi could not confirm the payment. Reason: ${parsed.data.reason}`,
   });
+
+  await notify(
+    "remittance_rejected",
+    { userId: sale.farmer_id, href: `/farmer/investments/${sale.investment_id}` },
+    { reference: sale.reference, amount: Number(sale.sale_amount), reason: parsed.data.reason },
+  );
 
   await logAdminAction({
     adminId: admin.id,

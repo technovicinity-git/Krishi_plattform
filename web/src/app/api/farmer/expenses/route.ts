@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { uploadUpdatePhoto } from "@/lib/investments/photos";
+import { notify, investmentParties } from "@/lib/notifications/notify";
 
 export const runtime = "nodejs";
 
@@ -85,6 +86,15 @@ export async function POST(request: Request) {
     amount,
     photo_path: receipt.path,
   });
+
+  const parties = await investmentParties(inv.id);
+  if (parties) {
+    await notify(
+      "expense_logged",
+      { userId: parties.stewardId, href: "/steward/expenses" },
+      { amount, name: user.fullName ?? undefined, plan: parties.plan, planBn: parties.planBn, reference: parties.reference },
+    );
+  }
 
   return NextResponse.json({ success: true });
 }

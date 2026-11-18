@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentAdmin } from "@/lib/admin/current-admin";
 import { logAdminAction } from "@/lib/admin/audit";
+import { notify, investmentParties } from "@/lib/notifications/notify";
 
 export const runtime = "nodejs";
 
@@ -102,6 +103,21 @@ export async function POST(
     metadata: { investment_id: investment.id },
     request,
   });
+
+  const parties = await investmentParties(investment.id);
+  if (parties) {
+    const params = { reference: parties.reference, plan: parties.plan, planBn: parties.planBn };
+    await notify(
+      "deposit_approved",
+      { userId: parties.investorId, href: `/portal/investments/${investment.id}` },
+      { ...params, amount: Number(deposit.amount) },
+    );
+    await notify(
+      "investment_new",
+      { userId: parties.stewardId, href: `/steward/investments/${investment.id}` },
+      params,
+    );
+  }
 
   return NextResponse.json({ success: true, investment_reference: investment.reference });
 }

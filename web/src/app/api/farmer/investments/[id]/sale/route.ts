@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { uploadUpdatePhoto } from "@/lib/investments/photos";
+import { notify, investmentParties } from "@/lib/notifications/notify";
 
 export const runtime = "nodejs";
 
@@ -157,6 +158,15 @@ export async function POST(
     photo_path: photo.path,
     metadata: { reference: sale.reference, from_stage: "growing_care", to_stage: "sale_pending" },
   });
+
+  const parties = await investmentParties(inv.id);
+  if (parties) {
+    await notify(
+      "sale_recorded",
+      { userId: parties.stewardId, href: `/steward/investments/${inv.id}` },
+      { reference: sale.reference, amount: data.sale_amount, name: user.fullName ?? undefined, plan: parties.plan, planBn: parties.planBn },
+    );
+  }
 
   return NextResponse.json({ success: true, reference: sale.reference });
 }

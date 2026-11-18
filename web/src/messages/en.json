@@ -1647,6 +1647,132 @@
     }
   },
   "app": {
+    "notifications": {
+      "heading": "Notifications",
+      "subtitle": "Updates on your requests, batches and money.",
+      "bell": "Notifications",
+      "bellUnread": "Notifications, {count} unread",
+      "markAllRead": "Mark all as read",
+      "viewAll": "See all notifications",
+      "loading": "Loading...",
+      "empty": "You're all caught up.",
+      "emptyHint": "We'll let you know here when something needs your attention.",
+      "unreadCount": "{count, plural, =0 {No unread notifications} one {# unread} other {# unread}}"
+    },
+    "notify": {
+      "interest_submitted": {
+        "title": "New interest {reference}",
+        "body": "{name} wants to invest in {plan}. Review it."
+      },
+      "interest_approved": {
+        "title": "Your interest was approved",
+        "body": "{plan} ({reference}). Complete KYC and your deposit to start investing."
+      },
+      "interest_declined": {
+        "title": "Your interest was not approved",
+        "body": "{plan} ({reference}). {reason}"
+      },
+      "deposit_approved": {
+        "title": "Deposit approved — investment started",
+        "body": "{amount} for {plan}. Your investment is {reference}."
+      },
+      "deposit_rejected": {
+        "title": "Deposit not accepted",
+        "body": "{reference} ({amount}): {reason}"
+      },
+      "investment_new": {
+        "title": "New investment {reference}",
+        "body": "{plan} is funded. Assign a farmer."
+      },
+      "batch_assigned": {
+        "title": "New batch assigned to you",
+        "body": "{plan} ({reference}). Buy the animals and confirm the purchase."
+      },
+      "farmer_assigned": {
+        "title": "Farmer assigned",
+        "body": "{name} will raise your animals for {plan}."
+      },
+      "purchase_confirmed": {
+        "title": "Animals purchased",
+        "body": "{plan} ({reference}): bought for {amount}. The growing stage has started."
+      },
+      "update_posted": {
+        "title": "New update on {plan}",
+        "body": "{title}"
+      },
+      "fund_requested": {
+        "title": "Fund request {reference}",
+        "body": "{name} asked for {amount} on {plan}."
+      },
+      "fund_approved": {
+        "title": "Fund request approved",
+        "body": "{reference}: {amount} approved."
+      },
+      "fund_rejected": {
+        "title": "Fund request not approved",
+        "body": "{reference} ({amount}): {reason}"
+      },
+      "expense_logged": {
+        "title": "Expense to review",
+        "body": "{name} logged {amount} on {plan}."
+      },
+      "expense_rejected": {
+        "title": "Expense not accepted",
+        "body": "{amount}: {reason}"
+      },
+      "sale_recorded": {
+        "title": "Sale to confirm",
+        "body": "{name} sold {plan} for {amount}. Confirm the sale."
+      },
+      "sale_confirmed": {
+        "title": "Sale confirmed — send the money",
+        "body": "Send {amount} to Krishi and submit the transfer details."
+      },
+      "sale_confirmed_investor": {
+        "title": "Your animals were sold",
+        "body": "{plan} sold for {amount}. Settlement follows once Krishi receives the money."
+      },
+      "sale_rejected": {
+        "title": "Sale sent back",
+        "body": "{reason} Record the sale again."
+      },
+      "remittance_rejected": {
+        "title": "Payment not confirmed",
+        "body": "{reference} ({amount}): {reason} Submit the payment again."
+      },
+      "settled_investor": {
+        "title": "Investment settled",
+        "body": "{plan} ({reference}): {amount} added to your wallet."
+      },
+      "settled_share": {
+        "title": "Profit share received",
+        "body": "{amount} from {plan} ({reference}) added to your wallet."
+      },
+      "withdrawal_paid": {
+        "title": "Withdrawal paid",
+        "body": "{amount} ({reference}) was sent to your account."
+      },
+      "withdrawal_rejected": {
+        "title": "Withdrawal rejected",
+        "body": "{amount} ({reference}) is back in your wallet. {reason}"
+      },
+      "kyc_approved": {
+        "title": "KYC verified",
+        "body": "Your identity is verified. You have full access."
+      },
+      "kyc_rejected": {
+        "title": "KYC needs changes",
+        "body": "{reason} Please resubmit."
+      },
+      "steward_approved": {
+        "title": "Steward account approved",
+        "body": "You can now manage interests, farmers and batches."
+      },
+      "steward_rejected": {
+        "title": "Steward application not approved",
+        "body": "{reason}"
+      }
+    },
     "wallet": {
       "title": "Wallet",
       "subtitle": "Money from settled batches stays here until you withdraw it.",

@@ -2,6 +2,8 @@ import { redirect } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
+import { NotificationBell } from "@/components/notifications/NotificationBell";
+import { getUnreadCount } from "@/lib/notifications/read";
 
 export default async function PortalLayout({
   children,
@@ -19,8 +21,11 @@ export default async function PortalLayout({
     getTranslations("app.panel"),
   ]);
 
+  const unreadNotifications = await getUnreadCount(user.id);
+
   return (
     <DashboardShell
+      headerActions={<NotificationBell initialUnread={unreadNotifications} allHref="/portal/notifications" />}
       locale={locale}
       roleLabel={tr("investor")}
       title={tp("investorTitle")}

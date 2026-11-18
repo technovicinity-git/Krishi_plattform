@@ -1646,6 +1646,132 @@
     }
   },
   "app": {
+    "notifications": {
+      "heading": "নোটিফিকেশন",
+      "subtitle": "আপনার অনুরোধ, ব্যাচ ও টাকার হালনাগাদ।",
+      "bell": "নোটিফিকেশন",
+      "bellUnread": "নোটিফিকেশন, {count}টি অপঠিত",
+      "markAllRead": "সব পঠিত করুন",
+      "viewAll": "সব নোটিফিকেশন দেখুন",
+      "loading": "লোড হচ্ছে...",
+      "empty": "নতুন কিছু নেই।",
+      "emptyHint": "কোনো কিছুতে আপনার মনোযোগ দরকার হলে এখানে জানানো হবে।",
+      "unreadCount": "{count, plural, =0 {কোনো অপঠিত নোটিফিকেশন নেই} other {#টি অপঠিত}}"
+    },
+    "notify": {
+      "interest_submitted": {
+        "title": "নতুন আগ্রহ {reference}",
+        "body": "{name} {plan}-এ বিনিয়োগ করতে চান। যাচাই করুন।"
+      },
+      "interest_approved": {
+        "title": "আপনার আগ্রহ অনুমোদিত হয়েছে",
+        "body": "{plan} ({reference})। বিনিয়োগ শুরু করতে KYC ও ডিপোজিট সম্পন্ন করুন।"
+      },
+      "interest_declined": {
+        "title": "আপনার আগ্রহ অনুমোদিত হয়নি",
+        "body": "{plan} ({reference})। {reason}"
+      },
+      "deposit_approved": {
+        "title": "ডিপোজিট অনুমোদিত — বিনিয়োগ শুরু",
+        "body": "{plan}-এর জন্য {amount}। আপনার বিনিয়োগ {reference}।"
+      },
+      "deposit_rejected": {
+        "title": "ডিপোজিট গ্রহণ করা হয়নি",
+        "body": "{reference} ({amount}): {reason}"
+      },
+      "investment_new": {
+        "title": "নতুন বিনিয়োগ {reference}",
+        "body": "{plan}-এর তহবিল এসেছে। একজন কৃষক নিয়োগ করুন।"
+      },
+      "batch_assigned": {
+        "title": "আপনাকে নতুন ব্যাচ দেওয়া হয়েছে",
+        "body": "{plan} ({reference})। পশু কিনে ক্রয় নিশ্চিত করুন।"
+      },
+      "farmer_assigned": {
+        "title": "কৃষক নিয়োগ হয়েছে",
+        "body": "{name} {plan}-এর পশু লালন-পালন করবেন।"
+      },
+      "purchase_confirmed": {
+        "title": "পশু কেনা হয়েছে",
+        "body": "{plan} ({reference}): {amount}-এ কেনা হয়েছে। লালন-পালন শুরু হয়েছে।"
+      },
+      "update_posted": {
+        "title": "{plan}-এ নতুন আপডেট",
+        "body": "{title}"
+      },
+      "fund_requested": {
+        "title": "তহবিল অনুরোধ {reference}",
+        "body": "{name} {plan}-এর জন্য {amount} চেয়েছেন।"
+      },
+      "fund_approved": {
+        "title": "তহবিল অনুরোধ অনুমোদিত",
+        "body": "{reference}: {amount} অনুমোদিত হয়েছে।"
+      },
+      "fund_rejected": {
+        "title": "তহবিল অনুরোধ অনুমোদিত হয়নি",
+        "body": "{reference} ({amount}): {reason}"
+      },
+      "expense_logged": {
+        "title": "যাচাইয়ের জন্য খরচ",
+        "body": "{name} {plan}-এ {amount} খরচ লিখেছেন।"
+      },
+      "expense_rejected": {
+        "title": "খরচ গ্রহণ করা হয়নি",
+        "body": "{amount}: {reason}"
+      },
+      "sale_recorded": {
+        "title": "নিশ্চিত করার জন্য বিক্রয়",
+        "body": "{name} {plan} {amount}-এ বিক্রি করেছেন। বিক্রয় নিশ্চিত করুন।"
+      },
+      "sale_confirmed": {
+        "title": "বিক্রয় নিশ্চিত — টাকা পাঠান",
+        "body": "কৃষিতে {amount} পাঠান এবং লেনদেনের তথ্য জমা দিন।"
+      },
+      "sale_confirmed_investor": {
+        "title": "আপনার পশু বিক্রি হয়েছে",
+        "body": "{plan} {amount}-এ বিক্রি হয়েছে। কৃষি টাকা পেলে নিষ্পত্তি হবে।"
+      },
+      "sale_rejected": {
+        "title": "বিক্রয় ফেরত পাঠানো হয়েছে",
+        "body": "{reason} আবার বিক্রয় লিখুন।"
+      },
+      "remittance_rejected": {
+        "title": "পেমেন্ট নিশ্চিত হয়নি",
+        "body": "{reference} ({amount}): {reason} আবার পেমেন্ট জমা দিন।"
+      },
+      "settled_investor": {
+        "title": "বিনিয়োগের নিষ্পত্তি হয়েছে",
+        "body": "{plan} ({reference}): {amount} আপনার ওয়ালেটে যোগ হয়েছে।"
+      },
+      "settled_share": {
+        "title": "লাভের অংশ পেয়েছেন",
+        "body": "{plan} ({reference}) থেকে {amount} আপনার ওয়ালেটে যোগ হয়েছে।"
+      },
+      "withdrawal_paid": {
+        "title": "উত্তোলন পরিশোধিত",
+        "body": "{amount} ({reference}) আপনার অ্যাকাউন্টে পাঠানো হয়েছে।"
+      },
+      "withdrawal_rejected": {
+        "title": "উত্তোলন বাতিল",
+        "body": "{amount} ({reference}) আপনার ওয়ালেটে ফিরে এসেছে। {reason}"
+      },
+      "kyc_approved": {
+        "title": "KYC যাচাই সম্পন্ন",
+        "body": "আপনার পরিচয় যাচাই হয়েছে। এখন সব সুবিধা পাবেন।"
+      },
+      "kyc_rejected": {
+        "title": "KYC-তে পরিবর্তন দরকার",
+        "body": "{reason} আবার জমা দিন।"
+      },
+      "steward_approved": {
+        "title": "স্টুয়ার্ড অ্যাকাউন্ট অনুমোদিত",
+        "body": "এখন আপনি আগ্রহ, কৃষক ও ব্যাচ পরিচালনা করতে পারবেন।"
+      },
+      "steward_rejected": {
+        "title": "স্টুয়ার্ড আবেদন অনুমোদিত হয়নি",
+        "body": "{reason}"
+      }
+    },
     "wallet": {
       "title": "ওয়ালেট",
       "subtitle": "নিষ্পত্তি হওয়া ব্যাচের টাকা উত্তোলন না করা পর্যন্ত এখানে থাকে।",

@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { uploadUpdatePhoto } from "@/lib/investments/photos";
+import { notify, investmentParties } from "@/lib/notifications/notify";
 
 export const runtime = "nodejs";
 
@@ -71,6 +72,15 @@ export async function POST(request: Request) {
   if (error) {
     console.error("[farmer/updates] insert failed:", error);
     return NextResponse.json({ error: "Failed to post update" }, { status: 500 });
+  }
+
+  const parties = await investmentParties(inv.id);
+  if (parties) {
+    await notify(
+      "update_posted",
+      { userId: parties.investorId, href: `/portal/investments/${inv.id}` },
+      { reference: parties.reference, plan: parties.plan, planBn: parties.planBn, title: parsed.data.title },
+    );
   }
 
   return NextResponse.json({ success: true });

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/current-user";
+import { notify, investmentParties } from "@/lib/notifications/notify";
 
 export const runtime = "nodejs";
 
@@ -92,6 +93,15 @@ export async function POST(request: Request) {
     body: parsed.data.note || `Requested ৳${parsed.data.amount.toLocaleString("en-IN")} for ${parsed.data.purpose}.`,
     amount: parsed.data.amount,
   });
+
+  const parties = await investmentParties(inv.id);
+  if (parties) {
+    await notify(
+      "fund_requested",
+      { userId: parties.stewardId, href: `/steward/investments/${inv.id}` },
+      { reference: fundReq.reference, amount: parsed.data.amount, name: user.fullName ?? undefined, plan: parties.plan, planBn: parties.planBn },
+    );
+  }
 
   return NextResponse.json({ success: true, reference: fundReq.reference });
 }
