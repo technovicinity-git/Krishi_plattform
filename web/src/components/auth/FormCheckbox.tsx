@@ -22,7 +22,7 @@ export function FormCheckbox({
         type="checkbox"
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
-        className="mt-0.5 h-[18px] w-[18px] shrink-0 cursor-pointer rounded-[4px] border border-border-light accent-terracotta"
+        className="mt-0.5 h-[18px] w-[18px] shrink-0 cursor-pointer rounded-[4px] border border-border-light accent-brand"
       />
       <label
         htmlFor={id}

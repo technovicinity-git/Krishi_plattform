@@ -37,13 +37,13 @@ export function StepPurchaseCare() {
                 <Row label={t("animalCard.plannedLabel")} value={t("animalCard.plannedValue")} />
                 <Row label={t("animalCard.actualLabel")} value={t("animalCard.actualValue")} valueColor="text-green-olive" labelColor="text-green-olive" />
                 <div className="h-px w-full bg-border-divider" />
-                <Row label={t("animalCard.remainingLabel")} value={t("animalCard.remainingValue")} valueColor="text-terracotta" labelColor="text-terracotta" />
+                <Row label={t("animalCard.remainingLabel")} value={t("animalCard.remainingValue")} valueColor="text-brand" labelColor="text-brand" />
               </div>
 
               <div className="flex flex-col gap-2">
                 <div className="flex h-2.5 w-full overflow-hidden rounded-full bg-stone">
                   <div className="h-full bg-green-olive" style={{ width: "97%" }} />
-                  <div className="h-full bg-terracotta" style={{ width: "3%" }} />
+                  <div className="h-full bg-brand" style={{ width: "3%" }} />
                 </div>
                 <div className="flex items-center justify-between text-[11px] text-ink-tertiary">
                   <span>{t("animalCard.barPrimaryLabel")}</span>
@@ -65,14 +65,14 @@ export function StepPurchaseCare() {
 
               <div className="flex flex-col gap-4">
                 <Row label={t("careCard.poolLabel")} value={t("careCard.poolValue")} />
-                <Row label={t("careCard.usedLabel")} value={t("careCard.usedValue")} valueColor="text-terracotta" labelColor="text-terracotta" />
+                <Row label={t("careCard.usedLabel")} value={t("careCard.usedValue")} valueColor="text-brand" labelColor="text-brand" />
                 <div className="h-px w-full bg-border-divider" />
                 <Row label={t("careCard.remainingLabel")} value={t("careCard.remainingValue")} valueColor="text-green-olive" labelColor="text-green-olive" />
               </div>
 
               <div className="flex flex-col gap-2">
                 <div className="flex h-2.5 w-full overflow-hidden rounded-full bg-stone">
-                  <div className="h-full bg-terracotta" style={{ width: "13%" }} />
+                  <div className="h-full bg-brand" style={{ width: "13%" }} />
                   <div className="h-full bg-green-olive" style={{ width: "87%" }} />
                 </div>
                 <div className="flex items-center justify-between text-[11px] text-ink-tertiary">
@@ -84,9 +84,9 @@ export function StepPurchaseCare() {
           </div>
 
           {/* Notice */}
-          <div className="rounded-[4px] border-l-4 border-terracotta bg-cream p-6">
+          <div className="rounded-[4px] border-l-4 border-brand bg-cream p-6">
             <div className="flex flex-col gap-2">
-              <span className="text-[14px] font-bold text-terracotta">
+              <span className="text-[14px] font-bold text-brand">
                 {t("notice.title")}
               </span>
               <p className="text-[13px] leading-[1.5] text-ink-secondary">

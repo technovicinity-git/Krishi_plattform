@@ -55,7 +55,7 @@ Wizard at `/onboarding/[reference]`, with steps in `components/onboarding/*`:
 | Phone verification | `/onboarding/phone` | OTP routes |
 | KYC | `/onboarding/kyc` | `POST /api/kyc/submit`: multipart upload of NID front/back (+ optional photo) to `kyc-documents`; `kyc_profiles.status` → `pending` |
 | Withdrawal method | `/onboarding/withdrawal` | `POST /api/onboarding/withdrawal`: upserts `withdrawal_preferences` |
-| Deposit | `/onboarding/deposit` | Shows active `platform_accounts`. Proof uploaded to `deposit-proofs`. `POST /api/deposits` requires an **approved** interest owned by the caller, inserts `deposits` (`pending`), and sets the interest to `onboarding`. |
+| Deposit | `/onboarding/deposit` | Shows active `platform_accounts`. `POST /api/deposits` (multipart) uploads the proof server-side to the private `deposit-proofs` bucket, works out the amount from the plan's unit price × units, requires an **approved** interest owned by the caller, inserts `deposits` (`pending`), and sets the interest to `onboarding`. |
 
 Bank deposits require `txn_id`. MFS deposits require `sender_number`.
 

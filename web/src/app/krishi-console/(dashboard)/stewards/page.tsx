@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { requireAdmin } from "@/lib/admin/current-admin";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { EmptyState, PageHeader, Tabs } from "@/components/dashboard/ui";
 
 const FILTERS = [
   { key: "pending", label: "Pending Approval" },
@@ -48,48 +49,25 @@ export default async function AdminStewardsPage({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <h1 className="font-serif text-[28px] leading-tight text-ink">
-          Stewards
-        </h1>
-        <p className="text-[13px] text-ink-secondary">
-          Steward accounts require admin approval before they can operate.
-        </p>
-      </div>
+      <PageHeader
+        title={<>Stewards</>}
+        description={<>Steward accounts require admin approval before they can operate.</>}
+      />
 
-      <div className="flex gap-1 border-b border-border-light">
-        {FILTERS.map((f) => {
-          const active = f.key === filter;
-          return (
-            <Link
-              key={f.key}
-              href={`/krishi-console/stewards?filter=${f.key}`}
-              className={`border-b-2 px-4 py-2.5 text-[13px] font-medium transition-colors ${
-                active
-                  ? "border-ink text-ink"
-                  : "border-transparent text-ink-secondary hover:text-ink"
-              }`}
-            >
-              {f.label}
-            </Link>
-          );
-        })}
-      </div>
+      <Tabs localized={false}
+        items={FILTERS.map((f) => ({
+          label: f.label,
+          href: `/krishi-console/stewards?filter=${f.key}`,
+          active: f.key === filter,
+        }))}
+      />
 
       {!stewards || stewards.length === 0 ? (
-        <div className="rounded-2xl border border-border-light bg-white px-8 py-16 text-center">
-          <p className="text-[14px] text-ink-secondary">
-            No stewards in this view.
-          </p>
-          <p className="mt-2 text-[12px] text-ink-muted">
-            Steward registration is not yet wired — this list will populate
-            once the public steward application flow is active.
-          </p>
-        </div>
+        <EmptyState icon="users" title="No stewards in this view." />
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-border-light bg-white">
-          <table className="w-full">
-            <thead className="border-b border-border-light bg-stone">
+        <div className="overflow-x-auto rounded-2xl border border-border-light bg-white">
+          <table className="w-full min-w-[720px]">
+            <thead className="border-b border-border-light bg-cream">
               <tr>
                 <th className="px-5 py-3 text-left text-[11px] font-bold uppercase tracking-[0.02em] text-ink-muted">
                   Steward
@@ -115,12 +93,12 @@ export default async function AdminStewardsPage({
                   status === "approved"
                     ? "bg-[#E8F0EA] text-green-deep"
                     : status === "rejected"
-                      ? "bg-[#FAF0ED] text-terracotta"
+                      ? "bg-[#FAF0ED] text-danger"
                       : "bg-[#FEF6E5] text-[#C48A2E]";
                 return (
                   <tr
                     key={s.id}
-                    className="border-b border-border-light last:border-b-0 hover:bg-stone/40"
+                    className="border-b border-border-light last:border-b-0 hover:bg-cream/60"
                   >
                     <td className="px-5 py-4 text-[13px] font-semibold text-ink">
                       {s.full_name ?? "—"}
@@ -141,7 +119,7 @@ export default async function AdminStewardsPage({
                     <td className="px-5 py-4 text-right">
                       <Link
                         href={`/krishi-console/stewards/${s.id}`}
-                        className="text-[12px] font-semibold text-terracotta hover:underline"
+                        className="text-[12px] font-semibold text-brand hover:underline"
                       >
                         Review →
                       </Link>

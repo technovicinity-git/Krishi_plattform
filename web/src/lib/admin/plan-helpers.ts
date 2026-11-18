@@ -179,3 +179,15 @@ export function planImageUrl(path: string | null): string | null {
   if (!base) return null;
   return `${base}/storage/v1/object/public/${BUCKET}/${path}`;
 }
+/** Row shape of a steward_plan_offerings query joined with thanas + users. */
+export interface OfferingQueryRow {
+  id: string;
+  units_offered: number;
+  units_funded: number;
+  status: string;
+  approved_at: string | null;
+  rejection_reason: string | null;
+  thana_id: string | null;
+  thanas: { name_en: string | null } | null;
+  users: { id: string; full_name: string | null } | null;
+}

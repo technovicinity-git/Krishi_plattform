@@ -22,7 +22,7 @@ export function StewardSupport() {
                 key={key}
                 className="flex flex-col gap-3 rounded-[8px] border border-border-light bg-cream px-7 py-5"
               >
-                <span className="text-[11px] font-bold uppercase tracking-[0.02em] text-terracotta">
+                <span className="text-[11px] font-bold uppercase tracking-[0.02em] text-brand">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <h3 className="font-serif text-[22px] leading-[1.2] text-ink">

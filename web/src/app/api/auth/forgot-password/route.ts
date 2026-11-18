@@ -3,6 +3,8 @@ import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { generateOtp, hashOtp, getOtpExpiry } from "@/lib/auth/otp";
 import { toE164, isValidBDPhone } from "@/lib/auth/phone";
+import { showOtpOnScreen } from "@/lib/auth/dev-flags";
+import { LIMITS, clientIp, tooManyRequests, withinLimits } from "@/lib/security/rate-limit";
 
 export const runtime = "nodejs";
 
@@ -15,6 +17,10 @@ const schema = z.object({
 
 export async function POST(request: Request) {
   try {
+    if (!(await withinLimits(LIMITS.forgotPassword(clientIp(request))))) {
+      return tooManyRequests(3600);
+    }
+
     const body = await request.json();
     const parsed = schema.safeParse(body);
     if (!parsed.success) {
@@ -70,7 +76,7 @@ export async function POST(request: Request) {
       expires_at: expiresAt.toISOString(),
     });
 
-    if (process.env.DEV_SHOW_OTP === "true") {
+    if (showOtpOnScreen()) {
       await admin.from("dev_otps").insert({ phone: e164, otp });
       console.log(`[DEV] Reset OTP for ${e164}: ${otp}`);
     }

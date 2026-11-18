@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDialog } from "@/components/ui/dialog-provider";
 import { compressImage } from "@/lib/images/compress";
@@ -113,22 +113,25 @@ export function PlanForm({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!slugTouched && mode === "create") {
-      setSlug(slugify(nameEn));
-    }
-  }, [nameEn, slugTouched, mode]);
+  // Auto-fill the slug from the English name until the admin edits the slug.
+  const handleNameEnChange = (value: string) => {
+    setNameEn(value);
+    if (!slugTouched && mode === "create") setSlug(slugify(value));
+  };
 
   const filteredDistricts = useMemo(
     () => districts.filter((d) => d.division_id === divisionId),
     [districts, divisionId],
   );
 
-  useEffect(() => {
-    if (!divisionId) return;
-    const stillValid = filteredDistricts.some((d) => d.id === districtId);
+  // Clear the district when it doesn't belong to the newly chosen division.
+  const handleDivisionChange = (value: string) => {
+    setDivisionId(value);
+    const stillValid = districts.some(
+      (d) => d.id === districtId && d.division_id === value,
+    );
     if (!stillValid) setDistrictId("");
-  }, [divisionId, districtId, filteredDistricts]);
+  };
 
   const handleImageChange = (file: File | null) => {
     if (!file) {
@@ -231,7 +234,7 @@ export function PlanForm({
           <Field
             label="English Name"
             value={nameEn}
-            onChange={setNameEn}
+            onChange={handleNameEnChange}
             placeholder="e.g. Cow Fattening Plan"
             required
           />
@@ -287,7 +290,7 @@ export function PlanForm({
         <div className="flex flex-col gap-2">
           <label className="text-[13px] font-semibold text-ink-nav">
             Cover Image{" "}
-            {mode === "create" && <span className="text-terracotta">*</span>}
+            {mode === "create" && <span className="text-brand">*</span>}
           </label>
           <div className="flex items-start gap-4">
             {imagePreview ? (
@@ -340,7 +343,7 @@ export function PlanForm({
           <SelectField
             label="Division"
             value={divisionId}
-            onChange={setDivisionId}
+            onChange={handleDivisionChange}
             required
             placeholder="Choose a division"
             options={divisions.map((d) => ({ value: d.id, label: d.name_en }))}
@@ -450,7 +453,7 @@ export function PlanForm({
         <button
           type="submit"
           disabled={submitting}
-          className="inline-flex h-[46px] items-center justify-center rounded-[8px] bg-ink px-8 text-[13px] font-bold text-white hover:bg-[#2A2A2A] disabled:opacity-60"
+          className="inline-flex h-[46px] items-center justify-center rounded-[8px] bg-brand px-8 text-[13px] font-bold text-white hover:bg-brand-hover disabled:opacity-60"
         >
           {submitting
             ? "Saving..."
@@ -505,7 +508,7 @@ function Field({
     <div className="flex flex-col gap-2">
       <label className="text-[13px] font-semibold text-ink-nav">
         {label}
-        {required && <span className="ml-1 text-terracotta">*</span>}
+        {required && <span className="ml-1 text-danger">*</span>}
       </label>
       <input
         type={type}
@@ -542,7 +545,7 @@ function SelectField({
     <div className="flex flex-col gap-2">
       <label className="text-[13px] font-semibold text-ink-nav">
         {label}
-        {required && <span className="ml-1 text-terracotta">*</span>}
+        {required && <span className="ml-1 text-danger">*</span>}
       </label>
       <select
         value={value}

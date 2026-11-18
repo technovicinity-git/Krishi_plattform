@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getLocale } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { findPublicOfferingById } from "@/lib/public/plans";
 import { ExpressInterestForm } from "@/components/interest/ExpressInterestForm";
@@ -18,19 +18,20 @@ function readStr(v: string | string[] | undefined): string | undefined {
 export default async function ExpressInterestPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const offeringId = readStr(params.offering);
+  const t = await getTranslations("app.expressInterest");
 
   if (!offeringId) {
     return (
       <div className="mx-auto flex max-w-[640px] flex-col gap-4 px-6 py-24 text-center">
-        <h1 className="font-serif text-[28px] text-ink">Choose a plan first</h1>
+        <h1 className="font-serif text-[28px] text-ink">{t("choosePlanTitle")}</h1>
         <p className="text-[14px] text-ink-secondary">
-          To express interest, open a plan and click &quot;Show Interest&quot;.
+          {t("choosePlanBody")}
         </p>
         <Link
           href="/plans"
           className="mt-4 inline-flex h-[44px] items-center justify-center rounded-[4px] bg-ink px-6 text-[13px] font-semibold text-white hover:bg-[#2A2A2A]"
         >
-          Explore Investment Plans →
+          {t("explorePlans")}
         </Link>
       </div>
     );
@@ -40,15 +41,15 @@ export default async function ExpressInterestPage({ searchParams }: PageProps) {
   if (!offering) {
     return (
       <div className="mx-auto flex max-w-[640px] flex-col gap-4 px-6 py-24 text-center">
-        <h1 className="font-serif text-[28px] text-ink">Plan not available</h1>
+        <h1 className="font-serif text-[28px] text-ink">{t("unavailableTitle")}</h1>
         <p className="text-[14px] text-ink-secondary">
-          This plan may have closed or been removed.
+          {t("unavailableBody")}
         </p>
         <Link
           href="/plans"
           className="mt-4 inline-flex h-[44px] items-center justify-center rounded-[4px] bg-ink px-6 text-[13px] font-semibold text-white hover:bg-[#2A2A2A]"
         >
-          Explore Investment Plans →
+          {t("explorePlans")}
         </Link>
       </div>
     );

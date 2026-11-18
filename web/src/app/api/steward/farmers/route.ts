@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { toE164, isValidBDPhone } from "@/lib/auth/phone";
 import { generateOtp, hashOtp, getOtpExpiry } from "@/lib/auth/otp";
+import { showOtpOnScreen } from "@/lib/auth/dev-flags";
 
 export const runtime = "nodejs";
 
@@ -92,7 +93,7 @@ export async function POST(request: Request) {
       expires_at: expiresAt.toISOString(),
     });
 
-    if (process.env.DEV_SHOW_OTP === "true") {
+    if (showOtpOnScreen()) {
       await admin.from("dev_otps").insert({ phone: e164, otp });
       console.log(`[DEV] Farmer activation OTP for ${e164}: ${otp}`);
     }

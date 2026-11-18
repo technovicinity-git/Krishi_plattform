@@ -36,7 +36,7 @@ export function IsIsNot() {
 
           {/* Is not */}
           <div className="flex flex-col gap-6">
-            <span className="text-[11px] font-semibold uppercase tracking-[0.02em] text-terracotta">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.02em] text-brand">
               {t("isNotLabel")}
             </span>
             <div className="flex flex-col">

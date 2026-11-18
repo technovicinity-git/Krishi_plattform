@@ -31,6 +31,11 @@ export default async function PortalProfilePage() {
       : user.kycStatus === "rejected" || user.kycStatus === "requires_update"
         ? t("kycCtaResubmit")
         : t("kycCtaView");
+  // Start / resubmit opens the KYC form; "view submission" opens the status page.
+  const kycHref =
+    user.kycStatus === "pending" || user.kycStatus === "under_review"
+      ? "/portal/kyc"
+      : "/onboarding/kyc";
 
   const details = [
     { labelKey: "detailAccountType", value: capitalize(user.role) },
@@ -61,7 +66,7 @@ export default async function PortalProfilePage() {
 
       {/* KYC card */}
       <div className="flex flex-col gap-5 rounded-2xl border border-border-light bg-white p-8 lg:p-10">
-        <div className="h-0.5 w-12 bg-terracotta" />
+        <div className="h-0.5 w-12 bg-brand" />
 
         <div className="flex flex-col gap-3">
           <span className="text-[11px] font-semibold uppercase tracking-[0.02em] text-sage">
@@ -92,8 +97,8 @@ export default async function PortalProfilePage() {
 
         {showKycCta && (
           <Link
-            href="/onboarding/kyc"
-            className="inline-flex h-[52px] w-fit items-center justify-center gap-2 rounded-[8px] bg-terracotta px-8 text-[15px] font-bold text-white transition-colors hover:bg-[#B3634A]"
+            href={kycHref}
+            className="inline-flex h-[52px] w-fit items-center justify-center gap-2 rounded-[8px] bg-brand px-8 text-[15px] font-bold text-white transition-colors hover:bg-brand-hover"
           >
             {ctaLabel}
             <ArrowRightIcon />
@@ -139,7 +144,7 @@ export default async function PortalProfilePage() {
             className={`inline-flex h-[52px] w-fit items-center justify-center gap-2 rounded-[8px] px-8 text-[15px] font-bold transition-colors ${
               withdrawal
                 ? "border border-border-light bg-white text-ink-nav hover:bg-stone"
-                : "bg-terracotta text-white hover:bg-[#B3634A]"
+                : "bg-brand text-white hover:bg-brand-hover"
             }`}
           >
             {withdrawal ? t("withdrawalCtaEdit") : t("withdrawalCta")}

@@ -7,6 +7,7 @@ import { Logo } from "./Logo";
 import { UserMenu } from "./UserMenu";
 import { getMenuItemsForRole } from "@/lib/auth/menu-items";
 import { cn } from "@/lib/cn";
+import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 
 const NAV_LINKS = [
   { key: "investmentPlans", href: "/plans" },
@@ -24,6 +25,7 @@ export interface HeaderUser {
 
 export function Header({ user }: { user: HeaderUser | null }) {
   const t = useTranslations("nav");
+  const tu = useTranslations("app.userMenu");
   const pathname = usePathname();
   const locale = useLocale();
   const router = useRouter();
@@ -61,7 +63,7 @@ export function Header({ user }: { user: HeaderUser | null }) {
                 className={cn(
                   "border-b-2 pb-1 text-[13px] leading-none transition-colors",
                   active
-                    ? "border-terracotta font-semibold text-terracotta"
+                    ? "border-brand font-semibold text-brand"
                     : "border-transparent font-medium text-ink-nav hover:text-ink",
                 )}
               >
@@ -74,7 +76,7 @@ export function Header({ user }: { user: HeaderUser | null }) {
         <div className="hidden items-center gap-5 lg:flex">
           {user ? (
             <UserMenu
-              fullName={user.fullName ?? "User"}
+              fullName={user.fullName ?? tu("user")}
               phone={user.phone}
               items={menuItems}
               logoutRedirect={`/${locale}/login`}
@@ -89,18 +91,18 @@ export function Header({ user }: { user: HeaderUser | null }) {
               </Link>
               <Link
                 href="/plans"
-                className="inline-flex items-center rounded-[4px] bg-terracotta px-[22px] py-[11px] text-[13px] font-semibold leading-none text-white transition-colors hover:bg-[#B3634A]"
+                className="inline-flex items-center rounded-[4px] bg-brand px-[22px] py-[11px] text-[13px] font-semibold leading-none text-white transition-colors hover:bg-brand-hover"
               >
                 {t("explorePlans")}
               </Link>
             </>
           )}
-          <LanguageSelector pathname={pathname} />
+          <LanguageSwitcher className="ml-1" />
         </div>
 
         <button
           type="button"
-          aria-label={mobileOpen ? "Close menu" : "Open menu"}
+          aria-label={mobileOpen ? tu("closeMenu") : tu("openMenu")}
           aria-expanded={mobileOpen}
           onClick={() => setMobileOpen((v) => !v)}
           className="inline-flex h-10 w-10 items-center justify-center text-ink lg:hidden"
@@ -145,7 +147,7 @@ export function Header({ user }: { user: HeaderUser | null }) {
                     className={cn(
                       "text-[15px]",
                       active
-                        ? "font-semibold text-terracotta"
+                        ? "font-semibold text-brand"
                         : "font-medium text-ink-nav",
                     )}
                   >
@@ -163,7 +165,7 @@ export function Header({ user }: { user: HeaderUser | null }) {
                     </span>
                     <div className="flex flex-col">
                       <span className="text-[13px] font-semibold text-ink">
-                        {user.fullName ?? "User"}
+                        {user.fullName ?? tu("user")}
                       </span>
                       {user.phone && (
                         <span className="text-[11px] text-ink-muted">
@@ -187,9 +189,9 @@ export function Header({ user }: { user: HeaderUser | null }) {
                       type="button"
                       onClick={handleMobileLogout}
                       disabled={loggingOut}
-                      className="mt-2 rounded-[6px] border-t border-border-light py-3 text-left text-[14px] font-medium text-terracotta hover:text-[#8A2F20] disabled:opacity-60"
+                      className="mt-2 rounded-[6px] border-t border-border-light py-3 text-left text-[14px] font-medium text-danger hover:text-[#8A2F20] disabled:opacity-60"
                     >
-                      {loggingOut ? "Signing out..." : "Sign out"}
+                      {loggingOut ? tu("signingOut") : tu("signOut")}
                     </button>
                   </div>
                 </>
@@ -205,14 +207,14 @@ export function Header({ user }: { user: HeaderUser | null }) {
                   <Link
                     href="/plans"
                     onClick={() => setMobileOpen(false)}
-                    className="inline-flex items-center justify-center rounded-[4px] bg-terracotta px-6 py-3 text-[14px] font-semibold text-white"
+                    className="inline-flex items-center justify-center rounded-[4px] bg-brand px-6 py-3 text-[14px] font-semibold text-white"
                   >
                     {t("explorePlans")}
                   </Link>
                 </>
               )}
               <div className="pt-2">
-                <LanguageSelector pathname={pathname} />
+                <LanguageSwitcher />
               </div>
             </div>
           </div>
@@ -222,30 +224,3 @@ export function Header({ user }: { user: HeaderUser | null }) {
   );
 }
 
-function LanguageSelector({ pathname }: { pathname: string }) {
-  const router = useRouter();
-
-  return (
-    <div className="flex items-center gap-[6px] border-l border-border-light pl-5">
-      <button
-        type="button"
-        onClick={() => router.replace(pathname, { locale: "en" })}
-        className="text-[12px] font-bold text-ink"
-        aria-label="Switch to English"
-      >
-        EN
-      </button>
-      <span className="text-[12px] text-ink-muted" aria-hidden="true">
-        |
-      </span>
-      <button
-        type="button"
-        onClick={() => router.replace(pathname, { locale: "bn" })}
-        className="text-[12px] text-ink-tertiary hover:text-ink"
-        aria-label="বাংলায় দেখুন"
-      >
-        বাংলা
-      </button>
-    </div>
-  );
-}

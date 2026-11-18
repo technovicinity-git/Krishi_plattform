@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentAdmin } from "@/lib/admin/current-admin";
 import { logAdminAction } from "@/lib/admin/audit";
+import type { OfferingQueryRow } from "@/lib/admin/plan-helpers";
 
 export const runtime = "nodejs";
 
@@ -41,7 +42,7 @@ export async function GET(
     return NextResponse.json({ error: "Failed to load offerings" }, { status: 500 });
   }
 
-  const items = (data ?? []).map((row: any) => ({
+  const items = ((data ?? []) as unknown as OfferingQueryRow[]).map((row) => ({
     id: row.id,
     steward_id: row.users?.id ?? null,
     steward_name: row.users?.full_name ?? "—",

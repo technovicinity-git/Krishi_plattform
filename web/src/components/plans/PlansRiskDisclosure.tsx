@@ -9,11 +9,11 @@ export function PlansRiskDisclosure() {
   return (
     <Section size="md" className="bg-cream">
       <Container>
-        <div className="mx-auto max-w-[1000px] rounded-xl border-l-4 border-terracotta bg-white p-10">
+        <div className="mx-auto max-w-[1000px] rounded-xl border-l-4 border-brand bg-white p-10">
           <div className="flex flex-col gap-5">
             <div className="flex items-center gap-3">
-              <AlertTriangleIcon className="text-terracotta" />
-              <span className="text-[11px] font-bold uppercase tracking-[0.02em] text-terracotta">
+              <AlertTriangleIcon className="text-brand" />
+              <span className="text-[11px] font-bold uppercase tracking-[0.02em] text-brand">
                 {t("label")}
               </span>
             </div>

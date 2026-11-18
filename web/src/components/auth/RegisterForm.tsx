@@ -12,6 +12,7 @@ import { useDialog } from "@/components/ui/dialog-provider";
 
 export function RegisterForm() {
   const t = useTranslations("auth.register");
+  const tErr = useTranslations("errors");
   const router = useRouter();
   const { alert } = useDialog();
 
@@ -36,7 +37,7 @@ export function RegisterForm() {
       confirmPassword,
     });
     if (!parsed.success) {
-      setError(parsed.error.issues[0]?.message ?? t("errors.generic"));
+      setError(parsed.error.issues[0]?.message ?? tErr("generic"));
       return;
     }
     if (!agreed) {
@@ -59,7 +60,7 @@ export function RegisterForm() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error ?? t("errors.generic"));
+        setError(data.error ?? tErr("generic"));
         setSubmitting(false);
         return;
       }
@@ -67,7 +68,7 @@ export function RegisterForm() {
       const e164 = toE164(phone);
       router.push(`/verify-otp?phone=${encodeURIComponent(e164)}`);
     } catch {
-      setError(t("errors.network"));
+      setError(tErr("network"));
       setSubmitting(false);
     }
   };
@@ -137,11 +138,11 @@ export function RegisterForm() {
         />
         <FormCheckbox id="terms" checked={agreed} onChange={setAgreed}>
           {t("agreePrefix")}{" "}
-          <Link href="/terms" className="font-semibold text-terracotta underline">
+          <Link href="/terms" className="font-semibold text-brand underline">
             {t("termsLink")}
           </Link>{" "}
           {t("and")}{" "}
-          <Link href="/privacy" className="font-semibold text-terracotta underline">
+          <Link href="/privacy" className="font-semibold text-brand underline">
             {t("privacyLink")}
           </Link>
           .
@@ -157,7 +158,7 @@ export function RegisterForm() {
       <button
         type="submit"
         disabled={submitting}
-        className="inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-[8px] bg-terracotta text-[15px] font-bold text-white transition-colors hover:bg-[#B3634A] disabled:opacity-60"
+        className="inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-[8px] bg-brand text-[15px] font-bold text-white transition-colors hover:bg-brand-hover disabled:opacity-60"
       >
         {submitting ? t("submitting") : t("submit")}
         {!submitting && <span aria-hidden="true">→</span>}
@@ -166,7 +167,7 @@ export function RegisterForm() {
       <div className="border-t border-border-light pt-6 text-center">
         <p className="text-[13px] text-ink-secondary">
           {t("haveAccount")}{" "}
-          <Link href="/login" className="font-semibold text-terracotta hover:underline">
+          <Link href="/login" className="font-semibold text-brand hover:underline">
             {t("loginLink")}
           </Link>
         </p>

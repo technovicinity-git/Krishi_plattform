@@ -1,12 +1,16 @@
 import bcrypt from "bcryptjs";
+import { fixedOtp } from "./dev-flags";
 
 const OTP_LENGTH = 6;
 const OTP_TTL_MINUTES = 5;
 /** OTPs are short-lived and low-entropy; a cheaper cost is fine. */
 const OTP_BCRYPT_ROUNDS = 8;
 
-/** Generate a cryptographically secure 6-digit OTP. */
+/** Generate a 6-digit OTP (fixed while testing — see ./dev-flags). */
 export function generateOtp(): string {
+  const fixed = fixedOtp();
+  if (fixed) return fixed;
+
   const buf = new Uint32Array(1);
   crypto.getRandomValues(buf);
   const num = buf[0] % 1_000_000;

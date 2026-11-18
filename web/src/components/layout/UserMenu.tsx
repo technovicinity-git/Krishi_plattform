@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/cn";
 
 interface MenuItem {
@@ -15,6 +16,8 @@ interface UserMenuProps {
   phone?: string | null;
   items: MenuItem[];
   logoutRedirect?: string;
+  /** API route that clears the session (the admin one also writes an audit entry). */
+  logoutEndpoint?: string;
   avatar?: React.ReactNode;
 }
 
@@ -31,8 +34,10 @@ export function UserMenu({
   phone,
   items,
   logoutRedirect = "/login",
+  logoutEndpoint = "/api/auth/logout",
   avatar,
 }: UserMenuProps) {
+  const t = useTranslations("app.userMenu");
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
@@ -61,7 +66,7 @@ export function UserMenu({
   const handleLogout = async () => {
     setLoggingOut(true);
     try {
-      await fetch("/api/auth/logout", { method: "POST" });
+      await fetch(logoutEndpoint, { method: "POST" });
       router.push(logoutRedirect);
       router.refresh();
     } catch {
@@ -134,9 +139,9 @@ export function UserMenu({
               type="button"
               onClick={handleLogout}
               disabled={loggingOut}
-              className="mt-1 rounded-[6px] border-t border-border-light px-3 pt-3 pb-2.5 text-left text-[13px] font-medium text-terracotta transition-colors hover:bg-[#FAF0ED] disabled:opacity-60"
+              className="mt-1 rounded-[6px] border-t border-border-light px-3 pt-3 pb-2.5 text-left text-[13px] font-medium text-danger transition-colors hover:bg-[#FAF0ED] disabled:opacity-60"
             >
-              {loggingOut ? "Signing out..." : "Sign out"}
+              {loggingOut ? t("signingOut") : t("signOut")}
             </button>
           </nav>
         </div>

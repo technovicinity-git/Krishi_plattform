@@ -74,7 +74,7 @@ export function JoinOptions() {
           {t("haveAccount")}{" "}
           <Link
             href="/login"
-            className="font-semibold text-terracotta hover:underline"
+            className="font-semibold text-brand hover:underline"
           >
             {t("loginLink")}
           </Link>

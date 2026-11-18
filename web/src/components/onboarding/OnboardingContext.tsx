@@ -21,9 +21,9 @@ export function OnboardingContext({
     `৳${n.toLocaleString("en-IN", { maximumFractionDigits: 0 })}`;
 
   return (
-    <div className="flex items-center justify-between gap-4 rounded-[8px] border-l-4 border-terracotta bg-[#FAF0ED] px-5 py-4">
+    <div className="flex items-center justify-between gap-4 rounded-[8px] border-l-4 border-brand bg-brand-tint px-5 py-4">
       <div className="flex flex-col gap-1">
-        <span className="text-[10px] font-bold uppercase tracking-[0.02em] text-terracotta">
+        <span className="text-[10px] font-bold uppercase tracking-[0.02em] text-brand">
           {t("label")}
         </span>
         <span className="text-[13px] font-semibold text-ink">

@@ -7,9 +7,12 @@ import { useDialog } from "@/components/ui/dialog-provider";
 export function KycReviewActions({
   kycId,
   applicantName,
+  redirectTo = "/krishi-console/kyc",
 }: {
   kycId: string;
   applicantName: string;
+  /** Where to go after a decision; null stays on the current page. */
+  redirectTo?: string | null;
 }) {
   const router = useRouter();
   const { confirm, alert } = useDialog();
@@ -41,7 +44,8 @@ export function KycReviewActions({
         setSubmitting(null);
         return;
       }
-      router.push("/krishi-console/kyc");
+      if (redirectTo) router.push(redirectTo);
+      else setSubmitting(null);
       router.refresh();
     } catch {
       setError("Network error");
@@ -83,7 +87,8 @@ export function KycReviewActions({
         setSubmitting(null);
         return;
       }
-      router.push("/krishi-console/kyc");
+      if (redirectTo) router.push(redirectTo);
+      else setSubmitting(null);
       router.refresh();
     } catch {
       setError("Network error");
@@ -123,7 +128,7 @@ export function KycReviewActions({
             type="button"
             onClick={() => setShowReject(true)}
             disabled={submitting !== null}
-            className="inline-flex h-[46px] flex-1 items-center justify-center rounded-[8px] border border-border-light bg-white text-[14px] font-semibold text-terracotta transition-colors hover:bg-[#FAF0ED] disabled:opacity-60"
+            className="inline-flex h-[46px] flex-1 items-center justify-center rounded-[8px] border border-border-light bg-white text-[14px] font-semibold text-danger transition-colors hover:bg-[#FAF0ED] disabled:opacity-60"
           >
             Reject KYC
           </button>
@@ -134,7 +139,7 @@ export function KycReviewActions({
             htmlFor="rejection-reason"
             className="text-[12px] font-semibold text-ink"
           >
-            Rejection reason <span className="text-terracotta">*</span>
+            Rejection reason <span className="text-danger">*</span>
           </label>
           <textarea
             id="rejection-reason"
@@ -149,7 +154,7 @@ export function KycReviewActions({
               type="button"
               onClick={handleReject}
               disabled={submitting !== null || reason.trim().length < 10}
-              className="inline-flex h-[46px] flex-1 items-center justify-center rounded-[8px] bg-terracotta text-[14px] font-bold text-white transition-colors hover:bg-[#B3634A] disabled:opacity-60"
+              className="inline-flex h-[46px] flex-1 items-center justify-center rounded-[8px] bg-danger text-[14px] font-bold text-white transition-colors hover:bg-[#8A2F20] disabled:opacity-60"
             >
               {submitting === "reject" ? "Rejecting..." : "Confirm Rejection"}
             </button>

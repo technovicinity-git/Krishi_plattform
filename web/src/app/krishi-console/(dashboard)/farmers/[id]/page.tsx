@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/current-admin";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { BackLink } from "@/components/ui/BackLink";
 
 function formatDateTime(iso: string | null): string {
   if (!iso) return "—";
@@ -55,13 +56,7 @@ export default async function AdminFarmerDetailPage({
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-3">
-        <Link
-          href="/krishi-console/farmers"
-          className="inline-flex w-fit items-center gap-1.5 text-[12px] font-semibold text-ink-secondary hover:text-ink"
-        >
-          <span aria-hidden="true">←</span>
-          Back to Farmers
-        </Link>
+        <BackLink href="/krishi-console/farmers" localized={false}>Back to Farmers</BackLink>
         <div className="flex flex-wrap items-center justify-between gap-4">
           <h1 className="font-serif text-[28px] leading-tight text-ink">
             {farmer.full_name ?? "Farmer"}
@@ -108,7 +103,7 @@ export default async function AdminFarmerDetailPage({
               <div className="mt-2">
                 <Link
                   href={`/krishi-console/stewards/${steward.id}`}
-                  className="text-[12px] font-semibold text-terracotta hover:underline"
+                  className="text-[12px] font-semibold text-brand hover:underline"
                 >
                   View steward →
                 </Link>

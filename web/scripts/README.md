@@ -16,8 +16,10 @@ because the CLI is currently blocked by the scoped-token permission bug.
 ## Commands
 
 - `npm run db:migrate` — apply pending migrations
-- `npm run db:status` — (planned) list applied vs. pending migrations
-- `npm run db:check` — (planned) verify checksums without applying
+- `npm run db:status` — list applied vs. pending migrations and verify checksums, without applying anything
+
+The scripts read `web/.env`, then `web/.env.local` (either may be missing).
+Checksums ignore line endings (CRLF vs LF), so Windows and Unix checkouts agree.
 
 ## How migrations work
 

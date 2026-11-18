@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Container } from "@/components/ui/Container";
 import { Badge } from "@/components/ui/Badge";
 import { ShieldIcon } from "@/components/icons";
@@ -12,21 +12,23 @@ interface HeroProps {
 
 export function Hero({ offering, title }: HeroProps) {
   const t = useTranslations("planDetail.hero");
+  const tp = useTranslations("app.planText");
+  const bn = useLocale() === "bn";
 
   const imageUrl = offering.imagePath
     ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/plan-images/${offering.imagePath}`
     : "/images/plan-detail-hero.png";
 
-  const locationLabel = offering.thanaNameEn
-    ? `${offering.thanaNameEn}, ${offering.districtNameEn}`
-    : offering.districtNameEn;
+  const thana = bn ? offering.thanaNameBn ?? offering.thanaNameEn : offering.thanaNameEn;
+  const district = bn ? offering.districtNameBn : offering.districtNameEn;
+  const locationLabel = thana ? `${thana}, ${district}` : district;
 
   const statusLabel =
     offering.status === "open"
-      ? "Accepting Investors"
+      ? tp("accepting")
       : offering.status === "coming_soon"
-        ? "Coming Soon"
-        : "Fully Funded";
+        ? tp("comingSoon")
+        : tp("fullyFunded");
 
   const statusVariant =
     offering.status === "open"
@@ -58,7 +60,7 @@ export function Hero({ offering, title }: HeroProps) {
           <div className="flex flex-col gap-7">
             <div className="flex flex-col gap-3">
               <span className="text-[11px] font-semibold uppercase tracking-[0.02em] text-green-olive">
-                {offering.categoryNameEn} · {locationLabel} · {offering.durationMonths} months
+                {bn ? offering.categoryNameBn : offering.categoryNameEn} · {locationLabel} · {tp("months", { count: offering.durationMonths })}
               </span>
               <h1 className="font-serif text-[32px] leading-[1.15] text-ink sm:text-[40px] lg:text-[48px]">
                 {title}
@@ -72,17 +74,17 @@ export function Hero({ offering, title }: HeroProps) {
             <div className="grid grid-cols-3 gap-8 border-y border-border-light py-6">
               <Metric
                 label={t("metrics.durationLabel")}
-                value={`${offering.durationMonths} months`}
+                value={tp("months", { count: offering.durationMonths })}
                 valueColor="text-ink"
               />
               <Metric
                 label={t("metrics.returnLabel")}
                 value={`${offering.roiMin}–${offering.roiMax}%`}
-                valueColor="text-terracotta"
+                valueColor="text-brand"
               />
               <Metric
                 label={t("metrics.unitsLabel")}
-                value={`${offering.unitsFunded} of ${offering.unitsOffered} Units`}
+                value={tp("unitsOf", { funded: offering.unitsFunded, total: offering.unitsOffered })}
                 valueColor="text-green-deep"
               />
             </div>

@@ -29,7 +29,7 @@ export function StepExpenses() {
             <div className="flex flex-col gap-6">
               {PROCESS.map((key, i) => (
                 <div key={key} className="flex items-start gap-5">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border-divider bg-white text-[13px] font-bold text-terracotta">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border-divider bg-white text-[13px] font-bold text-brand">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <div className="flex flex-col gap-1">
@@ -74,7 +74,7 @@ export function StepExpenses() {
                 <span className="text-[12px] italic text-green-olive">
                   {t("ledger.invoiceNote")}
                 </span>
-                <button className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-terracotta">
+                <button className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-brand">
                   {t("ledger.viewProof")}
                   <ExternalLinkIcon />
                 </button>

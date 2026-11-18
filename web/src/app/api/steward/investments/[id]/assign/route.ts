@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/current-user";
+import { notify, investmentParties } from "@/lib/notifications/notify";
 
 export const runtime = "nodejs";
 
@@ -37,7 +38,8 @@ export async function POST(
     .eq("id", id)
     .maybeSingle();
 
-  if (!investment || (investment.offering as any).steward_id !== user.id) {
+  const offering = investment?.offering as unknown as { steward_id: string } | null;
+  if (!investment || offering?.steward_id !== user.id) {
     return NextResponse.json({ error: "Investment not found or unauthorized" }, { status: 404 });
   }
 
@@ -70,6 +72,18 @@ export async function POST(
   if (error) {
     console.error("[assign farmer] error:", error);
     return NextResponse.json({ error: "Failed to assign farmer" }, { status: 500 });
+  }
+
+  const parties = await investmentParties(id);
+  if (parties) {
+    const params = { reference: parties.reference, plan: parties.plan, planBn: parties.planBn };
+    const { data: farmer } = await db.from("users").select("full_name").eq("id", parsed.data.farmer_id).maybeSingle();
+    await notify("batch_assigned", { userId: parties.farmerId, href: `/farmer/investments/${id}` }, params);
+    await notify(
+      "farmer_assigned",
+      { userId: parties.investorId, href: `/portal/investments/${id}` },
+      { ...params, name: farmer?.full_name ?? undefined },
+    );
   }
 
   return NextResponse.json({ success: true });

@@ -34,7 +34,7 @@ export function Ecosystem() {
                 key={step.key}
                 className="flex flex-col gap-5 bg-cream p-7 lg:px-8 lg:py-9"
               >
-                <span className="text-[11px] font-bold uppercase leading-none tracking-[0.02em] text-terracotta">
+                <span className="text-[11px] font-bold uppercase leading-none tracking-[0.02em] text-brand">
                   {step.number}
                 </span>
                 <div className="flex flex-col gap-2">

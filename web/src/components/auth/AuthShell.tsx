@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
+import { BackLink } from "@/components/ui/BackLink";
 
 interface AuthShellProps {
   children: React.ReactNode;
@@ -16,15 +18,16 @@ export function AuthShell({
   backLabel,
 }: AuthShellProps) {
   const t = useTranslations("authShell");
+  const tu = useTranslations("app.userMenu");
 
   return (
     <div className="flex min-h-screen flex-col bg-cream">
       <header className="border-b border-border-light bg-cream">
         <div className="mx-auto flex w-full max-w-[1440px] items-center justify-between px-6 py-4 sm:px-10 lg:px-20">
-          <Link href="/" aria-label="Krishi — home" className="relative block h-10 w-32">
+          <Link href="/" aria-label={tu("home")} className="relative block h-10 w-32">
             <Image
               src="/logo.png"
-              alt="Krishi"
+              alt={tu("brand")}
               fill
               priority
               sizes="128px"
@@ -33,23 +36,9 @@ export function AuthShell({
           </Link>
 
           <div className="flex items-center gap-6">
-            <Link
-              href={backHref}
-              className="inline-flex items-center gap-1.5 text-[13px] font-medium text-ink-nav hover:text-ink"
-            >
-              <span aria-hidden="true">←</span>
-              {backLabel ?? t("backToKrishi")}
-            </Link>
+            <BackLink href={backHref}>{backLabel ?? t("backToKrishi")}</BackLink>
 
-            <div className="flex items-center gap-1.5 border-l border-border-light pl-6">
-              <Link href={backHref} locale="en" className="text-[12px] font-bold text-ink">
-                EN
-              </Link>
-              <span className="text-[12px] text-ink-muted" aria-hidden="true">|</span>
-              <Link href={backHref} locale="bn" className="text-[12px] text-ink-tertiary hover:text-ink">
-                বাংলা
-              </Link>
-            </div>
+            <LanguageSwitcher />
           </div>
         </div>
       </header>

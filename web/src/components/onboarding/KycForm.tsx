@@ -11,6 +11,8 @@ import { compressImage } from "@/lib/images/compress";
 
 export function KycForm() {
   const t = useTranslations("onboarding.step2.form");
+  const tf = useTranslations("app.forms");
+  const tcm = useTranslations("app.common");
   const router = useRouter();
 
   const [docType, setDocType] = useState("nid");
@@ -27,15 +29,15 @@ export function KycForm() {
     setError(null);
 
     if (!nidNumber.trim() || nidNumber.length < 10) {
-      setError("Please enter a valid NID number");
+      setError(tf("invalidNid"));
       return;
     }
     if (!presentAddress.trim() || !permanentAddress.trim()) {
-      setError("Please enter both addresses");
+      setError(tf("bothAddresses"));
       return;
     }
     if (!nidFront || !nidBack) {
-      setError("Both NID sides are required");
+      setError(tf("bothNidSides"));
       return;
     }
 
@@ -63,7 +65,7 @@ export function KycForm() {
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok) {
-        setError(data.error ?? "Failed to submit KYC");
+        setError(data.error ?? tf("failedKyc"));
         setSubmitting(false);
         return;
       }
@@ -72,7 +74,7 @@ export function KycForm() {
       router.refresh();
     } catch (err) {
       console.error(err);
-      setError("Network error. Please try again.");
+      setError(tcm("networkError"));
       setSubmitting(false);
     }
   };
@@ -92,7 +94,7 @@ export function KycForm() {
       </div>
 
       <div className="flex flex-col gap-4">
-        <h3 className="text-[13px] font-bold uppercase tracking-[0.02em] text-terracotta">
+        <h3 className="text-[13px] font-bold uppercase tracking-[0.02em] text-brand">
           {t("section1Title")}
         </h3>
 
@@ -129,7 +131,7 @@ export function KycForm() {
       </div>
 
       <div className="flex flex-col gap-4">
-        <h3 className="text-[13px] font-bold uppercase tracking-[0.02em] text-terracotta">
+        <h3 className="text-[13px] font-bold uppercase tracking-[0.02em] text-brand">
           {t("section2Title")}
         </h3>
 
@@ -161,7 +163,7 @@ export function KycForm() {
       <button
         type="submit"
         disabled={submitting}
-        className="inline-flex h-[52px] w-full items-center justify-center rounded-[8px] bg-terracotta text-[15px] font-bold text-white transition-colors hover:bg-[#B3634A] disabled:opacity-60"
+        className="inline-flex h-[52px] w-full items-center justify-center rounded-[8px] bg-brand text-[15px] font-bold text-white transition-colors hover:bg-brand-hover disabled:opacity-60"
       >
         {submitting ? t("submitting") : t("submit")}
       </button>

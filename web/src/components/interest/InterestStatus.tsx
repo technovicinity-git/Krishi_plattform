@@ -7,13 +7,13 @@ type StatusTone = "success" | "warning" | "info" | "error";
 interface StatusRow {
   label: string;
   value: string;
-  valueTone?: "default" | "terracotta" | "green" | "muted";
+  valueTone?: "default" | "brand" | "green" | "muted";
 }
 
 interface PrimaryAction {
   label: string;
   href: string;
-  variant: "dark" | "terracotta";
+  variant: "dark" | "brand";
 }
 
 interface SecondaryAction {
@@ -49,12 +49,12 @@ const toneToText: Record<StatusTone, string> = {
   success: "text-green-deep",
   warning: "text-[#C48A2E]",
   info: "text-ink-secondary",
-  error: "text-terracotta",
+  error: "text-danger",
 };
 
 const rowValueColor: Record<NonNullable<StatusRow["valueTone"]>, string> = {
   default: "text-ink",
-  terracotta: "text-terracotta",
+  brand: "text-brand",
   green: "text-green-olive",
   muted: "text-ink-muted",
 };
@@ -153,8 +153,8 @@ export function InterestStatus({
             className={cn(
               "inline-flex h-[52px] flex-1 items-center justify-center rounded-[8px] text-[15px] font-bold text-white transition-colors",
               primaryAction.variant === "dark" && "bg-ink hover:bg-[#2A2A2A]",
-              primaryAction.variant === "terracotta" &&
-                "bg-terracotta hover:bg-[#B3634A]",
+              primaryAction.variant === "brand" &&
+                "bg-brand hover:bg-brand-hover",
             )}
           >
             {primaryAction.label}

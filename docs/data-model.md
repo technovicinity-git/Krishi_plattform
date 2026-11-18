@@ -2,7 +2,7 @@
 
 The schema is defined by the SQL files in `web/supabase/migrations/` (20 migrations, applied in filename order). All tables live in `public`. Every table has RLS **enabled**, and the app accesses them through the service role (see [architecture.md](architecture.md)).
 
-> ⚠️ Several tables the code depends on (`investments`, `deposits`, `fund_requests`, `expenses`, `investment_updates`, `platform_accounts`) **have no migration in this repo**. They were probably created by hand in the Supabase dashboard. Their columns below are **inferred from code**. See [known-gaps.md](known-gaps.md).
+`investments`, `deposits`, `fund_requests`, `expenses`, `investment_updates` and `platform_accounts` were first created by hand in the Supabase dashboard. `20261016000001_baseline_untracked_tables.sql` now creates them (copied from the live schema), so a database built from the migrations alone matches production.
 
 ## Entity relationships
 
@@ -32,7 +32,7 @@ otp_codes, dev_otps         (keyed by phone)
 admin_audit_log, admin_login_attempts
 _migrations, _smoke_test    (tooling)
 
-* = no migration in repo
+* = created by the baseline migration (20261016000001)
 ```
 
 ## Tables
@@ -107,16 +107,42 @@ _migrations, _smoke_test    (tooling)
 
 Partial unique indexes allow only one *active* interest (`submitted`, `under_review`, `approved`, `onboarding`) per investor or guest phone per offering.
 
-### Tables without migrations (inferred from code)
+**`investment_sales`** (`20261118000001_sales_and_settlements.sql`): one per investment. The farmer records the sale (`animals_sold`, `sale_amount`, `sale_date`, buyer, photo); the steward confirms it; the farmer then reports sending the money to Krishi (`remit_method` bank/mfs/cash, `remit_txn_id`, `remit_proof_path`).
 
-| Table | Key columns used in code | Statuses / stages seen |
-|-------|--------------------------|------------------------|
-| `deposits` | `id`, `reference`, `investor_id`, `interest_id`, `amount`, `method` (`bank`/`mfs`), `txn_id`, `sender_number`, `deposit_date`, `note`, `proof_path`, `status`, `reviewed_by`, `reviewed_at` | `pending` → `approved` \| rejected |
-| `investments` | `id`, `reference`, `interest_id`, `investor_id`, `offering_id`, `farmer_id`, `units`, `amount`, `status`, `current_stage`, `created_at` | status `active`; stages `awaiting_farmer` → `awaiting_purchase` → `purchased` → … `completed` / `settled` |
-| `fund_requests` | `id`, `reference`, `investment_id`, `farmer_id`, `amount`, `purpose`, `status`, `rejection_reason`, `reviewed_by`, `reviewed_at` | purpose: `animal_purchase`, `feed`, `medical`, `transport`, `other`; status `pending` → `approved`/`rejected` (detail code also expects `disbursed`) |
-| `expenses` | `investment_id`, `farmer_id`, `amount`, `category`, `description`, `receipt_path`, `status` | `pending` → `approved` |
-| `investment_updates` | `investment_id`, `author_id`, `author_role`, `update_type`, `title`, `body`, `amount`, `photo_path` | types: `fund_request`, `fund_disbursed`, `expense`, `note` |
-| `platform_accounts` | `is_active` and display fields | Krishi's receiving accounts |
+| `status` | Meaning | Investment stage |
+|----------|---------|------------------|
+| `pending_review` | Waiting for the steward | `sale_pending` |
+| `rejected` | Steward sent it back; farmer can record again (same row) | `growing_care` |
+| `awaiting_remittance` | Confirmed; farmer must send the money (admin can send a payment back here with `remit_rejection_reason`) | `sold` |
+| `remittance_submitted` | Admin to check the payment | `sold` |
+| `settled` | Admin confirmed the money and settled | `settled` (investment `status` = `completed`) |
+
+**`investment_settlements`**: one per investment, written by `settle_investment_sale()` together with the sale and investment updates. Stores `capital`, `funds_released` (approved fund requests), `sale_amount`, `total_return` (= sale + unspent capital), `net_result`, `outcome` (profit/loss/break_even) and the payouts. On a profit the net is split 60% farmer / 30% investor / 5% steward / 5% Krishi and the investor also gets the capital back; on a loss nobody takes a share and the investor receives the whole total return. The rule lives in `web/src/lib/investments/settlement.ts`.
+
+**`wallet_transactions`** (`20261118000002_wallets_and_withdrawals.sql`): every money movement for a user; positive = in, negative = out, balance = sum. Types: `settlement_payout` (investor), `settlement_share` (farmer/steward), `withdrawal` (held when requested), `withdrawal_reversal` (rejected/cancelled), `adjustment`. Unique indexes stop a settlement being credited twice or a withdrawal reversed twice. `settle_investment_sale()` calls `credit_settlement()` so wallets are credited in the same transaction.
+
+**`withdrawal_requests`**: `KR-WD-000001`. Copies the user's `withdrawal_preferences` at request time. `status`: `pending` → `paid` (admin records `payout_txn_id`) | `rejected` (admin, with reason) | `cancelled` (user). Created by `request_withdrawal()`, which locks per user, checks the minimum (`WITHDRAWAL_MIN` in `web/src/lib/wallet/config.ts`) and the balance, and holds the amount. Closed by `close_withdrawal()`, which returns the money unless paid.
+
+**`notifications`** (`20261118000003_notifications.sql`): in-app notifications for investors, stewards and farmers. `kind` + `params` (reference, amount, plan/planBn, name, reason, title) are rendered in the reader's language from `app.notify.<kind>` messages; `href` is an unprefixed app path; `read_at` marks it read. Created with `notify()` in `web/src/lib/notifications/notify.ts`, which never throws.
+
+**`animals`** (`20261118000005_animals.sql`): one row per animal, created when the farmer confirms the purchase (`KR-ANM-000001`, batch tag `A01`, `A02`…). Holds `ear_tag`, `breed`, `sex`, `purchase_price` (purchase cost split evenly), `purchase_weight_kg`, `current_weight_kg` (kept in step with the latest weight record), `status` (`active` → `sold` | `dead`), `sale_price` (sale amount split evenly over the animals sold), `sold_at`, `died_at`. Batches bought before this migration were back-filled.
+
+**`animal_records`**: weight / health / vaccination / treatment / note / death entries per animal, with optional photo (private bucket), `recorded_on`, `author_role`. A `death` record marks the animal dead and notifies the investor. `investment_sales.animal_ids` lists which animals a sale covers; confirming the sale marks them sold.
+
+**`steward_reviews`** (`20261118000006_steward_reviews.sql`): one per settled investment, written by its investor: `rating` 1–5, optional `comment`, `status` `published` | `hidden` (admin, with `hidden_reason`). Public pages show only published reviews, with the reviewer's first name and last initial.
+
+**`online_payments`** (`20261118000007_online_payments.sql`): one row per SSLCommerz payment attempt (`tran_id` `KR-TXN-0000001`). `initiated` → `paid` | `failed` | `cancelled` | `invalid`. A payment is marked paid only after the SSLCommerz validation API confirms the transaction ID, amount and currency; it then creates a `deposits` row (`method = 'online'`) and approves it automatically through `approveDeposit()` (`web/src/lib/deposits/approve.ts`, shared with admin approval). Payments SSLCommerz flags as risky, or that can't be approved (e.g. units sold out), leave the deposit `pending` for an admin, with the reason in `failure_reason`.
+
+### Tables from the baseline migration (20261016000001)
+
+| Table | Key columns | Statuses / stages |
+|-------|-------------|-------------------|
+| `deposits` | `reference` (`KR-PAY-000001`), `investor_id`, `interest_id`, `amount` (computed server-side from the plan), `method` (`bank`/`mfs`), `txn_id`, `sender_number`, `deposit_date`, `note`, `proof_path` (private bucket), `reviewed_by`, `reviewed_at`, `rejection_reason` | `pending` → `approved` \| `rejected` |
+| `investments` | `reference` (`KR-INV-000001`), `interest_id`, `investor_id`, `offering_id`, `farmer_id`, `units`, `amount`, `status`, `current_stage` | status `active` → `completed` (or `cancelled`); stage `awaiting_farmer` → `awaiting_purchase` → `growing_care` → `sale_pending` → `sold` → `settled` |
+| `fund_requests` | `reference` (`KR-REQ-00001`), `investment_id`, `farmer_id`, `amount`, `purpose`, `rejection_reason`, `reviewed_by`, `reviewed_at` | purpose: `animal_purchase`, `feed`, `medical`, `transport`, `other`; status `pending` → `approved` \| `rejected` (`disbursed` allowed but unused) |
+| `expenses` | `investment_id`, `fund_request_id`, `farmer_id`, `amount`, `category`, `description`, `receipt_path`, `rejection_reason`, `reviewed_by` | `pending` → `approved` \| `rejected` (steward) |
+| `investment_updates` | `investment_id`, `author_id`, `author_role`, `update_type`, `title`, `body`, `amount`, `photo_path`, `metadata` | types: `stage_change`, `photo_update`, `health_check`, `expense`, `fund_request`, `fund_disbursed`, `purchase`, `note`, `sale`, `settlement` |
+| `platform_accounts` | `method` (`bank`/`mfs`), `provider`, `account_name`, `account_number`, `branch_name`, `routing_number`, `is_active` | Krishi's receiving accounts |
 
 ### Auth and ops
 

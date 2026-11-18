@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/cn";
 
 interface FormInputProps {
@@ -33,14 +34,15 @@ export function FormInput({
   prefilled,
   className,
 }: FormInputProps) {
+  const tc = useTranslations("app.common");
   return (
     <div className={cn("flex flex-col gap-2", className)}>
       <div className="flex items-center gap-2">
         <label htmlFor={name} className="text-[14px] font-semibold text-ink-nav">
           {label}
-          {required && <span className="ml-1 text-terracotta">*</span>}
+          {required && <span className="ml-1 text-danger">*</span>}
           {optional && (
-            <span className="ml-1 text-[12px] font-normal text-ink-muted">(optional)</span>
+            <span className="ml-1 text-[12px] font-normal text-ink-muted">{tc("optional")}</span>
           )}
         </label>
         {prefilled && (

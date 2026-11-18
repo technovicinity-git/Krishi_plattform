@@ -5,10 +5,10 @@ export function RiskCard() {
   const t = useTranslations("planDetail.riskCard");
 
   return (
-    <div className="flex flex-col gap-4 rounded-[8px] border-l-4 border-terracotta bg-white p-6">
+    <div className="flex flex-col gap-4 rounded-[8px] border-l-4 border-brand bg-white p-6">
       <div className="flex items-center gap-2">
-        <AlertTriangleIcon className="h-4 w-4 text-terracotta" />
-        <span className="text-[11px] font-bold uppercase tracking-[0.02em] text-terracotta">
+        <AlertTriangleIcon className="h-4 w-4 text-brand" />
+        <span className="text-[11px] font-bold uppercase tracking-[0.02em] text-brand">
           {t("heading")}
         </span>
       </div>

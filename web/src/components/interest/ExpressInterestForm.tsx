@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import Image from "next/image";
 import { useRouter } from "@/i18n/navigation";
 import { Link } from "@/i18n/navigation";
@@ -20,20 +21,13 @@ interface Props {
   } | null;
 }
 
-function roleLabel(role: string): string {
-  switch (role) {
-    case "steward":
-      return "a steward";
-    case "farmer":
-      return "a farmer";
-    case "admin":
-      return "an administrator";
-    default:
-      return role;
-  }
-}
-
 export function ExpressInterestForm({ offering, planName, currentUser }: Props) {
+  const t = useTranslations("app.expressInterestForm");
+  const te = useTranslations("interest.express");
+  const tp = useTranslations("app.planText");
+  const bn = useLocale() === "bn";
+  const tc = useTranslations("app.common");
+  const roleLabel = (role: string) => (t.has(`roleArticle.${role}`) ? t(`roleArticle.${role}`) : role);
   const router = useRouter();
   const isLoggedIn = currentUser?.role === "investor";
   const isBlockedRole =
@@ -71,14 +65,14 @@ export function ExpressInterestForm({ offering, planName, currentUser }: Props) 
     setError(null);
 
     if (!isLoggedIn) {
-      if (!fullName.trim()) return setError("Full name is required.");
-      if (!phone.trim()) return setError("Phone number is required.");
+      if (!fullName.trim()) return setError(t("nameRequired"));
+      if (!phone.trim()) return setError(t("phoneRequired"));
     }
     if (units < 1 || units > remaining) {
       return setError(`Please choose between 1 and ${remaining} units.`);
     }
     if (!ackSubmit || !ackReturns || !ackContact) {
-      return setError("Please accept all acknowledgements to continue.");
+      return setError(t("ackRequired"));
     }
 
     setSubmitting(true);
@@ -97,13 +91,13 @@ export function ExpressInterestForm({ offering, planName, currentUser }: Props) 
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        setError(data.error ?? "Failed to submit interest");
+        setError(data.error ?? t("failed"));
         setSubmitting(false);
         return;
       }
       router.push(`/interest/${data.reference}`);
     } catch {
-      setError("Network error. Please try again.");
+      setError(tc("networkError"));
       setSubmitting(false);
     }
   };
@@ -126,12 +120,11 @@ export function ExpressInterestForm({ offering, planName, currentUser }: Props) 
           </div>
 
           <h1 className="mt-4 font-serif text-[26px] leading-tight text-ink">
-            Signed in as {roleLabel(isBlockedRole)}
+            {t("signedInAs", { role: roleLabel(isBlockedRole) })}
           </h1>
 
           <p className="mt-3 text-[14px] leading-[1.6] text-ink-secondary">
-            Only investor accounts can express interest in a plan. You are
-            currently signed in as {roleLabel(isBlockedRole)}
+            {t("investorOnly", { role: roleLabel(isBlockedRole) })}
             {currentUser?.fullName ? (
               <>
                 {" "}
@@ -142,8 +135,7 @@ export function ExpressInterestForm({ offering, planName, currentUser }: Props) 
           </p>
 
           <p className="mt-2 text-[13px] text-ink-muted">
-            If you want to submit this interest as a guest, sign out first and
-            try again.
+            {t("guestHint")}
           </p>
 
           <div className="mt-6 flex flex-col gap-2">
@@ -153,13 +145,13 @@ export function ExpressInterestForm({ offering, planName, currentUser }: Props) 
               disabled={signingOut}
               className="inline-flex h-[48px] items-center justify-center rounded-[4px] bg-ink text-[13px] font-bold text-white hover:bg-[#2A2A2A] disabled:opacity-60"
             >
-              {signingOut ? "Signing out…" : "Sign out and continue as guest"}
+              {signingOut ? t("signingOut") : t("signOutGuest")}
             </button>
             <Link
               href={`/plans/${offering.offeringSlug}`}
               className="inline-flex h-[48px] items-center justify-center rounded-[4px] border border-border-light text-[13px] font-semibold text-ink-nav hover:bg-stone"
             >
-              Back to Plan
+              {t("backToPlan")}
             </Link>
           </div>
         </div>
@@ -183,8 +175,9 @@ export function ExpressInterestForm({ offering, planName, currentUser }: Props) 
           </div>
           <div>
             <span className="text-[11px] font-semibold uppercase tracking-[0.02em] text-ink-muted">
-              {offering.categoryNameEn} · {offering.districtNameEn} ·{" "}
-              {offering.durationMonths} months
+              {bn ? offering.categoryNameBn : offering.categoryNameEn} ·{" "}
+              {bn ? offering.districtNameBn : offering.districtNameEn} ·{" "}
+              {tp("months", { count: offering.durationMonths })}
             </span>
             <h2 className="mt-2 font-serif text-[24px] leading-tight text-ink">
               {planName}
@@ -194,15 +187,15 @@ export function ExpressInterestForm({ offering, planName, currentUser }: Props) 
           <div className="grid grid-cols-2 gap-4 border-y border-border-light py-4">
             <div>
               <div className="text-[10px] uppercase text-ink-muted">
-                Estimated Return
+                {te("estimatedReturnLabel")}
               </div>
-              <div className="mt-1 text-[18px] font-bold text-terracotta">
+              <div className="mt-1 text-[18px] font-bold text-brand">
                 {offering.roiMin}–{offering.roiMax}%
               </div>
             </div>
             <div>
               <div className="text-[10px] uppercase text-ink-muted">
-                Per Unit Cost
+                {te("perUnitCostLabel")}
               </div>
               <div className="mt-1 text-[18px] font-bold text-ink">
                 {formatBDT(offering.unitPrice)}
@@ -212,7 +205,7 @@ export function ExpressInterestForm({ offering, planName, currentUser }: Props) 
 
           <div className="flex flex-col gap-2">
             <span className="text-[12px] font-semibold text-ink-secondary">
-              Select Intended Units
+              {te("selectUnitsLabel")}
             </span>
             <div className="flex items-center justify-between rounded-[6px] border border-border-light bg-cream px-4 py-3">
               <button
@@ -224,7 +217,7 @@ export function ExpressInterestForm({ offering, planName, currentUser }: Props) 
                 −
               </button>
               <span className="text-[16px] font-bold text-ink">
-                {units} {units === 1 ? "Unit" : "Units"}
+                {t("unitsCount", { count: units })}
               </span>
               <button
                 type="button"
@@ -236,21 +229,23 @@ export function ExpressInterestForm({ offering, planName, currentUser }: Props) 
               </button>
             </div>
             <p className="text-[11px] text-ink-muted">
-              {remaining} units available on this plan.
+              {t("unitsAvailable", { count: remaining })}
             </p>
           </div>
 
           <div className="flex items-baseline justify-between gap-3 rounded-lg bg-stone/60 px-4 py-3">
             <span className="text-[13px] font-semibold text-ink-secondary">
-              Total Intended Investment
+              {te("totalLabel")}
             </span>
             <span className="text-[20px] font-bold text-ink">
               {formatBDT(totalIntended)}
             </span>
           </div>
           <p className="text-[11px] leading-[1.5] text-ink-muted">
-            Fund Breakdown: Animal {formatBDT(offering.animalAllocation * units)}{" "}
-            + Care {formatBDT(offering.careAllocation * units)}
+            {t("fundBreakdown", {
+              animal: formatBDT(offering.animalAllocation * units),
+              care: formatBDT(offering.careAllocation * units),
+            })}
           </p>
         </aside>
 
@@ -261,44 +256,43 @@ export function ExpressInterestForm({ offering, planName, currentUser }: Props) 
         >
           <div>
             <h1 className="font-serif text-[32px] leading-tight text-ink">
-              Express your interest
+              {te("heading")}
             </h1>
             <p className="mt-2 text-[14px] text-ink-secondary">
-              Tell us how you&apos;d like to participate. We&apos;ll review your
-              interest and guide you through the next steps.
+              {te("subheading")}
             </p>
           </div>
 
           {!isLoggedIn && (
             <>
               <Field
-                label="Full Name"
+                label={te("fullNameLabel")}
                 required
                 value={fullName}
                 onChange={setFullName}
               />
               <Field
-                label="Phone Number"
+                label={te("phoneLabel")}
                 required
                 value={phone}
                 onChange={setPhone}
-                hint="Enter your 10-digit number without the leading 0."
+                hint={t("phoneHint")}
                 prefix="+880"
               />
               <Field
-                label="Email Address"
+                label={te("emailLabel")}
                 value={email}
                 onChange={setEmail}
-                hint="Optional — used for important updates"
+                hint={te("emailPlaceholder")}
               />
             </>
           )}
 
           {isLoggedIn && (
             <div className="rounded-lg bg-stone/60 p-4 text-[13px] text-ink-secondary">
-              Submitting as{" "}
+              {t("submittingAs")}{" "}
               <span className="font-semibold text-ink">
-                {currentUser?.fullName ?? "Investor"}
+                {currentUser?.fullName ?? t("investor")}
               </span>{" "}
               · {currentUser?.phone ?? ""}
             </div>
@@ -306,13 +300,13 @@ export function ExpressInterestForm({ offering, planName, currentUser }: Props) 
 
           <div className="flex flex-col gap-2">
             <label className="text-[13px] font-semibold text-ink-nav">
-              Message
+              {te("messageLabel")}
             </label>
             <textarea
               rows={3}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              placeholder="Any questions or preferences?"
+              placeholder={te("messagePlaceholder")}
               className="w-full resize-none rounded-[8px] border border-border-light bg-cream px-3 py-2.5 text-[13px] text-ink placeholder:text-ink-muted focus:border-sage focus:outline-none"
             />
           </div>
@@ -321,33 +315,33 @@ export function ExpressInterestForm({ offering, planName, currentUser }: Props) 
             <Checkbox
               checked={ackSubmit}
               onChange={setAckSubmit}
-              label="I understand that submitting interest does not guarantee approval or final unit allocation."
+              label={te("agree1")}
             />
             <Checkbox
               checked={ackReturns}
               onChange={setAckReturns}
-              label="I understand that estimated livestock returns are not guaranteed."
+              label={t("ackReturns")}
             />
             <Checkbox
               checked={ackContact}
               onChange={setAckContact}
-              label="I agree to be contacted by Krishi regarding this investment opportunity."
+              label={t("ackContact")}
             />
           </div>
 
           <div className="flex items-center gap-3 text-[12px] text-ink-muted">
             <Link
               href="/risk-disclosure"
-              className="text-terracotta hover:underline"
+              className="text-brand hover:underline"
             >
-              Risk Disclosure
+              {t("riskDisclosure")}
             </Link>
             <span>·</span>
             <Link
               href="/terms-of-investment"
-              className="text-terracotta hover:underline"
+              className="text-brand hover:underline"
             >
-              Terms of Investment
+              {te("termsLink")}
             </Link>
           </div>
 
@@ -360,21 +354,20 @@ export function ExpressInterestForm({ offering, planName, currentUser }: Props) 
           <button
             type="submit"
             disabled={submitting}
-            className="inline-flex h-[52px] items-center justify-center rounded-[4px] bg-terracotta text-[14px] font-bold text-white transition-colors hover:bg-[#B85A3F] disabled:opacity-60"
+            className="inline-flex h-[52px] items-center justify-center rounded-[4px] bg-brand text-[14px] font-bold text-white transition-colors hover:bg-brand-hover disabled:opacity-60"
           >
-            {submitting ? "Submitting…" : "Submit Interest →"}
+            {submitting ? t("submitting") : t("submit")}
           </button>
 
           <Link
             href={`/plans/${offering.offeringSlug}`}
             className="inline-flex h-[48px] items-center justify-center rounded-[4px] border border-border-light text-[13px] font-semibold text-ink-nav hover:bg-stone"
           >
-            Back to Opportunity
+            {te("backLink")}
           </Link>
 
           <p className="text-center text-[11px] text-ink-muted">
-            Your information is used to review your interest and coordinate the
-            next steps.
+            {t("privacy")}
           </p>
         </form>
       </div>
@@ -401,7 +394,7 @@ function Field({
     <div className="flex flex-col gap-2">
       <label className="text-[13px] font-semibold text-ink-nav">
         {label}
-        {required && <span className="ml-1 text-terracotta">*</span>}
+        {required && <span className="ml-1 text-danger">*</span>}
       </label>
       <div className="relative flex items-center">
         {prefix && (
@@ -438,7 +431,7 @@ function Checkbox({
         type="checkbox"
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
-        className="mt-0.5 h-4 w-4 shrink-0 rounded border-border-light accent-terracotta"
+        className="mt-0.5 h-4 w-4 shrink-0 rounded border-border-light accent-brand"
       />
       <span className="text-[13px] leading-[1.55] text-ink-secondary">
         {label}

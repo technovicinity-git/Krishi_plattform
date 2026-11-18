@@ -25,7 +25,7 @@ export function StepInterest() {
               <Field label={t("form.message")} value={t("form.messagePlaceholder")} muted tall />
               <button
                 type="button"
-                className="mt-2 inline-flex w-full items-center justify-center rounded-[4px] bg-terracotta py-3.5 text-[14px] font-semibold text-white transition-colors hover:bg-[#B3634A]"
+                className="mt-2 inline-flex w-full items-center justify-center rounded-[4px] bg-brand py-3.5 text-[14px] font-semibold text-white transition-colors hover:bg-brand-hover"
               >
                 {t("form.submit")}
               </button>
@@ -42,9 +42,9 @@ export function StepInterest() {
               {t("paragraph")}
             </p>
 
-            <div className="rounded-lg border-l-4 border-terracotta bg-cream p-6">
+            <div className="rounded-lg border-l-4 border-brand bg-cream p-6">
               <div className="flex flex-col gap-3">
-                <span className="text-[14px] font-bold text-terracotta">
+                <span className="text-[14px] font-bold text-brand">
                   {t("notice.title")}
                 </span>
                 <p className="text-[13px] leading-[1.5] text-ink-secondary">

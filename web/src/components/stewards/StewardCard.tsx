@@ -12,6 +12,7 @@ function humanize(s: string): string {
 
 export function StewardCard({ steward }: { steward: StewardListItem }) {
   const t = useTranslations("stewardsPage.directory");
+  const tsp = useTranslations("app.stewardProfile");
 
   // Map DB category slugs → translation keys.
   const categoryKeyMap: Record<string, string> = {
@@ -59,12 +60,12 @@ export function StewardCard({ steward }: { steward: StewardListItem }) {
               : t("types.individual")}
           </span>
           <span className="text-[13px] leading-[1.5] text-ink-secondary">
-            {steward.operatingArea ?? "Bangladesh"}
+            {steward.operatingArea ?? tsp("bangladesh")}
           </span>
 
           {steward.ratingAvg ? (
             <span className="flex items-center gap-1.5 text-[13px] font-semibold text-ink">
-              <StarIcon className="h-3.5 w-3.5 text-terracotta" />
+              <StarIcon className="h-3.5 w-3.5 text-brand" />
               {steward.ratingAvg.toFixed(1)} ·{" "}
               {t("card.ratingCount", { count: steward.ratingCount })}
             </span>

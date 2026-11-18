@@ -13,10 +13,17 @@ type Method = "mobile" | "bank";
 
 interface WithdrawalFormProps {
   initial?: WithdrawalPreference | null;
+  /** Where to go after saving (defaults to the investor profile). */
+  redirectTo?: string;
 }
 
-export function WithdrawalForm({ initial }: WithdrawalFormProps) {
+export function WithdrawalForm({
+  initial,
+  redirectTo = "/portal/profile?withdrawal=saved",
+}: WithdrawalFormProps) {
   const t = useTranslations("onboarding.step3.form");
+  const tf = useTranslations("app.forms");
+  const tcm = useTranslations("app.common");
   const router = useRouter();
 
   const [method, setMethod] = useState<Method>(initial?.method ?? "mobile");
@@ -64,15 +71,15 @@ export function WithdrawalForm({ initial }: WithdrawalFormProps) {
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok) {
-        setError(data.error ?? "Failed to save");
+        setError(data.error ?? tf("failedSave"));
         setSubmitting(false);
         return;
       }
 
-      router.push("/portal/profile?withdrawal=saved");
+      router.push(redirectTo);
       router.refresh();
     } catch {
-      setError("Network error. Please try again.");
+      setError(tcm("networkError"));
       setSubmitting(false);
     }
   };
@@ -115,7 +122,7 @@ export function WithdrawalForm({ initial }: WithdrawalFormProps) {
           <div className="flex flex-col gap-2">
             <span className="text-[14px] font-semibold text-ink-nav">
               {t("mfsLabel")}
-              <span className="ml-1 text-terracotta">*</span>
+              <span className="ml-1 text-brand">*</span>
             </span>
             <FormChipGroup
               value={mfs}
@@ -204,7 +211,7 @@ export function WithdrawalForm({ initial }: WithdrawalFormProps) {
       <button
         type="submit"
         disabled={submitting}
-        className="inline-flex h-[52px] w-full items-center justify-center rounded-[8px] bg-terracotta text-[15px] font-bold text-white transition-colors hover:bg-[#B3634A] disabled:opacity-60"
+        className="inline-flex h-[52px] w-full items-center justify-center rounded-[8px] bg-brand text-[15px] font-bold text-white transition-colors hover:bg-brand-hover disabled:opacity-60"
       >
         {submitting ? t("submitting") : t("submit")}
       </button>

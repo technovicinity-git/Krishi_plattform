@@ -1,97 +1,108 @@
+import { useLocale, useTranslations } from "next-intl";
+import { formatBDT } from "@/lib/utils";
+import { StatusBadge, type BadgeTone } from "@/components/dashboard/ui";
+
 interface Update {
   id: string;
   updateType: string;
   title: string;
   body: string | null;
   photoPath: string | null;
+  /** Signed link to the photo (storage is private). */
+  photoUrl: string | null;
   amount: number | null;
   createdAt: string;
   authorRole: string | null;
 }
 
-const TYPE_COLORS: Record<string, string> = {
-  stage_change: "bg-[#E8F0EA] text-green-deep",
-  fund_request: "bg-[#FEF6E5] text-[#C48A2E]",
-  fund_disbursed: "bg-[#E8F0EA] text-green-deep",
-  purchase: "bg-[#FEF6E5] text-[#C48A2E]",
-  expense: "bg-stone text-ink-muted",
-  health_check: "bg-[#FAF0ED] text-terracotta",
-  photo_update: "bg-stone text-ink-muted",
-  note: "bg-stone text-ink-muted",
-  sale: "bg-[#E8F0EA] text-green-deep",
-};
-
-const TYPE_LABEL: Record<string, string> = {
-  stage_change: "Stage",
-  fund_request: "Fund Request",
-  fund_disbursed: "Disbursement",
-  purchase: "Purchase",
-  expense: "Expense",
-  health_check: "Health",
-  photo_update: "Photo",
-  note: "Note",
-  sale: "Sale",
+const TYPE_TONE: Record<string, BadgeTone> = {
+  stage_change: "success",
+  fund_request: "warning",
+  fund_disbursed: "success",
+  purchase: "success",
+  expense: "neutral",
+  health_check: "info",
+  photo_update: "neutral",
+  note: "neutral",
+  sale: "success",
+  settlement: "success",
 };
 
 export function UpdatesList({
   updates,
-  emptyMessage = "No updates yet.",
+  emptyMessage,
 }: {
   updates: Update[];
   emptyMessage?: string;
 }) {
+  const t = useTranslations("app.updates");
+  const tr = useTranslations("app.roles");
+  const locale = useLocale();
+
   return (
-    <div className="rounded-xl border border-border-light bg-white p-6">
-      <h2 className="text-[11px] font-bold uppercase tracking-[0.02em] text-ink-muted">
-        Updates & Activity
-      </h2>
+    <section className="rounded-2xl border border-border-light bg-white">
+      <div className="border-b border-border-light px-6 py-4">
+        <h2 className="text-[15px] font-semibold text-ink">{t("heading")}</h2>
+      </div>
       {updates.length === 0 ? (
-        <p className="mt-4 text-[13px] text-ink-muted">{emptyMessage}</p>
+        <p className="px-6 py-6 text-[13px] text-ink-muted">{emptyMessage ?? t("empty")}</p>
       ) : (
-        <div className="mt-4 flex flex-col gap-4">
-          {updates.map((u) => (
-            <div
-              key={u.id}
-              className="flex gap-3 border-b border-border-light pb-4 last:border-b-0 last:pb-0"
-            >
-              <div className="flex flex-col items-center pt-1">
-                <div className="h-2 w-2 rounded-full bg-terracotta" />
-              </div>
-              <div className="flex-1">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span
-                    className={`inline-flex rounded px-1.5 py-0.5 text-[9px] font-bold uppercase ${
-                      TYPE_COLORS[u.updateType] ?? "bg-stone text-ink-muted"
-                    }`}
-                  >
-                    {TYPE_LABEL[u.updateType] ?? u.updateType}
-                  </span>
-                  <span className="text-[11px] text-ink-muted">
-                    {new Date(u.createdAt).toLocaleDateString("en-GB", {
-                      day: "2-digit",
-                      month: "short",
-                      year: "numeric",
-                    })}
-                  </span>
-                  {u.authorRole && (
-                    <span className="text-[10px] uppercase text-ink-muted">
-                      · {u.authorRole}
+        <ol className="flex flex-col px-6 py-5">
+          {updates.map((u, i) => {
+            const photo = u.photoUrl;
+            return (
+              <li key={u.id} className="relative flex gap-4 pb-6 last:pb-0">
+                {i < updates.length - 1 && (
+                  <span aria-hidden="true" className="absolute top-4 bottom-0 left-[7px] w-px bg-border-light" />
+                )}
+                <span
+                  aria-hidden="true"
+                  className="relative z-10 mt-1 h-[15px] w-[15px] shrink-0 rounded-full border-[3px] border-white bg-brand ring-1 ring-brand/30"
+                />
+                <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <StatusBadge tone={TYPE_TONE[u.updateType] ?? "neutral"}>
+                      {t.has(`type.${u.updateType}`) ? t(`type.${u.updateType}`) : u.updateType}
+                    </StatusBadge>
+                    <span className="text-[11.5px] text-ink-muted">
+                      {new Date(u.createdAt).toLocaleDateString(locale === "bn" ? "bn-BD" : "en-GB", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                      {u.authorRole && (
+                        <> · {tr.has(u.authorRole) ? tr(u.authorRole) : u.authorRole}</>
+                      )}
                     </span>
+                  </div>
+                  <div className="flex flex-wrap items-baseline justify-between gap-2">
+                    <span className="text-[14px] font-semibold text-ink">{u.title}</span>
+                    {u.amount !== null && u.amount > 0 && (
+                      <span className="text-[13px] font-bold text-green-deep">{formatBDT(u.amount)}</span>
+                    )}
+                  </div>
+                  {u.body && (
+                    <p className="whitespace-pre-line text-[13px] leading-[1.55] text-ink-secondary">
+                      {u.body}
+                    </p>
+                  )}
+                  {photo && (
+                    <a href={photo} target="_blank" rel="noopener noreferrer" className="mt-1 block w-fit">
+                      {/* eslint-disable-next-line @next/next/no-img-element -- storage URL, sizes vary */}
+                      <img
+                        src={photo}
+                        alt={u.title}
+                        loading="lazy"
+                        className="h-36 w-auto max-w-full rounded-xl border border-border-light object-cover transition-opacity hover:opacity-90"
+                      />
+                    </a>
                   )}
                 </div>
-                <div className="mt-1 text-[13px] font-semibold text-ink">
-                  {u.title}
-                </div>
-                {u.body && (
-                  <p className="mt-0.5 text-[12px] leading-[1.5] text-ink-secondary">
-                    {u.body}
-                  </p>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
+              </li>
+            );
+          })}
+        </ol>
       )}
-    </div>
+    </section>
   );
 }

@@ -32,7 +32,7 @@ export function StewardReviews({ steward }: { steward: Steward }) {
                 <span className="text-[56px] font-bold leading-none text-ink">
                   {steward.ratingAvg?.toFixed(1) ?? "—"}
                 </span>
-                <div className="flex gap-0.5 text-terracotta">
+                <div className="flex gap-0.5 text-brand">
                   {[1, 2, 3, 4, 5].map((i) => (
                     <StarIcon key={i} className="h-4 w-4" />
                   ))}
@@ -73,7 +73,7 @@ export function StewardReviews({ steward }: { steward: Steward }) {
           <div className="flex flex-col gap-3">
             <button
               type="button"
-              className="inline-flex w-fit items-center gap-1.5 text-[14px] font-semibold text-terracotta hover:underline"
+              className="inline-flex w-fit items-center gap-1.5 text-[14px] font-semibold text-brand hover:underline"
             >
               {t("viewAll")} →
             </button>

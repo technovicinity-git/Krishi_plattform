@@ -34,7 +34,7 @@ export function FormPasswordInput({
     <div className={cn("flex flex-col gap-2", className)}>
       <label htmlFor={name} className="text-[14px] font-semibold text-ink-nav">
         {label}
-        {required && <span className="ml-1 text-terracotta">*</span>}
+        {required && <span className="ml-1 text-danger">*</span>}
       </label>
 
       <div className="flex h-[48px] items-center gap-3 rounded-[8px] border border-border-light bg-cream px-4">

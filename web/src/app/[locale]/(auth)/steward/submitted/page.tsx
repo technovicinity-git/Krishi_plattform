@@ -1,14 +1,16 @@
 import { useTranslations } from "next-intl";
 import { AuthCard } from "@/components/auth/AuthCard";
 import { Link } from "@/i18n/navigation";
+import { BackLink } from "@/components/ui/BackLink";
 
 export default function StewardSubmittedPage() {
   const t = useTranslations("stewardSubmitted");
+  const tf = useTranslations("app.forms");
 
   return (
     <AuthCard>
       <div className="flex flex-col gap-8">
-        <div className="h-0.5 w-12 bg-terracotta" />
+        <div className="h-0.5 w-12 bg-brand" />
 
         <div className="flex flex-col gap-3">
           <span className="text-[11px] font-semibold uppercase tracking-[0.02em] text-sage">
@@ -42,20 +44,14 @@ export default function StewardSubmittedPage() {
 
         <Link
           href="/steward"
-          className="inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-[8px] bg-terracotta text-[15px] font-bold text-white transition-colors hover:bg-[#B3634A]"
+          className="inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-[8px] bg-brand text-[15px] font-bold text-white transition-colors hover:bg-brand-hover"
         >
-          Go to Steward Console
+          {tf("goToStewardConsole")}
           <span aria-hidden="true">→</span>
         </Link>
 
         <div className="border-t border-border-light pt-6">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-ink-nav hover:text-ink"
-          >
-            <span aria-hidden="true">←</span>
-            {t("backToKrishi")}
-          </Link>
+          <BackLink href="/">{t("backToKrishi")}</BackLink>
         </div>
       </div>
     </AuthCard>

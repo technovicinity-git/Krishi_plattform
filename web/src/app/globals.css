@@ -21,7 +21,12 @@
   --color-ink-button-muted: #736E69;
 
   /* ─── Accents ─────────────────────────────────── */
-  --color-terracotta: #C36F52;
+  /* Brand (primary actions, links, highlights) */
+  --color-brand: #3A7D44;
+  --color-brand-hover: #2E6537;
+  --color-brand-tint: #EDF5EE;
+  /* Danger (errors, rejections, required markers) */
+  --color-danger: #A13D2B;
   --color-green-deep: #2E5B3D;
   --color-green-olive: #4F5D48;
   --color-sage: #6B7763;

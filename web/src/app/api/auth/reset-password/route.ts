@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { hashPassword } from "@/lib/auth/password";
 import { toE164, isValidBDPhone } from "@/lib/auth/phone";
+import { LIMITS, clientIp, tooManyRequests, withinLimits } from "@/lib/security/rate-limit";
 
 export const runtime = "nodejs";
 
@@ -19,6 +20,10 @@ const schema = z.object({
 
 export async function POST(request: Request) {
   try {
+    if (!(await withinLimits(LIMITS.resetPassword(clientIp(request))))) {
+      return tooManyRequests(900);
+    }
+
     const body = await request.json();
     const parsed = schema.safeParse(body);
     if (!parsed.success) {

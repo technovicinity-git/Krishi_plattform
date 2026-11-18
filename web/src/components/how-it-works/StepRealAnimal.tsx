@@ -34,7 +34,7 @@ export function StepRealAnimal() {
                   {t("batchCard.batchId")}
                 </span>
                 <div className="flex items-center gap-3 text-[14px]">
-                  <span className="font-semibold text-terracotta">
+                  <span className="font-semibold text-brand">
                     {t("batchCard.units")}
                   </span>
                   <span className="text-ink-muted">·</span>
@@ -49,7 +49,7 @@ export function StepRealAnimal() {
 
             {/* Arrow */}
             <div className="flex shrink-0 items-center justify-center">
-              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-stone text-terracotta">
+              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-stone text-brand">
                 <ArrowRightIcon />
               </span>
             </div>

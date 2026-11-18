@@ -1,4 +1,5 @@
 import { createAdminClient } from "@/lib/supabase/admin";
+import { getStewardRatings } from "@/lib/reviews";
 
 export interface StewardListItem {
   id: string;
@@ -31,7 +32,7 @@ export async function listPublicStewards(opts: {
       id, full_name,
       steward_profiles ( steward_type, experience, division_id, district_id, upazila, categories,
         divisions ( slug, name_en ),
-        districts ( slug, name_en )
+        districts ( slug, name_en, name_bn )
       ),
       steward_plan_offerings!steward_id ( id, status )
       `,
@@ -71,6 +72,14 @@ export async function listPublicStewards(opts: {
     };
   });
 
+  // Real ratings from published investor reviews.
+  const ratings = await getStewardRatings(items.map((i) => i.id));
+  for (const item of items) {
+    const r = ratings.get(item.id);
+    item.ratingAvg = r?.avg ?? null;
+    item.ratingCount = r?.count ?? 0;
+  }
+
   return {
     items,
     total: count ?? 0,
@@ -89,7 +98,7 @@ export async function findPublicStewardBySlug(idOrSlug: string) {
       id, full_name,
       steward_profiles ( steward_type, experience, division_id, district_id, upazila, categories,
         divisions ( slug, name_en ),
-        districts ( slug, name_en )
+        districts ( slug, name_en, name_bn )
       ),
       steward_plan_offerings!steward_id (
         id, status, units_offered, units_funded,
@@ -99,7 +108,7 @@ export async function findPublicStewardBySlug(idOrSlug: string) {
           estimated_roi_min, estimated_roi_max, status,
           livestock_categories ( slug, name_en ),
           divisions ( slug, name_en ),
-          districts ( slug, name_en )
+          districts ( slug, name_en, name_bn )
         )
       )
       `,

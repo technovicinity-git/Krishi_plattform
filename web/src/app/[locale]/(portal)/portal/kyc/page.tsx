@@ -1,12 +1,14 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { getLocale, getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getSignedKycUrls } from "@/lib/admin/storage";
+import { KycDocPreview } from "@/components/kyc/KycDocPreview";
 
-function formatDateTime(iso: string | null): string {
+function formatDateTime(iso: string | null, locale: string): string {
   if (!iso) return "—";
-  return new Date(iso).toLocaleString("en-GB", {
+  return new Date(iso).toLocaleString(locale === "bn" ? "bn-BD" : "en-GB", {
     day: "2-digit",
     month: "short",
     year: "numeric",
@@ -15,22 +17,13 @@ function formatDateTime(iso: string | null): string {
   });
 }
 
-const STATUS_LABEL: Record<string, string> = {
-  not_started: "Not Started",
-  pending: "Under Review",
-  under_review: "Under Review",
-  verified: "Verified",
-  rejected: "Rejected",
-  requires_update: "Requires Update",
-};
-
 const STATUS_STYLE: Record<string, string> = {
   not_started: "bg-stone text-ink-muted",
   pending: "bg-[#FEF6E5] text-[#C48A2E]",
   under_review: "bg-[#FEF6E5] text-[#C48A2E]",
   verified: "bg-[#E8F0EA] text-green-deep",
-  rejected: "bg-[#FAF0ED] text-terracotta",
-  requires_update: "bg-[#FAF0ED] text-terracotta",
+  rejected: "bg-[#FAF0ED] text-danger",
+  requires_update: "bg-[#FAF0ED] text-danger",
 };
 
 export default async function PortalKycPage() {
@@ -44,8 +37,11 @@ export default async function PortalKycPage() {
     .eq("user_id", user.id)
     .maybeSingle();
 
+  const t = await getTranslations("app.kycPage");
+  const ts = await getTranslations("app.status");
+  const locale = await getLocale();
   const status = kyc?.status ?? "not_started";
-  const statusLabel = STATUS_LABEL[status] ?? status;
+  const statusLabel = ts.has(status) ? ts(status) : status;
   const statusStyle = STATUS_STYLE[status] ?? STATUS_STYLE.not_started;
 
   const urls = kyc
@@ -62,7 +58,7 @@ export default async function PortalKycPage() {
     <div className="flex w-full max-w-[960px] flex-col gap-8">
       <div className="flex items-center justify-between gap-4">
         <h1 className="font-serif text-[28px] leading-tight text-ink lg:text-[32px]">
-          KYC Verification
+          {t("title")}
         </h1>
         <span
           className={`inline-flex items-center rounded-[4px] px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.02em] ${statusStyle}`}
@@ -74,11 +70,10 @@ export default async function PortalKycPage() {
       {status === "verified" && (
         <div className="flex flex-col gap-3 rounded-2xl border border-[#A8CBB4] bg-[#E8F0EA] p-8">
           <h2 className="font-serif text-[24px] leading-tight text-green-deep">
-            Your identity is verified.
+            {t("verifiedTitle")}
           </h2>
           <p className="text-[14px] leading-[1.6] text-green-deep/90">
-            You have full access to Krishi. Your documents were reviewed and
-            approved.
+            {t("verifiedBody")}
           </p>
         </div>
       )}
@@ -86,11 +81,10 @@ export default async function PortalKycPage() {
       {(status === "pending" || status === "under_review") && (
         <div className="flex flex-col gap-3 rounded-2xl border border-[#F0D9A6] bg-[#FEF6E5] p-8">
           <h2 className="font-serif text-[24px] leading-tight text-[#7A5C1E]">
-            Under review
+            {t("reviewTitle")}
           </h2>
           <p className="text-[14px] leading-[1.6] text-[#7A5C1E]/90">
-            Your KYC submission is being reviewed by our team. You'll be able
-            to access all features once your identity is verified.
+            {t("reviewBody")}
           </p>
         </div>
       )}
@@ -98,36 +92,35 @@ export default async function PortalKycPage() {
       {status === "not_started" && (
         <div className="flex flex-col gap-4 rounded-2xl border border-border-light bg-white p-8">
           <h2 className="font-serif text-[24px] leading-tight text-ink">
-            Complete your identity verification.
+            {t("startTitle")}
           </h2>
           <p className="text-[14px] leading-[1.6] text-ink-secondary">
-            Submit your National ID and address details to unlock investing,
-            wallet, and reporting features.
+            {t("startBody")}
           </p>
           <Link
             href="/onboarding/kyc"
-            className="inline-flex h-[48px] w-fit items-center justify-center rounded-[8px] bg-terracotta px-6 text-[14px] font-bold text-white transition-colors hover:bg-[#B3634A]"
+            className="inline-flex h-[48px] w-fit items-center justify-center rounded-[8px] bg-brand px-6 text-[14px] font-bold text-white transition-colors hover:bg-brand-hover"
           >
-            Start KYC
+            {t("startCta")}
           </Link>
         </div>
       )}
 
       {showResubmit && (
         <div className="flex flex-col gap-4 rounded-2xl border border-[#F0C9C0] bg-[#FAF0ED] p-8">
-          <h2 className="font-serif text-[24px] leading-tight text-terracotta">
-            KYC rejected — please resubmit
+          <h2 className="font-serif text-[24px] leading-tight text-danger">
+            {t("rejectedTitle")}
           </h2>
           {kyc?.rejection_reason && (
             <p className="text-[14px] leading-[1.6] text-ink-secondary">
-              <strong>Reason:</strong> {kyc.rejection_reason}
+              <strong>{t("reason")}</strong> {kyc.rejection_reason}
             </p>
           )}
           <Link
             href="/onboarding/kyc"
-            className="inline-flex h-[48px] w-fit items-center justify-center rounded-[8px] bg-terracotta px-6 text-[14px] font-bold text-white transition-colors hover:bg-[#B3634A]"
+            className="inline-flex h-[48px] w-fit items-center justify-center rounded-[8px] bg-brand px-6 text-[14px] font-bold text-white transition-colors hover:bg-brand-hover"
           >
-            Resubmit KYC
+            {t("resubmitCta")}
           </Link>
         </div>
       )}
@@ -135,14 +128,14 @@ export default async function PortalKycPage() {
       {kyc && (
         <div className="flex flex-col gap-4 rounded-2xl border border-border-light bg-white p-8">
           <h2 className="text-[11px] font-bold uppercase tracking-[0.02em] text-ink-muted">
-            Submitted Details
+            {t("detailsHeading")}
           </h2>
           <div className="flex flex-col">
-            <Row label="NID Number" value={kyc.nid_number ?? "—"} />
-            <Row label="Present Address" value={kyc.present_address ?? "—"} />
-            <Row label="Permanent Address" value={kyc.permanent_address ?? "—"} />
-            <Row label="Submitted" value={formatDateTime(kyc.submitted_at)} />
-            <Row label="Last updated" value={formatDateTime(kyc.updated_at)} />
+            <Row label={t("nidNumber")} value={kyc.nid_number ?? "—"} />
+            <Row label={t("presentAddress")} value={kyc.present_address ?? "—"} />
+            <Row label={t("permanentAddress")} value={kyc.permanent_address ?? "—"} />
+            <Row label={t("submitted")} value={formatDateTime(kyc.submitted_at, locale)} />
+            <Row label={t("lastUpdated")} value={formatDateTime(kyc.updated_at, locale)} />
           </div>
         </div>
       )}
@@ -150,11 +143,11 @@ export default async function PortalKycPage() {
       {kyc && (urls.nidFront || urls.nidBack) && (
         <div className="flex flex-col gap-4 rounded-2xl border border-border-light bg-white p-8">
           <h2 className="text-[11px] font-bold uppercase tracking-[0.02em] text-ink-muted">
-            Submitted Documents
+            {t("documentsHeading")}
           </h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <DocPreview label="NID Front" url={urls.nidFront} />
-            <DocPreview label="NID Back" url={urls.nidBack} />
+            <KycDocPreview label={t("nidFront")} url={urls.nidFront} path={kyc.nid_front_path} emptyLabel={t("notProvided")} pdfLabel={t("pdfDocument")} fileLabel={t("document")} openLabel={t("openFile")} />
+            <KycDocPreview label={t("nidBack")} url={urls.nidBack} path={kyc.nid_back_path} emptyLabel={t("notProvided")} pdfLabel={t("pdfDocument")} fileLabel={t("document")} openLabel={t("openFile")} />
           </div>
         </div>
       )}
@@ -167,29 +160,6 @@ function Row({ label, value }: { label: string; value: string }) {
     <div className="flex items-start justify-between gap-4 border-b border-border-light py-3 last:border-b-0">
       <span className="shrink-0 text-[12px] text-ink-muted">{label}</span>
       <span className="text-right text-[13px] font-medium text-ink">{value}</span>
-    </div>
-  );
-}
-
-function DocPreview({ label, url }: { label: string; url: string | null }) {
-  return (
-    <div className="flex flex-col gap-2">
-      <span className="text-[11px] font-semibold text-ink-muted">{label}</span>
-      {url ? (
-        <a
-          href={url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block overflow-hidden rounded-[8px] border border-border-light bg-stone hover:border-terracotta"
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={url} alt={label} className="h-[180px] w-full object-cover" />
-        </a>
-      ) : (
-        <div className="flex h-[180px] items-center justify-center rounded-[8px] border border-dashed border-border-light bg-stone text-[12px] text-ink-muted">
-          Not provided
-        </div>
-      )}
     </div>
   );
 }

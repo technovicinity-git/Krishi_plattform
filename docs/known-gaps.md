@@ -4,17 +4,17 @@ Found while reading the codebase on 2026-11-17. Ordered by priority.
 
 ## 🔴 Security
 
-1. **Real credentials in `web/.env.example`.** The example file, which is meant to be committed, contains what look like a live Supabase **secret (service-role) key** and the **database password** in `DATABASE_URL`. Rotate both in the Supabase dashboard and replace them with placeholders. `web/scripts/README.md` describes the password reset steps.
+1. ~~Real credentials in `web/.env.example`~~ — checked 2026-11-18: the file and the whole git history contain no keys, database URLs or session secrets.
 2. **RLS is enabled but authorization lives only in app code.** Every query uses the service-role client, so one missing role or ownership check in a route handler exposes data. New routes need careful review.
-3. **`GET /api/interests/[reference]` is public.** References are sequential (`KR-INT-000001`, `…002`), so anyone can enumerate them. Check what `getInterestByReference` returns (guest name, phone or email would be a data leak).
-4. **No rate limiting on user OTP or login endpoints.** Admin login is rate-limited, but `/api/auth/login`, `/api/auth/register`, `/api/auth/forgot-password` and `/api/interests` are not. OTP attempts are capped per code, but new codes can be requested without limit.
-5. **`DEV_SHOW_OTP` stores plaintext OTPs** and exposes them through a public endpoint. Make sure it is never set in production.
-6. **`jwt.ts` only throws for a missing or weak secret outside production.** In production it would sign with an `undefined` key. Fail hard in every environment instead.
+3. ~~`GET /api/interests/[reference]` is public~~ — fixed 2026-11-18: it now answers only the investor who owns the interest, and the shared lookup no longer returns guest name, phone or message.
+4. ~~No rate limiting on user OTP or login endpoints~~ — fixed 2026-11-18: `hit_rate_limit()` + `web/src/lib/security/rate-limit.ts` limit login, sign-up, forgot/reset password, code verification, farmer activation, steward sign-up and interest submission per IP (and per phone for login/sign-up). Behind a proxy, make sure it sets `X-Forwarded-For`.
+5. ~~`DEV_SHOW_OTP` / `FIXED_OTP` could run in production~~ — fixed 2026-11-18: both are ignored in production builds unless `KRISHI_STAGING=true` (`web/src/lib/auth/dev-flags.ts`), with a logged warning.
+6. ~~`jwt.ts` signs with an `undefined` key in production~~ — fixed 2026-11-18: signing and verifying refuse to run without a 32+ character `KRISHI_SESSION_SECRET` in every environment.
 
 ## 🟠 Schema and data integrity
 
-1. **Missing migrations.** `investments`, `deposits`, `fund_requests`, `expenses`, `investment_updates` and `platform_accounts` are used by the code but no migration creates them. A fresh environment built from migrations will not work. Run `supabase db pull` or write migrations from the live schema.
-2. **Duplicate deposit-approval routes.** `/api/deposits/[id]/approve` and `/api/admin/deposits/[id]/approve` both exist. Only the admin route increments `steward_plan_offerings.units_funded`. Delete the legacy route or make the two the same.
+1. ~~Missing migrations~~ — fixed 2026-11-18: `20261016000001_baseline_untracked_tables.sql` creates the hand-made tables and storage buckets. A database built from all migrations was checked to match the live schema column for column.
+2. ~~Duplicate deposit-approval routes~~ — fixed 2026-11-18: the legacy `/api/deposits/[id]/approve` is deleted; admin approval and online payments share `approveDeposit()`. Previously: `/api/deposits/[id]/approve` and `/api/admin/deposits/[id]/approve` both exist. Only the admin route increments `steward_plan_offerings.units_funded`. Delete the legacy route or make the two the same.
 3. **No transactions in multi-step writes.** Deposit approval updates the deposit, the interest, the investment and the offering in separate calls. A failure partway leaves inconsistent state, e.g. a deposit marked approved with no investment. The `units_funded` increment is a read-then-write and can race. Move these into a Postgres function (RPC).
 4. **No overselling guard at interest or deposit time.** Interest checks `requested_units ≤ units_offered`, not the remaining `units_offered − units_funded`. The DB CHECK constraint will reject the final increment, but only after the deposit is already approved.
 5. **Legacy Supabase Auth leftovers.** The `auth.users` trigger and `is_admin()` / `current_user_role()` RLS helpers are unused. `proxy.ts` still calls `supabase.auth.getUser()` on every page request, which adds latency for no benefit.
@@ -22,10 +22,10 @@ Found while reading the codebase on 2026-11-17. Ordered by priority.
 ## 🟡 Feature gaps
 
 - **SMS delivery** for OTPs is a `TODO` everywhere.
-- **Investment lifecycle after `awaiting_purchase`:** nothing records the purchase, health updates, sale, settlement, profit split or payout.
-- **Expense approval:** expenses are created as `pending`, but no route approves them, and the investment detail only counts approved expenses.
+- **Online payment refunds** are manual: if a paid SSLCommerz deposit can't be approved (units sold out), an admin must refund it from the SSLCommerz merchant panel and reject the deposit.
 - **Fund disbursement:** the detail code treats `disbursed` as a status, but the steward route only sets `approved`/`rejected`.
 - **Admin console:** offerings default to `approved` when the admin creates them, and stewards have no self-serve way to propose offerings (`pending_approval` exists in the schema but is unused).
-- **No automated tests** and no CI configuration.
+- **Automated tests** cover the money rules only (`yarn test`: settlement maths, settlement/wallet/withdrawal SQL functions on a PGlite copy of the migrations, rate limits, session key and OTP safety switches). No route/UI tests and no CI yet.
+- **PDF text in Bangla can't be copied or searched.** Statements render Bangla correctly (pdfkit shapes it with the bundled Noto fonts), but text copied out of the PDF comes out scrambled. Printing and reading are unaffected.
 - **`web/README.md`** is the default create-next-app text.
-- **Housekeeping:** `all_packages.txt` at the root is a stray dump from another path. `_smoke_test` table and migration can be dropped. Both `package-lock.json` and `yarn.lock` exist in `web/`; pick one package manager. Some route files have inconsistent indentation (`api/kyc/submit`).
+- **Housekeeping:** `all_packages.txt` at the root is a stray dump from another path. `_smoke_test` table and migration can be dropped. Some route files have inconsistent indentation (`api/kyc/submit`).

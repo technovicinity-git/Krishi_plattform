@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentAdmin } from "@/lib/admin/current-admin";
 import { logAdminAction } from "@/lib/admin/audit";
+import { notify } from "@/lib/notifications/notify";
 
 export const runtime = "nodejs";
 
@@ -36,6 +37,8 @@ export async function POST(
     console.error("[admin/stewards/approve] update failed:", error);
     return NextResponse.json({ error: "Failed to approve" }, { status: 500 });
   }
+
+  await notify("steward_approved", { userId: id, href: "/steward" });
 
   await logAdminAction({
     adminId: admin.id,

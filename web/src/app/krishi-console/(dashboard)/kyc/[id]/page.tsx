@@ -1,9 +1,10 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/current-admin";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getSignedKycUrls } from "@/lib/admin/storage";
 import { KycReviewActions } from "@/components/admin/KycReviewActions";
+import { BackLink } from "@/components/ui/BackLink";
+import { KycDocPreview } from "@/components/kyc/KycDocPreview";
 
 const STATUS_LABEL: Record<string, string> = {
   not_started: "Not Started",
@@ -18,8 +19,8 @@ const STATUS_STYLE: Record<string, string> = {
   pending: "bg-[#FEF6E5] text-[#C48A2E]",
   under_review: "bg-[#FEF6E5] text-[#C48A2E]",
   verified: "bg-[#E8F0EA] text-green-deep",
-  rejected: "bg-[#FAF0ED] text-terracotta",
-  requires_update: "bg-[#FAF0ED] text-terracotta",
+  rejected: "bg-[#FAF0ED] text-danger",
+  requires_update: "bg-[#FAF0ED] text-danger",
   not_started: "bg-stone text-ink-muted",
 };
 
@@ -33,11 +34,6 @@ function formatDateTime(iso: string | null): string {
     hour: "2-digit",
     minute: "2-digit",
   });
-}
-
-function isImagePath(path: string | null): boolean {
-  if (!path) return false;
-  return /\.(jpe?g|png|webp|gif)$/i.test(path);
 }
 
 export default async function KycReviewPage({
@@ -82,13 +78,7 @@ export default async function KycReviewPage({
     <div className="flex flex-col gap-6">
       {/* Back + header */}
       <div className="flex flex-col gap-3">
-        <Link
-          href="/krishi-console/kyc"
-          className="inline-flex w-fit items-center gap-1.5 text-[12px] font-semibold text-ink-secondary hover:text-ink"
-        >
-          <span aria-hidden="true">←</span>
-          Back to KYC Queue
-        </Link>
+        <BackLink href="/krishi-console/kyc" localized={false}>Back to KYC Queue</BackLink>
 
         <div className="flex items-center justify-between gap-4">
           <h1 className="font-serif text-[28px] leading-tight text-ink">
@@ -150,60 +140,15 @@ export default async function KycReviewPage({
           </h2>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {documents.map((doc) => {
-              if (!doc.path) {
-                return (
-                  <div key={doc.key} className="flex flex-col gap-2">
-                    <span className="text-[11px] font-semibold text-ink-muted">
-                      {doc.label}
-                    </span>
-                    <div className="flex h-[180px] items-center justify-center rounded-[8px] border border-dashed border-border-light bg-stone text-[12px] text-ink-muted">
-                      Not provided
-                    </div>
-                  </div>
-                );
-              }
-
-              const image = isImagePath(doc.path);
-
-              return (
-                <div key={doc.key} className="flex flex-col gap-2">
-                  <span className="text-[11px] font-semibold text-ink-muted">
-                    {doc.label}
-                  </span>
-                  {doc.url ? (
-                    <a
-                      href={doc.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group block overflow-hidden rounded-[8px] border border-border-light bg-stone transition-colors hover:border-terracotta"
-                    >
-                      {image ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          src={doc.url}
-                          alt={doc.label}
-                          className="h-[180px] w-full object-cover"
-                        />
-                      ) : (
-                        <div className="flex h-[180px] flex-col items-center justify-center gap-2 px-4 text-center">
-                          <span className="text-[13px] font-semibold text-ink">
-                            PDF Document
-                          </span>
-                          <span className="text-[11px] text-terracotta group-hover:underline">
-                            Click to open →
-                          </span>
-                        </div>
-                      )}
-                    </a>
-                  ) : (
-                    <div className="flex h-[180px] items-center justify-center rounded-[8px] border border-dashed border-border-light bg-stone text-[12px] text-ink-muted">
-                      Unable to load
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+            {documents.map((doc) => (
+              <KycDocPreview
+                key={doc.key}
+                label={doc.label}
+                url={doc.path ? doc.url : null}
+                path={doc.path}
+                emptyLabel={doc.path ? "Unable to load" : "Not provided"}
+              />
+            ))}
           </div>
         </div>
       </div>

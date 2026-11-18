@@ -10,6 +10,8 @@ import { OTPInput } from "./OTPInput";
 
 export function FarmerActivateForm() {
   const t = useTranslations("farmerActivate");
+  const tf = useTranslations("app.forms");
+  const tcm = useTranslations("app.common");
   const router = useRouter();
   const searchParams = useSearchParams();
   const phoneFromUrl = searchParams.get("phone") ?? "";
@@ -66,7 +68,7 @@ export function FarmerActivateForm() {
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok) {
-        setError(data.error ?? "Failed to activate account");
+        setError(data.error ?? tf("failedActivate"));
         setSubmitting(false);
         return;
       }
@@ -74,7 +76,7 @@ export function FarmerActivateForm() {
       router.push("/farmer");
       router.refresh();
     } catch {
-      setError("Network error. Please try again.");
+      setError(tcm("networkError"));
       setSubmitting(false);
     }
   };
@@ -95,14 +97,14 @@ export function FarmerActivateForm() {
 
       {!hasPhone && (
         <FormInput
-          label="Phone Number"
+          label={tf("phoneLabel")}
           name="phone"
           type="tel"
           prefix="+880"
           value={phone}
           onChange={setPhone}
           required
-          helper="Enter the phone number your steward registered for you."
+          helper={tf("farmerPhoneHelper")}
         />
       )}
 
@@ -110,7 +112,7 @@ export function FarmerActivateForm() {
         <>
           <div className="flex flex-col gap-1">
             <span className="text-[13px] text-ink-secondary">
-              Activating account for
+              {tf("activatingFor")}
             </span>
             <span className="text-[16px] font-semibold text-ink">
               +880 {phone.replace(/^0/, "")}
@@ -118,16 +120,16 @@ export function FarmerActivateForm() {
           </div>
 
           {devOtp && (
-            <div className="rounded-[8px] border-2 border-dashed border-terracotta bg-[#FAF0ED] px-4 py-3">
+            <div className="rounded-[8px] border-2 border-dashed border-brand bg-brand-tint px-4 py-3">
               <div className="flex items-center gap-2">
-                <span className="rounded-[3px] bg-terracotta px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.02em] text-white">
+                <span className="rounded-[3px] bg-brand px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.02em] text-white">
                   Dev Mode
                 </span>
                 <span className="text-[12px] text-ink-secondary">
                   Activation OTP for testing:
                 </span>
               </div>
-              <div className="mt-1.5 text-[24px] font-bold tracking-[0.15em] text-terracotta">
+              <div className="mt-1.5 text-[24px] font-bold tracking-[0.15em] text-brand">
                 {devOtp}
               </div>
             </div>
@@ -181,7 +183,7 @@ export function FarmerActivateForm() {
         <button
           type="submit"
           disabled={submitting || !isCodeComplete}
-          className="inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-[8px] bg-terracotta text-[15px] font-bold text-white transition-colors hover:bg-[#B3634A] disabled:opacity-60"
+          className="inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-[8px] bg-brand text-[15px] font-bold text-white transition-colors hover:bg-brand-hover disabled:opacity-60"
         >
           {submitting ? t("submitting") : t("submit")}
           {!submitting && <span aria-hidden="true">→</span>}
@@ -191,7 +193,7 @@ export function FarmerActivateForm() {
       <div className="border-t border-border-light pt-6 text-center">
         <p className="text-[13px] text-ink-secondary">
           {t("alreadyActivated")}{" "}
-          <Link href="/login" className="font-semibold text-terracotta hover:underline">
+          <Link href="/login" className="font-semibold text-brand hover:underline">
             {t("loginLink")}
           </Link>
         </p>

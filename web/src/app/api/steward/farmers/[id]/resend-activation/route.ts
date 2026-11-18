@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { generateOtp, hashOtp, getOtpExpiry } from "@/lib/auth/otp";
+import { showOtpOnScreen } from "@/lib/auth/dev-flags";
 
 export const runtime = "nodejs";
 
@@ -57,7 +58,7 @@ export async function POST(
       expires_at: expiresAt.toISOString(),
     });
 
-    if (process.env.DEV_SHOW_OTP === "true") {
+    if (showOtpOnScreen()) {
       await db.from("dev_otps").delete().eq("phone", farmer.phone);
       await db.from("dev_otps").insert({ phone: farmer.phone, otp });
       console.log(`[DEV] Farmer activation OTP for ${farmer.phone}: ${otp}`);

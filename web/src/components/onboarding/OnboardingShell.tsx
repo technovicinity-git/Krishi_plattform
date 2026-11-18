@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { BackLink } from "@/components/ui/BackLink";
 
 interface OnboardingShellProps {
   children: React.ReactNode;
@@ -18,28 +19,23 @@ export function OnboardingShell({
   exitLabel,
 }: OnboardingShellProps) {
   const t = useTranslations("onboarding.shell");
+  const tu = useTranslations("app.userMenu");
 
   return (
     <div className="flex min-h-screen flex-col bg-cream">
       <header className="border-b border-border-light bg-cream">
         <div className="mx-auto flex w-full max-w-[1440px] items-center justify-between px-6 py-4 sm:px-10 lg:px-20">
-          <Link href="/" aria-label="Krishi — home" className="relative block h-10 w-32">
+          <Link href="/" aria-label={tu("home")} className="relative block h-10 w-32">
             <Image
               src="/logo.png"
-              alt="Krishi"
+              alt={tu("brand")}
               fill
               priority
               sizes="128px"
               className="object-contain object-left"
             />
           </Link>
-          <Link
-            href="/portal/profile"
-            className="inline-flex items-center gap-1.5 text-[13px] font-medium text-ink-nav hover:text-ink"
-          >
-            <span aria-hidden="true">←</span>
-            {exitLabel ?? t("exitDefault")}
-          </Link>
+          <BackLink href="/portal/profile">{exitLabel ?? t("exitDefault")}</BackLink>
         </div>
       </header>
 

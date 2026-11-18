@@ -2,13 +2,16 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { Link, useRouter } from "@/i18n/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { phoneSchema } from "@/lib/auth/schemas";
 import { toE164 } from "@/lib/auth/phone";
 import { FormInput } from "./FormInput";
+import { BackLink } from "@/components/ui/BackLink";
 
 export function ForgotPasswordForm() {
   const t = useTranslations("auth.forgot");
+  const tErr = useTranslations("errors");
+  const tf = useTranslations("app.forms");
   const router = useRouter();
 
   const [phone, setPhone] = useState("");
@@ -21,7 +24,7 @@ export function ForgotPasswordForm() {
 
     const parsed = phoneSchema.safeParse(phone);
     if (!parsed.success) {
-      setError(parsed.error.issues[0]?.message ?? t("errors.generic"));
+      setError(parsed.error.issues[0]?.message ?? tErr("generic"));
       return;
     }
 
@@ -37,7 +40,7 @@ export function ForgotPasswordForm() {
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok) {
-        setError(data.error ?? "Unable to send code");
+        setError(data.error ?? tf("sendCodeFailed"));
         setSubmitting(false);
         return;
       }
@@ -45,7 +48,7 @@ export function ForgotPasswordForm() {
       const e164 = toE164(phone);
       router.push(`/reset-password?phone=${encodeURIComponent(e164)}`);
     } catch {
-      setError(t("errors.network"));
+      setError(tErr("network"));
       setSubmitting(false);
     }
   };
@@ -86,7 +89,7 @@ export function ForgotPasswordForm() {
       <button
         type="submit"
         disabled={submitting}
-        className="inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-[8px] bg-terracotta text-[15px] font-bold text-white transition-colors hover:bg-[#B3634A] disabled:opacity-60"
+        className="inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-[8px] bg-brand text-[15px] font-bold text-white transition-colors hover:bg-brand-hover disabled:opacity-60"
       >
         {submitting ? t("submitting") : t("submit")}
         {!submitting && <span aria-hidden="true">→</span>}
@@ -100,13 +103,7 @@ export function ForgotPasswordForm() {
       </div>
 
       <div className="flex justify-center border-t border-border-light pt-6">
-        <Link
-          href="/login"
-          className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-ink-nav hover:text-ink"
-        >
-          <span aria-hidden="true">←</span>
-          {t("backToLogin")}
-        </Link>
+        <BackLink href="/login">{t("backToLogin")}</BackLink>
       </div>
     </form>
   );

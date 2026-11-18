@@ -42,7 +42,7 @@ export function Settlement() {
                 <span className="text-[16px] font-bold text-ink">
                   {t("math.totalLabel")}
                 </span>
-                <span className="text-[24px] font-extrabold text-terracotta">
+                <span className="text-[24px] font-extrabold text-brand">
                   {t("math.totalValue")}
                 </span>
               </div>

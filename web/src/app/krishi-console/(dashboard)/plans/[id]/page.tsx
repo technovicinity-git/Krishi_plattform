@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/current-admin";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -7,7 +6,8 @@ import {
   StewardOfferingsSection,
   type OfferingRow,
 } from "@/components/admin/StewardOfferingsSection";
-import { planImageUrl } from "@/lib/admin/plan-helpers";
+import { planImageUrl, type OfferingQueryRow } from "@/lib/admin/plan-helpers";
+import { BackLink } from "@/components/ui/BackLink";
 
 export default async function EditPlanPage({
   params,
@@ -71,7 +71,9 @@ export default async function EditPlanPage({
       .order("sort_order", { ascending: true }),
   ]);
 
-  const offerings: OfferingRow[] = (offeringRows ?? []).map((row: any) => ({
+  const offerings: OfferingRow[] = (
+    (offeringRows ?? []) as unknown as OfferingQueryRow[]
+  ).map((row) => ({
     id: row.id,
     steward_id: row.users?.id ?? "",
     steward_name: row.users?.full_name ?? "—",
@@ -87,13 +89,7 @@ export default async function EditPlanPage({
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-3">
-        <Link
-          href="/krishi-console/plans"
-          className="inline-flex w-fit items-center gap-1.5 text-[12px] font-semibold text-ink-secondary hover:text-ink"
-        >
-          <span aria-hidden="true">←</span>
-          Back to Plans
-        </Link>
+        <BackLink href="/krishi-console/plans" localized={false}>Back to Plans</BackLink>
         <h1 className="font-serif text-[28px] leading-tight text-ink">
           Edit Plan
         </h1>

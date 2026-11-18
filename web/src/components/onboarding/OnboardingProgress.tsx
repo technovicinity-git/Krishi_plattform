@@ -39,7 +39,7 @@ export function OnboardingProgress({ currentStep }: OnboardingProgressProps) {
               key={num}
               className={cn(
                 "flex min-w-[110px] flex-1 flex-col gap-1 rounded-[8px] border px-3 py-3",
-                status === "active" && "border-terracotta bg-[#FAF0ED]",
+                status === "active" && "border-brand bg-brand-tint",
                 status === "done" && "border-[#A8CBB4] bg-[#E8F0EA]",
                 status === "upcoming" && "border-border-light bg-white",
               )}
@@ -47,7 +47,7 @@ export function OnboardingProgress({ currentStep }: OnboardingProgressProps) {
               <span
                 className={cn(
                   "text-[10px] font-bold uppercase tracking-[0.02em]",
-                  status === "active" && "text-terracotta",
+                  status === "active" && "text-brand",
                   status === "done" && "text-green-deep",
                   status === "upcoming" && "text-ink-muted",
                 )}
@@ -65,7 +65,7 @@ export function OnboardingProgress({ currentStep }: OnboardingProgressProps) {
               <span
                 className={cn(
                   "text-[11px] leading-tight",
-                  status === "active" && "font-semibold text-terracotta",
+                  status === "active" && "font-semibold text-brand",
                   status === "done" && "text-green-deep",
                   status === "upcoming" && "text-ink-muted",
                 )}

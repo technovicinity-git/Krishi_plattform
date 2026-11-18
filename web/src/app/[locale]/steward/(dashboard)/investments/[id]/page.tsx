@@ -1,11 +1,23 @@
-import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
+import { getLocale, getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { getInvestmentDetail } from "@/lib/investments/detail";
 import { StageTimeline } from "@/components/investment/StageTimeline";
 import { StatsGrid, formatBDT } from "@/components/investment/StatsGrid";
 import { UpdatesList } from "@/components/investment/UpdatesList";
 import { FundRequestsList } from "@/components/investment/FundRequestsList";
+import { ExpensesList } from "@/components/investment/ExpensesList";
+import { SalePanel } from "@/components/investment/SalePanel";
+import { BackLink } from "@/components/ui/BackLink";
+import {
+  DetailRow,
+  PageHeader,
+  Panel,
+  StatusBadge,
+  toneFor,
+} from "@/components/dashboard/ui";
+import { AnimalsPanel } from "@/components/animals/AnimalsPanel";
+import { ReportDownload } from "@/components/reports/ReportDownload";
 
 export const dynamic = "force-dynamic";
 
@@ -21,67 +33,60 @@ export default async function StewardInvestmentDetailPage({
   const inv = await getInvestmentDetail(id);
   if (!inv || inv.steward.id !== user.id) notFound();
 
+  const t = await getTranslations("app.investmentDetail");
+  const tst = await getTranslations("app.stage");
+  const locale = await getLocale();
+  const bn = locale === "bn";
+  const planName = bn ? inv.offering.planNameBn : inv.offering.planNameEn;
+
   return (
-    <div className="mx-auto flex w-full max-w-[960px] flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <Link
-          href="/steward/investments"
-          className="text-[12px] font-semibold text-ink-secondary hover:text-ink"
-        >
-          ← Back to Investments
-        </Link>
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <span className="font-mono text-[11px] font-bold text-ink-muted">
-              {inv.reference}
-            </span>
-            <h1 className="mt-1 font-serif text-[28px] text-ink">
-              {inv.offering.planNameEn}
-            </h1>
+    <div className="flex flex-col gap-6">
+      <PageHeader
+        back={<BackLink href="/steward/investments">{t("backToInvestments")}</BackLink>}
+        eyebrow={<span className="font-mono">{inv.reference}</span>}
+        title={planName}
+        actions={
+          <div className="flex flex-wrap items-center gap-3">
+            <ReportDownload endpoint={`/api/reports/investment/${inv.id}`} />
+            <StatusBadge tone={toneFor(inv.currentStage)} className="text-[11px]">
+              {tst.has(inv.currentStage) ? tst(inv.currentStage) : inv.currentStage}
+            </StatusBadge>
           </div>
-          <span className="inline-flex rounded bg-[#FEF6E5] px-2.5 py-1 text-[10px] font-bold uppercase text-[#C48A2E]">
-            {inv.currentStage.replace(/_/g, " ")}
-          </span>
-        </div>
-      </div>
+        }
+      />
 
       <StageTimeline currentStage={inv.currentStage} />
 
       <StatsGrid
         items={[
-          { label: "Units", value: `${inv.units}` },
-          { label: "Investor", value: inv.investor.fullName ?? "—" },
-          { label: "Farmer", value: inv.farmer?.fullName ?? "Unassigned" },
-          { label: "Care Used", value: formatBDT(inv.stats.careBudgetUsed), accent: true },
+          { label: t("units"), value: `${inv.units}` },
+          { label: t("investor"), value: inv.investor.fullName ?? "—" },
+          { label: t("farmer"), value: inv.farmer?.fullName ?? t("unassigned") },
+          { label: t("fundsReleased"), value: formatBDT(inv.stats.fundsDisbursed), accent: true },
         ]}
       />
 
-      <FundRequestsList requests={inv.fundRequests} isSteward={true} />
+      {inv.sale && (
+        <SalePanel investmentId={inv.id} sale={inv.sale} settlement={inv.settlement} viewer="steward" />
+      )}
 
-      <UpdatesList updates={inv.updates} />
+      {inv.animals.length > 0 && <AnimalsPanel animals={inv.animals} canRecord />}
 
-      <div className="rounded-xl border border-border-light bg-white p-6">
-        <h2 className="text-[11px] font-bold uppercase tracking-[0.02em] text-ink-muted">
-          Investment Summary
-        </h2>
-        <div className="mt-3 flex flex-col gap-2 text-[13px]">
-          <Row label="Investor" value={inv.investor.fullName ?? "—"} />
-          <Row label="Investor Phone" value={inv.investor.phone ?? "—"} />
-          <Row label="Farmer" value={inv.farmer?.fullName ?? "Unassigned"} />
-          <Row label="Farmer Phone" value={inv.farmer?.phone ?? "—"} />
-          <Row label="Invested" value={formatBDT(inv.amount)} />
-          <Row label="Duration" value={`${inv.offering.durationMonths} months`} />
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
+        <div className="flex min-w-0 flex-col gap-6">
+          <FundRequestsList requests={inv.fundRequests} isSteward />
+          <ExpensesList expenses={inv.expenses} isSteward />
+          <UpdatesList updates={inv.updates} />
         </div>
+        <Panel title={t("summary")} className="h-fit">
+          <DetailRow label={t("investor")} value={inv.investor.fullName ?? "—"} />
+          <DetailRow label={t("investorPhone")} value={inv.investor.phone ?? "—"} />
+          <DetailRow label={t("farmer")} value={inv.farmer?.fullName ?? t("unassigned")} />
+          <DetailRow label={t("farmerPhone")} value={inv.farmer?.phone ?? "—"} />
+          <DetailRow label={t("invested")} value={formatBDT(inv.amount)} />
+          <DetailRow label={t("duration")} value={t("months", { count: inv.offering.durationMonths })} />
+        </Panel>
       </div>
-    </div>
-  );
-}
-
-function Row({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex items-center justify-between border-b border-border-light py-2 last:border-b-0">
-      <span className="text-ink-muted">{label}</span>
-      <span className="font-semibold text-ink">{value}</span>
     </div>
   );
 }

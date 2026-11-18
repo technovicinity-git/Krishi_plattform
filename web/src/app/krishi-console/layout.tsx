@@ -1,20 +1,10 @@
 import type { Metadata } from "next";
-import { Inter, DM_Serif_Display } from "next/font/google";
+import { dmSerif, inter } from "@/fonts";
 import "../globals.css";
+import { NextIntlClientProvider } from "next-intl";
+import { setRequestLocale } from "next-intl/server";
 import { DialogProvider } from "@/components/ui/dialog-provider";
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-});
-
-const dmSerif = DM_Serif_Display({
-  weight: "400",
-  subsets: ["latin"],
-  variable: "--font-dm-serif",
-  display: "swap",
-});
+import messages from "@/messages/en.json";
 
 export const metadata: Metadata = {
   title: "Krishi Console",
@@ -26,11 +16,17 @@ export default function AdminRootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // The console is English-only and lives outside [locale], but shared
+  // components (dialogs, user menu, form fields) use next-intl.
+  setRequestLocale("en");
+
   return (
     <html lang="en" className={`${inter.variable} ${dmSerif.variable}`}>
       <body>
-        <DialogProvider>{children}</DialogProvider>
-        </body>
+        <NextIntlClientProvider locale="en" messages={messages}>
+          <DialogProvider>{children}</DialogProvider>
+        </NextIntlClientProvider>
+      </body>
     </html>
   );
 }

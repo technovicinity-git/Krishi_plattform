@@ -24,7 +24,7 @@ export function Journey() {
             <span
               className={cn(
                 "text-[12px] font-bold leading-none",
-                isSecondHalf ? "text-green-olive" : "text-terracotta",
+                isSecondHalf ? "text-green-olive" : "text-brand",
               )}
             >
               {number}

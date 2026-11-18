@@ -25,7 +25,7 @@ export function FinalCta() {
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <Link
               href="/contact"
-              className="inline-flex items-center justify-center rounded-[4px] bg-terracotta px-9 py-4 text-[14px] font-bold text-white transition-colors hover:bg-[#B3634A]"
+              className="inline-flex items-center justify-center rounded-[4px] bg-brand px-9 py-4 text-[14px] font-bold text-white transition-colors hover:bg-brand-hover"
             >
               {t("ctaPrimary")}
             </Link>

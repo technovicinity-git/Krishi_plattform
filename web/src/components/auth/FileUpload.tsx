@@ -45,7 +45,7 @@ export function FileUpload({
           className="text-[13px] font-semibold text-ink-nav"
         >
           {label}
-          <span className="ml-1 text-terracotta">*</span>
+          <span className="ml-1 text-brand">*</span>
         </label>
       )}
       <label

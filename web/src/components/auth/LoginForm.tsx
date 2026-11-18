@@ -9,6 +9,7 @@ import { FormPasswordInput } from "./FormPasswordInput";
 
 export function LoginForm() {
   const t = useTranslations("auth.login");
+  const tErr = useTranslations("errors");
   const router = useRouter();
 
   const [phone, setPhone] = useState("");
@@ -22,7 +23,7 @@ export function LoginForm() {
 
     const parsed = loginSchema.safeParse({ phone, password });
     if (!parsed.success) {
-      setError(parsed.error.issues[0]?.message ?? t("errors.generic"));
+      setError(parsed.error.issues[0]?.message ?? tErr("generic"));
       return;
     }
 
@@ -38,7 +39,7 @@ export function LoginForm() {
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok) {
-        setError(data.error ?? t("errors.invalidCredentials"));
+        setError(data.error ?? tErr("invalidCredentials"));
         setSubmitting(false);
         return;
       }
@@ -55,7 +56,7 @@ export function LoginForm() {
       router.push(target);
       router.refresh();
     } catch {
-      setError(t("errors.network"));
+      setError(tErr("network"));
       setSubmitting(false);
     }
   };
@@ -98,7 +99,7 @@ export function LoginForm() {
         <div className="-mt-2 flex justify-end">
           <Link
             href="/forgot-password"
-            className="text-[13px] font-semibold text-terracotta hover:underline"
+            className="text-[13px] font-semibold text-brand hover:underline"
           >
             {t("forgotPassword")}
           </Link>
@@ -114,7 +115,7 @@ export function LoginForm() {
       <button
         type="submit"
         disabled={submitting}
-        className="inline-flex h-[52px] w-full items-center justify-center rounded-[8px] bg-terracotta text-[15px] font-bold text-white transition-colors hover:bg-[#B3634A] disabled:opacity-60"
+        className="inline-flex h-[52px] w-full items-center justify-center rounded-[8px] bg-brand text-[15px] font-bold text-white transition-colors hover:bg-brand-hover disabled:opacity-60"
       >
         {submitting ? t("submitting") : t("submit")}
       </button>
@@ -122,15 +123,27 @@ export function LoginForm() {
       <div className="flex flex-col items-center gap-3 border-t border-border-light pt-6">
         <p className="text-[13px] text-ink-secondary">
           {t("noAccount")}{" "}
-          <Link href="/register" className="font-semibold text-terracotta hover:underline">
+          <Link href="/register" className="font-semibold text-brand hover:underline">
             {t("createAccount")}
           </Link>
         </p>
         <Link
           href="/krishi-console/login"
-          className="text-[12px] text-ink-muted hover:text-ink"
+          className="group inline-flex items-center gap-1 rounded-full px-2 py-1 text-[12px] font-medium text-ink-muted transition-colors hover:text-brand focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/40"
         >
           {t("adminLink")}
+          <svg
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+            className="h-3 w-3 transition-transform duration-150 group-hover:translate-x-0.5"
+          >
+            <path d="M6 3.5L10.5 8 6 12.5" />
+          </svg>
         </Link>
       </div>
     </form>

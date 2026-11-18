@@ -176,12 +176,11 @@ export interface InterestDetail {
   reference: string;
   status: string;
   requestedUnits: number;
-  message: string | null;
-  guestName: string | null;
-  guestPhone: string | null;
   createdAt: string;
   reviewedAt: string | null;
   rejectionReason: string | null;
+  /** Owner when submitted by a signed-in investor; null for guest interests. */
+  investorId: string | null;
   offeringId: string;
   planNameEn: string;
   planNameBn: string;
@@ -199,6 +198,10 @@ export interface InterestDetail {
   offeringSlug: string;
 }
 
+/**
+ * Public-safe view of an interest: plan, status and amounts only — never the
+ * guest's name, phone or message (references are sequential and guessable).
+ */
 export async function getInterestByReference(
   reference: string,
 ): Promise<InterestDetail | null> {
@@ -208,8 +211,8 @@ export async function getInterestByReference(
     .from("investment_interests")
     .select(
       `
-      id, reference, status, requested_units, message,
-      guest_name, guest_phone, created_at, reviewed_at, rejection_reason,
+      id, reference, status, requested_units, investor_id,
+      created_at, reviewed_at, rejection_reason,
       offering:steward_plan_offerings!offering_id (
         id, units_offered, units_funded,
         investment_plans!inner (
@@ -246,9 +249,7 @@ export async function getInterestByReference(
     reference: data.reference,
     status: data.status,
     requestedUnits: data.requested_units,
-    message: data.message,
-    guestName: data.guest_name,
-    guestPhone: data.guest_phone,
+    investorId: data.investor_id,
     createdAt: data.created_at,
     reviewedAt: data.reviewed_at,
     rejectionReason: data.rejection_reason,

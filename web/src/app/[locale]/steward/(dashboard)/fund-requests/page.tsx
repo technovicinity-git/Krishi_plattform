@@ -1,8 +1,12 @@
-import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { redirect } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { FundRequestsInlineList } from "@/components/investment/FundRequestsInlineList";
+import { EmptyState, PageHeader, Tabs } from "@/components/dashboard/ui";
+import {
+  FundRequestsInlineList,
+  type FundRequestRow,
+} from "@/components/investment/FundRequestsInlineList";
 
 export const dynamic = "force-dynamic";
 
@@ -50,7 +54,7 @@ export default async function StewardFundRequestsPage({
             id, reference,
             farmer:users!farmer_id ( full_name, phone ),
             offering:steward_plan_offerings!offering_id (
-              investment_plans ( name_en )
+              investment_plans ( name_en, name_bn )
             )
           )
           `,
@@ -61,52 +65,27 @@ export default async function StewardFundRequestsPage({
     : { data: [] };
 
   const count = (fundRequests ?? []).length;
+  const t = await getTranslations("app.stewardFundRequests");
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <h1 className="font-serif text-[28px] leading-tight text-ink">
-          Fund Requests
-        </h1>
-        <p className="text-[13px] text-ink-secondary">
-          Review farmer fund requests across all your investments.
-        </p>
-      </div>
+      <PageHeader title={t("title")} description={t("subtitle")} />
 
-      <div className="flex gap-1 border-b border-border-light">
-        <Link
-          href="/steward/fund-requests"
-          className={`-mb-px border-b-2 px-4 py-2.5 text-[13px] font-semibold transition-colors ${
-            view === "pending"
-              ? "border-terracotta text-ink"
-              : "border-transparent text-ink-muted hover:text-ink"
-          }`}
-        >
-          Pending
-        </Link>
-        <Link
-          href="/steward/fund-requests?view=history"
-          className={`-mb-px border-b-2 px-4 py-2.5 text-[13px] font-semibold transition-colors ${
-            view === "history"
-              ? "border-terracotta text-ink"
-              : "border-transparent text-ink-muted hover:text-ink"
-          }`}
-        >
-          History
-        </Link>
-      </div>
+      <Tabs
+        items={[
+          { label: t("pending"), href: "/steward/fund-requests", active: view === "pending" },
+          { label: t("history"), href: "/steward/fund-requests?view=history", active: view === "history" },
+        ]}
+      />
 
       {count === 0 ? (
-        <div className="rounded-2xl border border-border-light bg-white px-8 py-16 text-center">
-          <p className="text-[14px] text-ink-secondary">
-            {view === "pending"
-              ? "No pending fund requests at the moment."
-              : "No historical fund requests yet."}
-          </p>
-        </div>
+        <EmptyState
+          icon="coins"
+          title={view === "pending" ? t("emptyPending") : t("emptyHistory")}
+        />
       ) : (
         <FundRequestsInlineList
-          requests={fundRequests ?? []}
+          requests={(fundRequests ?? []) as unknown as FundRequestRow[]}
           showActions={view === "pending"}
         />
       )}

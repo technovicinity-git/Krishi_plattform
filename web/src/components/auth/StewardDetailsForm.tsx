@@ -2,11 +2,12 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Link, useRouter } from "@/i18n/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { useDialog } from "@/components/ui/dialog-provider";
 import { FormInput } from "./FormInput";
 import { FormSelect } from "./FormSelect";
 import { FormTextarea } from "./FormTextarea";
+import { BackLink } from "@/components/ui/BackLink";
 
 interface Division {
   id: string;
@@ -38,6 +39,8 @@ export function StewardDetailsForm({
   districts: District[];
 }) {
   const t = useTranslations("stewardRegister.step2");
+  const tf = useTranslations("app.forms");
+  const tcm = useTranslations("app.common");
   const router = useRouter();
   const { alert } = useDialog();
 
@@ -72,10 +75,10 @@ export function StewardDetailsForm({
     e.preventDefault();
     setError(null);
 
-    if (!divisionId) return setError("Please choose a division.");
-    if (!districtId) return setError("Please choose a district.");
-    if (categories.length === 0) return setError("Select at least one livestock category.");
-    if (experience.trim().length < 10) return setError("Please describe your experience (at least 10 characters).");
+    if (!divisionId) return setError(tf("chooseDivision"));
+    if (!districtId) return setError(tf("chooseDistrict"));
+    if (categories.length === 0) return setError(tf("chooseCategory"));
+    if (experience.trim().length < 10) return setError(tf("describeExperience"));
 
     setSubmitting(true);
 
@@ -96,7 +99,7 @@ export function StewardDetailsForm({
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok) {
-        setError(data.error ?? "Failed to submit");
+        setError(data.error ?? tf("failedSubmit"));
         setSubmitting(false);
         return;
       }
@@ -104,7 +107,7 @@ export function StewardDetailsForm({
       router.push("/steward/submitted");
       router.refresh();
     } catch {
-      setError("Network error. Please try again.");
+      setError(tcm("networkError"));
       setSubmitting(false);
     }
   };
@@ -124,12 +127,12 @@ export function StewardDetailsForm({
         </div>
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center gap-2">
-            <span className="text-[11px] font-bold uppercase tracking-[0.02em] text-terracotta">
+            <span className="text-[11px] font-bold uppercase tracking-[0.02em] text-brand">
               {t("stepperStep2")}
             </span>
             <span className="text-[11px] text-ink-muted">{t("stepperCurrent")}</span>
           </div>
-          <div className="h-0.5 w-full rounded bg-terracotta" />
+          <div className="h-0.5 w-full rounded bg-brand" />
         </div>
       </div>
 
@@ -146,7 +149,7 @@ export function StewardDetailsForm({
       <div className="flex flex-col gap-2">
         <span className="text-[14px] font-semibold text-ink-nav">
           {t("typeLabel")}
-          <span className="ml-1 text-terracotta">*</span>
+          <span className="ml-1 text-brand">*</span>
         </span>
         <div className="grid grid-cols-2 gap-0 rounded-[8px] border border-border-light bg-stone p-1">
           {(["individual", "organization"] as const).map((opt) => (
@@ -215,7 +218,7 @@ export function StewardDetailsForm({
         <div className="flex flex-col gap-1">
           <span className="text-[14px] font-semibold text-ink-nav">
             {t("categoriesLabel")}
-            <span className="ml-1 text-terracotta">*</span>
+            <span className="ml-1 text-brand">*</span>
           </span>
           <span className="text-[12px] text-ink-secondary">
             {t("categoriesHelper")}
@@ -231,13 +234,13 @@ export function StewardDetailsForm({
                 onClick={() => toggleCategory(cat)}
                 className={`inline-flex items-center gap-2 rounded-[8px] border px-4 py-2.5 text-[13px] font-medium transition-colors ${
                   selected
-                    ? "border-terracotta bg-[#FAF0ED] text-terracotta"
+                    ? "border-brand bg-brand-tint text-brand"
                     : "border-border-light bg-white text-ink-secondary hover:bg-stone"
                 }`}
               >
                 <span
                   className={`flex h-4 w-4 items-center justify-center rounded-[3px] border ${
-                    selected ? "border-terracotta bg-terracotta" : "border-border-light"
+                    selected ? "border-brand bg-brand" : "border-border-light"
                   }`}
                   aria-hidden="true"
                 >
@@ -277,20 +280,14 @@ export function StewardDetailsForm({
       <button
         type="submit"
         disabled={submitting}
-        className="inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-[8px] bg-terracotta text-[15px] font-bold text-white transition-colors hover:bg-[#B3634A] disabled:opacity-60"
+        className="inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-[8px] bg-brand text-[15px] font-bold text-white transition-colors hover:bg-brand-hover disabled:opacity-60"
       >
         {submitting ? t("submitting") : t("submit")}
         {!submitting && <span aria-hidden="true">→</span>}
       </button>
 
       <div>
-        <Link
-          href="/steward/register"
-          className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-ink-nav hover:text-ink"
-        >
-          <span aria-hidden="true">←</span>
-          {t("back")}
-        </Link>
+        <BackLink href="/steward/register">{t("back")}</BackLink>
       </div>
     </form>
   );

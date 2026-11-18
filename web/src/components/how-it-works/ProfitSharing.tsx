@@ -8,7 +8,7 @@ import { CheckCircle } from "@/components/icons";
 const INFO_KEYS = ["farmer", "investor", "platform", "steward"] as const;
 const CHART = [
   { key: "farmer", value: "60%", color: "bg-green-olive", text: "text-green-olive", width: "60%" },
-  { key: "investor", value: "30%", color: "bg-terracotta", text: "text-terracotta", width: "30%" },
+  { key: "investor", value: "30%", color: "bg-brand", text: "text-brand", width: "30%" },
   { key: "platform", value: "5%", color: "bg-ink", text: "text-ink", width: "5%" },
   { key: "steward", value: "5%", color: "bg-ink-tertiary", text: "text-ink-tertiary", width: "5%" },
 ] as const;
@@ -48,7 +48,7 @@ export function ProfitSharing() {
                   </li>
                 ))}
               </ul>
-              <p className="text-[12px] italic text-terracotta">
+              <p className="text-[12px] italic text-brand">
                 {t("info.footnote")}
               </p>
             </div>

@@ -19,7 +19,7 @@ export default function InterestNotApprovedPage() {
         rows={[
           { label: t("rowOpportunity"), value: "Cow Fattening Plan" },
           { label: t("rowIntendedUnits"), value: "2 Units" },
-          { label: t("rowIntendedInvestment"), value: "৳2,00,000", valueTone: "terracotta" },
+          { label: t("rowIntendedInvestment"), value: "৳2,00,000", valueTone: "brand" },
         ]}
         primaryAction={{ label: t("primaryAction"), href: "/plans", variant: "dark" }}
         secondaryAction={{ label: t("secondaryAction"), href: "/contact" }}

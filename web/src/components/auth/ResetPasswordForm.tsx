@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { passwordSchema } from "@/lib/auth/schemas";
+import { BackButton } from "@/components/ui/BackLink";
 import { OTPInput } from "./OTPInput";
 import { FormPasswordInput } from "./FormPasswordInput";
 
@@ -12,6 +13,9 @@ type Step = "otp" | "password";
 
 export function ResetPasswordForm() {
   const t = useTranslations("auth.reset");
+  const tErr = useTranslations("errors");
+  const tf = useTranslations("app.forms");
+  const tcm = useTranslations("app.common");
   const router = useRouter();
   const searchParams = useSearchParams();
   const phone = searchParams.get("phone") ?? "";
@@ -61,7 +65,7 @@ export function ResetPasswordForm() {
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok) {
-        setError(data.error ?? t("errors.invalidOtp"));
+        setError(data.error ?? tErr("invalidOtp"));
         setSubmitting(false);
         return;
       }
@@ -71,7 +75,7 @@ export function ResetPasswordForm() {
       setSubmitting(false);
       setStep("password");
     } catch {
-      setError("Network error. Please try again.");
+      setError(tcm("networkError"));
       setSubmitting(false);
     }
   };
@@ -82,7 +86,7 @@ export function ResetPasswordForm() {
 
     const parsed = passwordSchema.safeParse(password);
     if (!parsed.success) {
-      setError(parsed.error.issues[0]?.message ?? t("errors.generic"));
+      setError(parsed.error.issues[0]?.message ?? tErr("generic"));
       return;
     }
     if (password !== confirmPassword) {
@@ -100,7 +104,7 @@ export function ResetPasswordForm() {
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok) {
-        setError(data.error ?? "Failed to update password");
+        setError(data.error ?? tf("failedPassword"));
         setSubmitting(false);
         return;
       }
@@ -108,7 +112,7 @@ export function ResetPasswordForm() {
       router.push("/login?reset=success");
       router.refresh();
     } catch {
-      setError("Network error. Please try again.");
+      setError(tcm("networkError"));
       setSubmitting(false);
     }
   };
@@ -155,16 +159,16 @@ export function ResetPasswordForm() {
         </div>
 
         {devOtp && (
-          <div className="rounded-[8px] border-2 border-dashed border-terracotta bg-[#FAF0ED] px-4 py-3">
+          <div className="rounded-[8px] border-2 border-dashed border-brand bg-brand-tint px-4 py-3">
             <div className="flex items-center gap-2">
-              <span className="rounded-[3px] bg-terracotta px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.02em] text-white">
+              <span className="rounded-[3px] bg-brand px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.02em] text-white">
                 Dev Mode
               </span>
               <span className="text-[12px] text-ink-secondary">
                 SMS not sent — OTP for testing:
               </span>
             </div>
-            <div className="mt-1.5 text-[24px] font-bold tracking-[0.15em] text-terracotta">
+            <div className="mt-1.5 text-[24px] font-bold tracking-[0.15em] text-brand">
               {devOtp}
             </div>
           </div>
@@ -187,7 +191,7 @@ export function ResetPasswordForm() {
         <button
           type="submit"
           disabled={!isCodeComplete || submitting}
-          className="inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-[8px] bg-terracotta text-[15px] font-bold text-white transition-colors hover:bg-[#B3634A] disabled:opacity-60"
+          className="inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-[8px] bg-brand text-[15px] font-bold text-white transition-colors hover:bg-brand-hover disabled:opacity-60"
         >
           {submitting ? t("otpSubmitting") : t("otpSubmit")}
           {!submitting && <span aria-hidden="true">→</span>}
@@ -255,25 +259,22 @@ export function ResetPasswordForm() {
       <button
         type="submit"
         disabled={submitting}
-        className="inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-[8px] bg-terracotta text-[15px] font-bold text-white transition-colors hover:bg-[#B3634A] disabled:opacity-60"
+        className="inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-[8px] bg-brand text-[15px] font-bold text-white transition-colors hover:bg-brand-hover disabled:opacity-60"
       >
         {submitting ? t("pwSubmitting") : t("pwSubmit")}
         {!submitting && <span aria-hidden="true">→</span>}
       </button>
 
       <div className="flex justify-center border-t border-border-light pt-6">
-        <button
-          type="button"
+        <BackButton
           onClick={() => {
             setStep("otp");
             setCode(Array(6).fill(""));
             setError(null);
           }}
-          className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-ink-nav hover:text-ink"
         >
-          <span aria-hidden="true">←</span>
           {t("changeCode")}
-        </button>
+        </BackButton>
       </div>
     </form>
   );

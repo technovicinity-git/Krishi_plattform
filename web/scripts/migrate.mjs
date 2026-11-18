@@ -12,7 +12,13 @@
  *   - SSL is enforced
  *
  * Usage:
- *   npm run db:migrate
+ *   npm run db:migrate            apply pending migrations
+ *   npm run db:status             list pending migrations, apply nothing
+ *
+ * Checksums are taken over the file with LF line endings, so a Windows
+ * checkout (CRLF) and a Unix checkout of the same file match. Rows recorded
+ * by older versions of this script from a CRLF checkout are recognised and
+ * upgraded to the LF checksum.
  */
 
 import postgres from "postgres";
@@ -28,11 +34,13 @@ if (typeof window !== "undefined") {
   throw new Error("Migration script must only run on the server");
 }
 
+const STATUS_ONLY = process.argv.includes("--status");
+
 // Guard 2: fail fast if the connection string is missing.
 const DATABASE_URL = process.env.DATABASE_URL;
 if (!DATABASE_URL) {
   console.error("\n✗ DATABASE_URL is not set.");
-  console.error("  Add it to web/.env.local — see .env.local.example\n");
+  console.error("  Add it to web/.env (or web/.env.local) - see .env.example\n");
   process.exit(1);
 }
 
@@ -90,25 +98,44 @@ async function main() {
 
     let appliedCount = 0;
     let skippedCount = 0;
+    let upgradedCount = 0;
+    const pending = [];
+
+    const sha256 = (text) => createHash("sha256").update(text).digest("hex");
 
     for (const filename of files) {
       const path = join(migrationsDir, filename);
       if (!statSync(path).isFile()) continue;
 
-      const content = readFileSync(path, "utf8");
-      const checksum = createHash("sha256").update(content).digest("hex");
+      // Normalise line endings so CRLF and LF checkouts hash the same.
+      const content = readFileSync(path, "utf8").replace(/\r\n/g, "\n");
+      const checksum = sha256(content);
 
       const existingChecksum = appliedMap.get(filename);
 
       // Already applied → verify the file hasn't been edited.
       if (existingChecksum !== undefined) {
         if (existingChecksum !== checksum) {
-          console.error(`\n✗ Checksum mismatch for ${filename}`);
-          console.error("  This migration was already applied with different content.");
-          console.error("  Do not edit applied migrations. Create a new one instead.");
-          process.exit(1);
+          // Recorded from a CRLF checkout by an older runner: same SQL.
+          const legacy = sha256(content.replace(/\n/g, "\r\n"));
+          if (existingChecksum === legacy) {
+            if (!STATUS_ONLY) {
+              await sql`update _migrations set checksum = ${checksum} where filename = ${filename}`;
+            }
+            upgradedCount++;
+          } else {
+            console.error(`\n✗ Checksum mismatch for ${filename}`);
+            console.error("  This migration was already applied with different content.");
+            console.error("  Do not edit applied migrations. Create a new one instead.");
+            process.exit(1);
+          }
         }
         skippedCount++;
+        continue;
+      }
+
+      if (STATUS_ONLY) {
+        pending.push(filename);
         continue;
       }
 
@@ -134,7 +161,17 @@ async function main() {
       }
     }
 
-    console.log(`\n✓ Done.  Applied: ${appliedCount}  Skipped: ${skippedCount}`);
+    if (upgradedCount) {
+      console.log(
+        `→ ${upgradedCount} checksum(s) recorded with Windows line endings ${STATUS_ONLY ? "will be" : "were"} normalised (same SQL).`,
+      );
+    }
+    if (STATUS_ONLY) {
+      console.log(`\n✓ Applied: ${skippedCount}  Pending: ${pending.length}`);
+      for (const f of pending) console.log(`  • ${f}`);
+    } else {
+      console.log(`\n✓ Done.  Applied: ${appliedCount}  Skipped: ${skippedCount}`);
+    }
   } finally {
     await sql`select pg_advisory_unlock(${ADVISORY_LOCK_KEY})`;
     await sql.end();

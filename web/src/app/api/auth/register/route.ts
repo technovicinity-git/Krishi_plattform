@@ -5,6 +5,8 @@ import { hashPassword } from "@/lib/auth/password";
 import { generateOtp, hashOtp, getOtpExpiry } from "@/lib/auth/otp";
 import { setSessionCookie } from "@/lib/auth/session";
 import { toE164, isValidBDPhone } from "@/lib/auth/phone";
+import { showOtpOnScreen } from "@/lib/auth/dev-flags";
+import { LIMITS, clientIp, tooManyRequests, withinLimits } from "@/lib/security/rate-limit";
 
 export const runtime = "nodejs";
 
@@ -32,6 +34,9 @@ export async function POST(request: Request) {
 
     const { fullName, phone, email, password } = parsed.data;
     const e164 = toE164(phone);
+    if (!(await withinLimits(LIMITS.register(clientIp(request), e164)))) {
+      return tooManyRequests(3600);
+    }
     const admin = createAdminClient();
 
     // Phone uniqueness — return generic message to avoid enumeration.
@@ -87,7 +92,7 @@ export async function POST(request: Request) {
     }
 
     // Dev-only plaintext log for the on-screen banner.
-    if (process.env.DEV_SHOW_OTP === "true") {
+    if (showOtpOnScreen()) {
       await admin.from("dev_otps").insert({ phone: e164, otp });
       console.log(`[DEV] OTP for ${e164}: ${otp}`);
     }

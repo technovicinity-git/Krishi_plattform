@@ -26,8 +26,8 @@ export function Transparency() {
     },
     {
       key: "reserve" as const,
-      barColor: "bg-terracotta",
-      amountColor: "text-terracotta",
+      barColor: "bg-brand",
+      amountColor: "text-brand",
       width: "10%",
     },
   ];

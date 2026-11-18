@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import {
   createContext,
   useCallback,
@@ -53,6 +54,7 @@ export function useDialog(): DialogContextValue {
 }
 
 export function DialogProvider({ children }: { children: React.ReactNode }) {
+  const tc = useTranslations("app.common");
   const [dialog, setDialog] = useState<DialogState | null>(null);
 
   const confirm = useCallback(
@@ -62,13 +64,13 @@ export function DialogProvider({ children }: { children: React.ReactNode }) {
           kind: "confirm",
           title: options.title,
           message: options.message,
-          confirmLabel: options.confirmLabel ?? "Confirm",
-          cancelLabel: options.cancelLabel ?? "Cancel",
+          confirmLabel: options.confirmLabel ?? tc("confirm"),
+          cancelLabel: options.cancelLabel ?? tc("cancel"),
           variant: options.variant ?? "default",
           resolve,
         });
       }),
-    [],
+    [tc],
   );
 
   const alert = useCallback(
@@ -78,12 +80,12 @@ export function DialogProvider({ children }: { children: React.ReactNode }) {
           kind: "alert",
           title: options.title,
           message: options.message,
-          confirmLabel: options.confirmLabel ?? "OK",
+          confirmLabel: options.confirmLabel ?? tc("ok"),
           variant: options.variant ?? "default",
           resolve: () => resolve(),
         });
       }),
-    [],
+    [tc],
   );
 
   const handleClose = useCallback(
@@ -133,6 +135,7 @@ function Dialog({
   variant: Variant;
   onClose: (value: boolean) => void;
 }) {
+  const tc = useTranslations("app.common");
   const confirmBtnRef = useRef<HTMLButtonElement>(null);
   const cancelBtnRef = useRef<HTMLButtonElement>(null);
 
@@ -165,7 +168,7 @@ function Dialog({
 
   const accent = {
     default: { ring: "bg-stone text-ink", btn: "bg-ink hover:bg-[#2A2A2A]" },
-    danger: { ring: "bg-[#FAF0ED] text-terracotta", btn: "bg-terracotta hover:bg-[#B3634A]" },
+    danger: { ring: "bg-[#FAF0ED] text-danger", btn: "bg-danger hover:bg-[#8A2F20]" },
     success: { ring: "bg-[#E8F0EA] text-green-deep", btn: "bg-green-deep hover:bg-[#24492F]" },
     info: { ring: "bg-stone text-ink", btn: "bg-ink hover:bg-[#2A2A2A]" },
   }[variant];
@@ -181,7 +184,7 @@ function Dialog({
       {/* Backdrop */}
       <button
         type="button"
-        aria-label="Close dialog"
+        aria-label={tc("closeDialog")}
         onClick={() => onClose(false)}
         className="absolute inset-0 cursor-default bg-black/40 backdrop-blur-[2px]"
       />

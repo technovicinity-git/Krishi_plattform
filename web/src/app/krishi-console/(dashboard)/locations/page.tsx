@@ -1,5 +1,6 @@
 import { requireAdmin } from "@/lib/admin/current-admin";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { PageHeader } from "@/components/dashboard/ui";
 
 export default async function AdminLocationsPage() {
   await requireAdmin();
@@ -24,15 +25,11 @@ export default async function AdminLocationsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <h1 className="font-serif text-[28px] leading-tight text-ink">
-          Locations
-        </h1>
-        <p className="text-[13px] text-ink-secondary">
-          Divisions and districts used when creating investment plans. This
-          list is fixed — 8 divisions, 64 districts.
-        </p>
-      </div>
+      <PageHeader
+        title={<>Locations</>}
+        description={<>Divisions and districts used when creating investment plans. This
+          list is fixed — 8 divisions, 64 districts.</>}
+      />
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         {(divisions ?? []).map((div) => {

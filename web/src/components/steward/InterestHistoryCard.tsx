@@ -1,40 +1,28 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
+import { useLocale, useTranslations } from "next-intl";
+import type { StewardInterestRow } from "./types";
+
+import { StatusBadge, toneFor } from "@/components/dashboard/ui";
 
 interface Props {
-  interest: any;
+  interest: StewardInterestRow;
 }
 
-const STATUS_LABEL: Record<string, string> = {
-  approved: "Approved",
-  not_approved: "Not Approved",
-  onboarding: "Onboarding",
-  converted: "Converted",
-  expired: "Expired",
-  cancelled: "Cancelled",
-};
-
-const STATUS_STYLE: Record<string, string> = {
-  approved: "bg-[#E8F0EA] text-green-deep",
-  not_approved: "bg-[#F5EBE6] text-terracotta",
-  onboarding: "bg-[#FEF6E5] text-[#C48A2E]",
-  converted: "bg-[#E8F0EA] text-green-deep",
-  expired: "bg-stone text-ink-muted",
-  cancelled: "bg-stone text-ink-muted",
-};
-
 export function InterestHistoryCard({ interest }: Props) {
+  const t = useTranslations("app.interestCard");
+  const ts = useTranslations("app.status");
+  const locale = useLocale();
   const investorName =
-    interest.investor?.full_name || interest.guest_name || "Guest";
+    interest.investor?.full_name || interest.guest_name || t("guest");
   const investorPhone =
     interest.investor?.phone || interest.guest_phone || "—";
+  const plan = interest.offering?.investment_plans;
   const planName =
-    interest.offering?.investment_plans?.name_en ?? "Unknown plan";
-  const statusStyle =
-    STATUS_STYLE[interest.status] ?? "bg-stone text-ink-muted";
-  const statusLabel = STATUS_LABEL[interest.status] ?? interest.status;
+    (locale === "bn" ? plan?.name_bn : plan?.name_en) ?? plan?.name_en ?? t("unknownPlan");
+  const statusLabel = ts.has(interest.status) ? ts(interest.status) : interest.status;
 
   return (
-    <div className="flex flex-col gap-4 rounded-xl border border-border-light bg-white p-6">
+    <div className="flex flex-col gap-4 rounded-2xl border border-border-light bg-white p-6">
       <div className="flex items-start justify-between gap-4">
         <div>
           <span className="text-[10px] font-bold uppercase tracking-[0.02em] text-ink-muted">
@@ -42,30 +30,26 @@ export function InterestHistoryCard({ interest }: Props) {
           </span>
           <h3 className="mt-1 font-serif text-[20px] text-ink">{planName}</h3>
         </div>
-        <span
-          className={`inline-flex rounded px-2 py-1 text-[10px] font-bold uppercase ${statusStyle}`}
-        >
-          {statusLabel}
-        </span>
+        <StatusBadge tone={toneFor(interest.status)}>{statusLabel}</StatusBadge>
       </div>
 
       <div className="grid grid-cols-2 gap-4 border-y border-border-light py-3 text-[13px]">
         <div>
-          <span className="text-ink-muted">Investor</span>
+          <span className="text-ink-muted">{t("investor")}</span>
           <div className="font-semibold text-ink">{investorName}</div>
           <div className="text-[11px] text-ink-secondary">{investorPhone}</div>
         </div>
         <div>
-          <span className="text-ink-muted">Requested Units</span>
+          <span className="text-ink-muted">{t("requestedUnits")}</span>
           <div className="font-bold text-ink">
-            {interest.requested_units} Units
+            {t("unitsCount", { count: interest.requested_units })}
           </div>
         </div>
       </div>
 
       {interest.rejection_reason && interest.status === "not_approved" && (
         <p className="text-[12px] text-[#A13D2B]">
-          <strong>Reason:</strong> {interest.rejection_reason}
+          <strong>{t("reason")}</strong> {interest.rejection_reason}
         </p>
       )}
 
@@ -73,7 +57,7 @@ export function InterestHistoryCard({ interest }: Props) {
         href={`/interest/${interest.reference}`}
         className="inline-flex h-[40px] items-center justify-center rounded-[4px] border border-border-light text-[12px] font-semibold text-ink-nav hover:bg-stone"
       >
-        View status page →
+        {t("viewStatus")}
       </Link>
     </div>
   );

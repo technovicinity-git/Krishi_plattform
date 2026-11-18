@@ -53,11 +53,11 @@ krishi-platform-main/
 
 ```bash
 cd web
-npm install
-cp .env.example .env.local   # then fill in the values
-npm run db:migrate
-npm run seed:admin -- admin@example.com "a-long-password" "Krishi Admin"
-npm run dev
+yarn install                 # the project uses yarn (yarn.lock)
+cp .env.example .env         # then fill in the values
+yarn db:migrate
+yarn seed:admin admin@example.com "a-long-password" "Krishi Admin"
+yarn dev
 ```
 
 Required variables in `web/.env.local`:
@@ -69,6 +69,7 @@ Required variables in `web/.env.local`:
 | `SUPABASE_SECRET_KEY` | Service-role key, **server only** |
 | `DATABASE_URL` | Session-pooler Postgres URL, used only by the scripts |
 | `KRISHI_SESSION_SECRET` | Session signing key, 32+ characters |
+| `SSLCOMMERZ_STORE_ID` / `SSLCOMMERZ_STORE_PASSWORD` / `SSLCOMMERZ_SANDBOX` | Online payments (optional; see docs/development.md) |
 | `DEV_SHOW_OTP` | Optional, dev only: set to `true` to show OTPs on screen (there is no SMS provider yet) |
 
 Generate a session secret with:
@@ -89,6 +90,8 @@ Run from `web/`:
 | `npm run build` / `npm start` | Production build / serve |
 | `npm run lint` | ESLint |
 | `npm run db:migrate` | Apply pending SQL migrations from `web/supabase/migrations/` |
+| `npm run db:status` | Show applied and pending migrations without changing anything |
+| `yarn test` | Run the automated tests (money rules, safety switches) |
 | `npm run seed:admin -- <email> <password> [name]` | Create or update an admin (password 12+ characters) |
 
 Never edit a migration that has already been applied. Add a new file instead. See [docs/development.md](docs/development.md) for details.

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/current-user";
+import { notify } from "@/lib/notifications/notify";
 
 export const runtime = "nodejs";
 
@@ -30,7 +31,7 @@ export async function PATCH(
   const { data: fundReq } = await db
     .from("fund_requests")
     .select(`
-      id, investment_id, amount, purpose, status,
+      id, investment_id, amount, purpose, status, reference, farmer_id,
       investment:investments!investment_id (
         offering:steward_plan_offerings!offering_id ( steward_id )
       )
@@ -40,7 +41,9 @@ export async function PATCH(
 
   if (!fundReq) return NextResponse.json({ error: "Request not found" }, { status: 404 });
   
-  const stewardId = (fundReq.investment as any)?.offering?.steward_id;
+  const stewardId = (
+    fundReq.investment as unknown as { offering: { steward_id: string } | null } | null
+  )?.offering?.steward_id;
   if (stewardId !== user.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }
@@ -76,6 +79,16 @@ export async function PATCH(
       : `Rejected request for ${fundReq.purpose}. Reason: ${parsed.data.reason || "None"}`,
     amount: isApproved ? fundReq.amount : null,
   });
+
+  await notify(
+    isApproved ? "fund_approved" : "fund_rejected",
+    { userId: fundReq.farmer_id, href: `/farmer/investments/${fundReq.investment_id}` },
+    {
+      reference: fundReq.reference,
+      amount: Number(fundReq.amount),
+      reason: isApproved ? undefined : parsed.data.reason || undefined,
+    },
+  );
 
   return NextResponse.json({ success: true });
 }

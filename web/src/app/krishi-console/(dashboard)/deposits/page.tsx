@@ -1,10 +1,29 @@
-import Link from "next/link";
 import { requireAdmin } from "@/lib/admin/current-admin";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { DepositApprovalActions } from "@/components/admin/DepositApprovalActions";
 import { formatBDT } from "@/lib/utils";
+import { signFileUrls } from "@/lib/storage/private-files";
+import { EmptyState, PageHeader, Tabs } from "@/components/dashboard/ui";
 
 export const dynamic = "force-dynamic";
+
+interface DepositRow {
+  id: string;
+  reference: string;
+  amount: number;
+  status: string;
+  method: string;
+  txn_id: string | null;
+  sender_number: string | null;
+  proof_path: string | null;
+  rejection_reason: string | null;
+  created_at: string;
+  investor: { full_name: string | null; phone: string | null } | null;
+  interest: {
+    reference: string;
+    offering: { investment_plans: { name_en: string | null } | null } | null;
+  } | null;
+}
 
 export default async function AdminDepositsPage({
   searchParams,
@@ -33,43 +52,30 @@ export default async function AdminDepositsPage({
     .in("status", statuses)
     .order("created_at", { ascending: false });
 
+  const proofUrls = await signFileUrls(
+    ((deposits ?? []) as unknown as DepositRow[]).map((d) => d.proof_path),
+  );
+
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <h1 className="font-serif text-[28px] leading-tight text-ink">Deposits</h1>
-        <p className="text-[13px] text-ink-secondary">Review pending transfers and track history.</p>
-      </div>
+      <PageHeader
+        title={<>Deposits</>}
+        description={<>Review pending transfers and track history.</>}
+      />
 
-      {/* Tabs */}
-      <div className="flex gap-1 border-b border-border-light">
-        <Link
-          href="/krishi-console/deposits"
-          className={`-mb-px border-b-2 px-4 py-2.5 text-[13px] font-semibold transition-colors ${
-            view === "pending" ? "border-terracotta text-ink" : "border-transparent text-ink-muted hover:text-ink"
-          }`}
-        >
-          Pending Review
-        </Link>
-        <Link
-          href="/krishi-console/deposits?view=history"
-          className={`-mb-px border-b-2 px-4 py-2.5 text-[13px] font-semibold transition-colors ${
-            view === "history" ? "border-terracotta text-ink" : "border-transparent text-ink-muted hover:text-ink"
-          }`}
-        >
-          History
-        </Link>
-      </div>
+      <Tabs localized={false}
+        items={[
+          { label: "Pending Review", href: "/krishi-console/deposits", active: view === "pending" },
+          { label: "History", href: "/krishi-console/deposits?view=history", active: view === "history" },
+        ]}
+      />
 
       {!deposits || deposits.length === 0 ? (
-        <div className="rounded-2xl border border-border-light bg-white px-8 py-16 text-center">
-          <p className="text-[14px] text-ink-secondary">
-            {view === "pending" ? "No pending deposits at the moment." : "No historical deposits yet."}
-          </p>
-        </div>
+        <EmptyState title={view === "pending" ? "No pending deposits at the moment." : "No historical deposits yet."} />
       ) : (
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-          {deposits.map((dep: any) => (
-            <div key={dep.id} className="flex flex-col gap-4 rounded-xl border border-border-light bg-white p-6">
+          {(deposits as unknown as DepositRow[]).map((dep) => (
+            <div key={dep.id} className="flex flex-col gap-4 rounded-2xl border border-border-light bg-white p-6">
               <div className="flex items-start justify-between border-b border-border-light pb-3">
                 <div>
                   <span className="font-mono text-[12px] font-bold text-ink-muted">{dep.reference}</span>
@@ -78,10 +84,10 @@ export default async function AdminDepositsPage({
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-[20px] font-bold text-terracotta">{formatBDT(dep.amount)}</div>
-                  <div className="text-[11px] text-ink-muted">{new Date(dep.created_at).toLocaleString()}</div>
+                  <div className="text-[20px] font-bold text-brand">{formatBDT(dep.amount)}</div>
+                  <div className="text-[11px] text-ink-muted">{new Date(dep.created_at).toLocaleString("en-GB", { timeZone: "Asia/Dhaka", dateStyle: "medium", timeStyle: "short" })}</div>
                   {view === "history" && (
-                    <span className={`mt-1 inline-flex rounded px-2 py-0.5 text-[10px] font-bold uppercase ${dep.status === "approved" ? "bg-[#E8F0EA] text-green-deep" : "bg-[#F5EBE6] text-terracotta"}`}>
+                    <span className={`mt-1 inline-flex rounded px-2 py-0.5 text-[10px] font-bold uppercase ${dep.status === "approved" ? "bg-[#E8F0EA] text-green-deep" : "bg-[#FAF0ED] text-danger"}`}>
                       {dep.status}
                     </span>
                   )}
@@ -96,9 +102,11 @@ export default async function AdminDepositsPage({
                 </div>
                 <div>
                   <span className="text-ink-muted">Payment Method</span>
-                  <div className="font-semibold uppercase text-ink">{dep.method}</div>
+                  <div className="font-semibold uppercase text-ink">
+                    {dep.method === "online" ? "Online · SSLCommerz" : dep.method}
+                  </div>
                   <div className="text-ink-secondary">
-                    {dep.method === "bank" ? `TXN: ${dep.txn_id}` : `Sender: ${dep.sender_number}`}
+                    {dep.method === "mfs" ? `Sender: ${dep.sender_number}` : `TXN: ${dep.txn_id}`}
                   </div>
                 </div>
               </div>
@@ -114,10 +122,10 @@ export default async function AdminDepositsPage({
                 <div>
                   {dep.proof_path ? (
                     <a
-                      href={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/deposit-proofs/${dep.proof_path}`}
+                      href={proofUrls.get(dep.proof_path) ?? "#"}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-terracotta hover:underline"
+                      className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-brand hover:underline"
                     >
                       View Attachment
                     </a>

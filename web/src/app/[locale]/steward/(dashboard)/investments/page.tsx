@@ -1,7 +1,10 @@
+import { getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { redirect } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { AssignFarmerCard } from "@/components/steward/AssignFarmerCard";
+import { EmptyState, PageHeader } from "@/components/dashboard/ui";
+import type { StewardInvestmentRow } from "@/components/steward/types";
 
 export const dynamic = "force-dynamic";
 
@@ -9,6 +12,7 @@ export default async function StewardInvestmentsPage() {
   const user = await getCurrentUser();
   if (!user || user.role !== "steward") redirect("/login");
 
+  const t = await getTranslations("app.stewardInvestments");
   const db = createAdminClient();
 
   // Step 1: fetch all offerings for this steward
@@ -30,7 +34,7 @@ export default async function StewardInvestmentsPage() {
           farmer:users!farmer_id ( full_name ),
           offering:steward_plan_offerings!offering_id (
             id,
-            investment_plans ( name_en )
+            investment_plans ( name_en, name_bn )
           )
           `,
         )
@@ -49,30 +53,14 @@ export default async function StewardInvestmentsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <h1 className="font-serif text-[28px] leading-tight text-ink">
-          Active Investments
-        </h1>
-        <p className="text-[13px] text-ink-secondary">
-          Manage active batches, assign farmers, and track progress.
-        </p>
-      </div>
+      <PageHeader title={t("title")} description={t("subtitle")} />
 
       {!investments || investments.length === 0 ? (
-        <div className="rounded-2xl border border-border-light bg-white px-8 py-16 text-center">
-          <p className="text-[14px] text-ink-secondary">
-            You don&apos;t have any active investments yet. This appears once an
-            investor completes a deposit on one of your offerings.
-          </p>
-        </div>
+        <EmptyState icon="briefcase" title={t("empty")} />
       ) : (
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-          {investments.map((inv: any) => (
-            <AssignFarmerCard
-              key={inv.id}
-              investment={inv}
-              farmers={farmers || []}
-            />
+          {(investments as unknown as StewardInvestmentRow[]).map((inv) => (
+            <AssignFarmerCard key={inv.id} investment={inv} farmers={farmers || []} />
           ))}
         </div>
       )}

@@ -1,7 +1,7 @@
-import Link from "next/link";
 import { requireAdmin } from "@/lib/admin/current-admin";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { PlanForm } from "@/components/admin/PlanForm";
+import { BackLink } from "@/components/ui/BackLink";
 
 export default async function NewPlanPage() {
   await requireAdmin();
@@ -26,13 +26,7 @@ export default async function NewPlanPage() {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-3">
-        <Link
-          href="/krishi-console/plans"
-          className="inline-flex w-fit items-center gap-1.5 text-[12px] font-semibold text-ink-secondary hover:text-ink"
-        >
-          <span aria-hidden="true">←</span>
-          Back to Plans
-        </Link>
+        <BackLink href="/krishi-console/plans" localized={false}>Back to Plans</BackLink>
         <h1 className="font-serif text-[28px] leading-tight text-ink">
           Create Investment Plan
         </h1>

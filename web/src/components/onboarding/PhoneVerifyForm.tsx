@@ -106,7 +106,7 @@ export function PhoneVerifyForm() {
         <button
           type="button"
           onClick={handleSendOtp}
-          className="inline-flex h-[52px] w-full items-center justify-center rounded-[8px] bg-terracotta text-[15px] font-bold text-white transition-colors hover:bg-[#B3634A]"
+          className="inline-flex h-[52px] w-full items-center justify-center rounded-[8px] bg-brand text-[15px] font-bold text-white transition-colors hover:bg-brand-hover"
         >
           {t("sendOtp")}
         </button>
@@ -127,7 +127,7 @@ export function PhoneVerifyForm() {
               type="button"
               onClick={handleResend}
               disabled={!canResend}
-              className="text-[13px] font-semibold text-terracotta hover:underline disabled:cursor-not-allowed disabled:text-ink-muted disabled:no-underline"
+              className="text-[13px] font-semibold text-brand hover:underline disabled:cursor-not-allowed disabled:text-ink-muted disabled:no-underline"
             >
               {canResend
                 ? t("resendOtp")
@@ -138,7 +138,7 @@ export function PhoneVerifyForm() {
           <button
             type="submit"
             disabled={!isComplete || submitting}
-            className="inline-flex h-[52px] w-full items-center justify-center rounded-[8px] bg-terracotta text-[15px] font-bold text-white transition-colors hover:bg-[#B3634A] disabled:opacity-60"
+            className="inline-flex h-[52px] w-full items-center justify-center rounded-[8px] bg-brand text-[15px] font-bold text-white transition-colors hover:bg-brand-hover disabled:opacity-60"
           >
             {submitting ? t("verifying") : t("verifyAndContinue")}
           </button>

@@ -26,7 +26,7 @@ export function TrustIndicators() {
                 key={key}
                 className="flex flex-col gap-4 rounded-[8px] border border-border-light bg-cream p-7"
               >
-                <span className="text-[11px] font-bold uppercase leading-none tracking-[0.02em] text-terracotta">
+                <span className="text-[11px] font-bold uppercase leading-none tracking-[0.02em] text-brand">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <div className="flex flex-col gap-2">

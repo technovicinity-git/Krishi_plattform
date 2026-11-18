@@ -1,6 +1,7 @@
 import { requireAdmin } from "@/lib/admin/current-admin";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { CategoryManager } from "@/components/admin/CategoryManager";
+import { PageHeader } from "@/components/dashboard/ui";
 
 export default async function AdminCategoriesPage() {
   await requireAdmin();
@@ -36,15 +37,11 @@ export default async function AdminCategoriesPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <h1 className="font-serif text-[28px] leading-tight text-ink">
-          Livestock Categories
-        </h1>
-        <p className="text-[13px] text-ink-secondary">
-          Categories used when creating investment plans. Deactivate to hide
-          from plan creation without deleting existing records.
-        </p>
-      </div>
+      <PageHeader
+        title={<>Livestock Categories</>}
+        description={<>Categories used when creating investment plans. Deactivate to hide
+          from plan creation without deleting existing records.</>}
+      />
 
       <CategoryManager categories={rows} />
     </div>

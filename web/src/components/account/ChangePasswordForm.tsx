@@ -1,10 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { useDialog } from "@/components/ui/dialog-provider";
 import { FormPasswordInput } from "@/components/auth/FormPasswordInput";
 
 export function ChangePasswordForm() {
+  const t = useTranslations("app.passwordForm");
+  const tc = useTranslations("app.common");
   const { alert } = useDialog();
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -17,7 +20,7 @@ export function ChangePasswordForm() {
     setError(null);
 
     if (newPassword !== confirmPassword) {
-      setError("Passwords do not match");
+      setError(t("mismatch"));
       return;
     }
 
@@ -31,13 +34,13 @@ export function ChangePasswordForm() {
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok) {
-        setError(data.error ?? "Failed to change password");
+        setError(data.error ?? t("failed"));
         setSubmitting(false);
         return;
       }
 
       await alert({
-        title: "Password changed",
+        title: t("changed"),
         variant: "success",
       });
       setCurrentPassword("");
@@ -45,7 +48,7 @@ export function ChangePasswordForm() {
       setConfirmPassword("");
       setSubmitting(false);
     } catch {
-      setError("Network error. Please try again.");
+      setError(tc("networkError"));
       setSubmitting(false);
     }
   };
@@ -53,7 +56,7 @@ export function ChangePasswordForm() {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
       <FormPasswordInput
-        label="Current Password"
+        label={t("current")}
         name="currentPassword"
         value={currentPassword}
         onChange={setCurrentPassword}
@@ -61,16 +64,16 @@ export function ChangePasswordForm() {
         autoComplete="current-password"
       />
       <FormPasswordInput
-        label="New Password"
+        label={t("new")}
         name="newPassword"
         value={newPassword}
         onChange={setNewPassword}
         required
         autoComplete="new-password"
-        helper="Use at least 8 characters with at least one letter and one number."
+        helper={t("helper")}
       />
       <FormPasswordInput
-        label="Confirm New Password"
+        label={t("confirm")}
         name="confirmPassword"
         value={confirmPassword}
         onChange={setConfirmPassword}
@@ -88,9 +91,9 @@ export function ChangePasswordForm() {
         <button
           type="submit"
           disabled={submitting}
-          className="inline-flex h-[42px] items-center justify-center rounded-[8px] bg-ink px-6 text-[13px] font-bold text-white hover:bg-[#2A2A2A] disabled:opacity-60"
+          className="inline-flex h-[42px] items-center justify-center rounded-[8px] bg-brand px-6 text-[13px] font-bold text-white hover:bg-brand-hover disabled:opacity-60"
         >
-          {submitting ? "Updating..." : "Change Password"}
+          {submitting ? t("updating") : t("submit")}
         </button>
       </div>
     </form>

@@ -12,7 +12,7 @@ const variantMap: Record<BadgeVariant, string> = {
   success: "bg-green-deep text-white px-[10px] py-[5px] text-[9px]",
   neutral: "bg-stone text-ink-secondary px-[10px] py-[5px] text-[9px]",
   approved: "bg-[#E8F0EA] text-green-deep px-[10px] py-[5px] text-[9px]",
-  funded: "bg-[#F5EBE6] text-terracotta px-[10px] py-[5px] text-[9px]",
+  funded: "bg-brand-tint text-brand px-[10px] py-[5px] text-[9px]",
 };
 
 export function Badge({
