@@ -1,23 +1,10 @@
 import type { Metadata } from "next";
-import { Inter, DM_Serif_Display } from "next/font/google";
+import { dmSerif, inter } from "@/fonts";
 import "../globals.css";
 import { NextIntlClientProvider } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { DialogProvider } from "@/components/ui/dialog-provider";
 import messages from "@/messages/en.json";
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-});
-
-const dmSerif = DM_Serif_Display({
-  weight: "400",
-  subsets: ["latin"],
-  variable: "--font-dm-serif",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "Krishi Console",

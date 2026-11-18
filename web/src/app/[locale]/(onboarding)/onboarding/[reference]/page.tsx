@@ -61,9 +61,13 @@ export default async function OnboardingWizardPage({
   const { data: accounts } = await db.from("platform_accounts").select("*").eq("is_active", true);
 
   const t = await getTranslations("app.onboardingWizard");
-  const plan = interest.offering?.investment_plans;
+  // Supabase types many-to-one joins as arrays; at runtime they are objects.
+  const offering = interest.offering as unknown as {
+    investment_plans: { name_en: string | null; name_bn: string | null; unit_price: number | null } | null;
+  } | null;
+  const plan = offering?.investment_plans;
   const planName = (locale === "bn" ? plan?.name_bn : plan?.name_en) ?? plan?.name_en ?? t("defaultPlanName");
-  const unitPrice = Number(interest.offering?.investment_plans?.unit_price ?? 0);
+  const unitPrice = Number(plan?.unit_price ?? 0);
   const totalAmount = unitPrice * interest.requested_units;
 
   return (

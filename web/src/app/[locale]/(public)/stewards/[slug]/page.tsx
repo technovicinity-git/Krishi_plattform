@@ -39,6 +39,13 @@ export default async function StewardProfilePage({
     ? steward.steward_profiles[0]
     : steward.steward_profiles;
 
+  // Supabase may type this many-to-one join as an array; normalise it.
+  const rawDistrict = profile?.districts as unknown;
+  const district = (Array.isArray(rawDistrict) ? rawDistrict[0] : rawDistrict) as
+    | { name_en: string | null; name_bn: string | null }
+    | null
+    | undefined;
+
   const allOfferings = steward.steward_plan_offerings ?? [];
   const activeOfferings = allOfferings.filter(
     (o: any) =>
@@ -46,7 +53,7 @@ export default async function StewardProfilePage({
   );
 
   const operatingArea = profile
-    ? [profile.upazila, (bn ? profile.districts?.name_bn : null) ?? profile.districts?.name_en].filter(Boolean).join(", ")
+    ? [profile.upazila, (bn ? district?.name_bn : null) ?? district?.name_en].filter(Boolean).join(", ")
     : t("bangladesh");
 
   const categories: string[] = profile?.categories ?? [];
