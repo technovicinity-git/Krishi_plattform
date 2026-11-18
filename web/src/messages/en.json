@@ -1647,6 +1647,30 @@
     }
   },
   "app": {
+    "farmerSales": {
+      "title": "Sales",
+      "subtitle": "Record a sale when your animals are sold, then send the money to Krishi. Your profit share is added to your wallet when the batch is settled.",
+      "totalSold": "Total sold",
+      "toSend": "Money to send",
+      "yourShare": "Your profit share",
+      "empty": "No sales yet.",
+      "emptyHint": "Once a batch reaches Growing & Care you can record its sale here.",
+      "sendHeading": "Send money to Krishi",
+      "sendHint": "Your steward confirmed these sales. Send the full sale money and submit the transfer details.",
+      "readyHeading": "Ready to sell",
+      "readyHint": "Batches you are raising. Record the sale after the animals are sold.",
+      "waitingHeading": "Waiting",
+      "waitingHint": "Waiting for your steward to confirm the sale, or for Krishi to confirm your payment.",
+      "settledHeading": "Settled",
+      "soldOn": "sold {date}",
+      "soldFor": "Sold for {amount}",
+      "notConfirmed": "Payment not confirmed: {reason}",
+      "sentBack": "Sent back by steward: {reason}",
+      "animalsActive": "{count, plural, one {# animal} other {# animals}} to sell",
+      "units": "{count, plural, one {# unit} other {# units}}",
+      "yourShareLabel": "Your share",
+      "lossNoShare": "Loss — no share"
+    },
     "onlinePayment": {
       "title": "Pay online",
       "body": "Card, bKash, Nagad, Rocket or internet banking through SSLCommerz. Your investment starts as soon as the payment is confirmed.",
