@@ -42,7 +42,9 @@ export type NotificationKind =
   | "offering_paused"
   | "offering_closed"
   | "offering_rejected"
-  | "offering_units";
+  | "offering_units"
+  | "settlement_corrected_payout"
+  | "settlement_corrected_share";
 
 export interface NotificationParams {
   reference?: string;

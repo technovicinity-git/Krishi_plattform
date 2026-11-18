@@ -89,7 +89,9 @@ export async function investmentStatementPdf(
   pdf.keyValues([
     [t("animalBudget"), money(inv.stats.animalBudgetTotal)],
     [t("careBudget"), money(inv.stats.careBudgetTotal)],
-    [t("fundsReleased"), money(inv.stats.fundsDisbursed)],
+    [t("animalPurchase"), money(inv.stats.purchaseCost)],
+    [t("fundRequestsApproved"), money(inv.stats.fundsDisbursed)],
+    [t("fundsReleased"), money(inv.stats.capitalSpent)],
     [t("expensesApproved"), money(inv.stats.expensesApproved)],
   ]);
 

@@ -2,11 +2,12 @@
  * How a sold batch is settled. Pure functions: safe on client and server.
  *
  * Money model
- * - The investor's capital sits with Krishi. Approved fund requests are the
- *   part of it released to the farmer; the rest stays unspent.
+ * - The investor's capital sits with Krishi. What is spent on the batch is
+ *   the animal purchase cost plus approved fund requests (see capitalSpent);
+ *   the rest stays unspent.
  * - The farmer sells the animals and sends the full sale money to Krishi.
  * - Total return = sale money + unspent capital.
- * - Net result   = total return - capital  (= sale money - funds released).
+ * - Net result   = total return - capital  (= sale money - money spent).
  *
  * Profit: the net is split by PROFIT_SPLIT; the investor also gets their
  * capital back. Loss or break-even: nobody takes a share and the investor
@@ -101,3 +102,36 @@ export function releasedFunds(requests: Array<{ status: string; amount: number }
       .reduce((sum, r) => sum + Number(r.amount), 0),
   );
 }
+
+/**
+ * Capital spent on a batch: the animal purchase cost recorded when the farmer
+ * confirmed the purchase, plus approved fund requests. An "animal_purchase"
+ * fund request pays for that same purchase, so the larger of the two counts —
+ * never both. `includePending` also counts requests still waiting for the
+ * steward (used to cap new requests).
+ */
+export function capitalSpent(input: {
+  purchaseCost: number;
+  requests: Array<{ status: string; amount: number; purpose: string }>;
+  includePending?: boolean;
+}): { purchase: number; otherRequests: number; spent: number } {
+  const counted = input.requests.filter(
+    (r) =>
+      r.status === "approved" ||
+      r.status === "disbursed" ||
+      (input.includePending && r.status === "pending"),
+  );
+  const animalRequests = counted
+    .filter((r) => r.purpose === "animal_purchase")
+    .reduce((s, r) => s + Number(r.amount), 0);
+  const otherRequests = counted
+    .filter((r) => r.purpose !== "animal_purchase")
+    .reduce((s, r) => s + Number(r.amount), 0);
+  const purchase = Math.max(Number(input.purchaseCost) || 0, animalRequests);
+  return {
+    purchase: round2(purchase),
+    otherRequests: round2(otherRequests),
+    spent: round2(purchase + otherRequests),
+  };
+}
+

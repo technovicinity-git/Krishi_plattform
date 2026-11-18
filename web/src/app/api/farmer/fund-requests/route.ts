@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/current-user";
+import { getCapitalSpent } from "@/lib/investments/spending";
 import { notify, investmentParties } from "@/lib/notifications/notify";
 
 export const runtime = "nodejs";
@@ -49,15 +50,15 @@ export async function POST(request: Request) {
     );
   }
 
-  // Requests (pending + approved) may not exceed the money the investor put in.
-  const { data: open } = await db
-    .from("fund_requests")
-    .select("amount")
-    .eq("investment_id", inv.id)
-    .in("status", ["pending", "approved", "disbursed"]);
-  const committed = (open ?? []).reduce((sum, r) => sum + Number(r.amount), 0);
+  // Spending (animal purchase + pending/approved requests) may not exceed the
+  // money the investor put in.
   const capital = Number(inv.amount ?? 0);
-  if (committed + parsed.data.amount > capital) {
+  const { spent: committed } = await getCapitalSpent(inv.id, { includePending: true });
+  const { spent: withNew } = await getCapitalSpent(inv.id, {
+    includePending: true,
+    extra: { amount: parsed.data.amount, purpose: parsed.data.purpose },
+  });
+  if (withNew > capital) {
     const left = Math.max(0, capital - committed);
     return NextResponse.json(
       { error: `Only ৳${left.toLocaleString("en-IN")} of this batch's budget is left to request` },

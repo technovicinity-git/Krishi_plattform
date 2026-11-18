@@ -1,5 +1,5 @@
 import { createAdminClient } from "@/lib/supabase/admin";
-import { releasedFunds } from "./settlement";
+import { capitalSpent, releasedFunds } from "./settlement";
 import { signFileUrls } from "@/lib/storage/private-files";
 import { getAnimalsForInvestment, type Animal } from "@/lib/animals";
 
@@ -72,6 +72,10 @@ export interface InvestmentDetail {
     careBudgetUsed: number;
     careBudgetRemaining: number;
     fundsDisbursed: number;
+    /** Animal purchase cost recorded at purchase confirmation. */
+    purchaseCost: number;
+    /** Capital spent: purchase + approved fund requests (no double counting). */
+    capitalSpent: number;
     expensesApproved: number;
   };
 }
@@ -232,6 +236,14 @@ export async function getInvestmentDetail(
       .filter((e) => e.category !== "animal_purchase")
       .reduce((sum, e) => sum + Number(e.amount), 0) || 0;
 
+  const purchaseCost = (updatesData ?? [])
+    .filter((u) => u.update_type === "purchase")
+    .reduce((sum, u) => sum + Number(u.amount ?? 0), 0);
+  const spending = capitalSpent({
+    purchaseCost,
+    requests: (fundReqs ?? []).map((r) => ({ status: r.status, amount: Number(r.amount), purpose: r.purpose })),
+  });
+
   // Photos and receipts are private: sign every path shown on this page.
   const urls = await signFileUrls([
     ...(updatesData ?? []).map((u) => u.photo_path),
@@ -335,6 +347,8 @@ export async function getInvestmentDetail(
       careBudgetUsed,
       careBudgetRemaining: careBudgetTotal - careBudgetUsed,
       fundsDisbursed,
+      purchaseCost: spending.purchase,
+      capitalSpent: spending.spent,
       expensesApproved,
     },
   };
