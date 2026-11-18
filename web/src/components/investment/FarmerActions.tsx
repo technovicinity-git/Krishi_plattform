@@ -8,8 +8,9 @@ import { FundRequestModal } from "./FundRequestModal";
 import { LogExpenseModal } from "./LogExpenseModal";
 import { PurchaseModal } from "./PurchaseModal";
 import { PostUpdateModal } from "./PostUpdateModal";
+import { RecordSaleModal } from "./RecordSaleModal";
 
-type Dialog = "purchase" | "update" | "fund" | "expense" | null;
+type Dialog = "purchase" | "sale" | "update" | "fund" | "expense" | null;
 
 interface Action {
   key: Exclude<Dialog, null>;
@@ -24,10 +25,13 @@ export function FarmerActions({
   investmentId,
   currentStage,
   units,
+  saleRejected = false,
 }: {
   investmentId: string;
   currentStage: string;
   units: number;
+  /** The steward sent the last recorded sale back; offer to record it again. */
+  saleRejected?: boolean;
 }) {
   const t = useTranslations("app.farmerActions");
   const t2 = useTranslations("app.farmerActions2");
@@ -35,13 +39,32 @@ export function FarmerActions({
   const close = () => setOpen(null);
 
   const needsPurchase = currentStage === "awaiting_purchase";
+  const raising = currentStage === "growing_care";
+  // Money can be requested/logged only while buying or raising the animals.
+  const spending = needsPurchase || raising;
+  // After settlement the batch is closed.
+  if (currentStage === "settled") return null;
+
   const actions: Action[] = [
     ...(needsPurchase
       ? [{ key: "purchase", icon: "leaf", label: t2("confirmPurchase"), hint: t2("confirmPurchaseHint"), primary: true } as Action]
       : []),
-    { key: "update", icon: "clipboard", label: t2("postUpdate"), hint: t2("postUpdateHint"), primary: !needsPurchase },
-    { key: "fund", icon: "coins", label: t("requestFunds"), hint: t2("requestFundsHint") },
-    { key: "expense", icon: "receipt", label: t("logExpense"), hint: t2("logExpenseHint") },
+    ...(raising
+      ? [{
+          key: "sale",
+          icon: "tag",
+          label: saleRejected ? t2("recordSaleAgain") : t2("recordSale"),
+          hint: t2("recordSaleHint"),
+          primary: true,
+        } as Action]
+      : []),
+    { key: "update", icon: "clipboard", label: t2("postUpdate"), hint: t2("postUpdateHint"), primary: !spending },
+    ...(spending
+      ? ([
+          { key: "fund", icon: "coins", label: t("requestFunds"), hint: t2("requestFundsHint") },
+          { key: "expense", icon: "receipt", label: t("logExpense"), hint: t2("logExpenseHint") },
+        ] as Action[])
+      : []),
   ];
 
   return (
@@ -84,6 +107,9 @@ export function FarmerActions({
 
       {open === "purchase" && (
         <PurchaseModal investmentId={investmentId} defaultAnimals={units} onClose={close} />
+      )}
+      {open === "sale" && (
+        <RecordSaleModal investmentId={investmentId} defaultAnimals={units} onClose={close} />
       )}
       {open === "update" && <PostUpdateModal investmentId={investmentId} onClose={close} />}
       {open === "fund" && <FundRequestModal investmentId={investmentId} onClose={close} />}

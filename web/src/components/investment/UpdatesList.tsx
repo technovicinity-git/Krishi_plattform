@@ -24,6 +24,7 @@ const TYPE_TONE: Record<string, BadgeTone> = {
   photo_update: "neutral",
   note: "neutral",
   sale: "success",
+  settlement: "success",
 };
 
 export function UpdatesList({

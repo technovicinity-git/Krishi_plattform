@@ -12,7 +12,7 @@ async function getPendingCounts(stewardId: string) {
     .select("id")
     .eq("steward_id", stewardId);
   const offeringIds = (offerings ?? []).map((o) => o.id);
-  if (offeringIds.length === 0) return { interests: 0, funds: 0, awaitingFarmer: 0 };
+  if (offeringIds.length === 0) return { interests: 0, funds: 0, awaitingFarmer: 0, expenses: 0, sales: 0 };
 
   const [{ count: interests }, { data: investments }] = await Promise.all([
     db
@@ -24,17 +24,32 @@ async function getPendingCounts(stewardId: string) {
   ]);
 
   const investmentIds = (investments ?? []).map((i) => i.id);
-  const { count: funds } = investmentIds.length
-    ? await db
-        .from("fund_requests")
-        .select("*", { count: "exact", head: true })
-        .in("investment_id", investmentIds)
-        .eq("status", "pending")
-    : { count: 0 };
+  const none = { count: 0 };
+  const [{ count: funds }, { count: expenses }, { count: sales }] = investmentIds.length
+    ? await Promise.all([
+        db
+          .from("fund_requests")
+          .select("*", { count: "exact", head: true })
+          .in("investment_id", investmentIds)
+          .eq("status", "pending"),
+        db
+          .from("expenses")
+          .select("*", { count: "exact", head: true })
+          .in("investment_id", investmentIds)
+          .eq("status", "pending"),
+        db
+          .from("investment_sales")
+          .select("*", { count: "exact", head: true })
+          .in("investment_id", investmentIds)
+          .eq("status", "pending_review"),
+      ])
+    : [none, none, none];
 
   return {
     interests: interests ?? 0,
     funds: funds ?? 0,
+    expenses: expenses ?? 0,
+    sales: sales ?? 0,
     awaitingFarmer: (investments ?? []).filter((i) => i.current_stage === "awaiting_farmer").length,
   };
 }
@@ -85,6 +100,8 @@ export default async function StewardDashboardLayout({
             { label: ts("items.interests"), href: "/steward/interests", icon: "inbox", badge: counts.interests },
             { label: ts("items.investments"), href: "/steward/investments", icon: "briefcase", badge: counts.awaitingFarmer },
             { label: ts("items.fundRequests"), href: "/steward/fund-requests", icon: "coins", badge: counts.funds },
+            { label: ts("items.expenses"), href: "/steward/expenses", icon: "receipt", badge: counts.expenses },
+            { label: ts("items.sales"), href: "/steward/sales", icon: "tag", badge: counts.sales },
           ],
         },
         {
@@ -100,8 +117,6 @@ export default async function StewardDashboardLayout({
           locked: true,
           items: [
             { label: ts("items.livestock"), href: "/steward/livestock", icon: "leaf" },
-            { label: ts("items.expenses"), href: "/steward/expenses", icon: "receipt" },
-            { label: ts("items.sales"), href: "/steward/sales", icon: "tag" },
             { label: ts("items.reports"), href: "/steward/reports", icon: "chart" },
           ],
         },

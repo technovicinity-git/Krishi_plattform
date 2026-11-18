@@ -6,6 +6,8 @@ import { StageTimeline } from "@/components/investment/StageTimeline";
 import { StatsGrid, formatBDT } from "@/components/investment/StatsGrid";
 import { UpdatesList } from "@/components/investment/UpdatesList";
 import { FundRequestsList } from "@/components/investment/FundRequestsList";
+import { ExpensesList } from "@/components/investment/ExpensesList";
+import { SalePanel } from "@/components/investment/SalePanel";
 import { BackLink } from "@/components/ui/BackLink";
 import {
   DetailRow,
@@ -55,13 +57,18 @@ export default async function StewardInvestmentDetailPage({
           { label: t("units"), value: `${inv.units}` },
           { label: t("investor"), value: inv.investor.fullName ?? "—" },
           { label: t("farmer"), value: inv.farmer?.fullName ?? t("unassigned") },
-          { label: t("careUsed"), value: formatBDT(inv.stats.careBudgetUsed), accent: true },
+          { label: t("fundsReleased"), value: formatBDT(inv.stats.fundsDisbursed), accent: true },
         ]}
       />
+
+      {inv.sale && (
+        <SalePanel investmentId={inv.id} sale={inv.sale} settlement={inv.settlement} viewer="steward" />
+      )}
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
         <div className="flex min-w-0 flex-col gap-6">
           <FundRequestsList requests={inv.fundRequests} isSteward />
+          <ExpensesList expenses={inv.expenses} isSteward />
           <UpdatesList updates={inv.updates} />
         </div>
         <Panel title={t("summary")} className="h-fit">

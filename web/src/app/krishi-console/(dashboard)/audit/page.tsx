@@ -14,6 +14,7 @@ const FILTERS = [
   { key: "kyc", label: "KYC", prefix: "kyc." },
   { key: "steward", label: "Stewards", prefix: "steward." },
   { key: "deposit", label: "Deposits", prefix: "deposit." },
+  { key: "sale", label: "Sales", prefix: "sale." },
   { key: "plan", label: "Plans", prefix: "plan." },
   { key: "offering", label: "Offerings", prefix: "offering." },
   { key: "category", label: "Categories", prefix: "category." },
@@ -39,6 +40,8 @@ const ACTION_STYLE: Record<string, string> = {
   reject: "bg-[#FAF0ED] text-danger",
   failure: "bg-[#FAF0ED] text-danger",
   rate_limited: "bg-[#FAF0ED] text-danger",
+  settle: "bg-[#E8F0EA] text-green-deep",
+  remittance_reject: "bg-[#FAF0ED] text-danger",
   close: "bg-[#FEF6E5] text-[#C48A2E]",
   update: "bg-[#FEF6E5] text-[#C48A2E]",
 };
@@ -54,6 +57,8 @@ function targetHref(row: AuditRow): string | null {
   switch (row.target_type) {
     case "kyc_profile":
       return `/krishi-console/kyc/${row.target_id}`;
+    case "investment_sale":
+      return `/krishi-console/sales/${row.target_id}`;
     case "investment_plan":
       return `/krishi-console/plans/${row.target_id}`;
     case "user":

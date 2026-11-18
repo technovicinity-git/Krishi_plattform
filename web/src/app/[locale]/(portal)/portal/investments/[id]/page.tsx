@@ -5,6 +5,7 @@ import { getInvestmentDetail } from "@/lib/investments/detail";
 import { StageTimeline } from "@/components/investment/StageTimeline";
 import { StatsGrid, formatBDT } from "@/components/investment/StatsGrid";
 import { UpdatesList } from "@/components/investment/UpdatesList";
+import { SalePanel } from "@/components/investment/SalePanel";
 import { BackLink } from "@/components/ui/BackLink";
 import {
   DetailRow,
@@ -53,10 +54,21 @@ export default async function InvestorInvestmentDetailPage({
         items={[
           { label: t("invested"), value: formatBDT(inv.amount) },
           { label: t("units"), value: `${inv.units}` },
-          { label: t("estReturn"), value: `${inv.offering.roiMin}–${inv.offering.roiMax}%`, accent: true },
-          { label: t("careUsed"), value: formatBDT(inv.stats.careBudgetUsed) },
+          inv.settlement
+            ? { label: t("yourPayout"), value: formatBDT(inv.settlement.investorPayout), accent: true }
+            : { label: t("estReturn"), value: `${inv.offering.roiMin}–${inv.offering.roiMax}%`, accent: true },
+          inv.settlement
+            ? {
+                label: t("actualReturn"),
+                value: `${inv.settlement.investorPayout >= inv.amount ? "+" : "−"}${formatBDT(Math.abs(inv.settlement.investorPayout - inv.amount))}`,
+              }
+            : { label: t("careUsed"), value: formatBDT(inv.stats.careBudgetUsed) },
         ]}
       />
+
+      {inv.sale && inv.sale.status !== "rejected" && (
+        <SalePanel investmentId={inv.id} sale={inv.sale} settlement={inv.settlement} viewer="investor" />
+      )}
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
         <UpdatesList updates={inv.updates} />

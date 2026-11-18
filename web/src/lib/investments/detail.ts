@@ -1,4 +1,5 @@
 import { createAdminClient } from "@/lib/supabase/admin";
+import { releasedFunds } from "./settlement";
 
 export interface InvestmentDetail {
   id: string;
@@ -36,6 +37,18 @@ export interface InvestmentDetail {
     createdAt: string;
     rejectionReason: string | null;
   }>;
+  expenses: Array<{
+    id: string;
+    amount: number;
+    category: string;
+    description: string | null;
+    receiptPath: string | null;
+    status: string;
+    rejectionReason: string | null;
+    createdAt: string;
+  }>;
+  sale: InvestmentSale | null;
+  settlement: InvestmentSettlement | null;
   updates: Array<{
     id: string;
     updateType: string;
@@ -55,6 +68,77 @@ export interface InvestmentDetail {
     expensesApproved: number;
   };
 }
+
+export interface InvestmentSale {
+  id: string;
+  reference: string;
+  animalsSold: number;
+  saleAmount: number;
+  buyerName: string | null;
+  buyerPhone: string | null;
+  saleDate: string;
+  note: string | null;
+  photoPath: string | null;
+  status: string;
+  rejectionReason: string | null;
+  reviewedAt: string | null;
+  remitMethod: string | null;
+  remitTxnId: string | null;
+  remitSender: string | null;
+  remitNote: string | null;
+  remitProofPath: string | null;
+  remittedAt: string | null;
+  remitRejectionReason: string | null;
+  receivedAt: string | null;
+  createdAt: string;
+}
+
+export interface InvestmentSettlement {
+  capital: number;
+  fundsReleased: number;
+  saleAmount: number;
+  totalReturn: number;
+  netResult: number;
+  outcome: "profit" | "loss" | "break_even";
+  investorPayout: number;
+  farmerShare: number;
+  stewardShare: number;
+  platformShare: number;
+  note: string | null;
+  settledAt: string;
+}
+
+const SALE_COLUMNS =
+  "id, reference, animals_sold, sale_amount, buyer_name, buyer_phone, sale_date, note, photo_path, status, rejection_reason, reviewed_at, remit_method, remit_txn_id, remit_sender, remit_note, remit_proof_path, remitted_at, remit_rejection_reason, received_at, created_at";
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function mapSale(row: any): InvestmentSale {
+  return {
+    id: row.id,
+    reference: row.reference,
+    animalsSold: row.animals_sold,
+    saleAmount: Number(row.sale_amount),
+    buyerName: row.buyer_name,
+    buyerPhone: row.buyer_phone,
+    saleDate: row.sale_date,
+    note: row.note,
+    photoPath: row.photo_path,
+    status: row.status,
+    rejectionReason: row.rejection_reason,
+    reviewedAt: row.reviewed_at,
+    remitMethod: row.remit_method,
+    remitTxnId: row.remit_txn_id,
+    remitSender: row.remit_sender,
+    remitNote: row.remit_note,
+    remitProofPath: row.remit_proof_path,
+    remittedAt: row.remitted_at,
+    remitRejectionReason: row.remit_rejection_reason,
+    receivedAt: row.received_at,
+    createdAt: row.created_at,
+  };
+}
+
+export { SALE_COLUMNS };
 
 export async function getInvestmentDetail(
   investmentId: string,
@@ -110,17 +194,24 @@ export async function getInvestmentDetail(
   // Compute stats
   const animalBudgetTotal = Number(plan?.animal_allocation ?? 0) * data.units;
   const careBudgetTotal = Number(plan?.care_allocation ?? 0) * data.units;
-  const fundsDisbursed =
-    (fundReqs ?? [])
-      .filter((r) => r.status === "disbursed" || r.status === "approved")
-      .reduce((sum, r) => sum + Number(r.amount), 0) || 0;
+  const fundsDisbursed = releasedFunds(
+    (fundReqs ?? []).map((r) => ({ status: r.status, amount: Number(r.amount) })),
+  );
 
-  // Fetch approved expenses sum
-  const { data: expAgg } = await db
-    .from("expenses")
-    .select("amount, category")
-    .eq("investment_id", investmentId)
-    .eq("status", "approved");
+  const [{ data: expenseRows }, { data: saleRow }, { data: settlementRow }] = await Promise.all([
+    db
+      .from("expenses")
+      .select("id, amount, category, description, receipt_path, status, rejection_reason, created_at")
+      .eq("investment_id", investmentId)
+      .order("created_at", { ascending: false }),
+    db.from("investment_sales").select(SALE_COLUMNS).eq("investment_id", investmentId).maybeSingle(),
+    db
+      .from("investment_settlements")
+      .select("capital, funds_released, sale_amount, total_return, net_result, outcome, investor_payout, farmer_share, steward_share, platform_share, note, settled_at")
+      .eq("investment_id", investmentId)
+      .maybeSingle(),
+  ]);
+  const expAgg = (expenseRows ?? []).filter((e) => e.status === "approved");
 
   const expensesApproved =
     (expAgg ?? []).reduce((sum, e) => sum + Number(e.amount), 0) || 0;
@@ -178,6 +269,33 @@ export async function getInvestmentDetail(
       createdAt: r.created_at,
       rejectionReason: r.rejection_reason,
     })),
+    expenses: (expenseRows ?? []).map((e) => ({
+      id: e.id,
+      amount: Number(e.amount),
+      category: e.category,
+      description: e.description,
+      receiptPath: e.receipt_path,
+      status: e.status,
+      rejectionReason: e.rejection_reason,
+      createdAt: e.created_at,
+    })),
+    sale: saleRow ? mapSale(saleRow) : null,
+    settlement: settlementRow
+      ? {
+          capital: Number(settlementRow.capital),
+          fundsReleased: Number(settlementRow.funds_released),
+          saleAmount: Number(settlementRow.sale_amount),
+          totalReturn: Number(settlementRow.total_return),
+          netResult: Number(settlementRow.net_result),
+          outcome: settlementRow.outcome as InvestmentSettlement["outcome"],
+          investorPayout: Number(settlementRow.investor_payout),
+          farmerShare: Number(settlementRow.farmer_share),
+          stewardShare: Number(settlementRow.steward_share),
+          platformShare: Number(settlementRow.platform_share),
+          note: settlementRow.note,
+          settledAt: settlementRow.settled_at,
+        }
+      : null,
     updates: (updatesData ?? []).map((u) => ({
       id: u.id,
       updateType: u.update_type,

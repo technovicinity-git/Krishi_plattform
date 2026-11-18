@@ -7,6 +7,9 @@ import { StatsGrid, formatBDT } from "@/components/investment/StatsGrid";
 import { UpdatesList } from "@/components/investment/UpdatesList";
 import { FundRequestsList } from "@/components/investment/FundRequestsList";
 import { FarmerActions } from "@/components/investment/FarmerActions";
+import { ExpensesList } from "@/components/investment/ExpensesList";
+import { SalePanel } from "@/components/investment/SalePanel";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { BackLink } from "@/components/ui/BackLink";
 import {
   DetailRow,
@@ -38,6 +41,23 @@ export default async function FarmerInvestmentDetailPage({
   const bn = locale === "bn";
   const planName = bn ? inv.offering.planNameBn : inv.offering.planNameEn;
 
+  // Krishi's receiving accounts, shown when the farmer sends the sale money.
+  const needsAccounts = inv.sale?.status === "awaiting_remittance";
+  const { data: accountRows } = needsAccounts
+    ? await createAdminClient()
+        .from("platform_accounts")
+        .select("id, method, provider, account_name, account_number, branch_name")
+        .eq("is_active", true)
+    : { data: [] };
+  const accounts = (accountRows ?? []).map((a) => ({
+    id: a.id,
+    method: a.method,
+    provider: a.provider,
+    accountName: a.account_name,
+    accountNumber: a.account_number,
+    branchName: a.branch_name,
+  }));
+
   return (
     <div className="flex flex-col gap-6">
       <PageHeader
@@ -58,20 +78,32 @@ export default async function FarmerInvestmentDetailPage({
           { label: t("units"), value: `${inv.units}` },
           { label: t("animalBudget"), value: formatBDT(inv.stats.animalBudgetTotal) },
           { label: t("careBudget"), value: formatBDT(inv.stats.careBudgetTotal) },
-          { label: t("careUsed"), value: formatBDT(inv.stats.careBudgetUsed), accent: true },
+          { label: t("fundsReceived"), value: formatBDT(inv.stats.fundsDisbursed), accent: true },
         ]}
       />
+
+      {inv.sale && (
+        <SalePanel
+          investmentId={inv.id}
+          sale={inv.sale}
+          settlement={inv.settlement}
+          viewer="farmer"
+          accounts={accounts}
+        />
+      )}
 
       <FarmerActions
         investmentId={inv.id}
         currentStage={inv.currentStage}
         units={inv.units}
+        saleRejected={inv.sale?.status === "rejected"}
       />
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
         <div className="flex min-w-0 flex-col gap-6">
           <UpdatesList updates={inv.updates} />
           <FundRequestsList requests={inv.fundRequests} />
+          <ExpensesList expenses={inv.expenses} />
         </div>
         <Panel title={t("details")} className="h-fit">
           <DetailRow label={t("plan")} value={planName} />

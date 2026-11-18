@@ -107,6 +107,18 @@ _migrations, _smoke_test    (tooling)
 
 Partial unique indexes allow only one *active* interest (`submitted`, `under_review`, `approved`, `onboarding`) per investor or guest phone per offering.
 
+**`investment_sales`** (`20261118000001_sales_and_settlements.sql`): one per investment. The farmer records the sale (`animals_sold`, `sale_amount`, `sale_date`, buyer, photo); the steward confirms it; the farmer then reports sending the money to Krishi (`remit_method` bank/mfs/cash, `remit_txn_id`, `remit_proof_path`).
+
+| `status` | Meaning | Investment stage |
+|----------|---------|------------------|
+| `pending_review` | Waiting for the steward | `sale_pending` |
+| `rejected` | Steward sent it back; farmer can record again (same row) | `growing_care` |
+| `awaiting_remittance` | Confirmed; farmer must send the money (admin can send a payment back here with `remit_rejection_reason`) | `sold` |
+| `remittance_submitted` | Admin to check the payment | `sold` |
+| `settled` | Admin confirmed the money and settled | `settled` (investment `status` = `completed`) |
+
+**`investment_settlements`**: one per investment, written by `settle_investment_sale()` together with the sale and investment updates. Stores `capital`, `funds_released` (approved fund requests), `sale_amount`, `total_return` (= sale + unspent capital), `net_result`, `outcome` (profit/loss/break_even) and the payouts. On a profit the net is split 60% farmer / 30% investor / 5% steward / 5% Krishi and the investor also gets the capital back; on a loss nobody takes a share and the investor receives the whole total return. The rule lives in `web/src/lib/investments/settlement.ts`.
+
 ### Tables without migrations (inferred from code)
 
 | Table | Key columns used in code | Statuses / stages seen |

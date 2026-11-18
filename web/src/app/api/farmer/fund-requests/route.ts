@@ -5,6 +5,9 @@ import { getCurrentUser } from "@/lib/auth/current-user";
 
 export const runtime = "nodejs";
 
+/** Stages in which the farmer is still buying or raising the animals. */
+const ACTIVE_STAGES = ["awaiting_purchase", "growing_care"];
+
 const schema = z.object({
   investment_id: z.string().uuid(),
   amount: z.coerce.number().positive(),
@@ -29,13 +32,36 @@ export async function POST(request: Request) {
   // Verify investment belongs to this farmer
   const { data: inv } = await db
     .from("investments")
-    .select("id, farmer_id, current_stage")
+    .select("id, farmer_id, current_stage, amount")
     .eq("id", parsed.data.investment_id)
     .eq("farmer_id", user.id)
     .maybeSingle();
 
   if (!inv) {
     return NextResponse.json({ error: "Investment not found" }, { status: 404 });
+  }
+
+  if (!ACTIVE_STAGES.includes(inv.current_stage ?? "")) {
+    return NextResponse.json(
+      { error: "Funds can only be requested while the batch is being bought or raised" },
+      { status: 400 },
+    );
+  }
+
+  // Requests (pending + approved) may not exceed the money the investor put in.
+  const { data: open } = await db
+    .from("fund_requests")
+    .select("amount")
+    .eq("investment_id", inv.id)
+    .in("status", ["pending", "approved", "disbursed"]);
+  const committed = (open ?? []).reduce((sum, r) => sum + Number(r.amount), 0);
+  const capital = Number(inv.amount ?? 0);
+  if (committed + parsed.data.amount > capital) {
+    const left = Math.max(0, capital - committed);
+    return NextResponse.json(
+      { error: `Only ৳${left.toLocaleString("en-IN")} of this batch's budget is left to request` },
+      { status: 400 },
+    );
   }
 
   // Create the fund request

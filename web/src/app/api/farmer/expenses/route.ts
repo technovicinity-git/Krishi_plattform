@@ -43,12 +43,18 @@ export async function POST(request: Request) {
 
   const { data: inv } = await db
     .from("investments")
-    .select("id")
+    .select("id, current_stage")
     .eq("id", parsed.data.investment_id)
     .eq("farmer_id", user.id)
     .maybeSingle();
 
   if (!inv) return NextResponse.json({ error: "Investment not found" }, { status: 404 });
+  if (!["awaiting_purchase", "growing_care"].includes(inv.current_stage ?? "")) {
+    return NextResponse.json(
+      { error: "Expenses can only be logged while the batch is being bought or raised" },
+      { status: 400 },
+    );
+  }
 
   const receipt = await uploadUpdatePhoto(form.get("receipt"), inv.id, "receipts");
   if (!receipt.ok) return NextResponse.json({ error: receipt.error }, { status: 400 });

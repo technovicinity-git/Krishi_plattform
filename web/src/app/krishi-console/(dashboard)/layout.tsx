@@ -16,7 +16,7 @@ export default async function AdminDashboardLayout({
   const admin = await requireAdmin();
   const db = createAdminClient();
 
-  const [{ count: kyc }, { count: deposits }, { count: stewards }] = await Promise.all([
+  const [{ count: kyc }, { count: deposits }, { count: stewards }, { count: sales }] = await Promise.all([
     db.from("kyc_profiles").select("*", { count: "exact", head: true }).eq("status", "pending"),
     db.from("deposits").select("*", { count: "exact", head: true }).eq("status", "pending"),
     db
@@ -24,6 +24,10 @@ export default async function AdminDashboardLayout({
       .select("*", { count: "exact", head: true })
       .eq("role", "steward")
       .eq("steward_approval_status", "pending"),
+    db
+      .from("investment_sales")
+      .select("*", { count: "exact", head: true })
+      .eq("status", "remittance_submitted"),
   ]);
 
   return (
@@ -55,6 +59,7 @@ export default async function AdminDashboardLayout({
           items: [
             { label: "KYC Queue", href: "/krishi-console/kyc", icon: "shield", badge: kyc ?? 0 },
             { label: "Deposits", href: "/krishi-console/deposits", icon: "coins", badge: deposits ?? 0 },
+            { label: "Sales", href: "/krishi-console/sales", icon: "tag", badge: sales ?? 0 },
           ],
         },
         {

@@ -16,7 +16,7 @@ export type PhotoUploadResult =
 export async function uploadUpdatePhoto(
   value: FormDataEntryValue | null,
   investmentId: string,
-  folder: "updates" | "receipts" = "updates",
+  folder: "updates" | "receipts" | "sales" | "remittances" = "updates",
 ): Promise<PhotoUploadResult> {
   if (!value || typeof value === "string" || value.size === 0) {
     return { ok: true, path: null };
