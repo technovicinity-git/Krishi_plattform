@@ -45,7 +45,8 @@ export interface PlanFilters {
   limit?: number;
 }
 
-function buildOfferingSlug(
+/** Public URL slug of an offering: plan-district-steward. */
+export function buildOfferingSlug(
   planSlug: string,
   districtSlug: string,
   stewardName: string,

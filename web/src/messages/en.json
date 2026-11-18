@@ -1474,6 +1474,7 @@
       "comingSoon": "Coming Soon",
       "locked": "Locked",
       "items": {
+        "plans": "My plans",
         "dashboard": "Dashboard",
         "farmers": "Farmers",
         "settings": "Settings",
@@ -1647,6 +1648,33 @@
     }
   },
   "app": {
+    "stewardPlans": {
+      "title": "My plans",
+      "subtitle": "Plans Krishi has added you to, with how many units you offer and how many are funded.",
+      "livePlans": "Live plans",
+      "unitsOffered": "Units offered",
+      "unitsFunded": "Units funded",
+      "openInterests": "Interests to review",
+      "empty": "You haven't been added to any plan yet.",
+      "emptyHint": "When Krishi adds you to a plan, it appears here and you get a notification.",
+      "months": "{count, plural, one {# month} other {# months}}",
+      "unitPrice": "Unit price",
+      "estReturn": "Est. return",
+      "left": "Units left",
+      "funded": "{funded} of {offered} units funded",
+      "pendingNote": "Waiting for Krishi's approval. Investors can't see it yet.",
+      "rejectedNote": "Not approved: {reason}",
+      "interestsLink": "{count, plural, =0 {No interests to review} one {# interest to review} other {# interests to review}}",
+      "batchesLink": "{count, plural, =0 {No active batches} one {# active batch} other {# active batches}}",
+      "viewPublic": "View public page"
+    },
+    "offeringStatus": {
+      "approved": "Live",
+      "pending_approval": "Pending approval",
+      "paused": "Paused",
+      "closed": "Closed",
+      "rejected": "Not approved"
+    },
     "farmerSales": {
       "title": "Sales",
       "subtitle": "Record a sale when your animals are sold, then send the money to Krishi. Your profit share is added to your wallet when the batch is settled.",
@@ -1685,6 +1713,8 @@
       "cancelled": "You cancelled the online payment."
     },
     "pdf": {
+      "animalPurchase": "Animal purchase",
+      "fundRequestsApproved": "Fund requests approved",
       "investmentTitle": "Investment Statement",
       "walletTitle": "Wallet Statement",
       "investor": "Investor",
@@ -1711,7 +1741,7 @@
       "money": "Money used",
       "animalBudget": "Animal budget",
       "careBudget": "Care budget",
-      "fundsReleased": "Released to the farmer",
+      "fundsReleased": "Spent on animals & care",
       "expensesApproved": "Expenses approved",
       "sale": "Sale",
       "saleReference": "Sale reference",
@@ -1910,6 +1940,15 @@
       "unreadCount": "{count, plural, =0 {No unread notifications} one {# unread} other {# unread}}"
     },
     "notify": {
+      "settlement_corrected_payout": {"title": "Settlement corrected: {plan}", "body": "{reference} was recalculated as a loss (the animal purchase was missed the first time). Your payout is now {amount}; your wallet was adjusted."},
+      "settlement_corrected_share": {"title": "Settlement corrected: {plan}", "body": "{reference} was recalculated as a loss, so there is no profit share. {amount} was taken back from your wallet."},
+      "offering_assigned": {"title": "You were added to {plan}", "body": "You can take {title} units. The plan is open to investors now."},
+      "offering_assigned_pending": {"title": "You were added to {plan}", "body": "{title} units, waiting for Krishi's approval before investors can see it."},
+      "offering_approved": {"title": "{plan} is live", "body": "Your {title} units are now open to investors."},
+      "offering_paused": {"title": "{plan} is paused", "body": "Investors can't send new interests for now."},
+      "offering_closed": {"title": "{plan} is closed", "body": "Your offering on this plan was closed by Krishi."},
+      "offering_rejected": {"title": "{plan} was not approved", "body": "{reason}"},
+      "offering_units": {"title": "Units changed on {plan}", "body": "You now offer {title} units."},
       "animal_died": {"title": "Animal {name} died", "body": "{plan} ({reference}): {reason}"},
       "review_received": {"title": "New {name}-star review", "body": "An investor reviewed your work on {plan}."},
       "interest_submitted": {
@@ -2162,7 +2201,7 @@
       "loss": "Loss {amount}",
       "breakEven": "Break-even",
       "capital": "Invested capital",
-      "fundsReleased": "Released to the farmer",
+      "fundsReleased": "Spent on animals & care",
       "unspent": "Unspent capital",
       "saleAmount": "Sale money received",
       "totalReturn": "Total returned",
@@ -2626,7 +2665,7 @@
     },
     "investmentDetail": {
       "fundsReceived": "Funds Received",
-      "fundsReleased": "Funds Released",
+      "fundsReleased": "Spent So Far",
       "yourPayout": "Your Payout",
       "actualReturn": "Profit / Loss",
       "backToInvestments": "Back to Investments",

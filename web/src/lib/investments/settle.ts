@@ -1,5 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/admin";
-import { computeSettlement, releasedFunds, type SettlementBreakdown } from "./settlement";
+import { computeSettlement, type SettlementBreakdown } from "./settlement";
+import { getCapitalSpent } from "./spending";
 
 /**
  * Loads what is needed to settle a sale and computes the breakdown.
@@ -22,19 +23,14 @@ export async function previewSettlement(saleId: string): Promise<
     .maybeSingle();
   if (!sale) return { ok: false, error: "Sale not found" };
 
-  const { data: requests } = await db
-    .from("fund_requests")
-    .select("amount, status")
-    .eq("investment_id", sale.investment_id);
-
   const capital = Number(
     (sale.investment as unknown as { amount: number | string } | null)?.amount ?? 0,
   );
+  // Animal purchase + approved fund requests (not just the requests).
+  const { spent } = await getCapitalSpent(sale.investment_id);
   const breakdown = computeSettlement({
     capital,
-    fundsReleased: releasedFunds(
-      (requests ?? []).map((r) => ({ status: r.status, amount: Number(r.amount) })),
-    ),
+    fundsReleased: spent,
     saleAmount: Number(sale.sale_amount),
   });
 

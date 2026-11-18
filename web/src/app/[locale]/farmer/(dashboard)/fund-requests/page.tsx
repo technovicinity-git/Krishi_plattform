@@ -12,6 +12,7 @@ import {
   toneFor,
 } from "@/components/dashboard/ui";
 import { NewFundRequestButton } from "@/components/investment/NewFundRequestButton";
+import { getCapitalSpent } from "@/lib/investments/spending";
 
 export const dynamic = "force-dynamic";
 
@@ -69,17 +70,12 @@ export default async function FarmerFundRequestsPage() {
     .eq("farmer_id", user.id)
     .in("current_stage", ["awaiting_purchase", "growing_care"])
     .order("created_at", { ascending: false });
-  const { data: committedRows } = batchRows?.length
-    ? await db
-        .from("fund_requests")
-        .select("investment_id, amount")
-        .in("investment_id", batchRows.map((b) => b.id))
-        .in("status", ["pending", "approved", "disbursed"])
-    : { data: [] };
-  const committed = new Map<string, number>();
-  for (const r of committedRows ?? []) {
-    committed.set(r.investment_id, (committed.get(r.investment_id) ?? 0) + Number(r.amount));
-  }
+  // Already committed per batch: animal purchase + pending/approved requests.
+  const committed = new Map<string, number>(
+    await Promise.all(
+      (batchRows ?? []).map(async (b) => [b.id, (await getCapitalSpent(b.id, { includePending: true })).spent] as const),
+    ),
+  );
   const batches = (batchRows ?? []).map((b) => {
     const plan = (b.offering as unknown as { investment_plans: { name_en: string | null; name_bn: string | null } | null } | null)
       ?.investment_plans;

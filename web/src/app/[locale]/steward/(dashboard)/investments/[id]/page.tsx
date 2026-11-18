@@ -62,7 +62,7 @@ export default async function StewardInvestmentDetailPage({
           { label: t("units"), value: `${inv.units}` },
           { label: t("investor"), value: inv.investor.fullName ?? "—" },
           { label: t("farmer"), value: inv.farmer?.fullName ?? t("unassigned") },
-          { label: t("fundsReleased"), value: formatBDT(inv.stats.fundsDisbursed), accent: true },
+          { label: t("fundsReleased"), value: formatBDT(inv.stats.capitalSpent), accent: true },
         ]}
       />
 

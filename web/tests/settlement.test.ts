@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { computeSettlement, PROFIT_SPLIT, releasedFunds } from "@/lib/investments/settlement";
+import { capitalSpent, computeSettlement, PROFIT_SPLIT, releasedFunds } from "@/lib/investments/settlement";
 
 describe("computeSettlement", () => {
   it("splits a profit 60/30/5/5 and returns the investor's capital", () => {
@@ -67,5 +67,52 @@ describe("releasedFunds", () => {
         { status: "rejected", amount: 99999 },
       ]),
     ).toBe(70000);
+  });
+});
+
+describe("capitalSpent", () => {
+  it("counts the animal purchase, not just fund requests (KR-INV-000012 case)", () => {
+    // Invested 10,00,000; animals bought for 8,00,000; 2,00,000 feed request; sold for 6,00,000.
+    const spent = capitalSpent({
+      purchaseCost: 800000,
+      requests: [{ status: "approved", amount: 200000, purpose: "feed" }],
+    });
+    expect(spent.spent).toBe(1000000);
+
+    const b = computeSettlement({ capital: 1000000, fundsReleased: spent.spent, saleAmount: 600000 });
+    expect(b.unspent).toBe(0);
+    expect(b.totalReturn).toBe(600000);
+    expect(b.netResult).toBe(-400000);
+    expect(b.outcome).toBe("loss");
+    expect(b.investorPayout).toBe(600000);
+    expect(b.farmerShare + b.stewardShare + b.platformShare).toBe(0);
+  });
+
+  it("does not count an animal-purchase request and the purchase twice", () => {
+    const spent = capitalSpent({
+      purchaseCost: 800000,
+      requests: [
+        { status: "approved", amount: 800000, purpose: "animal_purchase" },
+        { status: "approved", amount: 50000, purpose: "medical" },
+      ],
+    });
+    expect(spent.spent).toBe(850000);
+  });
+
+  it("uses the animal-purchase request if it is larger than the recorded cost", () => {
+    const spent = capitalSpent({
+      purchaseCost: 700000,
+      requests: [{ status: "approved", amount: 750000, purpose: "animal_purchase" }],
+    });
+    expect(spent.spent).toBe(750000);
+  });
+
+  it("ignores rejected requests and counts pending only when asked", () => {
+    const requests = [
+      { status: "rejected", amount: 99999, purpose: "feed" },
+      { status: "pending", amount: 30000, purpose: "feed" },
+    ];
+    expect(capitalSpent({ purchaseCost: 100000, requests }).spent).toBe(100000);
+    expect(capitalSpent({ purchaseCost: 100000, requests, includePending: true }).spent).toBe(130000);
   });
 });

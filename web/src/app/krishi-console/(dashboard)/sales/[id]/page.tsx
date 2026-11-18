@@ -88,7 +88,9 @@ export default async function AdminSaleDetailPage({
             <DetailRow label="Farmer" value={inv.farmer?.fullName ?? "—"} />
             <DetailRow label="Farmer phone" value={inv.farmer?.phone ?? "—"} />
             <DetailRow label="Invested" value={formatBDT(inv.amount)} />
-            <DetailRow label="Funds released" value={formatBDT(inv.stats.fundsDisbursed)} />
+            <DetailRow label="Animal purchase" value={formatBDT(inv.stats.purchaseCost)} />
+            <DetailRow label="Fund requests approved" value={formatBDT(inv.stats.fundsDisbursed)} />
+            <DetailRow label="Spent on the batch" value={formatBDT(inv.stats.capitalSpent)} />
             <DetailRow label="Expenses approved" value={formatBDT(inv.stats.expensesApproved)} />
             <DetailRow label="Category" value={inv.offering.categoryName} />
             <DetailRow label="District" value={inv.offering.districtName} />
