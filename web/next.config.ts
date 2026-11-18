@@ -13,6 +13,13 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: appRoot,
   },
+  // pdfkit reads its own font metric files from disk at runtime, so load it
+  // with Node's require instead of bundling it.
+  serverExternalPackages: ["pdfkit"],
+  // The PDF report routes read these font files from disk.
+  outputFileTracingIncludes: {
+    "/api/reports/**": ["./src/fonts/pdf/**/*"],
+  },
   images: {
     remotePatterns: [
       ...(supabaseHost

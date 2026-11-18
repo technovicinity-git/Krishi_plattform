@@ -1,4 +1,5 @@
 import { createAdminClient } from "@/lib/supabase/admin";
+import { getStewardRatings } from "@/lib/reviews";
 
 export interface StewardListItem {
   id: string;
@@ -70,6 +71,14 @@ export async function listPublicStewards(opts: {
       ratingCount: 0,
     };
   });
+
+  // Real ratings from published investor reviews.
+  const ratings = await getStewardRatings(items.map((i) => i.id));
+  for (const item of items) {
+    const r = ratings.get(item.id);
+    item.ratingAvg = r?.avg ?? null;
+    item.ratingCount = r?.count ?? 0;
+  }
 
   return {
     items,

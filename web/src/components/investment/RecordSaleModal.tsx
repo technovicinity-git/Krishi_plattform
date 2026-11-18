@@ -12,6 +12,7 @@ import {
   fieldClass,
 } from "@/components/dashboard/Modal";
 import { PhotoField } from "./PhotoField";
+import type { Animal } from "@/lib/animals";
 
 function today(): string {
   const d = new Date();
@@ -23,10 +24,13 @@ function today(): string {
 export function RecordSaleModal({
   investmentId,
   defaultAnimals,
+  animals = [],
   onClose,
 }: {
   investmentId: string;
   defaultAnimals: number;
+  /** Active animals in the batch; when present the farmer ticks which were sold. */
+  animals?: Pick<Animal, "id" | "tag" | "earTag" | "currentWeightKg">[];
   onClose: () => void;
 }) {
   const t = useTranslations("app.saleForm");
@@ -40,7 +44,16 @@ export function RecordSaleModal({
     phone: useId(),
     note: useId(),
   };
-  const [animals, setAnimals] = useState(String(defaultAnimals || 1));
+  const tracked = animals.length > 0;
+  const [count, setCount] = useState(String(defaultAnimals || 1));
+  const [picked, setPicked] = useState<Set<string>>(() => new Set(animals.map((a) => a.id)));
+  const toggle = (id: string) =>
+    setPicked((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState(today);
   const [buyer, setBuyer] = useState("");
@@ -56,7 +69,8 @@ export function RecordSaleModal({
     setError(null);
     try {
       const fd = new FormData();
-      fd.set("animals_sold", animals);
+      if (tracked) picked.forEach((id) => fd.append("animal_ids", id));
+      else fd.set("animals_sold", count);
       fd.set("sale_amount", amount);
       fd.set("sale_date", date);
       fd.set("buyer_name", buyer);
@@ -81,7 +95,34 @@ export function RecordSaleModal({
   return (
     <Modal title={t("title")} subtitle={t("subtitle")} onClose={onClose}>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        {tracked && (
+          <fieldset>
+            <legend className="text-[12.5px] font-semibold text-ink-nav">
+              {t("whichAnimals", { count: picked.size })}
+            </legend>
+            <div className="mt-1.5 grid grid-cols-2 gap-2 sm:grid-cols-3">
+              {animals.map((a) => (
+                <label
+                  key={a.id}
+                  className={`flex cursor-pointer items-center gap-2 rounded-[8px] border px-3 py-2 text-[13px] ${
+                    picked.has(a.id) ? "border-brand bg-brand-tint/60" : "border-border-light"
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={picked.has(a.id)}
+                    onChange={() => toggle(a.id)}
+                    className="h-4 w-4 accent-[#3A7D44]"
+                  />
+                  <span className="font-semibold text-ink">{a.tag}</span>
+                  {a.earTag && <span className="truncate text-[11px] text-ink-muted">{a.earTag}</span>}
+                </label>
+              ))}
+            </div>
+          </fieldset>
+        )}
         <div className="grid grid-cols-2 gap-3">
+          {!tracked && (
           <div>
             <FieldLabel htmlFor={ids.animals}>{t("animals")}</FieldLabel>
             <input
@@ -90,11 +131,12 @@ export function RecordSaleModal({
               min={1}
               required
               inputMode="numeric"
-              value={animals}
-              onChange={(e) => setAnimals(e.target.value)}
+              value={count}
+              onChange={(e) => setCount(e.target.value)}
               className={`${fieldClass} h-[44px]`}
             />
           </div>
+          )}
           <div>
             <FieldLabel htmlFor={ids.amount}>{t("amount")}</FieldLabel>
             <input
@@ -161,7 +203,7 @@ export function RecordSaleModal({
           onCancel={onClose}
           cancelLabel={tc("cancel")}
           submitLabel={loading ? t("submitting") : t("submit")}
-          disabled={loading || !animals || !amount || !date}
+          disabled={loading || (tracked ? picked.size === 0 : !count) || !amount || !date}
         />
       </form>
     </Modal>

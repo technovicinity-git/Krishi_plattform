@@ -1,6 +1,7 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { releasedFunds } from "./settlement";
 import { signFileUrls } from "@/lib/storage/private-files";
+import { getAnimalsForInvestment, type Animal } from "@/lib/animals";
 
 export interface InvestmentDetail {
   id: string;
@@ -52,6 +53,8 @@ export interface InvestmentDetail {
   }>;
   sale: InvestmentSale | null;
   settlement: InvestmentSettlement | null;
+  /** One entry per animal bought, with weight/health records. */
+  animals: Animal[];
   updates: Array<{
     id: string;
     updateType: string;
@@ -206,7 +209,7 @@ export async function getInvestmentDetail(
     (fundReqs ?? []).map((r) => ({ status: r.status, amount: Number(r.amount) })),
   );
 
-  const [{ data: expenseRows }, { data: saleRow }, { data: settlementRow }] = await Promise.all([
+  const [{ data: expenseRows }, { data: saleRow }, { data: settlementRow }, animals] = await Promise.all([
     db
       .from("expenses")
       .select("id, amount, category, description, receipt_path, status, rejection_reason, created_at")
@@ -218,6 +221,7 @@ export async function getInvestmentDetail(
       .select("capital, funds_released, sale_amount, total_return, net_result, outcome, investor_payout, farmer_share, steward_share, platform_share, note, settled_at")
       .eq("investment_id", investmentId)
       .maybeSingle(),
+    getAnimalsForInvestment(investmentId),
   ]);
   const expAgg = (expenseRows ?? []).filter((e) => e.status === "approved");
 
@@ -297,6 +301,7 @@ export async function getInvestmentDetail(
       createdAt: e.created_at,
     })),
     sale: saleRow ? mapSale(saleRow, urls) : null,
+    animals,
     settlement: settlementRow
       ? {
           capital: Number(settlementRow.capital),

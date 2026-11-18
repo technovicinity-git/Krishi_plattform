@@ -4,6 +4,8 @@ import { Link } from "@/i18n/navigation";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { DetailRow, PageHeader, Panel, StatusBadge } from "@/components/dashboard/ui";
+import { getStewardRatings, getStewardReviews } from "@/lib/reviews";
+import { ReviewList } from "@/components/reviews/ReviewList";
 
 export const dynamic = "force-dynamic";
 
@@ -35,6 +37,12 @@ export default async function StewardProfilePage() {
   if (!user) redirect("/login");
   if (user.role !== "steward") redirect("/portal/profile");
 
+  const [ratingMap, myReviews, trv] = await Promise.all([
+    getStewardRatings([user.id]),
+    getStewardReviews(user.id, 50),
+    getTranslations("app.review"),
+  ]);
+  const myRating = ratingMap.get(user.id) ?? null;
   const t = await getTranslations("app.stewardAccount");
   const tk = await getTranslations("portal.profile");
   const tr = await getTranslations("app.roles");
@@ -145,6 +153,14 @@ export default async function StewardProfilePage() {
           </div>
         )}
       </Card>
+
+      <Panel title={trv("yourReviews")}>
+        {myRating ? (
+          <ReviewList rating={myRating} reviews={myReviews} />
+        ) : (
+          <p className="text-[13px] text-ink-muted">{trv("noneYet")}</p>
+        )}
+      </Panel>
     </div>
   );
 }

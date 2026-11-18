@@ -37,7 +37,7 @@ export async function PATCH(
   const { data: sale } = await db
     .from("investment_sales")
     .select(`
-      id, investment_id, sale_amount, status, reference,
+      id, investment_id, sale_amount, status, reference, animal_ids, sale_date,
       investment:investments!investment_id (
         offering:steward_plan_offerings!offering_id ( steward_id )
       )
@@ -72,6 +72,18 @@ export async function PATCH(
   }
   if (!updated?.length) {
     return NextResponse.json({ error: "Sale already reviewed" }, { status: 409 });
+  }
+
+  // Mark the sold animals, each with an equal share of the price.
+  const soldIds = (sale.animal_ids ?? []) as string[];
+  if (approve && soldIds.length > 0) {
+    const share = Math.round((Number(sale.sale_amount) / soldIds.length) * 100) / 100;
+    await db
+      .from("animals")
+      .update({ status: "sold", sale_price: share, sold_at: sale.sale_date })
+      .in("id", soldIds)
+      .eq("investment_id", sale.investment_id)
+      .eq("status", "active");
   }
 
   await db

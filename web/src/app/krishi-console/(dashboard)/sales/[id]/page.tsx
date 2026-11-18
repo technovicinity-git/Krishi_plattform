@@ -12,6 +12,8 @@ import { FundRequestsList } from "@/components/investment/FundRequestsList";
 import { ExpensesList } from "@/components/investment/ExpensesList";
 import { UpdatesList } from "@/components/investment/UpdatesList";
 import { SettleSaleActions } from "@/components/admin/SettleSaleActions";
+import { AnimalsPanel } from "@/components/animals/AnimalsPanel";
+import { ReportDownload } from "@/components/reports/ReportDownload";
 
 export const dynamic = "force-dynamic";
 
@@ -56,6 +58,7 @@ export default async function AdminSaleDetailPage({
         eyebrow={<span className="font-mono">{inv.reference}</span>}
         title={inv.offering.planNameEn}
         description={<>{inv.units} unit{inv.units === 1 ? "" : "s"} · invested {formatBDT(inv.amount)}</>}
+        actions={<ReportDownload endpoint={`/api/reports/investment/${inv.id}`} locale="en" />}
       />
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_380px]">
@@ -68,6 +71,7 @@ export default async function AdminSaleDetailPage({
             </Panel>
           )}
 
+          {inv.animals.length > 0 && <AnimalsPanel animals={inv.animals} />}
           <FundRequestsList requests={inv.fundRequests} />
           <ExpensesList expenses={inv.expenses} />
           <UpdatesList updates={inv.updates} />

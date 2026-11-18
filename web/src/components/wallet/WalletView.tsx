@@ -13,6 +13,7 @@ import {
 } from "@/components/dashboard/ui";
 import { WithdrawButton } from "./WithdrawButton";
 import { CancelWithdrawalButton } from "./CancelWithdrawalButton";
+import { ReportDownload } from "@/components/reports/ReportDownload";
 
 const WD_TONE: Record<string, BadgeTone> = {
   pending: "warning",
@@ -59,7 +60,12 @@ export async function WalletView({
       <PageHeader
         title={t("title")}
         description={t("subtitle")}
-        actions={<WithdrawButton balance={wallet.balance} destination={destination} />}
+        actions={
+          <div className="flex flex-wrap items-center gap-3">
+            <ReportDownload endpoint="/api/reports/wallet" />
+            <WithdrawButton balance={wallet.balance} destination={destination} />
+          </div>
+        }
       />
 
       {!wallet.payout && (

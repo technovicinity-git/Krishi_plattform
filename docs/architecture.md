@@ -9,6 +9,7 @@
 | i18n | `next-intl` 4. Locales `bn` (default) and `en`, `localePrefix: "as-needed"`, browser detection off |
 | Database | **Supabase Postgres** |
 | File storage | Supabase Storage buckets: `kyc-documents` (private), `deposit-proofs` (private), `plan-images` |
+| PDF reports | `pdfkit` with bundled Noto Sans + Noto Sans Bengali (`web/src/fonts/pdf`, OFL). `web/src/lib/pdf/doc.ts` switches font per script run so mixed Bangla/Latin text renders; routes under `/api/reports/*` |
 | Auth | **Custom**: phone/email + bcrypt password, 6-digit OTP, HS256 JWT in an httpOnly cookie (`jose`) |
 | Validation | `zod` v4 in every API route |
 | Migrations | Plain SQL files run by a custom Node runner (`web/scripts/migrate.mjs`, uses `postgres`) |

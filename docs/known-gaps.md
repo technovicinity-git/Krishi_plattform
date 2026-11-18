@@ -25,5 +25,7 @@ Found while reading the codebase on 2026-11-17. Ordered by priority.
 - **Fund disbursement:** the detail code treats `disbursed` as a status, but the steward route only sets `approved`/`rejected`.
 - **Admin console:** offerings default to `approved` when the admin creates them, and stewards have no self-serve way to propose offerings (`pending_approval` exists in the schema but is unused).
 - **No automated tests** and no CI configuration.
+- **PDF text in Bangla can't be copied or searched.** Statements render Bangla correctly (pdfkit shapes it with the bundled Noto fonts), but text copied out of the PDF comes out scrambled. Printing and reading are unaffected.
+- **Two lockfiles.** `pdfkit` was added with yarn, so `yarn.lock` is current and `web/package-lock.json` is not. Pick one package manager and delete the other lockfile.
 - **`web/README.md`** is the default create-next-app text.
 - **Housekeeping:** `all_packages.txt` at the root is a stray dump from another path. `_smoke_test` table and migration can be dropped. Both `package-lock.json` and `yarn.lock` exist in `web/`; pick one package manager. Some route files have inconsistent indentation (`api/kyc/submit`).

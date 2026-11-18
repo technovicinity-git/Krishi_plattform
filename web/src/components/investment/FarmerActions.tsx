@@ -9,6 +9,7 @@ import { LogExpenseModal } from "./LogExpenseModal";
 import { PurchaseModal } from "./PurchaseModal";
 import { PostUpdateModal } from "./PostUpdateModal";
 import { RecordSaleModal } from "./RecordSaleModal";
+import type { Animal } from "@/lib/animals";
 
 type Dialog = "purchase" | "sale" | "update" | "fund" | "expense" | null;
 
@@ -26,12 +27,14 @@ export function FarmerActions({
   currentStage,
   units,
   saleRejected = false,
+  activeAnimals = [],
 }: {
   investmentId: string;
   currentStage: string;
   units: number;
   /** The steward sent the last recorded sale back; offer to record it again. */
   saleRejected?: boolean;
+  activeAnimals?: Pick<Animal, "id" | "tag" | "earTag" | "currentWeightKg">[];
 }) {
   const t = useTranslations("app.farmerActions");
   const t2 = useTranslations("app.farmerActions2");
@@ -109,7 +112,12 @@ export function FarmerActions({
         <PurchaseModal investmentId={investmentId} defaultAnimals={units} onClose={close} />
       )}
       {open === "sale" && (
-        <RecordSaleModal investmentId={investmentId} defaultAnimals={units} onClose={close} />
+        <RecordSaleModal
+          investmentId={investmentId}
+          defaultAnimals={units}
+          animals={activeAnimals}
+          onClose={close}
+        />
       )}
       {open === "update" && <PostUpdateModal investmentId={investmentId} onClose={close} />}
       {open === "fund" && <FundRequestModal investmentId={investmentId} onClose={close} />}

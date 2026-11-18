@@ -40,8 +40,11 @@ export async function POST(
     return NextResponse.json({ error: "Invalid form data" }, { status: 400 });
   }
 
+  // Which tracked animals were sold (when the batch has animal records).
+  const animalIds = form.getAll("animal_ids").filter((v): v is string => typeof v === "string" && v.length > 0);
+
   const parsed = schema.safeParse({
-    animals_sold: form.get("animals_sold"),
+    animals_sold: animalIds.length > 0 ? animalIds.length : form.get("animals_sold"),
     sale_amount: form.get("sale_amount"),
     sale_date: form.get("sale_date"),
     buyer_name: form.get("buyer_name") ?? undefined,
@@ -87,6 +90,22 @@ export async function POST(
     );
   }
 
+  // Batches with tracked animals must say which ones were sold.
+  const { data: activeAnimals } = await db
+    .from("animals")
+    .select("id")
+    .eq("investment_id", inv.id)
+    .eq("status", "active");
+  const activeIds = new Set((activeAnimals ?? []).map((a) => a.id));
+  if (activeIds.size > 0) {
+    if (animalIds.length === 0) {
+      return NextResponse.json({ error: "Choose the animals you sold" }, { status: 400 });
+    }
+    if (animalIds.some((aid) => !activeIds.has(aid)) || new Set(animalIds).size !== animalIds.length) {
+      return NextResponse.json({ error: "One of the chosen animals is not an active animal in this batch" }, { status: 400 });
+    }
+  }
+
   const { data: existing } = await db
     .from("investment_sales")
     .select("id, status")
@@ -118,6 +137,7 @@ export async function POST(
     investment_id: inv.id,
     farmer_id: user.id,
     animals_sold: data.animals_sold,
+    animal_ids: animalIds.length > 0 ? animalIds : null,
     sale_amount: data.sale_amount,
     sale_date: data.sale_date,
     buyer_name: data.buyer_name || null,

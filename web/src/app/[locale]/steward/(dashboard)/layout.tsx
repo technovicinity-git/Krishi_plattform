@@ -108,6 +108,8 @@ export default async function StewardDashboardLayout({
             { label: ts("items.expenses"), href: "/steward/expenses", icon: "receipt", badge: counts.expenses },
             { label: ts("items.sales"), href: "/steward/sales", icon: "tag", badge: counts.sales },
             { label: tp("wallet"), href: "/steward/wallet", icon: "wallet" },
+            { label: ts("items.livestock"), href: "/steward/livestock", icon: "leaf" },
+            { label: ts("items.reports"), href: "/steward/reports", icon: "chart" },
           ],
         },
         {
@@ -116,14 +118,6 @@ export default async function StewardDashboardLayout({
             { label: ts("items.profile"), href: "/steward/profile", icon: "user" },
             { label: ts("items.kyc"), href: "/onboarding/kyc", icon: "shield" },
             { label: tu("settings"), href: "/steward/settings", icon: "settings" },
-          ],
-        },
-        {
-          label: tp("comingSoon"),
-          locked: true,
-          items: [
-            { label: ts("items.livestock"), href: "/steward/livestock", icon: "leaf" },
-            { label: ts("items.reports"), href: "/steward/reports", icon: "chart" },
           ],
         },
       ]}

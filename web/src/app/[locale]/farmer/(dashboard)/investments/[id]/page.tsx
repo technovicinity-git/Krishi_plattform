@@ -18,6 +18,8 @@ import {
   StatusBadge,
   toneFor,
 } from "@/components/dashboard/ui";
+import { AnimalsPanel } from "@/components/animals/AnimalsPanel";
+import { ReportDownload } from "@/components/reports/ReportDownload";
 
 export const dynamic = "force-dynamic";
 
@@ -65,9 +67,12 @@ export default async function FarmerInvestmentDetailPage({
         eyebrow={<span className="font-mono">{inv.reference}</span>}
         title={planName}
         actions={
-          <StatusBadge tone={toneFor(inv.currentStage)} className="text-[11px]">
-            {tst.has(inv.currentStage) ? tst(inv.currentStage) : inv.currentStage}
-          </StatusBadge>
+          <div className="flex flex-wrap items-center gap-3">
+            <ReportDownload endpoint={`/api/reports/investment/${inv.id}`} />
+            <StatusBadge tone={toneFor(inv.currentStage)} className="text-[11px]">
+              {tst.has(inv.currentStage) ? tst(inv.currentStage) : inv.currentStage}
+            </StatusBadge>
+          </div>
         }
       />
 
@@ -97,7 +102,10 @@ export default async function FarmerInvestmentDetailPage({
         currentStage={inv.currentStage}
         units={inv.units}
         saleRejected={inv.sale?.status === "rejected"}
+        activeAnimals={inv.animals.filter((a) => a.status === "active")}
       />
+
+      {inv.animals.length > 0 && <AnimalsPanel animals={inv.animals} canEdit canRecord />}
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
         <div className="flex min-w-0 flex-col gap-6">

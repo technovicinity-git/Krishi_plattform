@@ -26,10 +26,12 @@ export function PurchaseModal({
   const t = useTranslations("app.purchaseForm");
   const tc = useTranslations("app.common");
   const router = useRouter();
-  const ids = { animals: useId(), cost: useId(), note: useId() };
+  const ids = { animals: useId(), cost: useId(), note: useId(), breed: useId(), weight: useId() };
   const [animals, setAnimals] = useState(String(defaultAnimals || 1));
   const [cost, setCost] = useState("");
   const [note, setNote] = useState("");
+  const [breed, setBreed] = useState("");
+  const [weight, setWeight] = useState("");
   const [photo, setPhoto] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -43,6 +45,8 @@ export function PurchaseModal({
       fd.set("animals", animals);
       fd.set("total_cost", cost);
       fd.set("note", note);
+      fd.set("breed", breed);
+      fd.set("avg_weight", weight);
       if (photo) fd.set("photo", await compressImage(photo, 1600, 1));
 
       const res = await fetch(`/api/farmer/investments/${investmentId}/purchase`, {
@@ -90,6 +94,33 @@ export function PurchaseModal({
             />
           </div>
         </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <FieldLabel htmlFor={ids.breed}>{t("breed")}</FieldLabel>
+            <input
+              id={ids.breed}
+              type="text"
+              value={breed}
+              placeholder={t("breedPlaceholder")}
+              onChange={(e) => setBreed(e.target.value)}
+              className={`${fieldClass} h-[44px]`}
+            />
+          </div>
+          <div>
+            <FieldLabel htmlFor={ids.weight}>{t("avgWeight")}</FieldLabel>
+            <input
+              id={ids.weight}
+              type="number"
+              min={1}
+              step="0.1"
+              inputMode="decimal"
+              value={weight}
+              onChange={(e) => setWeight(e.target.value)}
+              className={`${fieldClass} h-[44px]`}
+            />
+          </div>
+        </div>
+        <p className="-mt-2 text-[12px] text-ink-muted">{t("animalsHint")}</p>
         <div>
           <FieldLabel htmlFor={ids.note}>{t("note")}</FieldLabel>
           <textarea

@@ -73,6 +73,7 @@ export default async function AdminDashboardLayout({
             { label: "Investors", href: "/krishi-console/investors", icon: "briefcase" },
             { label: "Stewards", href: "/krishi-console/stewards", icon: "users", badge: stewards ?? 0 },
             { label: "Farmers", href: "/krishi-console/farmers", icon: "leaf" },
+            { label: "Reviews", href: "/krishi-console/reviews", icon: "inbox" },
           ],
         },
         {

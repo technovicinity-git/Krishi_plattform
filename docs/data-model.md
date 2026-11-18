@@ -125,6 +125,12 @@ Partial unique indexes allow only one *active* interest (`submitted`, `under_rev
 
 **`notifications`** (`20261118000003_notifications.sql`): in-app notifications for investors, stewards and farmers. `kind` + `params` (reference, amount, plan/planBn, name, reason, title) are rendered in the reader's language from `app.notify.<kind>` messages; `href` is an unprefixed app path; `read_at` marks it read. Created with `notify()` in `web/src/lib/notifications/notify.ts`, which never throws.
 
+**`animals`** (`20261118000005_animals.sql`): one row per animal, created when the farmer confirms the purchase (`KR-ANM-000001`, batch tag `A01`, `A02`…). Holds `ear_tag`, `breed`, `sex`, `purchase_price` (purchase cost split evenly), `purchase_weight_kg`, `current_weight_kg` (kept in step with the latest weight record), `status` (`active` → `sold` | `dead`), `sale_price` (sale amount split evenly over the animals sold), `sold_at`, `died_at`. Batches bought before this migration were back-filled.
+
+**`animal_records`**: weight / health / vaccination / treatment / note / death entries per animal, with optional photo (private bucket), `recorded_on`, `author_role`. A `death` record marks the animal dead and notifies the investor. `investment_sales.animal_ids` lists which animals a sale covers; confirming the sale marks them sold.
+
+**`steward_reviews`** (`20261118000006_steward_reviews.sql`): one per settled investment, written by its investor: `rating` 1–5, optional `comment`, `status` `published` | `hidden` (admin, with `hidden_reason`). Public pages show only published reviews, with the reviewer's first name and last initial.
+
 ### Tables from the baseline migration (20261016000001)
 
 | Table | Key columns | Statuses / stages |

@@ -14,6 +14,10 @@ import {
   StatusBadge,
   toneFor,
 } from "@/components/dashboard/ui";
+import { AnimalsPanel } from "@/components/animals/AnimalsPanel";
+import { ReviewPanel } from "@/components/reviews/ReviewPanel";
+import { getReviewForInvestment } from "@/lib/reviews";
+import { ReportDownload } from "@/components/reports/ReportDownload";
 
 export const dynamic = "force-dynamic";
 
@@ -29,6 +33,7 @@ export default async function InvestorInvestmentDetailPage({
   const inv = await getInvestmentDetail(id);
   if (!inv || inv.investor.id !== user.id) notFound();
 
+  const review = inv.currentStage === "settled" ? await getReviewForInvestment(inv.id) : null;
   const t = await getTranslations("app.investmentDetail");
   const tst = await getTranslations("app.stage");
   const locale = await getLocale();
@@ -42,9 +47,12 @@ export default async function InvestorInvestmentDetailPage({
         eyebrow={<span className="font-mono">{inv.reference}</span>}
         title={planName}
         actions={
-          <StatusBadge tone={toneFor(inv.currentStage)} className="text-[11px]">
-            {tst.has(inv.currentStage) ? tst(inv.currentStage) : inv.currentStage}
-          </StatusBadge>
+          <div className="flex flex-wrap items-center gap-3">
+            <ReportDownload endpoint={`/api/reports/investment/${inv.id}`} />
+            <StatusBadge tone={toneFor(inv.currentStage)} className="text-[11px]">
+              {tst.has(inv.currentStage) ? tst(inv.currentStage) : inv.currentStage}
+            </StatusBadge>
+          </div>
         }
       />
 
@@ -69,6 +77,12 @@ export default async function InvestorInvestmentDetailPage({
       {inv.sale && inv.sale.status !== "rejected" && (
         <SalePanel investmentId={inv.id} sale={inv.sale} settlement={inv.settlement} viewer="investor" />
       )}
+
+      {inv.currentStage === "settled" && (
+        <ReviewPanel investmentId={inv.id} stewardName={inv.steward.fullName ?? "—"} review={review} />
+      )}
+
+      {inv.animals.length > 0 && <AnimalsPanel animals={inv.animals} />}
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
         <UpdatesList updates={inv.updates} />

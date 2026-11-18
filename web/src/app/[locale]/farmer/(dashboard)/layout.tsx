@@ -58,6 +58,7 @@ export default async function FarmerDashboardLayout({
             { label: tn("fundRequests"), href: "/farmer/fund-requests", icon: "coins", badge: pendingFunds ?? 0 },
             { label: tn("expenses"), href: "/farmer/expenses", icon: "receipt" },
             { label: tp("wallet"), href: "/farmer/wallet", icon: "wallet" },
+            { label: tn("livestock"), href: "/farmer/livestock", icon: "leaf" },
           ],
         },
         {
@@ -71,7 +72,6 @@ export default async function FarmerDashboardLayout({
           label: tp("comingSoon"),
           locked: true,
           items: [
-            { label: tn("livestock"), href: "/farmer/livestock", icon: "leaf" },
             { label: tn("sales"), href: "/farmer/sales", icon: "tag" },
           ],
         },

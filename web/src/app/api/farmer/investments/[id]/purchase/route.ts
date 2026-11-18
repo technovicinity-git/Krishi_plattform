@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { uploadUpdatePhoto } from "@/lib/investments/photos";
+import { createAnimalsForPurchase } from "@/lib/animals";
 import { notify, investmentParties } from "@/lib/notifications/notify";
 
 export const runtime = "nodejs";
@@ -11,12 +12,18 @@ const schema = z.object({
   animals: z.coerce.number().int().min(1).max(500),
   total_cost: z.coerce.number().positive().max(100_000_000),
   note: z.string().trim().max(1000).optional().default(""),
+  breed: z.string().trim().max(80).optional().default(""),
+  avg_weight: z
+    .union([z.literal(""), z.coerce.number().positive().max(2000)])
+    .optional()
+    .transform((v) => (v === "" || v === undefined ? null : v)),
 });
 
 /**
  * Farmer confirms the animals were bought. Moves the investment from
  * `awaiting_purchase` to `growing_care` and posts a purchase update.
- * Body: multipart form (animals, total_cost, note, photo?).
+ * Body: multipart form (animals, total_cost, note, breed?, avg_weight?, photo?).
+ * Creates one `animals` row per animal bought.
  */
 export async function POST(
   request: Request,
@@ -39,6 +46,8 @@ export async function POST(
     animals: form.get("animals"),
     total_cost: form.get("total_cost"),
     note: form.get("note") ?? undefined,
+    breed: form.get("breed") ?? undefined,
+    avg_weight: form.get("avg_weight") ?? undefined,
   });
   if (!parsed.success) {
     return NextResponse.json(
@@ -82,7 +91,17 @@ export async function POST(
     return NextResponse.json({ error: "Purchase already confirmed" }, { status: 409 });
   }
 
-  const { animals, total_cost, note } = parsed.data;
+  const { animals, total_cost, note, breed, avg_weight } = parsed.data;
+
+  // One record per animal bought, so each can be weighed and tracked.
+  await createAnimalsForPurchase({
+    investmentId: inv.id,
+    count: animals,
+    totalCost: total_cost,
+    avgWeightKg: avg_weight,
+    breed,
+    purchasedAt: new Date().toISOString().slice(0, 10),
+  });
   await db.from("investment_updates").insert({
     investment_id: inv.id,
     author_id: user.id,

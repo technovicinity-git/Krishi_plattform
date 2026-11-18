@@ -8,6 +8,9 @@ import { StarIcon } from "@/components/icons";
 import { Link } from "@/i18n/navigation";
 import { planImageUrl } from "@/lib/admin/plan-helpers";
 import { formatBDT } from "@/lib/utils";
+import { getStewardRatings, getStewardReviews } from "@/lib/reviews";
+import { Stars } from "@/components/reviews/Stars";
+import { ReviewList } from "@/components/reviews/ReviewList";
 
 export const dynamic = "force-dynamic";
 
@@ -56,6 +59,13 @@ export default async function StewardProfilePage({
     ? [profile.upazila, (bn ? district?.name_bn : null) ?? district?.name_en].filter(Boolean).join(", ")
     : t("bangladesh");
 
+  const [ratingMap, reviews] = await Promise.all([
+    getStewardRatings([steward.id]),
+    getStewardReviews(steward.id),
+  ]);
+  const rating = ratingMap.get(steward.id) ?? null;
+  const tr = await getTranslations("app.review");
+
   const categories: string[] = profile?.categories ?? [];
   const experience: string = profile?.experience ?? "";
   const stewardName = steward.full_name ?? t("steward");
@@ -79,10 +89,18 @@ export default async function StewardProfilePage({
                   {isOrg ? t("typeOrgLong") : t("typeIndividualLong")}
                 </div>
                 <p className="text-[13px] text-ink-secondary">{operatingArea}</p>
-                <div className="flex items-center gap-1.5 text-[13px] font-medium text-ink-muted">
-                  <StarIcon className="h-3.5 w-3.5 text-brand" />
-                  {t("noReviews")}
-                </div>
+                {rating ? (
+                  <div className="flex items-center gap-2 text-[13px] font-semibold text-ink">
+                    <Stars value={rating.avg} size={15} label={tr("avgLabel", { avg: rating.avg.toFixed(1) })} />
+                    {rating.avg.toFixed(1)}
+                    <span className="font-medium text-ink-muted">· {tr("count", { count: rating.count })}</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-1.5 text-[13px] font-medium text-ink-muted">
+                    <StarIcon className="h-3.5 w-3.5 text-brand" />
+                    {t("noReviews")}
+                  </div>
+                )}
               </div>
               <p className="max-w-[560px] text-[15px] leading-[1.65] text-ink-secondary">
                 {experience ||
@@ -173,15 +191,21 @@ export default async function StewardProfilePage({
           <p className="mt-2 text-[13px] text-ink-secondary">
             {t("reviewsSubtitle")}
           </p>
-          <div className="mt-8 rounded-2xl border border-border-light bg-white p-10 text-center">
-            <StarIcon className="mx-auto h-8 w-8 text-ink-muted/40" />
-            <p className="mt-3 text-[14px] font-semibold text-ink-secondary">
-              {t("noReviews")}
-            </p>
-            <p className="mt-1 text-[12px] text-ink-muted">
-              {t("reviewsEmpty")}
-            </p>
-          </div>
+          {rating && reviews.length > 0 ? (
+            <div className="mt-8">
+              <ReviewList rating={rating} reviews={reviews} />
+            </div>
+          ) : (
+            <div className="mt-8 rounded-2xl border border-border-light bg-white p-10 text-center">
+              <StarIcon className="mx-auto h-8 w-8 text-ink-muted/40" />
+              <p className="mt-3 text-[14px] font-semibold text-ink-secondary">
+                {t("noReviews")}
+              </p>
+              <p className="mt-1 text-[12px] text-ink-muted">
+                {t("reviewsEmpty")}
+              </p>
+            </div>
+          )}
         </Container>
       </section>
 

@@ -33,7 +33,9 @@ export type NotificationKind =
   | "kyc_approved"
   | "kyc_rejected"
   | "steward_approved"
-  | "steward_rejected";
+  | "steward_rejected"
+  | "animal_died"
+  | "review_received";
 
 export interface NotificationParams {
   reference?: string;
