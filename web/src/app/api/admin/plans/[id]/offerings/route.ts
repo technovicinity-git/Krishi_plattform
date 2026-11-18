@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentAdmin } from "@/lib/admin/current-admin";
 import { logAdminAction } from "@/lib/admin/audit";
+import { notifyOfferingChange } from "@/lib/notifications/notify";
 import type { OfferingQueryRow } from "@/lib/admin/plan-helpers";
 
 export const runtime = "nodejs";
@@ -156,6 +157,8 @@ export async function POST(
     metadata: { plan_id: id, steward_id: parsed.data.steward_id },
     request,
   });
+
+  await notifyOfferingChange(data.id, isApproved ? "offering_assigned" : "offering_assigned_pending");
 
   return NextResponse.json({ success: true, id: data.id });
 }

@@ -1910,6 +1910,13 @@
       "unreadCount": "{count, plural, =0 {No unread notifications} one {# unread} other {# unread}}"
     },
     "notify": {
+      "offering_assigned": {"title": "You were added to {plan}", "body": "You can take {title} units. The plan is open to investors now."},
+      "offering_assigned_pending": {"title": "You were added to {plan}", "body": "{title} units, waiting for Krishi's approval before investors can see it."},
+      "offering_approved": {"title": "{plan} is live", "body": "Your {title} units are now open to investors."},
+      "offering_paused": {"title": "{plan} is paused", "body": "Investors can't send new interests for now."},
+      "offering_closed": {"title": "{plan} is closed", "body": "Your offering on this plan was closed by Krishi."},
+      "offering_rejected": {"title": "{plan} was not approved", "body": "{reason}"},
+      "offering_units": {"title": "Units changed on {plan}", "body": "You now offer {title} units."},
       "animal_died": {"title": "Animal {name} died", "body": "{plan} ({reference}): {reason}"},
       "review_received": {"title": "New {name}-star review", "body": "An investor reviewed your work on {plan}."},
       "interest_submitted": {

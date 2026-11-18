@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentAdmin } from "@/lib/admin/current-admin";
 import { logAdminAction } from "@/lib/admin/audit";
+import { notifyOfferingChange } from "@/lib/notifications/notify";
 
 export const runtime = "nodejs";
 
@@ -27,7 +28,7 @@ export async function PATCH(
 
   const { data: existing } = await db
     .from("steward_plan_offerings")
-    .select("id, units_funded")
+    .select("id, units_funded, units_offered, status")
     .eq("id", id)
     .maybeSingle();
   if (!existing) {
@@ -100,6 +101,25 @@ export async function PATCH(
     request,
   });
 
+  // Tell the steward what changed: a new status wins over a units change.
+  const newStatus = parsed.data.status;
+  if (newStatus && newStatus !== existing.status) {
+    const kind = (
+      {
+        approved: "offering_approved",
+        paused: "offering_paused",
+        closed: "offering_closed",
+        rejected: "offering_rejected",
+      } as const
+    )[newStatus as "approved" | "paused" | "closed" | "rejected"];
+    if (kind) await notifyOfferingChange(id, kind, { reason: parsed.data.rejection_reason });
+  } else if (
+    parsed.data.units_offered !== undefined &&
+    parsed.data.units_offered !== existing.units_offered
+  ) {
+    await notifyOfferingChange(id, "offering_units");
+  }
+
   return NextResponse.json({ success: true });
 }
 
@@ -145,6 +165,8 @@ export async function DELETE(
     targetId: id,
     request,
   });
+
+  await notifyOfferingChange(id, "offering_closed");
 
   return NextResponse.json({ success: true });
 }

@@ -35,7 +35,14 @@ export type NotificationKind =
   | "steward_approved"
   | "steward_rejected"
   | "animal_died"
-  | "review_received";
+  | "review_received"
+  | "offering_assigned"
+  | "offering_assigned_pending"
+  | "offering_approved"
+  | "offering_paused"
+  | "offering_closed"
+  | "offering_rejected"
+  | "offering_units";
 
 export interface NotificationParams {
   reference?: string;
@@ -112,4 +119,42 @@ export async function investmentParties(investmentId: string): Promise<{
     plan: offering?.investment_plans?.name_en ?? "",
     planBn: offering?.investment_plans?.name_bn ?? offering?.investment_plans?.name_en ?? "",
   };
+}
+
+/**
+ * Tells a steward about a change to their offering on a plan (assigned,
+ * approved, paused, closed, rejected, units changed). Never throws.
+ */
+export async function notifyOfferingChange(
+  offeringId: string,
+  kind: Extract<
+    NotificationKind,
+    | "offering_assigned"
+    | "offering_assigned_pending"
+    | "offering_approved"
+    | "offering_paused"
+    | "offering_closed"
+    | "offering_rejected"
+    | "offering_units"
+  >,
+  extra: { reason?: string | null } = {},
+): Promise<void> {
+  const { data } = await createAdminClient()
+    .from("steward_plan_offerings")
+    .select("steward_id, units_offered, investment_plans ( name_en, name_bn )")
+    .eq("id", offeringId)
+    .maybeSingle();
+  if (!data) return;
+  const plan = data.investment_plans as unknown as { name_en: string | null; name_bn: string | null } | null;
+  await notify(
+    kind,
+    { userId: data.steward_id, href: "/steward" },
+    {
+      plan: plan?.name_en ?? undefined,
+      planBn: plan?.name_bn ?? plan?.name_en ?? undefined,
+      // Units offered, shown as a plain number.
+      title: String(data.units_offered),
+      reason: extra.reason ?? undefined,
+    },
+  );
 }
