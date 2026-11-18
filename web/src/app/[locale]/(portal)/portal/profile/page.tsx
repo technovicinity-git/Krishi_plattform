@@ -31,6 +31,11 @@ export default async function PortalProfilePage() {
       : user.kycStatus === "rejected" || user.kycStatus === "requires_update"
         ? t("kycCtaResubmit")
         : t("kycCtaView");
+  // Start / resubmit opens the KYC form; "view submission" opens the status page.
+  const kycHref =
+    user.kycStatus === "pending" || user.kycStatus === "under_review"
+      ? "/portal/kyc"
+      : "/onboarding/kyc";
 
   const details = [
     { labelKey: "detailAccountType", value: capitalize(user.role) },
@@ -92,7 +97,7 @@ export default async function PortalProfilePage() {
 
         {showKycCta && (
           <Link
-            href="/onboarding/kyc"
+            href={kycHref}
             className="inline-flex h-[52px] w-fit items-center justify-center gap-2 rounded-[8px] bg-brand px-8 text-[15px] font-bold text-white transition-colors hover:bg-brand-hover"
           >
             {ctaLabel}
