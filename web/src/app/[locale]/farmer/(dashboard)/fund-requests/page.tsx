@@ -11,6 +11,7 @@ import {
   StatusBadge,
   toneFor,
 } from "@/components/dashboard/ui";
+import { NewFundRequestButton } from "@/components/investment/NewFundRequestButton";
 
 export const dynamic = "force-dynamic";
 
@@ -60,12 +61,45 @@ export default async function FarmerFundRequestsPage() {
     .order("created_at", { ascending: false });
 
   const requests = (data ?? []) as unknown as FundRequestRow[];
+
+  // Batches the farmer can still request money for (buying or raising animals).
+  const { data: batchRows } = await db
+    .from("investments")
+    .select("id, reference, amount, current_stage, offering:steward_plan_offerings!offering_id ( investment_plans ( name_en, name_bn ) )")
+    .eq("farmer_id", user.id)
+    .in("current_stage", ["awaiting_purchase", "growing_care"])
+    .order("created_at", { ascending: false });
+  const { data: committedRows } = batchRows?.length
+    ? await db
+        .from("fund_requests")
+        .select("investment_id, amount")
+        .in("investment_id", batchRows.map((b) => b.id))
+        .in("status", ["pending", "approved", "disbursed"])
+    : { data: [] };
+  const committed = new Map<string, number>();
+  for (const r of committedRows ?? []) {
+    committed.set(r.investment_id, (committed.get(r.investment_id) ?? 0) + Number(r.amount));
+  }
+  const batches = (batchRows ?? []).map((b) => {
+    const plan = (b.offering as unknown as { investment_plans: { name_en: string | null; name_bn: string | null } | null } | null)
+      ?.investment_plans;
+    return {
+      id: b.id,
+      reference: b.reference,
+      plan: (bn ? plan?.name_bn : plan?.name_en) ?? plan?.name_en ?? "—",
+      remaining: Math.max(0, Number(b.amount) - (committed.get(b.id) ?? 0)),
+    };
+  });
   const sum = (statuses: string[]) =>
     requests.filter((r) => statuses.includes(r.status)).reduce((s, r) => s + Number(r.amount), 0);
 
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader title={t("title")} description={t("subtitle")} />
+      <PageHeader
+        title={t("title")}
+        description={t("subtitle")}
+        actions={<NewFundRequestButton batches={batches} />}
+      />
 
       {requests.length > 0 && (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -76,7 +110,12 @@ export default async function FarmerFundRequestsPage() {
       )}
 
       {requests.length === 0 ? (
-        <EmptyState icon="coins" title={t("empty")} />
+        <EmptyState
+          icon="coins"
+          title={t("empty")}
+          description={batches.length === 0 ? t("noBatches") : undefined}
+          action={<NewFundRequestButton batches={batches} />}
+        />
       ) : (
         <div className="overflow-hidden rounded-2xl border border-border-light bg-white">
           <ul className="divide-y divide-border-light">

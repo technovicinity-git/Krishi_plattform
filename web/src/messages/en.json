@@ -2505,6 +2505,11 @@
       "logExpense": "Log Expense / Receipt"
     },
     "farmerFundRequests": {
+      "newRequest": "New request",
+      "chooseBatch": "Which batch is this for?",
+      "chooseBatchHint": "You can request money for batches you are buying or raising.",
+      "remaining": "Left to request",
+      "noBatches": "You can request money once a batch is assigned to you.",
       "title": "My Fund Requests",
       "subtitle": "Track funds you have requested from your steward.",
       "empty": "You haven't submitted any fund requests yet."

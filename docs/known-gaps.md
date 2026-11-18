@@ -14,7 +14,7 @@ Found while reading the codebase on 2026-11-17. Ordered by priority.
 ## 🟠 Schema and data integrity
 
 1. ~~Missing migrations~~ — fixed 2026-11-18: `20261016000001_baseline_untracked_tables.sql` creates the hand-made tables and storage buckets. A database built from all migrations was checked to match the live schema column for column.
-2. **Duplicate deposit-approval routes.** `/api/deposits/[id]/approve` and `/api/admin/deposits/[id]/approve` both exist. Only the admin route increments `steward_plan_offerings.units_funded`. Delete the legacy route or make the two the same.
+2. ~~Duplicate deposit-approval routes~~ — fixed 2026-11-18: the legacy `/api/deposits/[id]/approve` is deleted; admin approval and online payments share `approveDeposit()`. Previously: `/api/deposits/[id]/approve` and `/api/admin/deposits/[id]/approve` both exist. Only the admin route increments `steward_plan_offerings.units_funded`. Delete the legacy route or make the two the same.
 3. **No transactions in multi-step writes.** Deposit approval updates the deposit, the interest, the investment and the offering in separate calls. A failure partway leaves inconsistent state, e.g. a deposit marked approved with no investment. The `units_funded` increment is a read-then-write and can race. Move these into a Postgres function (RPC).
 4. **No overselling guard at interest or deposit time.** Interest checks `requested_units ≤ units_offered`, not the remaining `units_offered − units_funded`. The DB CHECK constraint will reject the final increment, but only after the deposit is already approved.
 5. **Legacy Supabase Auth leftovers.** The `auth.users` trigger and `is_admin()` / `current_user_role()` RLS helpers are unused. `proxy.ts` still calls `supabase.auth.getUser()` on every page request, which adds latency for no benefit.
@@ -25,8 +25,7 @@ Found while reading the codebase on 2026-11-17. Ordered by priority.
 - **Online payment refunds** are manual: if a paid SSLCommerz deposit can't be approved (units sold out), an admin must refund it from the SSLCommerz merchant panel and reject the deposit.
 - **Fund disbursement:** the detail code treats `disbursed` as a status, but the steward route only sets `approved`/`rejected`.
 - **Admin console:** offerings default to `approved` when the admin creates them, and stewards have no self-serve way to propose offerings (`pending_approval` exists in the schema but is unused).
-- **No automated tests** and no CI configuration.
+- **Automated tests** cover the money rules only (`yarn test`: settlement maths, settlement/wallet/withdrawal SQL functions on a PGlite copy of the migrations, rate limits, session key and OTP safety switches). No route/UI tests and no CI yet.
 - **PDF text in Bangla can't be copied or searched.** Statements render Bangla correctly (pdfkit shapes it with the bundled Noto fonts), but text copied out of the PDF comes out scrambled. Printing and reading are unaffected.
-- **Two lockfiles.** `pdfkit` was added with yarn, so `yarn.lock` is current and `web/package-lock.json` is not. Pick one package manager and delete the other lockfile.
 - **`web/README.md`** is the default create-next-app text.
-- **Housekeeping:** `all_packages.txt` at the root is a stray dump from another path. `_smoke_test` table and migration can be dropped. Both `package-lock.json` and `yarn.lock` exist in `web/`; pick one package manager. Some route files have inconsistent indentation (`api/kyc/submit`).
+- **Housekeeping:** `all_packages.txt` at the root is a stray dump from another path. `_smoke_test` table and migration can be dropped. Some route files have inconsistent indentation (`api/kyc/submit`).

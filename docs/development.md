@@ -41,6 +41,7 @@ Run from `web/`:
 | `npm run lint` | ESLint (`eslint-config-next`) |
 | `npm run db:migrate` | Apply pending SQL migrations |
 | `npm run db:status` | List applied and pending migrations without applying anything |
+| `yarn test` | Run the automated tests (Vitest). Database tests build a throwaway in-process Postgres (PGlite) from the migrations; the real database is never touched. |
 | `npm run seed:admin -- <email> <password> [name]` | Create or update an admin (password 12+ chars) |
 
 Root `package.json` has Supabase CLI wrappers (`db:start`, `db:push`, `db:types`, …). The team runs migrations with the custom script instead because the CLI hit a scoped-token permission bug (see `web/scripts/README.md`). Note that root `supabase/config.toml` and `web/supabase/migrations/` sit in different folders.
