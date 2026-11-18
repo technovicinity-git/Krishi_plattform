@@ -52,6 +52,7 @@ export default async function FarmerDashboardLayout({
             { label: tn("dashboard"), href: "/farmer", icon: "home", exact: true },
             { label: tn("fundRequests"), href: "/farmer/fund-requests", icon: "coins", badge: pendingFunds ?? 0 },
             { label: tn("expenses"), href: "/farmer/expenses", icon: "receipt" },
+            { label: tp("wallet"), href: "/farmer/wallet", icon: "wallet" },
           ],
         },
         {

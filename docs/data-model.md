@@ -119,6 +119,10 @@ Partial unique indexes allow only one *active* interest (`submitted`, `under_rev
 
 **`investment_settlements`**: one per investment, written by `settle_investment_sale()` together with the sale and investment updates. Stores `capital`, `funds_released` (approved fund requests), `sale_amount`, `total_return` (= sale + unspent capital), `net_result`, `outcome` (profit/loss/break_even) and the payouts. On a profit the net is split 60% farmer / 30% investor / 5% steward / 5% Krishi and the investor also gets the capital back; on a loss nobody takes a share and the investor receives the whole total return. The rule lives in `web/src/lib/investments/settlement.ts`.
 
+**`wallet_transactions`** (`20261118000002_wallets_and_withdrawals.sql`): every money movement for a user; positive = in, negative = out, balance = sum. Types: `settlement_payout` (investor), `settlement_share` (farmer/steward), `withdrawal` (held when requested), `withdrawal_reversal` (rejected/cancelled), `adjustment`. Unique indexes stop a settlement being credited twice or a withdrawal reversed twice. `settle_investment_sale()` calls `credit_settlement()` so wallets are credited in the same transaction.
+
+**`withdrawal_requests`**: `KR-WD-000001`. Copies the user's `withdrawal_preferences` at request time. `status`: `pending` → `paid` (admin records `payout_txn_id`) | `rejected` (admin, with reason) | `cancelled` (user). Created by `request_withdrawal()`, which locks per user, checks the minimum (`WITHDRAWAL_MIN` in `web/src/lib/wallet/config.ts`) and the balance, and holds the amount. Closed by `close_withdrawal()`, which returns the money unless paid.
+
 ### Tables without migrations (inferred from code)
 
 | Table | Key columns used in code | Statuses / stages seen |

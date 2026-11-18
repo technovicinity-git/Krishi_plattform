@@ -1647,6 +1647,54 @@
     }
   },
   "app": {
+    "wallet": {
+      "title": "Wallet",
+      "subtitle": "Money from settled batches stays here until you withdraw it.",
+      "available": "Available",
+      "pending": "Withdrawal in progress",
+      "earned": "Total earned",
+      "withdrawn": "Withdrawn",
+      "belowMin": "Minimum withdrawal is {min}",
+      "withdraw": "Withdraw",
+      "withdrawTitle": "Withdraw money",
+      "withdrawSubtitle": "Krishi will send it to {destination}, usually within 2 working days.",
+      "amount": "Amount (BDT)",
+      "withdrawAll": "All ({amount})",
+      "limits": "Minimum {min}, up to {max}. No fee.",
+      "requestWithdrawal": "Request withdrawal",
+      "requesting": "Requesting...",
+      "withdrawFailed": "Could not request the withdrawal",
+      "noPayout": "Add the bank or mobile wallet account where Krishi should send your money.",
+      "noPayoutShort": "No payout account yet.",
+      "addPayout": "Add payout account",
+      "payoutAccount": "Payout account",
+      "payoutHint": "Withdrawals are sent to this account.",
+      "change": "Change",
+      "backToWallet": "Back to Wallet",
+      "transactions": "Transactions",
+      "noTransactions": "No money in or out yet. Shares are added when a batch is settled.",
+      "viewBatch": "View batch",
+      "withdrawals": "Withdrawals",
+      "noWithdrawals": "No withdrawals yet.",
+      "paidTxn": "Paid · Txn {txn}",
+      "cancelWithdrawal": "Cancel withdrawal",
+      "cancelTitle": "Cancel {reference}?",
+      "cancelMessage": "The money goes back to your available balance.",
+      "cancelFailed": "Could not cancel the withdrawal",
+      "type": {
+        "settlement_payout": "Investment payout",
+        "settlement_share": "Profit share",
+        "withdrawal": "Withdrawal",
+        "withdrawal_reversal": "Withdrawal returned",
+        "adjustment": "Adjustment"
+      },
+      "status": {
+        "pending": "Pending",
+        "paid": "Paid",
+        "rejected": "Rejected",
+        "cancelled": "Cancelled"
+      }
+    },
     "saleForm": {
       "title": "Record the sale",
       "subtitle": "Enter what the animals sold for. Your steward confirms it, then you send the money to Krishi.",
@@ -1726,7 +1774,7 @@
       "awaitingRemittance": "Sale confirmed. Waiting for the farmer to send the money to Krishi.",
       "remittanceSubmitted": "The farmer sent the money. Krishi is checking the payment before settling.",
       "adminReview": "Check the payment against Krishi's account, then confirm and settle.",
-      "settled": "Krishi received the money and the batch is settled."
+      "settled": "Krishi received the money and the batch is settled. Each share was added to the person's wallet."
     },
     "settlement": {
       "result": "Result",

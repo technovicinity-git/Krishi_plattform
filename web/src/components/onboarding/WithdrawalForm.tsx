@@ -13,9 +13,14 @@ type Method = "mobile" | "bank";
 
 interface WithdrawalFormProps {
   initial?: WithdrawalPreference | null;
+  /** Where to go after saving (defaults to the investor profile). */
+  redirectTo?: string;
 }
 
-export function WithdrawalForm({ initial }: WithdrawalFormProps) {
+export function WithdrawalForm({
+  initial,
+  redirectTo = "/portal/profile?withdrawal=saved",
+}: WithdrawalFormProps) {
   const t = useTranslations("onboarding.step3.form");
   const tf = useTranslations("app.forms");
   const tcm = useTranslations("app.common");
@@ -71,7 +76,7 @@ export function WithdrawalForm({ initial }: WithdrawalFormProps) {
         return;
       }
 
-      router.push("/portal/profile?withdrawal=saved");
+      router.push(redirectTo);
       router.refresh();
     } catch {
       setError(tcm("networkError"));

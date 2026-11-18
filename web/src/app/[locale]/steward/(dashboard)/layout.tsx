@@ -102,6 +102,7 @@ export default async function StewardDashboardLayout({
             { label: ts("items.fundRequests"), href: "/steward/fund-requests", icon: "coins", badge: counts.funds },
             { label: ts("items.expenses"), href: "/steward/expenses", icon: "receipt", badge: counts.expenses },
             { label: ts("items.sales"), href: "/steward/sales", icon: "tag", badge: counts.sales },
+            { label: tp("wallet"), href: "/steward/wallet", icon: "wallet" },
           ],
         },
         {

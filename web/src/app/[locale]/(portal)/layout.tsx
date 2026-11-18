@@ -45,6 +45,7 @@ export default async function PortalLayout({
           items: [
             { label: ts("items.investments"), href: "/portal/investments", icon: "briefcase" },
             { label: ts("items.interests"), href: "/portal/interests", icon: "inbox" },
+            { label: tp("wallet"), href: "/portal/wallet", icon: "wallet" },
           ],
         },
         {
@@ -59,8 +60,6 @@ export default async function PortalLayout({
           label: tp("comingSoon"),
           locked: true,
           items: [
-            { label: tp("wallet"), href: "/portal/wallet", icon: "wallet" },
-            { label: tp("transactions"), href: "/portal/transactions", icon: "history" },
             { label: ts("items.livestock"), href: "/portal/livestock", icon: "leaf" },
             { label: ts("items.reports"), href: "/portal/reports", icon: "chart" },
           ],
