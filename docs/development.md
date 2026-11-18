@@ -20,7 +20,9 @@ Create **`web/.env.local`**. The npm scripts load this file. Never commit it; `.
 | `SSLCOMMERZ_STORE_ID`, `SSLCOMMERZ_STORE_PASSWORD` | **Server only** | SSLCommerz merchant credentials. Leave empty to hide the "Pay online" option. Sandbox accounts: https://developer.sslcommerz.com/registration/ |
 | `SSLCOMMERZ_SANDBOX` | Server only | `false` for live payments; anything else uses the sandbox. |
 | `APP_URL` | Server only | Public base URL for SSLCommerz callbacks (e.g. `https://krishi.com.bd`). Without it the request's host is used; the IPN can't reach `localhost`. |
-| `DEV_SHOW_OTP` | Dev only | `true` shows OTPs on screen via `dev_otps`. **Must be unset in production.** |
+| `DEV_SHOW_OTP` | Dev / staging | `true` shows OTPs on screen via `dev_otps`. Ignored in production builds unless `KRISHI_STAGING=true`. |
+| `FIXED_OTP` | Dev / staging | Every one-time code is this value (development defaults to `123456`). Ignored in production builds unless `KRISHI_STAGING=true`. |
+| `KRISHI_STAGING` | Staging only | `true` allows `FIXED_OTP` / `DEV_SHOW_OTP` in a production build. **Never set on the live site.** |
 
 Generate a session secret:
 

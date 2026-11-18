@@ -6,6 +6,7 @@ import { FarmerActivationPanel } from "@/components/steward/FarmerActivationPane
 import { BackLink } from "@/components/ui/BackLink";
 import { Link } from "@/i18n/navigation";
 import { DetailRow, PageHeader, Panel, StatusBadge, toneFor } from "@/components/dashboard/ui";
+import { showOtpOnScreen } from "@/lib/auth/dev-flags";
 
 function formatDateTime(iso: string | null, locale: string): string {
   if (!iso) return "—";
@@ -56,7 +57,7 @@ export default async function StewardFarmerDetailPage({
 
   // Dev-only: fetch the current plaintext OTP for the activation panel
   let devOtp: string | null = null;
-  if (!isActive && process.env.DEV_SHOW_OTP === "true" && farmer.phone) {
+  if (!isActive && showOtpOnScreen() && farmer.phone) {
     const { data: otpRow } = await db
       .from("dev_otps")
       .select("otp")

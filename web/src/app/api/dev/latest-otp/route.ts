@@ -1,15 +1,16 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { showOtpOnScreen } from "@/lib/auth/dev-flags";
 
 /**
  * DEV-ONLY endpoint. Returns the most recent OTP for a phone number,
  * so the OTP form can display it during development.
  *
- * Hard-gated by DEV_SHOW_OTP env var. If the env var is not "true",
- * this endpoint returns 404 (as if it doesn't exist).
+ * Hard-gated by showOtpOnScreen() (DEV_SHOW_OTP, never on a live site).
+ * Otherwise this endpoint returns 404 (as if it doesn't exist).
  */
 export async function GET(request: Request) {
-  if (process.env.DEV_SHOW_OTP !== "true") {
+  if (!showOtpOnScreen()) {
     return new NextResponse(null, { status: 404 });
   }
 

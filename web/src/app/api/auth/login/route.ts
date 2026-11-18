@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { verifyPassword } from "@/lib/auth/password";
 import { setSessionCookie } from "@/lib/auth/session";
 import { toE164, isValidBDPhone } from "@/lib/auth/phone";
+import { LIMITS, clientIp, tooManyRequests, withinLimits } from "@/lib/security/rate-limit";
 
 export const runtime = "nodejs";
 
@@ -24,6 +25,9 @@ export async function POST(request: Request) {
     }
 
     const e164 = toE164(parsed.data.phone);
+    if (!(await withinLimits(LIMITS.login(clientIp(request), e164)))) {
+      return tooManyRequests(900);
+    }
     const admin = createAdminClient();
 
     const { data: user } = await admin

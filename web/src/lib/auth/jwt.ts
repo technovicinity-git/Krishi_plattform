@@ -1,18 +1,25 @@
 import { SignJWT, jwtVerify } from "jose";
 
-const secret = process.env.KRISHI_SESSION_SECRET;
+let cachedKey: Uint8Array | null = null;
 
-if (!secret || secret.length < 32) {
-  // Fail loudly in dev so we never accidentally ship a weak secret.
-  if (process.env.NODE_ENV !== "production") {
+/**
+ * Session signing key. Refuses to run without a strong secret in every
+ * environment — a missing secret in production would otherwise sign tokens
+ * with the string "undefined", letting anyone forge a session. Read lazily so
+ * `next build` doesn't need the secret.
+ */
+function getKey(): Uint8Array {
+  if (cachedKey) return cachedKey;
+  const secret = process.env.KRISHI_SESSION_SECRET;
+  if (!secret || secret.length < 32) {
     throw new Error(
       "KRISHI_SESSION_SECRET is missing or too short (min 32 chars). " +
-      "See .env.example for how to generate one.",
+        "See docs/development.md for how to generate one.",
     );
   }
+  cachedKey = new TextEncoder().encode(secret);
+  return cachedKey;
 }
-
-const key = new TextEncoder().encode(secret!);
 
 export type UserRole = "investor" | "steward" | "farmer" | "admin";
 
@@ -30,14 +37,14 @@ export async function signSession(payload: SessionPayload): Promise<string> {
     .setSubject(payload.sub)
     .setIssuedAt()
     .setExpirationTime(SESSION_TTL)
-    .sign(key);
+    .sign(getKey());
 }
 
 export async function verifySession(
   token: string,
 ): Promise<SessionPayload | null> {
   try {
-    const { payload } = await jwtVerify(token, key, {
+    const { payload } = await jwtVerify(token, getKey(), {
       algorithms: ["HS256"],
     });
 

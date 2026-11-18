@@ -4,12 +4,12 @@ Found while reading the codebase on 2026-11-17. Ordered by priority.
 
 ## 🔴 Security
 
-1. **Real credentials in `web/.env.example`.** The example file, which is meant to be committed, contains what look like a live Supabase **secret (service-role) key** and the **database password** in `DATABASE_URL`. Rotate both in the Supabase dashboard and replace them with placeholders. `web/scripts/README.md` describes the password reset steps.
+1. ~~Real credentials in `web/.env.example`~~ — checked 2026-11-18: the file and the whole git history contain no keys, database URLs or session secrets.
 2. **RLS is enabled but authorization lives only in app code.** Every query uses the service-role client, so one missing role or ownership check in a route handler exposes data. New routes need careful review.
-3. **`GET /api/interests/[reference]` is public.** References are sequential (`KR-INT-000001`, `…002`), so anyone can enumerate them. Check what `getInterestByReference` returns (guest name, phone or email would be a data leak).
-4. **No rate limiting on user OTP or login endpoints.** Admin login is rate-limited, but `/api/auth/login`, `/api/auth/register`, `/api/auth/forgot-password` and `/api/interests` are not. OTP attempts are capped per code, but new codes can be requested without limit.
-5. **`DEV_SHOW_OTP` stores plaintext OTPs** and exposes them through a public endpoint. Make sure it is never set in production.
-6. **`jwt.ts` only throws for a missing or weak secret outside production.** In production it would sign with an `undefined` key. Fail hard in every environment instead.
+3. ~~`GET /api/interests/[reference]` is public~~ — fixed 2026-11-18: it now answers only the investor who owns the interest, and the shared lookup no longer returns guest name, phone or message.
+4. ~~No rate limiting on user OTP or login endpoints~~ — fixed 2026-11-18: `hit_rate_limit()` + `web/src/lib/security/rate-limit.ts` limit login, sign-up, forgot/reset password, code verification, farmer activation, steward sign-up and interest submission per IP (and per phone for login/sign-up). Behind a proxy, make sure it sets `X-Forwarded-For`.
+5. ~~`DEV_SHOW_OTP` / `FIXED_OTP` could run in production~~ — fixed 2026-11-18: both are ignored in production builds unless `KRISHI_STAGING=true` (`web/src/lib/auth/dev-flags.ts`), with a logged warning.
+6. ~~`jwt.ts` signs with an `undefined` key in production~~ — fixed 2026-11-18: signing and verifying refuse to run without a 32+ character `KRISHI_SESSION_SECRET` in every environment.
 
 ## 🟠 Schema and data integrity
 

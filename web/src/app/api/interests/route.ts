@@ -4,6 +4,7 @@ import { getCurrentUser } from "@/lib/auth/current-user";
 import { submitInterest } from "@/lib/public/interests";
 import { notify } from "@/lib/notifications/notify";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { LIMITS, clientIp, tooManyRequests, withinLimits } from "@/lib/security/rate-limit";
 
 export const runtime = "nodejs";
 
@@ -26,6 +27,10 @@ function getClientIp(request: Request): string {
 
 export async function POST(request: Request) {
   try {
+    if (!(await withinLimits(LIMITS.interest(clientIp(request))))) {
+      return tooManyRequests(3600);
+    }
+
     const body = await request.json();
     const parsed = schema.safeParse(body);
     if (!parsed.success) {

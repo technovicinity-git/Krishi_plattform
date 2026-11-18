@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { verifyOtpHash } from "@/lib/auth/otp";
 import { getSessionFromCookie } from "@/lib/auth/session";
+import { LIMITS, clientIp, tooManyRequests, withinLimits } from "@/lib/security/rate-limit";
 
 export const runtime = "nodejs";
 
@@ -14,6 +15,10 @@ const schema = z.object({
 
 export async function POST(request: Request) {
   try {
+    if (!(await withinLimits(LIMITS.verifyCode(clientIp(request))))) {
+      return tooManyRequests(900);
+    }
+
     const session = await getSessionFromCookie();
     if (!session) {
       return NextResponse.json(
