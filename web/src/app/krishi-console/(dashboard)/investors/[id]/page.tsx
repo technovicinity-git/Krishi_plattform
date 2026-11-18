@@ -3,6 +3,7 @@ import { requireAdmin } from "@/lib/admin/current-admin";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getSignedKycUrls } from "@/lib/admin/storage";
 import { BackLink } from "@/components/ui/BackLink";
+import { KycReviewActions } from "@/components/admin/KycReviewActions";
 
 function formatDateTime(iso: string | null): string {
   if (!iso) return "—";
@@ -132,6 +133,7 @@ export default async function AdminInvestorDetailPage({
           </Card>
         </div>
 
+        <div className="flex flex-col gap-6">
         {/* KYC documents */}
         <div className="flex flex-col gap-4 rounded-2xl border border-border-light bg-white p-6">
           <h2 className="text-[11px] font-bold uppercase tracking-[0.02em] text-ink-muted">
@@ -144,6 +146,18 @@ export default async function AdminInvestorDetailPage({
             </div>
           ) : (
             <p className="text-[13px] text-ink-muted">—</p>
+          )}
+        </div>
+
+        {kyc &&
+          (kyc.status === "pending" ||
+            kyc.status === "under_review" ||
+            kyc.status === "requires_update") && (
+            <KycReviewActions
+              kycId={kyc.id}
+              applicantName={user.full_name ?? "Investor"}
+              redirectTo={null}
+            />
           )}
         </div>
       </div>

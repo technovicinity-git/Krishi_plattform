@@ -7,9 +7,12 @@ import { useDialog } from "@/components/ui/dialog-provider";
 export function KycReviewActions({
   kycId,
   applicantName,
+  redirectTo = "/krishi-console/kyc",
 }: {
   kycId: string;
   applicantName: string;
+  /** Where to go after a decision; null stays on the current page. */
+  redirectTo?: string | null;
 }) {
   const router = useRouter();
   const { confirm, alert } = useDialog();
@@ -41,7 +44,8 @@ export function KycReviewActions({
         setSubmitting(null);
         return;
       }
-      router.push("/krishi-console/kyc");
+      if (redirectTo) router.push(redirectTo);
+      else setSubmitting(null);
       router.refresh();
     } catch {
       setError("Network error");
@@ -83,7 +87,8 @@ export function KycReviewActions({
         setSubmitting(null);
         return;
       }
-      router.push("/krishi-console/kyc");
+      if (redirectTo) router.push(redirectTo);
+      else setSubmitting(null);
       router.refresh();
     } catch {
       setError("Network error");
