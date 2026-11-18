@@ -4,7 +4,7 @@
 
 - Node.js 20+ (scripts use `node --env-file`)
 - A Supabase project (hosted). The local Supabase CLI flow exists but is currently bypassed; see below.
-- Storage buckets created in Supabase: `kyc-documents` (private), `deposit-proofs`, `plan-images`
+- Storage buckets created in Supabase: `kyc-documents` (private), `deposit-proofs` (private), `plan-images`
 
 ## Environment variables
 

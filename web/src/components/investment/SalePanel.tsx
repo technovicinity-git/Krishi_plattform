@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { formatBDT } from "@/lib/utils";
-import { updatePhotoUrl } from "@/lib/investments/photo-url";
 import { useDialog } from "@/components/ui/dialog-provider";
 import { DetailRow, StatusBadge, type BadgeTone } from "@/components/dashboard/ui";
 import { fieldClass } from "@/components/dashboard/Modal";
@@ -90,8 +89,8 @@ export function SalePanel({
     }
   };
 
-  const photo = updatePhotoUrl(sale.photoPath);
-  const proof = updatePhotoUrl(sale.remitProofPath);
+  const photo = sale.photoUrl;
+  const proof = sale.remitProofUrl;
   const remitted = Boolean(sale.remittedAt) && sale.status !== "awaiting_remittance";
 
   return (

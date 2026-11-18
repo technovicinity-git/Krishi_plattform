@@ -1,5 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { releasedFunds } from "./settlement";
+import { signFileUrls } from "@/lib/storage/private-files";
 
 export interface InvestmentDetail {
   id: string;
@@ -43,6 +44,8 @@ export interface InvestmentDetail {
     category: string;
     description: string | null;
     receiptPath: string | null;
+    /** Short-lived signed link to the receipt image. */
+    receiptUrl: string | null;
     status: string;
     rejectionReason: string | null;
     createdAt: string;
@@ -55,6 +58,7 @@ export interface InvestmentDetail {
     title: string;
     body: string | null;
     photoPath: string | null;
+    photoUrl: string | null;
     amount: number | null;
     createdAt: string;
     authorRole: string | null;
@@ -79,6 +83,7 @@ export interface InvestmentSale {
   saleDate: string;
   note: string | null;
   photoPath: string | null;
+  photoUrl: string | null;
   status: string;
   rejectionReason: string | null;
   reviewedAt: string | null;
@@ -87,6 +92,7 @@ export interface InvestmentSale {
   remitSender: string | null;
   remitNote: string | null;
   remitProofPath: string | null;
+  remitProofUrl: string | null;
   remittedAt: string | null;
   remitRejectionReason: string | null;
   receivedAt: string | null;
@@ -112,7 +118,7 @@ const SALE_COLUMNS =
   "id, reference, animals_sold, sale_amount, buyer_name, buyer_phone, sale_date, note, photo_path, status, rejection_reason, reviewed_at, remit_method, remit_txn_id, remit_sender, remit_note, remit_proof_path, remitted_at, remit_rejection_reason, received_at, created_at";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function mapSale(row: any): InvestmentSale {
+export function mapSale(row: any, urls: Map<string, string> = new Map()): InvestmentSale {
   return {
     id: row.id,
     reference: row.reference,
@@ -123,6 +129,7 @@ export function mapSale(row: any): InvestmentSale {
     saleDate: row.sale_date,
     note: row.note,
     photoPath: row.photo_path,
+    photoUrl: urls.get(row.photo_path) ?? null,
     status: row.status,
     rejectionReason: row.rejection_reason,
     reviewedAt: row.reviewed_at,
@@ -131,6 +138,7 @@ export function mapSale(row: any): InvestmentSale {
     remitSender: row.remit_sender,
     remitNote: row.remit_note,
     remitProofPath: row.remit_proof_path,
+    remitProofUrl: urls.get(row.remit_proof_path) ?? null,
     remittedAt: row.remitted_at,
     remitRejectionReason: row.remit_rejection_reason,
     receivedAt: row.received_at,
@@ -220,6 +228,14 @@ export async function getInvestmentDetail(
       .filter((e) => e.category !== "animal_purchase")
       .reduce((sum, e) => sum + Number(e.amount), 0) || 0;
 
+  // Photos and receipts are private: sign every path shown on this page.
+  const urls = await signFileUrls([
+    ...(updatesData ?? []).map((u) => u.photo_path),
+    ...(expenseRows ?? []).map((e) => e.receipt_path),
+    saleRow?.photo_path,
+    saleRow?.remit_proof_path,
+  ]);
+
   return {
     id: data.id,
     reference: data.reference,
@@ -275,11 +291,12 @@ export async function getInvestmentDetail(
       category: e.category,
       description: e.description,
       receiptPath: e.receipt_path,
+      receiptUrl: e.receipt_path ? urls.get(e.receipt_path) ?? null : null,
       status: e.status,
       rejectionReason: e.rejection_reason,
       createdAt: e.created_at,
     })),
-    sale: saleRow ? mapSale(saleRow) : null,
+    sale: saleRow ? mapSale(saleRow, urls) : null,
     settlement: settlementRow
       ? {
           capital: Number(settlementRow.capital),
@@ -302,6 +319,7 @@ export async function getInvestmentDetail(
       title: u.title,
       body: u.body,
       photoPath: u.photo_path,
+      photoUrl: u.photo_path ? urls.get(u.photo_path) ?? null : null,
       amount: u.amount ? Number(u.amount) : null,
       createdAt: u.created_at,
       authorRole: u.author_role,

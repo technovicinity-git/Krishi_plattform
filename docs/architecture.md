@@ -8,7 +8,7 @@
 | Styling | Tailwind CSS v4 (`@tailwindcss/postcss`), small in-house UI kit in `src/components/ui` |
 | i18n | `next-intl` 4. Locales `bn` (default) and `en`, `localePrefix: "as-needed"`, browser detection off |
 | Database | **Supabase Postgres** |
-| File storage | Supabase Storage buckets: `kyc-documents` (private), `deposit-proofs`, `plan-images` |
+| File storage | Supabase Storage buckets: `kyc-documents` (private), `deposit-proofs` (private), `plan-images` |
 | Auth | **Custom**: phone/email + bcrypt password, 6-digit OTP, HS256 JWT in an httpOnly cookie (`jose`) |
 | Validation | `zod` v4 in every API route |
 | Migrations | Plain SQL files run by a custom Node runner (`web/scripts/migrate.mjs`, uses `postgres`) |
@@ -100,7 +100,7 @@ Krishi does **not** use Supabase Auth for users. Early migrations wired `public.
 | Bucket | Used for | Access |
 |--------|----------|--------|
 | `kyc-documents` | NID front/back and profile photos (`/api/kyc/submit`). JPG/PNG/PDF, 5 MB max | Private; admins view via signed URLs (`lib/admin/storage.ts`) |
-| `deposit-proofs` | Deposit receipts uploaded during onboarding | Uploaded from the onboarding deposit form |
+| `deposit-proofs` (private) | Deposit proofs, expense receipts, update and sale photos, remittance proofs | Uploaded only by the server (`web/src/lib/storage/private-files.ts`); shown through 1-hour signed URLs |
 | `plan-images` | Plan hero images uploaded in the admin plan form | Served through `next/image` (`next.config.ts` allows the Supabase storage host) |
 
 Images are compressed on the client (`lib/images/compress.ts`) before upload.

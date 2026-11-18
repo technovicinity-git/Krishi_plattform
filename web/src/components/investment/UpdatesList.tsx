@@ -1,6 +1,5 @@
 import { useLocale, useTranslations } from "next-intl";
 import { formatBDT } from "@/lib/utils";
-import { updatePhotoUrl } from "@/lib/investments/photo-url";
 import { StatusBadge, type BadgeTone } from "@/components/dashboard/ui";
 
 interface Update {
@@ -9,6 +8,8 @@ interface Update {
   title: string;
   body: string | null;
   photoPath: string | null;
+  /** Signed link to the photo (storage is private). */
+  photoUrl: string | null;
   amount: number | null;
   createdAt: string;
   authorRole: string | null;
@@ -48,7 +49,7 @@ export function UpdatesList({
       ) : (
         <ol className="flex flex-col px-6 py-5">
           {updates.map((u, i) => {
-            const photo = updatePhotoUrl(u.photoPath);
+            const photo = u.photoUrl;
             return (
               <li key={u.id} className="relative flex gap-4 pb-6 last:pb-0">
                 {i < updates.length - 1 && (

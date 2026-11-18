@@ -4,12 +4,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { compressImage } from "@/lib/images/compress";
-import { createClient } from "@/lib/supabase/client";
 
 export function DepositForm({ interestId, expectedAmount }: { interestId: string, expectedAmount: number }) {
   const t = useTranslations("app.deposit");
   const router = useRouter();
-  const supabase = createClient();
 
   const [method, setMethod] = useState<"bank" | "mfs">("mfs");
   const [txnId, setTxnId] = useState("");
@@ -30,35 +28,18 @@ export function DepositForm({ interestId, expectedAmount }: { interestId: string
     setError(null);
 
     try {
-      let proofPath = undefined;
+      // The proof is uploaded by the server into private storage; the amount
+      // is worked out there from the plan.
+      const fd = new FormData();
+      fd.set("interest_id", interestId);
+      fd.set("method", method);
+      if (method === "bank") fd.set("txn_id", txnId);
+      if (method === "mfs") fd.set("sender_number", senderNumber);
+      fd.set("deposit_date", depositDate);
+      fd.set("note", note.trim());
+      if (file) fd.set("proof", await compressImage(file, 1200, 0.8));
 
-      if (file) {
-        const compressed = await compressImage(file, 1200, 0.8);
-        const fileName = `${interestId}-${Date.now()}.jpg`;
-        const { error: uploadError } = await supabase.storage
-          .from("deposit-proofs")
-          .upload(fileName, compressed);
-
-        if (uploadError) throw new Error(uploadError.message || t("uploadFailed"));
-        proofPath = fileName;
-      }
-
-      const payload = {
-        interest_id: interestId,
-        amount: expectedAmount,
-        method,
-        txn_id: method === "bank" ? txnId : undefined,
-        sender_number: method === "mfs" ? senderNumber : undefined,
-        deposit_date: depositDate,
-        note: note.trim() || undefined,
-        proof_path: proofPath,
-      };
-
-      const res = await fetch("/api/deposits", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      const res = await fetch("/api/deposits", { method: "POST", body: fd });
 
       if (!res.ok) {
         const data = await res.json();
@@ -66,8 +47,8 @@ export function DepositForm({ interestId, expectedAmount }: { interestId: string
       }
 
       router.refresh();
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t("submitFailed"));
       setLoading(false);
     }
   };

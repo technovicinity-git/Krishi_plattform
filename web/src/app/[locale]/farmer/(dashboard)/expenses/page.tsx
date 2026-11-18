@@ -4,7 +4,7 @@ import { Link } from "@/i18n/navigation";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { formatBDT } from "@/lib/utils";
-import { updatePhotoUrl } from "@/lib/investments/photo-url";
+import { signFileUrls } from "@/lib/storage/private-files";
 import {
   EmptyState,
   PageHeader,
@@ -52,6 +52,7 @@ export default async function FarmerExpensesPage() {
     .order("created_at", { ascending: false });
 
   const expenses = (data ?? []) as unknown as ExpenseRow[];
+  const receiptUrls = await signFileUrls(expenses.map((e) => e.receipt_path));
   const total = expenses.reduce((s, e) => s + Number(e.amount), 0);
   const pending = expenses.filter((e) => e.status === "pending").reduce((s, e) => s + Number(e.amount), 0);
   const approved = expenses.filter((e) => e.status === "approved").reduce((s, e) => s + Number(e.amount), 0);
@@ -97,7 +98,7 @@ export default async function FarmerExpensesPage() {
               </thead>
               <tbody className="divide-y divide-border-light">
                 {expenses.map((e) => {
-                  const receipt = updatePhotoUrl(e.receipt_path);
+                  const receipt = e.receipt_path ? receiptUrls.get(e.receipt_path) ?? null : null;
                   return (
                     <tr key={e.id} className="align-top hover:bg-cream/60">
                       <td className="whitespace-nowrap px-5 py-4 text-[13px] text-ink-secondary">{date(e.created_at)}</td>

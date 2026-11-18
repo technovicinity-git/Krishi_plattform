@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { formatBDT } from "@/lib/utils";
-import { updatePhotoUrl } from "@/lib/investments/photo-url";
 import { useDialog } from "@/components/ui/dialog-provider";
 import { StatusBadge, toneFor } from "@/components/dashboard/ui";
 import { Link } from "@/i18n/navigation";
@@ -86,7 +85,7 @@ export function ExpensesList({
       ) : (
         <ul className="divide-y divide-border-light">
           {expenses.map((e) => {
-            const receipt = updatePhotoUrl(e.receiptPath);
+            const receipt = e.receiptUrl;
             return (
               <li key={e.id} className="flex flex-col gap-3 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex min-w-0 flex-col gap-1">

@@ -2,6 +2,7 @@ import { requireAdmin } from "@/lib/admin/current-admin";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { DepositApprovalActions } from "@/components/admin/DepositApprovalActions";
 import { formatBDT } from "@/lib/utils";
+import { signFileUrls } from "@/lib/storage/private-files";
 import { EmptyState, PageHeader, Tabs } from "@/components/dashboard/ui";
 
 export const dynamic = "force-dynamic";
@@ -50,6 +51,10 @@ export default async function AdminDepositsPage({
     `)
     .in("status", statuses)
     .order("created_at", { ascending: false });
+
+  const proofUrls = await signFileUrls(
+    ((deposits ?? []) as unknown as DepositRow[]).map((d) => d.proof_path),
+  );
 
   return (
     <div className="flex flex-col gap-6">
@@ -115,7 +120,7 @@ export default async function AdminDepositsPage({
                 <div>
                   {dep.proof_path ? (
                     <a
-                      href={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/deposit-proofs/${dep.proof_path}`}
+                      href={proofUrls.get(dep.proof_path) ?? "#"}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-brand hover:underline"

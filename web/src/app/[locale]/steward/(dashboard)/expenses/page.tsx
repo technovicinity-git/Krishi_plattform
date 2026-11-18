@@ -5,6 +5,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getStewardInvestmentIds } from "@/lib/steward/investments";
 import { EmptyState, PageHeader, Tabs } from "@/components/dashboard/ui";
 import { ExpensesList } from "@/components/investment/ExpensesList";
+import { signFileUrls } from "@/lib/storage/private-files";
 
 export const dynamic = "force-dynamic";
 
@@ -58,7 +59,9 @@ export default async function StewardExpensesPage({
 
   const t = await getTranslations("app.stewardExpenses");
   const bn = (await getLocale()) === "bn";
-  const expenses = ((data ?? []) as unknown as ExpenseRow[]).map((e) => {
+  const rows = (data ?? []) as unknown as ExpenseRow[];
+  const urls = await signFileUrls(rows.map((e) => e.receipt_path));
+  const expenses = rows.map((e) => {
     const plan = e.investment?.offering?.investment_plans;
     const planName = (bn ? plan?.name_bn : plan?.name_en) ?? plan?.name_en ?? "—";
     const farmer = e.investment?.farmer?.full_name;
@@ -68,6 +71,7 @@ export default async function StewardExpensesPage({
       category: e.category,
       description: e.description,
       receiptPath: e.receipt_path,
+      receiptUrl: e.receipt_path ? urls.get(e.receipt_path) ?? null : null,
       status: e.status,
       rejectionReason: e.rejection_reason,
       createdAt: e.created_at,
