@@ -1,8 +1,43 @@
 import { redirect } from "next/navigation";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/auth/current-user";
-import { PortalHeader } from "@/components/portal/PortalHeader";
-import { StewardSidebar } from "@/components/steward/StewardSidebar";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { DashboardShell } from "@/components/dashboard/DashboardShell";
+
+/** Counts shown as badges in the sidebar: work waiting for this steward. */
+async function getPendingCounts(stewardId: string) {
+  const db = createAdminClient();
+  const { data: offerings } = await db
+    .from("steward_plan_offerings")
+    .select("id")
+    .eq("steward_id", stewardId);
+  const offeringIds = (offerings ?? []).map((o) => o.id);
+  if (offeringIds.length === 0) return { interests: 0, funds: 0, awaitingFarmer: 0 };
+
+  const [{ count: interests }, { data: investments }] = await Promise.all([
+    db
+      .from("investment_interests")
+      .select("*", { count: "exact", head: true })
+      .in("offering_id", offeringIds)
+      .in("status", ["submitted", "under_review"]),
+    db.from("investments").select("id, current_stage").in("offering_id", offeringIds),
+  ]);
+
+  const investmentIds = (investments ?? []).map((i) => i.id);
+  const { count: funds } = investmentIds.length
+    ? await db
+        .from("fund_requests")
+        .select("*", { count: "exact", head: true })
+        .in("investment_id", investmentIds)
+        .eq("status", "pending")
+    : { count: 0 };
+
+  return {
+    interests: interests ?? 0,
+    funds: funds ?? 0,
+    awaitingFarmer: (investments ?? []).filter((i) => i.current_stage === "awaiting_farmer").length,
+  };
+}
 
 export default async function StewardDashboardLayout({
   children,
@@ -12,26 +47,67 @@ export default async function StewardDashboardLayout({
   const user = await getCurrentUser();
   if (!user) redirect("/login");
   if (user.role !== "steward") redirect("/portal/profile");
-  const t = await getTranslations("app.userMenu");
-  const tr = await getTranslations("app.roles");
+
+  const locale = await getLocale();
+  const [tu, tr, ts, tp, counts] = await Promise.all([
+    getTranslations("app.userMenu"),
+    getTranslations("app.roles"),
+    getTranslations("stewardPortal.sidebar"),
+    getTranslations("app.panel"),
+    getPendingCounts(user.id),
+  ]);
 
   return (
-    <div className="flex min-h-screen flex-col bg-cream">
-      <PortalHeader
-        fullName={user.fullName ?? tr("steward")}
-        phone={user.phone}
-        menuItems={[
-          { label: t("dashboard"), href: "/steward" },
-          { label: t("profile"), href: "/steward/profile" },
-          { label: t("settings"), href: "/steward/settings" },
-        ]}
-      />
-      <div className="flex flex-1 flex-col lg:flex-row">
-        <StewardSidebar />
-        <main className="flex-1 px-6 py-8 sm:px-10 lg:px-12 lg:py-10">
-          {children}
-        </main>
-      </div>
-    </div>
+    <DashboardShell
+      locale={locale}
+      roleLabel={tr("steward")}
+      title={tp("stewardTitle")}
+      subtitle={tp("stewardSubtitle")}
+      lockedLabel={tp("soon")}
+      user={{ fullName: user.fullName ?? tr("steward"), phone: user.phone }}
+      menuItems={[
+        { label: tu("profile"), href: "/steward/profile" },
+        { label: tu("settings"), href: "/steward/settings" },
+      ]}
+      logoutRedirect={locale === "bn" ? "/login" : "/en/login"}
+      labels={{
+        signOut: tu("signOut"),
+        signingOut: tu("signingOut"),
+        home: tu("home"),
+        brand: tu("brand"),
+      }}
+      sections={[
+        {
+          label: tp("workspace"),
+          items: [
+            { label: ts("items.dashboard"), href: "/steward", icon: "home", exact: true },
+            { label: ts("items.farmers"), href: "/steward/farmers", icon: "users" },
+            { label: ts("items.interests"), href: "/steward/interests", icon: "inbox", badge: counts.interests },
+            { label: ts("items.investments"), href: "/steward/investments", icon: "briefcase", badge: counts.awaitingFarmer },
+            { label: ts("items.fundRequests"), href: "/steward/fund-requests", icon: "coins", badge: counts.funds },
+          ],
+        },
+        {
+          label: tp("account"),
+          items: [
+            { label: ts("items.profile"), href: "/steward/profile", icon: "user" },
+            { label: ts("items.kyc"), href: "/onboarding/kyc", icon: "shield" },
+            { label: tu("settings"), href: "/steward/settings", icon: "settings" },
+          ],
+        },
+        {
+          label: tp("comingSoon"),
+          locked: true,
+          items: [
+            { label: ts("items.livestock"), href: "/steward/livestock", icon: "leaf" },
+            { label: ts("items.expenses"), href: "/steward/expenses", icon: "receipt" },
+            { label: ts("items.sales"), href: "/steward/sales", icon: "tag" },
+            { label: ts("items.reports"), href: "/steward/reports", icon: "chart" },
+          ],
+        },
+      ]}
+    >
+      {children}
+    </DashboardShell>
   );
 }

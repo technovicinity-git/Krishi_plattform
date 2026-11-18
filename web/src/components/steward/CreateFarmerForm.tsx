@@ -141,7 +141,7 @@ export function CreateFarmerForm() {
         <button
           type="submit"
           disabled={submitting}
-          className="inline-flex h-[46px] items-center justify-center rounded-[8px] bg-ink px-8 text-[13px] font-bold text-white hover:bg-[#2A2A2A] disabled:opacity-60"
+          className="inline-flex h-[46px] items-center justify-center rounded-[8px] bg-brand px-8 text-[13px] font-bold text-white hover:bg-brand-hover disabled:opacity-60"
         >
           {submitting ? t("creating") : t("submit")}
         </button>

@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import type { FarmerOption, StewardInvestmentRow } from "./types";
 
+import { StatusBadge, toneFor } from "@/components/dashboard/ui";
+
 export function AssignFarmerCard({
   investment,
   farmers,
@@ -49,7 +51,7 @@ export function AssignFarmerCard({
   };
 
   return (
-    <div className="flex flex-col gap-4 rounded-xl border border-border-light bg-white p-6">
+    <div className="flex flex-col gap-4 rounded-2xl border border-border-light bg-white p-6">
       <div className="flex items-start justify-between border-b border-border-light pb-3">
         <div>
           <span className="font-mono text-[11px] font-bold text-ink-muted">
@@ -57,15 +59,9 @@ export function AssignFarmerCard({
           </span>
           <h3 className="mt-1 font-serif text-[20px] text-ink">{planName}</h3>
         </div>
-        <span
-          className={`inline-flex rounded px-2 py-1 text-[10px] font-bold uppercase ${
-            isAwaitingFarmer
-              ? "bg-[#FEF6E5] text-[#C48A2E]"
-              : "bg-[#E8F0EA] text-green-deep"
-          }`}
-        >
+        <StatusBadge tone={toneFor(investment.current_stage)}>
           {tst.has(investment.current_stage) ? tst(investment.current_stage) : investment.current_stage.replace(/_/g, " ")}
-        </span>
+        </StatusBadge>
       </div>
 
       <div className="grid grid-cols-2 gap-4 text-[13px]">
@@ -102,7 +98,7 @@ export function AssignFarmerCard({
             <button
               onClick={handleAssign}
               disabled={!selectedFarmer || loading}
-              className="h-[40px] rounded bg-ink px-4 text-[12px] font-bold text-white disabled:opacity-50"
+              className="h-[40px] rounded-[6px] bg-brand hover:bg-brand-hover px-4 text-[12px] font-bold text-white disabled:opacity-50"
             >
               {loading ? "..." : t("assign")}
             </button>
@@ -119,7 +115,7 @@ export function AssignFarmerCard({
           </div>
           <Link
             href={`/steward/investments/${investment.id}`}
-            className="inline-flex h-[40px] w-full items-center justify-center rounded bg-ink text-[13px] font-bold text-white hover:bg-[#2A2A2A]"
+            className="inline-flex h-[40px] w-full items-center justify-center rounded bg-brand text-[13px] font-bold text-white hover:bg-brand-hover"
           >
             {t("view")}
           </Link>

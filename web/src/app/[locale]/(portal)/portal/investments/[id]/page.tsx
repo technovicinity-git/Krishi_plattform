@@ -6,6 +6,13 @@ import { StageTimeline } from "@/components/investment/StageTimeline";
 import { StatsGrid, formatBDT } from "@/components/investment/StatsGrid";
 import { UpdatesList } from "@/components/investment/UpdatesList";
 import { BackLink } from "@/components/ui/BackLink";
+import {
+  DetailRow,
+  PageHeader,
+  Panel,
+  StatusBadge,
+  toneFor,
+} from "@/components/dashboard/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -28,23 +35,17 @@ export default async function InvestorInvestmentDetailPage({
   const planName = bn ? inv.offering.planNameBn : inv.offering.planNameEn;
 
   return (
-    <div className="mx-auto flex w-full max-w-[960px] flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <BackLink href="/portal/investments">{t("backToInvestments")}</BackLink>
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <span className="font-mono text-[11px] font-bold text-ink-muted">
-              {inv.reference}
-            </span>
-            <h1 className="mt-1 font-serif text-[28px] text-ink">
-              {planName}
-            </h1>
-          </div>
-          <span className="inline-flex rounded bg-[#FEF6E5] px-2.5 py-1 text-[10px] font-bold uppercase text-[#C48A2E]">
-            {tst.has(inv.currentStage) ? tst(inv.currentStage) : inv.currentStage.replace(/_/g, " ")}
-          </span>
-        </div>
-      </div>
+    <div className="flex flex-col gap-6">
+      <PageHeader
+        back={<BackLink href="/portal/investments">{t("backToInvestments")}</BackLink>}
+        eyebrow={<span className="font-mono">{inv.reference}</span>}
+        title={planName}
+        actions={
+          <StatusBadge tone={toneFor(inv.currentStage)} className="text-[11px]">
+            {tst.has(inv.currentStage) ? tst(inv.currentStage) : inv.currentStage}
+          </StatusBadge>
+        }
+      />
 
       <StageTimeline currentStage={inv.currentStage} />
 
@@ -57,30 +58,17 @@ export default async function InvestorInvestmentDetailPage({
         ]}
       />
 
-      <UpdatesList updates={inv.updates} />
-
-      <div className="rounded-xl border border-border-light bg-white p-6">
-        <h2 className="text-[11px] font-bold uppercase tracking-[0.02em] text-ink-muted">
-          {t("summary")}
-        </h2>
-        <div className="mt-3 flex flex-col gap-2 text-[13px]">
-          <Row label={t("plan")} value={planName} />
-          <Row label={t("category")} value={bn ? inv.offering.categoryNameBn : inv.offering.categoryName} />
-          <Row label={t("district")} value={bn ? inv.offering.districtNameBn : inv.offering.districtName} />
-          <Row label={t("duration")} value={t("months", { count: inv.offering.durationMonths })} />
-          <Row label={t("steward")} value={inv.steward.fullName ?? "—"} />
-          <Row label={t("farmer")} value={inv.farmer?.fullName ?? t("unassigned")} />
-        </div>
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
+        <UpdatesList updates={inv.updates} />
+        <Panel title={t("summary")} className="h-fit">
+          <DetailRow label={t("plan")} value={planName} />
+          <DetailRow label={t("category")} value={(bn ? inv.offering.categoryNameBn : inv.offering.categoryName) ?? "—"} />
+          <DetailRow label={t("district")} value={(bn ? inv.offering.districtNameBn : inv.offering.districtName) ?? "—"} />
+          <DetailRow label={t("duration")} value={t("months", { count: inv.offering.durationMonths })} />
+          <DetailRow label={t("steward")} value={inv.steward.fullName ?? "—"} />
+          <DetailRow label={t("farmer")} value={inv.farmer?.fullName ?? t("unassigned")} />
+        </Panel>
       </div>
-    </div>
-  );
-}
-
-function Row({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex items-center justify-between border-b border-border-light py-2 last:border-b-0">
-      <span className="text-ink-muted">{label}</span>
-      <span className="font-semibold text-ink">{value}</span>
     </div>
   );
 }

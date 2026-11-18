@@ -1,11 +1,18 @@
-import { Link } from "@/i18n/navigation";
+import { redirect } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { createAdminClient } from "@/lib/supabase/admin";
+import {
+  ButtonLink,
+  EmptyState,
+  PageHeader,
+  StatusBadge,
+  Tabs,
+} from "@/components/dashboard/ui";
 
-const FILTERS = [{ key: "all" }, { key: "pending" }, { key: "active" }] as const;
-
-type FilterKey = (typeof FILTERS)[number]["key"];
+const FILTERS = ["all", "pending", "active"] as const;
+type FilterKey = (typeof FILTERS)[number];
 
 function formatDate(iso: string | null, locale: string): string {
   if (!iso) return "—";
@@ -22,10 +29,10 @@ export default async function StewardFarmersPage({
   searchParams: Promise<{ filter?: string }>;
 }) {
   const user = await getCurrentUser();
-  if (!user) return null;
+  if (!user || user.role !== "steward") redirect("/login");
 
   const params = await searchParams;
-  const filter: FilterKey = FILTERS.some((f) => f.key === params.filter)
+  const filter: FilterKey = (FILTERS as readonly string[]).includes(params.filter ?? "")
     ? (params.filter as FilterKey)
     : "all";
 
@@ -33,113 +40,82 @@ export default async function StewardFarmersPage({
   const locale = await getLocale();
   const db = createAdminClient();
 
-  let query = db
+  const { data: all } = await db
     .from("users")
     .select("id, full_name, phone, status, created_at")
     .eq("assigned_steward_id", user.id)
     .eq("role", "farmer")
     .order("created_at", { ascending: false });
 
-  if (filter === "pending") {
-    query = query.eq("status", "pending_activation");
-  } else if (filter === "active") {
-    query = query.eq("status", "active");
-  }
-
-  const { data: farmers } = await query;
+  const farmersAll = all ?? [];
+  const counts = {
+    all: farmersAll.length,
+    pending: farmersAll.filter((f) => f.status === "pending_activation").length,
+    active: farmersAll.filter((f) => f.status === "active").length,
+  };
+  const farmers =
+    filter === "pending"
+      ? farmersAll.filter((f) => f.status === "pending_activation")
+      : filter === "active"
+        ? farmersAll.filter((f) => f.status === "active")
+        : farmersAll;
 
   return (
-    <div className="flex w-full max-w-[1040px] flex-col gap-6">
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex flex-col gap-1">
-          <h1 className="font-serif text-[28px] leading-tight text-ink">
-            {t("title")}
-          </h1>
-          <p className="text-[13px] text-ink-secondary">
-            {t("subtitle")}
-          </p>
-        </div>
-        <Link
-          href="/steward/farmers/new"
-          className="inline-flex h-[42px] w-fit items-center justify-center rounded-[8px] bg-ink px-5 text-[13px] font-bold text-white hover:bg-[#2A2A2A]"
-        >
-          {t("addFarmer")}
-        </Link>
-      </div>
+    <div className="flex flex-col gap-6">
+      <PageHeader
+        title={t("title")}
+        description={t("subtitle")}
+        actions={<ButtonLink href="/steward/farmers/new">{t("addFarmer")}</ButtonLink>}
+      />
 
-      <div className="flex gap-1 border-b border-border-light">
-        {FILTERS.map((f) => {
-          const active = f.key === filter;
-          return (
-            <Link
-              key={f.key}
-              href={`/steward/farmers?filter=${f.key}`}
-              className={`border-b-2 px-4 py-2.5 text-[13px] font-medium transition-colors ${
-                active
-                  ? "border-ink text-ink"
-                  : "border-transparent text-ink-secondary hover:text-ink"
-              }`}
-            >
-              {t(`filter.${f.key}`)}
-            </Link>
-          );
-        })}
-      </div>
+      <Tabs
+        items={FILTERS.map((f) => ({
+          label: t(`filter.${f}`),
+          href: f === "all" ? "/steward/farmers" : `/steward/farmers?filter=${f}`,
+          active: f === filter,
+          count: counts[f],
+        }))}
+      />
 
-      {!farmers || farmers.length === 0 ? (
-        <div className="rounded-2xl border border-border-light bg-white px-8 py-16 text-center">
-          <p className="text-[14px] text-ink-secondary">
-            {t("empty")}
-          </p>
-          <p className="mt-2 text-[12px] text-ink-muted">
-            {t.rich("emptyHint", { strong: (chunks) => <strong>{chunks}</strong> })}
-          </p>
-        </div>
+      {farmers.length === 0 ? (
+        <EmptyState
+          icon="users"
+          title={t("empty")}
+          description={t.rich("emptyHint", { strong: (chunks) => <strong>{chunks}</strong> })}
+        />
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-border-light bg-white">
-          <table className="w-full">
-            <thead className="border-b border-border-light bg-stone">
+        <div className="overflow-x-auto rounded-2xl border border-border-light bg-white">
+          <table className="w-full min-w-[640px]">
+            <thead className="border-b border-border-light bg-cream">
               <tr>
-                <th className="px-5 py-3 text-left text-[11px] font-bold uppercase tracking-[0.02em] text-ink-muted">
-                  {t("colFarmer")}
-                </th>
-                <th className="px-5 py-3 text-left text-[11px] font-bold uppercase tracking-[0.02em] text-ink-muted">
-                  {t("colPhone")}
-                </th>
-                <th className="px-5 py-3 text-left text-[11px] font-bold uppercase tracking-[0.02em] text-ink-muted">
-                  {t("colStatus")}
-                </th>
-                <th className="px-5 py-3 text-left text-[11px] font-bold uppercase tracking-[0.02em] text-ink-muted">
-                  {t("colAdded")}
-                </th>
-                <th className="px-5 py-3 text-right text-[11px] font-bold uppercase tracking-[0.02em] text-ink-muted">
+                {[t("colFarmer"), t("colPhone"), t("colStatus"), t("colAdded")].map((h) => (
+                  <th key={h} className="px-5 py-3 text-left text-[11px] font-bold uppercase tracking-[0.05em] text-ink-muted">
+                    {h}
+                  </th>
+                ))}
+                <th className="px-5 py-3 text-right text-[11px] font-bold uppercase tracking-[0.05em] text-ink-muted">
                   {t("colActions")}
                 </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-border-light">
               {farmers.map((f) => {
                 const active = f.status === "active";
-                const style = active
-                  ? "bg-[#E8F0EA] text-green-deep"
-                  : "bg-[#FEF6E5] text-[#C48A2E]";
                 return (
-                  <tr
-                    key={f.id}
-                    className="border-b border-border-light last:border-b-0 hover:bg-stone/40"
-                  >
-                    <td className="px-5 py-4 text-[13px] font-semibold text-ink">
-                      {f.full_name ?? "—"}
-                    </td>
-                    <td className="px-5 py-4 text-[13px] text-ink-secondary">
-                      {f.phone ?? "—"}
-                    </td>
+                  <tr key={f.id} className="hover:bg-cream/60">
                     <td className="px-5 py-4">
-                      <span
-                        className={`inline-flex items-center rounded-[4px] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.02em] ${style}`}
-                      >
+                      <div className="flex items-center gap-3">
+                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-tint text-[12px] font-bold text-green-deep">
+                          {(f.full_name ?? "?").trim().slice(0, 1).toUpperCase()}
+                        </span>
+                        <span className="text-[13.5px] font-semibold text-ink">{f.full_name ?? "—"}</span>
+                      </div>
+                    </td>
+                    <td className="px-5 py-4 text-[13px] text-ink-secondary">{f.phone ?? "—"}</td>
+                    <td className="px-5 py-4">
+                      <StatusBadge tone={active ? "success" : "warning"}>
                         {active ? t("filter.active") : t("filter.pending")}
-                      </span>
+                      </StatusBadge>
                     </td>
                     <td className="px-5 py-4 text-[13px] text-ink-secondary">
                       {formatDate(f.created_at, locale)}
@@ -147,7 +123,7 @@ export default async function StewardFarmersPage({
                     <td className="px-5 py-4 text-right">
                       <Link
                         href={`/steward/farmers/${f.id}`}
-                        className="text-[12px] font-semibold text-brand hover:underline"
+                        className="text-[12.5px] font-semibold text-brand hover:underline"
                       >
                         {t("view")}
                       </Link>

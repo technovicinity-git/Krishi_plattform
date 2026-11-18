@@ -4,6 +4,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { formatBDT } from "@/lib/utils";
+import { PageHeader } from "@/components/dashboard/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -30,14 +31,10 @@ export default async function InvestorInvestmentsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <h1 className="font-serif text-[28px] leading-tight text-ink">
-          {t("title")}
-        </h1>
-        <p className="text-[13px] text-ink-secondary">
-          {t("subtitle")}
-        </p>
-      </div>
+      <PageHeader
+        title={t("title")}
+        description={t("subtitle")}
+      />
 
       {!investments || investments.length === 0 ? (
         <div className="rounded-2xl border border-border-light bg-white px-8 py-16 text-center">
@@ -94,7 +91,7 @@ export default async function InvestorInvestmentsPage() {
                   <div className="mt-4 border-t border-border-light pt-4">
                     <Link
                       href={`/portal/investments/${inv.id}`}
-                      className="inline-flex h-[40px] w-full items-center justify-center rounded-[4px] bg-ink text-[13px] font-semibold text-white hover:bg-[#2A2A2A]"
+                      className="inline-flex h-[40px] w-full items-center justify-center rounded-[4px] bg-brand text-[13px] font-semibold text-white hover:bg-brand-hover"
                     >
                       {t("view")}
                     </Link>

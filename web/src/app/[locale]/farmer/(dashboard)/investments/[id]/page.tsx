@@ -8,6 +8,13 @@ import { UpdatesList } from "@/components/investment/UpdatesList";
 import { FundRequestsList } from "@/components/investment/FundRequestsList";
 import { FarmerActions } from "@/components/investment/FarmerActions";
 import { BackLink } from "@/components/ui/BackLink";
+import {
+  DetailRow,
+  PageHeader,
+  Panel,
+  StatusBadge,
+  toneFor,
+} from "@/components/dashboard/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -21,8 +28,8 @@ export default async function FarmerInvestmentDetailPage({
 
   const { id } = await params;
   const inv = await getInvestmentDetail(id);
-  
-  // Ensure this farmer is actually assigned to this investment
+
+  // Only the assigned farmer may open this batch.
   if (!inv || inv.farmer?.id !== user.id) notFound();
 
   const t = await getTranslations("app.investmentDetail");
@@ -32,74 +39,49 @@ export default async function FarmerInvestmentDetailPage({
   const planName = bn ? inv.offering.planNameBn : inv.offering.planNameEn;
 
   return (
-    <div className="mx-auto flex w-full max-w-[960px] flex-col gap-6 pb-20">
-      {/* Header */}
-      <div className="flex flex-col gap-2">
-        <BackLink href="/farmer">{t("backToAssignments")}</BackLink>
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <span className="font-mono text-[11px] font-bold text-ink-muted">
-              {inv.reference}
-            </span>
-            <h1 className="mt-1 font-serif text-[28px] text-ink">
-              {planName}
-            </h1>
-          </div>
-          <span className="inline-flex rounded bg-[#FEF6E5] px-2.5 py-1 text-[10px] font-bold uppercase text-[#C48A2E]">
-            {tst.has(inv.currentStage) ? tst(inv.currentStage) : inv.currentStage.replace(/_/g, " ")}
-          </span>
-        </div>
-      </div>
+    <div className="flex flex-col gap-6">
+      <PageHeader
+        back={<BackLink href="/farmer">{t("backToAssignments")}</BackLink>}
+        eyebrow={<span className="font-mono">{inv.reference}</span>}
+        title={planName}
+        actions={
+          <StatusBadge tone={toneFor(inv.currentStage)} className="text-[11px]">
+            {tst.has(inv.currentStage) ? tst(inv.currentStage) : inv.currentStage}
+          </StatusBadge>
+        }
+      />
 
-      {/* Timeline */}
       <StageTimeline currentStage={inv.currentStage} />
 
-      {/* Stats */}
       <StatsGrid
         items={[
           { label: t("units"), value: `${inv.units}` },
           { label: t("animalBudget"), value: formatBDT(inv.stats.animalBudgetTotal) },
           { label: t("careBudget"), value: formatBDT(inv.stats.careBudgetTotal) },
-          {
-            label: t("careUsed"),
-            value: formatBDT(inv.stats.careBudgetUsed),
-            accent: true,
-          },
+          { label: t("careUsed"), value: formatBDT(inv.stats.careBudgetUsed), accent: true },
         ]}
       />
 
-      {/* Actions (Client Component) */}
-      <FarmerActions investmentId={inv.id} />
+      <FarmerActions
+        investmentId={inv.id}
+        currentStage={inv.currentStage}
+        units={inv.units}
+      />
 
-      {/* Fund Requests History */}
-      <FundRequestsList requests={inv.fundRequests} />
-
-      {/* Activity Timeline */}
-      <UpdatesList updates={inv.updates} />
-
-      {/* Investment Details */}
-      <div className="rounded-xl border border-border-light bg-white p-6">
-        <h2 className="text-[11px] font-bold uppercase tracking-[0.02em] text-ink-muted">
-          {t("details")}
-        </h2>
-        <div className="mt-3 flex flex-col gap-2 text-[13px]">
-          <Row label={t("plan")} value={planName} />
-          <Row label={t("category")} value={bn ? inv.offering.categoryNameBn : inv.offering.categoryName} />
-          <Row label={t("district")} value={bn ? inv.offering.districtNameBn : inv.offering.districtName} />
-          <Row label={t("duration")} value={t("months", { count: inv.offering.durationMonths })} />
-          <Row label={t("steward")} value={inv.steward.fullName ?? "—"} />
-          <Row label={t("investor")} value={inv.investor.fullName ?? "—"} />
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
+        <div className="flex min-w-0 flex-col gap-6">
+          <UpdatesList updates={inv.updates} />
+          <FundRequestsList requests={inv.fundRequests} />
         </div>
+        <Panel title={t("details")} className="h-fit">
+          <DetailRow label={t("plan")} value={planName} />
+          <DetailRow label={t("category")} value={(bn ? inv.offering.categoryNameBn : inv.offering.categoryName) ?? "—"} />
+          <DetailRow label={t("district")} value={(bn ? inv.offering.districtNameBn : inv.offering.districtName) ?? "—"} />
+          <DetailRow label={t("duration")} value={t("months", { count: inv.offering.durationMonths })} />
+          <DetailRow label={t("steward")} value={inv.steward.fullName ?? "—"} />
+          <DetailRow label={t("investor")} value={inv.investor.fullName ?? "—"} />
+        </Panel>
       </div>
-    </div>
-  );
-}
-
-function Row({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex items-center justify-between border-b border-border-light py-2 last:border-b-0">
-      <span className="text-ink-muted">{label}</span>
-      <span className="font-semibold text-ink">{value}</span>
     </div>
   );
 }

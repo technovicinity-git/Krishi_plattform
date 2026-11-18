@@ -3,6 +3,7 @@ import { requireAdmin } from "@/lib/admin/current-admin";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { planImageUrl } from "@/lib/admin/plan-helpers";
 import { formatBDT } from "@/lib/utils";
+import { EmptyState, PageHeader } from "@/components/dashboard/ui";
 
 const STATUS_STYLE: Record<string, string> = {
   draft: "bg-stone text-ink-muted",
@@ -84,32 +85,24 @@ export default async function AdminPlansPage() {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between gap-4">
-        <div className="flex flex-col gap-2">
-          <h1 className="font-serif text-[28px] leading-tight text-ink">
-            Investment Plans
-          </h1>
-          <p className="text-[13px] text-ink-secondary">
-            Plans shown on the public site. Total: {plans?.length ?? 0}
-          </p>
-        </div>
+        <PageHeader
+          title={<>Investment Plans</>}
+          description={<>Plans shown on the public site. Total: {plans?.length ?? 0}</>}
+        />
         <Link
           href="/krishi-console/plans/new"
-          className="inline-flex h-[42px] items-center justify-center rounded-[8px] bg-ink px-5 text-[13px] font-bold text-white hover:bg-[#2A2A2A]"
+          className="inline-flex h-[42px] items-center justify-center rounded-[8px] bg-brand px-5 text-[13px] font-bold text-white hover:bg-brand-hover"
         >
           + Create Plan
         </Link>
       </div>
 
       {!plans || plans.length === 0 ? (
-        <div className="rounded-2xl border border-border-light bg-white px-8 py-16 text-center">
-          <p className="text-[14px] text-ink-secondary">
-            No plans yet. Click <strong>Create Plan</strong> to add the first one.
-          </p>
-        </div>
+        <EmptyState title={<>No plans yet. Click <strong>Create Plan</strong> to add the first one.</>} />
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-border-light bg-white">
-          <table className="w-full">
-            <thead className="border-b border-border-light bg-stone">
+        <div className="overflow-x-auto rounded-2xl border border-border-light bg-white">
+          <table className="w-full min-w-[720px]">
+            <thead className="border-b border-border-light bg-cream">
               <tr>
                 <th className="px-5 py-3 text-left text-[11px] font-bold uppercase tracking-[0.02em] text-ink-muted">
                   Plan
@@ -144,7 +137,7 @@ export default async function AdminPlansPage() {
                 return (
                   <tr
                     key={plan.id}
-                    className="border-b border-border-light last:border-b-0 hover:bg-stone/40"
+                    className="border-b border-border-light last:border-b-0 hover:bg-cream/60"
                   >
                     <td className="px-5 py-3">
                       <div className="flex items-center gap-3">

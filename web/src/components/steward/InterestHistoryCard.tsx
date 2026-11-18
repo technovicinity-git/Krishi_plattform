@@ -2,18 +2,11 @@ import { Link } from "@/i18n/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import type { StewardInterestRow } from "./types";
 
+import { StatusBadge, toneFor } from "@/components/dashboard/ui";
+
 interface Props {
   interest: StewardInterestRow;
 }
-
-const STATUS_STYLE: Record<string, string> = {
-  approved: "bg-[#E8F0EA] text-green-deep",
-  not_approved: "bg-[#FAF0ED] text-danger",
-  onboarding: "bg-[#FEF6E5] text-[#C48A2E]",
-  converted: "bg-[#E8F0EA] text-green-deep",
-  expired: "bg-stone text-ink-muted",
-  cancelled: "bg-stone text-ink-muted",
-};
 
 export function InterestHistoryCard({ interest }: Props) {
   const t = useTranslations("app.interestCard");
@@ -26,12 +19,10 @@ export function InterestHistoryCard({ interest }: Props) {
   const plan = interest.offering?.investment_plans;
   const planName =
     (locale === "bn" ? plan?.name_bn : plan?.name_en) ?? plan?.name_en ?? t("unknownPlan");
-  const statusStyle =
-    STATUS_STYLE[interest.status] ?? "bg-stone text-ink-muted";
   const statusLabel = ts.has(interest.status) ? ts(interest.status) : interest.status;
 
   return (
-    <div className="flex flex-col gap-4 rounded-xl border border-border-light bg-white p-6">
+    <div className="flex flex-col gap-4 rounded-2xl border border-border-light bg-white p-6">
       <div className="flex items-start justify-between gap-4">
         <div>
           <span className="text-[10px] font-bold uppercase tracking-[0.02em] text-ink-muted">
@@ -39,11 +30,7 @@ export function InterestHistoryCard({ interest }: Props) {
           </span>
           <h3 className="mt-1 font-serif text-[20px] text-ink">{planName}</h3>
         </div>
-        <span
-          className={`inline-flex rounded px-2 py-1 text-[10px] font-bold uppercase ${statusStyle}`}
-        >
-          {statusLabel}
-        </span>
+        <StatusBadge tone={toneFor(interest.status)}>{statusLabel}</StatusBadge>
       </div>
 
       <div className="grid grid-cols-2 gap-4 border-y border-border-light py-3 text-[13px]">

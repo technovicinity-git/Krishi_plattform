@@ -89,7 +89,7 @@ export function AdminLoginForm() {
       <button
         type="submit"
         disabled={submitting}
-        className="inline-flex h-[48px] w-full items-center justify-center rounded-[8px] bg-ink text-[14px] font-bold text-white transition-colors hover:bg-[#2A2A2A] disabled:opacity-60"
+        className="inline-flex h-[48px] w-full items-center justify-center rounded-[8px] bg-brand text-[14px] font-bold text-white transition-colors hover:bg-brand-hover disabled:opacity-60"
       >
         {submitting ? "Signing in..." : "Sign In"}
       </button>

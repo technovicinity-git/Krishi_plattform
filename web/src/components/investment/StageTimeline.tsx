@@ -1,4 +1,5 @@
 import { useTranslations } from "next-intl";
+import { cn } from "@/lib/cn";
 
 const STAGES = ["awaiting_farmer", "awaiting_purchase", "growing_care", "sale_pending", "settled"] as const;
 
@@ -15,47 +16,51 @@ export function StageTimeline({ currentStage }: { currentStage: string }) {
   const t = useTranslations("app.stageTimeline");
   const current = ORDER[currentStage] ?? 0;
   return (
-    <div className="rounded-xl border border-border-light bg-white p-6">
-      <h2 className="text-[11px] font-bold uppercase tracking-[0.02em] text-ink-muted">
-        {t("heading")}
-      </h2>
-      <div className="mt-4 flex items-center gap-1">
+    <section className="rounded-2xl border border-border-light bg-white px-6 py-5">
+      <h2 className="text-[15px] font-semibold text-ink">{t("heading")}</h2>
+      <ol className="mt-5 grid grid-cols-5">
         {STAGES.map((s, i) => {
           const done = i < current;
           const active = i === current;
           return (
-            <div key={s} className="flex flex-1 items-center gap-1">
-              <div className="flex flex-col items-center">
-                <div
-                  className={`flex h-7 w-7 items-center justify-center rounded-full text-[10px] font-bold ${
-                    done
-                      ? "bg-green-deep text-white"
-                      : active
-                        ? "bg-brand text-white"
-                        : "bg-stone text-ink-muted"
-                  }`}
-                >
-                  {done ? "✓" : i + 1}
-                </div>
+            <li key={s} className="relative flex flex-col items-center gap-2 text-center">
+              {i > 0 && (
                 <span
-                  className={`mt-1.5 whitespace-nowrap text-[9px] font-semibold uppercase ${
-                    active ? "text-brand" : "text-ink-muted"
-                  }`}
-                >
-                  {t(s)}
-                </span>
-              </div>
-              {i < STAGES.length - 1 && (
-                <div
-                  className={`h-0.5 flex-1 ${
-                    i < current ? "bg-green-deep" : "bg-stone"
-                  }`}
+                  aria-hidden="true"
+                  className={cn(
+                    "absolute top-[15px] right-1/2 h-[3px] w-full -translate-y-1/2",
+                    i <= current ? "bg-brand" : "bg-stone",
+                  )}
                 />
               )}
-            </div>
+              <span
+                className={cn(
+                  "relative z-10 flex h-[30px] w-[30px] items-center justify-center rounded-full text-[12px] font-bold",
+                  done && "bg-brand text-white",
+                  active && "bg-white text-brand ring-[3px] ring-brand",
+                  !done && !active && "bg-stone text-ink-muted",
+                )}
+              >
+                {done ? (
+                  <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" className="h-3 w-3" aria-hidden="true">
+                    <path d="M2 6l3 3 5-6" />
+                  </svg>
+                ) : (
+                  i + 1
+                )}
+              </span>
+              <span
+                className={cn(
+                  "px-1 text-[10.5px] font-semibold leading-tight sm:text-[11.5px]",
+                  active ? "text-green-deep" : done ? "text-ink-secondary" : "text-ink-muted",
+                )}
+              >
+                {t(s)}
+              </span>
+            </li>
           );
         })}
-      </div>
-    </div>
+      </ol>
+    </section>
   );
 }

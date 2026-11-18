@@ -8,6 +8,8 @@ import { useLocale, useTranslations } from "next-intl";
 import { formatBDT } from "@/lib/utils";
 import { useDialog } from "@/components/ui/dialog-provider";
 
+import { StatusBadge, toneFor } from "@/components/dashboard/ui";
+
 export interface FundRequestRow {
   id: string;
   reference: string;
@@ -24,13 +26,6 @@ export interface FundRequestRow {
     } | null;
   } | null;
 }
-
-const STATUS_STYLE: Record<string, string> = {
-  pending: "bg-[#FEF6E5] text-[#C48A2E]",
-  approved: "bg-[#E8F0EA] text-green-deep",
-  disbursed: "bg-[#E8F0EA] text-green-deep",
-  rejected: "bg-[#FAF0ED] text-danger",
-};
 
 export function FundRequestsInlineList({
   requests,
@@ -89,7 +84,7 @@ export function FundRequestsInlineList({
         return (
           <div
             key={r.id}
-            className="rounded-xl border border-border-light bg-white p-5"
+            className="rounded-2xl border border-border-light bg-white p-6"
           >
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
@@ -104,13 +99,7 @@ export function FundRequestsInlineList({
                   })}
                 </div>
               </div>
-              <span
-                className={`inline-flex rounded px-2 py-0.5 text-[9px] font-bold uppercase ${
-                  STATUS_STYLE[r.status] ?? "bg-stone text-ink-muted"
-                }`}
-              >
-                {ts.has(r.status) ? ts(r.status) : r.status}
-              </span>
+              <StatusBadge tone={toneFor(r.status)}>{ts.has(r.status) ? ts(r.status) : r.status}</StatusBadge>
             </div>
 
             <div className="mt-3 grid grid-cols-2 gap-3 text-[13px] md:grid-cols-4">
@@ -200,7 +189,7 @@ export function FundRequestsInlineList({
                       <button
                         onClick={() => handleAction(r.id, "approve")}
                         disabled={loadingId === r.id}
-                        className="rounded bg-ink px-3 py-1.5 text-[11px] font-bold text-white hover:bg-[#2A2A2A] disabled:opacity-50"
+                        className="rounded bg-brand px-3 py-1.5 text-[11px] font-bold text-white hover:bg-brand-hover disabled:opacity-50"
                       >
                         {loadingId === r.id ? "..." : tc("approve")}
                       </button>

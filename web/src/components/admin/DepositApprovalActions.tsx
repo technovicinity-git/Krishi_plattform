@@ -87,7 +87,7 @@ export function DepositApprovalActions({ depositId }: { depositId: string }) {
       <button
         onClick={handleApprove}
         disabled={loading}
-        className="inline-flex h-[36px] items-center justify-center rounded bg-ink px-4 text-[12px] font-bold text-white hover:bg-[#2A2A2A] disabled:opacity-60"
+        className="inline-flex h-[36px] items-center justify-center rounded bg-brand px-4 text-[12px] font-bold text-white hover:bg-brand-hover disabled:opacity-60"
       >
         {loading ? "..." : "Approve"}
       </button>

@@ -1,16 +1,32 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import {
+  FieldLabel,
+  FormError,
+  Modal,
+  ModalActions,
+  fieldClass,
+} from "@/components/dashboard/Modal";
 
-export function FundRequestModal({ investmentId, onClose }: { investmentId: string, onClose: () => void }) {
+export const PURPOSES = ["animal_purchase", "feed", "medical", "transport", "other"] as const;
+
+export function FundRequestModal({
+  investmentId,
+  onClose,
+}: {
+  investmentId: string;
+  onClose: () => void;
+}) {
   const t = useTranslations("app.fundRequest");
   const tp = useTranslations("app.purpose");
   const tc = useTranslations("app.common");
   const router = useRouter();
+  const ids = { purpose: useId(), amount: useId(), note: useId() };
   const [amount, setAmount] = useState("");
-  const [purpose, setPurpose] = useState("animal_purchase");
+  const [purpose, setPurpose] = useState<string>("animal_purchase");
   const [note, setNote] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -31,68 +47,68 @@ export function FundRequestModal({ investmentId, onClose }: { investmentId: stri
           note,
         }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || t("failed"));
-      
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error ?? t("failed"));
+
       onClose();
       router.refresh();
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t("failed"));
       setLoading(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
-        <h2 className="font-serif text-[22px] text-ink">{t("title")}</h2>
-        <p className="mt-1 text-[12px] text-ink-muted">{t("subtitle")}</p>
+    <Modal title={t("title")} subtitle={t("subtitle")} onClose={onClose}>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <div>
+          <FieldLabel htmlFor={ids.purpose}>{t("purpose")}</FieldLabel>
+          <select
+            id={ids.purpose}
+            value={purpose}
+            onChange={(e) => setPurpose(e.target.value)}
+            className={`${fieldClass} h-[44px]`}
+          >
+            {PURPOSES.map((p) => (
+              <option key={p} value={p}>
+                {tp(p)}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <FieldLabel htmlFor={ids.amount}>{t("amount")}</FieldLabel>
+          <input
+            id={ids.amount}
+            type="number"
+            min={1}
+            required
+            inputMode="decimal"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            className={`${fieldClass} h-[44px]`}
+          />
+        </div>
+        <div>
+          <FieldLabel htmlFor={ids.note}>{t("note")}</FieldLabel>
+          <textarea
+            id={ids.note}
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            rows={2}
+            className={`${fieldClass} py-2.5`}
+          />
+        </div>
 
-        <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-4">
-          <div>
-            <label className="text-[12px] font-semibold text-ink-nav">{t("purpose")}</label>
-            <select
-              value={purpose}
-              onChange={(e) => setPurpose(e.target.value)}
-              className="mt-1 h-[40px] w-full rounded border border-border-light bg-cream px-3 text-[13px]"
-            >
-              <option value="animal_purchase">{tp("animal_purchase")}</option>
-              <option value="feed">{tp("feed")}</option>
-              <option value="medical">{tp("medical")}</option>
-              <option value="transport">{tp("transport")}</option>
-              <option value="other">{tp("other")}</option>
-            </select>
-          </div>
-          <div>
-            <label className="text-[12px] font-semibold text-ink-nav">{t("amount")}</label>
-            <input
-              type="number"
-              required
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              className="mt-1 h-[40px] w-full rounded border border-border-light bg-cream px-3 text-[13px]"
-            />
-          </div>
-          <div>
-            <label className="text-[12px] font-semibold text-ink-nav">{t("note")}</label>
-            <textarea
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              rows={2}
-              className="mt-1 w-full rounded border border-border-light bg-cream px-3 py-2 text-[13px]"
-            />
-          </div>
+        <FormError>{error}</FormError>
 
-          {error && <p className="text-[12px] text-[#A13D2B]">{error}</p>}
-
-          <div className="flex gap-2">
-            <button type="button" onClick={onClose} className="flex-1 rounded border border-border-light py-2 text-[13px] font-semibold text-ink-secondary">{tc("cancel")}</button>
-            <button type="submit" disabled={loading || !amount} className="flex-1 rounded bg-brand py-2 text-[13px] font-bold text-white disabled:opacity-50">
-              {loading ? t("sending") : t("submit")}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+        <ModalActions
+          onCancel={onClose}
+          cancelLabel={tc("cancel")}
+          submitLabel={loading ? t("sending") : t("submit")}
+          disabled={loading || !amount}
+        />
+      </form>
+    </Modal>
   );
 }

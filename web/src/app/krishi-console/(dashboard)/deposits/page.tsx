@@ -1,8 +1,8 @@
-import Link from "next/link";
 import { requireAdmin } from "@/lib/admin/current-admin";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { DepositApprovalActions } from "@/components/admin/DepositApprovalActions";
 import { formatBDT } from "@/lib/utils";
+import { EmptyState, PageHeader, Tabs } from "@/components/dashboard/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -53,41 +53,24 @@ export default async function AdminDepositsPage({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <h1 className="font-serif text-[28px] leading-tight text-ink">Deposits</h1>
-        <p className="text-[13px] text-ink-secondary">Review pending transfers and track history.</p>
-      </div>
+      <PageHeader
+        title={<>Deposits</>}
+        description={<>Review pending transfers and track history.</>}
+      />
 
-      {/* Tabs */}
-      <div className="flex gap-1 border-b border-border-light">
-        <Link
-          href="/krishi-console/deposits"
-          className={`-mb-px border-b-2 px-4 py-2.5 text-[13px] font-semibold transition-colors ${
-            view === "pending" ? "border-brand text-ink" : "border-transparent text-ink-muted hover:text-ink"
-          }`}
-        >
-          Pending Review
-        </Link>
-        <Link
-          href="/krishi-console/deposits?view=history"
-          className={`-mb-px border-b-2 px-4 py-2.5 text-[13px] font-semibold transition-colors ${
-            view === "history" ? "border-brand text-ink" : "border-transparent text-ink-muted hover:text-ink"
-          }`}
-        >
-          History
-        </Link>
-      </div>
+      <Tabs localized={false}
+        items={[
+          { label: "Pending Review", href: "/krishi-console/deposits", active: view === "pending" },
+          { label: "History", href: "/krishi-console/deposits?view=history", active: view === "history" },
+        ]}
+      />
 
       {!deposits || deposits.length === 0 ? (
-        <div className="rounded-2xl border border-border-light bg-white px-8 py-16 text-center">
-          <p className="text-[14px] text-ink-secondary">
-            {view === "pending" ? "No pending deposits at the moment." : "No historical deposits yet."}
-          </p>
-        </div>
+        <EmptyState title={view === "pending" ? "No pending deposits at the moment." : "No historical deposits yet."} />
       ) : (
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
           {(deposits as unknown as DepositRow[]).map((dep) => (
-            <div key={dep.id} className="flex flex-col gap-4 rounded-xl border border-border-light bg-white p-6">
+            <div key={dep.id} className="flex flex-col gap-4 rounded-2xl border border-border-light bg-white p-6">
               <div className="flex items-start justify-between border-b border-border-light pb-3">
                 <div>
                   <span className="font-mono text-[12px] font-bold text-ink-muted">{dep.reference}</span>

@@ -3,6 +3,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { DetailRow, PageHeader, Panel, StatusBadge } from "@/components/dashboard/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -71,12 +72,7 @@ export default async function StewardProfilePage() {
 
   return (
     <div className="flex w-full max-w-[960px] flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <h1 className="font-serif text-[28px] leading-tight text-ink lg:text-[32px]">
-          {t("title")}
-        </h1>
-        <p className="text-[14px] text-ink-secondary">{t("subtitle")}</p>
-      </div>
+      <PageHeader title={t("title")} description={t("subtitle")} />
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <Card title={t("account")}>
@@ -86,7 +82,7 @@ export default async function StewardProfilePage() {
           <Row label={t("email")} value={user.email ?? t("notProvided")} />
           <Link
             href="/steward/settings"
-            className="mt-2 text-[13px] font-semibold text-brand hover:underline"
+            className="mt-4 text-[13px] font-semibold text-brand hover:underline"
           >
             {t("editAccount")}
           </Link>
@@ -101,7 +97,7 @@ export default async function StewardProfilePage() {
           {!kycVerified && (
             <Link
               href="/onboarding/kyc"
-              className="mt-2 inline-flex h-[42px] w-fit items-center justify-center rounded-[8px] bg-ink px-5 text-[13px] font-bold text-white hover:bg-[#2A2A2A]"
+              className="mt-4 inline-flex h-[42px] w-fit items-center justify-center rounded-[8px] bg-brand px-5 text-[13px] font-bold text-white hover:bg-brand-hover"
             >
               {user.kycStatus === "not_started"
                 ? tk("kycCta")
@@ -155,12 +151,9 @@ export default async function StewardProfilePage() {
 
 function Card({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="flex flex-col gap-3 rounded-2xl border border-border-light bg-white p-6">
-      <h2 className="text-[11px] font-bold uppercase tracking-[0.02em] text-ink-muted">
-        {title}
-      </h2>
+    <Panel title={title} className="h-fit" bodyClassName="flex flex-col gap-0 p-6">
       {children}
-    </div>
+    </Panel>
   );
 }
 
@@ -174,13 +167,9 @@ function Row({
   accent?: boolean;
 }) {
   return (
-    <div className="flex items-start justify-between gap-4 border-b border-border-light py-3 last:border-b-0">
-      <span className="shrink-0 text-[12px] text-ink-muted">{label}</span>
-      <span
-        className={`text-right text-[13px] font-medium ${accent ? "text-green-deep" : "text-ink"}`}
-      >
-        {value}
-      </span>
-    </div>
+    <DetailRow
+      label={label}
+      value={accent ? <StatusBadge tone="success">{value}</StatusBadge> : value}
+    />
   );
 }

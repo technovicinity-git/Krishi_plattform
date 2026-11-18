@@ -3,6 +3,7 @@ import { getCurrentUser } from "@/lib/auth/current-user";
 import { redirect } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { AssignFarmerCard } from "@/components/steward/AssignFarmerCard";
+import { EmptyState, PageHeader } from "@/components/dashboard/ui";
 import type { StewardInvestmentRow } from "@/components/steward/types";
 
 export const dynamic = "force-dynamic";
@@ -52,29 +53,14 @@ export default async function StewardInvestmentsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <h1 className="font-serif text-[28px] leading-tight text-ink">
-          {t("title")}
-        </h1>
-        <p className="text-[13px] text-ink-secondary">
-          {t("subtitle")}
-        </p>
-      </div>
+      <PageHeader title={t("title")} description={t("subtitle")} />
 
       {!investments || investments.length === 0 ? (
-        <div className="rounded-2xl border border-border-light bg-white px-8 py-16 text-center">
-          <p className="text-[14px] text-ink-secondary">
-            {t("empty")}
-          </p>
-        </div>
+        <EmptyState icon="briefcase" title={t("empty")} />
       ) : (
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           {(investments as unknown as StewardInvestmentRow[]).map((inv) => (
-            <AssignFarmerCard
-              key={inv.id}
-              investment={inv}
-              farmers={farmers || []}
-            />
+            <AssignFarmerCard key={inv.id} investment={inv} farmers={farmers || []} />
           ))}
         </div>
       )}

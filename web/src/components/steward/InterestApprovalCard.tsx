@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import type { StewardInterestRow } from "./types";
+import { StatusBadge } from "@/components/dashboard/ui";
 
 interface Props {
   interest: StewardInterestRow;
@@ -52,7 +53,7 @@ export function InterestApprovalCard({ interest }: Props) {
   };
 
   return (
-    <div className="flex flex-col gap-4 rounded-xl border border-border-light bg-white p-6">
+    <div className="flex flex-col gap-4 rounded-2xl border border-border-light bg-white p-6">
       <div className="flex items-start justify-between gap-4">
         <div>
           <span className="text-[10px] font-bold uppercase tracking-[0.02em] text-ink-muted">
@@ -60,9 +61,9 @@ export function InterestApprovalCard({ interest }: Props) {
           </span>
           <h3 className="mt-1 font-serif text-[20px] text-ink">{planName}</h3>
         </div>
-        <span className="inline-flex rounded bg-[#FEF6E5] px-2 py-1 text-[10px] font-bold uppercase text-[#C48A2E]">
+        <StatusBadge tone="warning">
           {ts.has(interest.status) ? ts(interest.status) : interest.status.replace("_", " ")}
-        </span>
+        </StatusBadge>
       </div>
 
       <div className="grid grid-cols-2 gap-4 border-y border-border-light py-3 text-[13px]">
@@ -85,7 +86,7 @@ export function InterestApprovalCard({ interest }: Props) {
         <button
           onClick={() => handleAction("approve")}
           disabled={loading}
-          className="flex-1 rounded bg-ink py-2 text-[12px] font-bold text-white hover:bg-[#2A2A2A] disabled:opacity-60"
+          className="flex-1 rounded bg-brand py-2 text-[12px] font-bold text-white hover:bg-brand-hover disabled:opacity-60"
         >
           {loading ? t("processing") : tc("approve")}
         </button>

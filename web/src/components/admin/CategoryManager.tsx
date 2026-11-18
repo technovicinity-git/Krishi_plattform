@@ -69,7 +69,7 @@ export function CategoryManager({ categories }: { categories: Category[] }) {
           <button
             type="button"
             onClick={() => setShowAdd(true)}
-            className="inline-flex h-[42px] items-center justify-center rounded-[8px] bg-ink px-5 text-[13px] font-bold text-white hover:bg-[#2A2A2A]"
+            className="inline-flex h-[42px] items-center justify-center rounded-[8px] bg-brand px-5 text-[13px] font-bold text-white hover:bg-brand-hover"
           >
             + Add category
           </button>
@@ -316,7 +316,7 @@ function AddCategoryForm({
         <button
           type="submit"
           disabled={submitting}
-          className="inline-flex h-[42px] items-center justify-center rounded-[8px] bg-ink px-6 text-[13px] font-bold text-white hover:bg-[#2A2A2A] disabled:opacity-60"
+          className="inline-flex h-[42px] items-center justify-center rounded-[8px] bg-brand px-6 text-[13px] font-bold text-white hover:bg-brand-hover disabled:opacity-60"
         >
           {submitting ? "Creating..." : "Create Category"}
         </button>
@@ -452,7 +452,7 @@ function EditCategoryModal({
           <button
             type="submit"
             disabled={submitting}
-            className="inline-flex h-[42px] flex-1 items-center justify-center rounded-[8px] bg-ink text-[13px] font-bold text-white hover:bg-[#2A2A2A] disabled:opacity-60"
+            className="inline-flex h-[42px] flex-1 items-center justify-center rounded-[8px] bg-brand text-[13px] font-bold text-white hover:bg-brand-hover disabled:opacity-60"
           >
             {submitting ? "Saving..." : "Save Changes"}
           </button>

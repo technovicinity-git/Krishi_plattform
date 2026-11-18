@@ -1,8 +1,7 @@
 import { redirect } from "next/navigation";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/auth/current-user";
-import { PortalHeader } from "@/components/portal/PortalHeader";
-import { PortalSidebar } from "@/components/portal/PortalSidebar";
+import { DashboardShell } from "@/components/dashboard/DashboardShell";
 
 export default async function PortalLayout({
   children,
@@ -11,25 +10,64 @@ export default async function PortalLayout({
 }) {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
-  const t = await getTranslations("app.userMenu");
+
+  const locale = await getLocale();
+  const [tu, tr, ts, tp] = await Promise.all([
+    getTranslations("app.userMenu"),
+    getTranslations("app.roles"),
+    getTranslations("portal.sidebar"),
+    getTranslations("app.panel"),
+  ]);
 
   return (
-    <div className="flex min-h-screen flex-col bg-cream">
-      <PortalHeader
-        fullName={user.fullName ?? t("user")}
-        phone={user.phone}
-        menuItems={[
-          { label: t("profile"), href: "/portal/profile" },
-          { label: t("kyc"), href: "/portal/kyc" },
-          { label: t("settings"), href: "/portal/settings" },
-        ]}
-      />
-      <div className="flex flex-1 flex-col lg:flex-row">
-        <PortalSidebar />
-        <main className="flex-1 px-6 py-8 sm:px-10 lg:px-12 lg:py-10">
-          {children}
-        </main>
-      </div>
-    </div>
+    <DashboardShell
+      locale={locale}
+      roleLabel={tr("investor")}
+      title={tp("investorTitle")}
+      subtitle={tp("investorSubtitle")}
+      lockedLabel={tp("soon")}
+      user={{ fullName: user.fullName ?? tu("user"), phone: user.phone }}
+      menuItems={[
+        { label: tu("profile"), href: "/portal/profile" },
+        { label: tu("kyc"), href: "/portal/kyc" },
+        { label: tu("settings"), href: "/portal/settings" },
+      ]}
+      logoutRedirect={locale === "bn" ? "/login" : "/en/login"}
+      labels={{
+        signOut: tu("signOut"),
+        signingOut: tu("signingOut"),
+        home: tu("home"),
+        brand: tu("brand"),
+      }}
+      sections={[
+        {
+          label: tp("workspace"),
+          items: [
+            { label: ts("items.investments"), href: "/portal/investments", icon: "briefcase" },
+            { label: ts("items.interests"), href: "/portal/interests", icon: "inbox" },
+          ],
+        },
+        {
+          label: tp("account"),
+          items: [
+            { label: ts("items.profile"), href: "/portal/profile", icon: "user" },
+            { label: ts("items.kyc"), href: "/portal/kyc", icon: "shield" },
+            { label: ts("items.accountSettings"), href: "/portal/settings", icon: "settings" },
+          ],
+        },
+        {
+          label: tp("comingSoon"),
+          locked: true,
+          items: [
+            { label: tp("wallet"), href: "/portal/wallet", icon: "wallet" },
+            { label: tp("transactions"), href: "/portal/transactions", icon: "history" },
+            { label: ts("items.livestock"), href: "/portal/livestock", icon: "leaf" },
+            { label: ts("items.reports"), href: "/portal/reports", icon: "chart" },
+          ],
+        },
+      ]}
+    >
+      {children}
+    </DashboardShell>
   );
 }

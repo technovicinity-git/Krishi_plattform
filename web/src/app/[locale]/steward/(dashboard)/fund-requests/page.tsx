@@ -1,8 +1,8 @@
-import { Link } from "@/i18n/navigation";
 import { getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { redirect } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { EmptyState, PageHeader, Tabs } from "@/components/dashboard/ui";
 import {
   FundRequestsInlineList,
   type FundRequestRow,
@@ -69,46 +69,20 @@ export default async function StewardFundRequestsPage({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <h1 className="font-serif text-[28px] leading-tight text-ink">
-          {t("title")}
-        </h1>
-        <p className="text-[13px] text-ink-secondary">
-          {t("subtitle")}
-        </p>
-      </div>
+      <PageHeader title={t("title")} description={t("subtitle")} />
 
-      <div className="flex gap-1 border-b border-border-light">
-        <Link
-          href="/steward/fund-requests"
-          className={`-mb-px border-b-2 px-4 py-2.5 text-[13px] font-semibold transition-colors ${
-            view === "pending"
-              ? "border-brand text-ink"
-              : "border-transparent text-ink-muted hover:text-ink"
-          }`}
-        >
-          {t("pending")}
-        </Link>
-        <Link
-          href="/steward/fund-requests?view=history"
-          className={`-mb-px border-b-2 px-4 py-2.5 text-[13px] font-semibold transition-colors ${
-            view === "history"
-              ? "border-brand text-ink"
-              : "border-transparent text-ink-muted hover:text-ink"
-          }`}
-        >
-          {t("history")}
-        </Link>
-      </div>
+      <Tabs
+        items={[
+          { label: t("pending"), href: "/steward/fund-requests", active: view === "pending" },
+          { label: t("history"), href: "/steward/fund-requests?view=history", active: view === "history" },
+        ]}
+      />
 
       {count === 0 ? (
-        <div className="rounded-2xl border border-border-light bg-white px-8 py-16 text-center">
-          <p className="text-[14px] text-ink-secondary">
-            {view === "pending"
-              ? t("emptyPending")
-              : t("emptyHistory")}
-          </p>
-        </div>
+        <EmptyState
+          icon="coins"
+          title={view === "pending" ? t("emptyPending") : t("emptyHistory")}
+        />
       ) : (
         <FundRequestsInlineList
           requests={(fundRequests ?? []) as unknown as FundRequestRow[]}

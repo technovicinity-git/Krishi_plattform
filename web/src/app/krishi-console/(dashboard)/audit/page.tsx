@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { requireAdmin } from "@/lib/admin/current-admin";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { EmptyState, PageHeader, Tabs } from "@/components/dashboard/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -124,46 +125,30 @@ export default async function AdminAuditLogPage({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <h1 className="font-serif text-[28px] leading-tight text-ink">
-          Audit Log
-        </h1>
-        <p className="text-[13px] text-ink-secondary">
-          Every admin action, newest first. Times are Bangladesh time.
-          Total: <strong>{total}</strong>
-        </p>
-      </div>
+      <PageHeader
+        title={<>Audit Log</>}
+        description={<>Every admin action, newest first. Times are Bangladesh time.
+          Total: <strong>{total}</strong></>}
+      />
 
-      <div className="flex gap-1 overflow-x-auto border-b border-border-light">
-        {FILTERS.map((f) => (
-          <Link
-            key={f.key}
-            href={`/krishi-console/audit?filter=${f.key}`}
-            className={`-mb-px shrink-0 whitespace-nowrap border-b-2 px-4 py-2.5 text-[13px] font-medium transition-colors ${
-              f.key === filterKey
-                ? "border-ink text-ink"
-                : "border-transparent text-ink-secondary hover:text-ink"
-            }`}
-          >
-            {f.label}
-          </Link>
-        ))}
-      </div>
+      <Tabs localized={false}
+        items={FILTERS.map((f) => ({
+          label: f.label,
+          href: `/krishi-console/audit?filter=${f.key}`,
+          active: f.key === filterKey,
+        }))}
+      />
 
       {error ? (
         <div className="rounded-2xl border border-[#F0C9C0] bg-[#FAF0ED] px-8 py-6 text-[13px] text-danger">
           Could not load the audit log: {error.message}
         </div>
       ) : rows.length === 0 ? (
-        <div className="rounded-2xl border border-border-light bg-white px-8 py-16 text-center">
-          <p className="text-[14px] text-ink-secondary">
-            No audit entries in this view.
-          </p>
-        </div>
+        <EmptyState title={<>No audit entries in this view.</>} />
       ) : (
         <div className="overflow-x-auto rounded-2xl border border-border-light bg-white">
           <table className="w-full min-w-[760px]">
-            <thead className="border-b border-border-light bg-stone">
+            <thead className="border-b border-border-light bg-cream">
               <tr>
                 {["Time", "Admin", "Action", "Target", "IP"].map((h) => (
                   <th
@@ -182,7 +167,7 @@ export default async function AdminAuditLogPage({
                 return (
                   <tr
                     key={row.id}
-                    className="border-b border-border-light align-top last:border-b-0 hover:bg-stone/40"
+                    className="border-b border-border-light align-top last:border-b-0 hover:bg-cream/60"
                   >
                     <td className="whitespace-nowrap px-5 py-4 text-[12px] text-ink-secondary">
                       {formatDateTime(row.created_at)}

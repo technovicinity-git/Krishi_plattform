@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { requireAdmin } from "@/lib/admin/current-admin";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { EmptyState, PageHeader, Tabs } from "@/components/dashboard/ui";
 
 const FILTERS = [
   { key: "all", label: "All" },
@@ -68,45 +69,26 @@ export default async function AdminFarmersPage({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <h1 className="font-serif text-[28px] leading-tight text-ink">
-          Farmers
-        </h1>
-        <p className="text-[13px] text-ink-secondary">
-          All farmer accounts across every steward. Total:{" "}
-          <strong>{farmers?.length ?? 0}</strong>
-        </p>
-      </div>
+      <PageHeader
+        title={<>Farmers</>}
+        description={<>All farmer accounts across every steward. Total:{" "}
+          <strong>{farmers?.length ?? 0}</strong></>}
+      />
 
-      <div className="flex gap-1 border-b border-border-light">
-        {FILTERS.map((f) => {
-          const active = f.key === filter;
-          return (
-            <Link
-              key={f.key}
-              href={`/krishi-console/farmers?filter=${f.key}`}
-              className={`border-b-2 px-4 py-2.5 text-[13px] font-medium transition-colors ${
-                active
-                  ? "border-ink text-ink"
-                  : "border-transparent text-ink-secondary hover:text-ink"
-              }`}
-            >
-              {f.label}
-            </Link>
-          );
-        })}
-      </div>
+      <Tabs localized={false}
+        items={FILTERS.map((f) => ({
+          label: f.label,
+          href: `/krishi-console/farmers?filter=${f.key}`,
+          active: f.key === filter,
+        }))}
+      />
 
       {!farmers || farmers.length === 0 ? (
-        <div className="rounded-2xl border border-border-light bg-white px-8 py-16 text-center">
-          <p className="text-[14px] text-ink-secondary">
-            No farmers in this view.
-          </p>
-        </div>
+        <EmptyState title={<>No farmers in this view.</>} />
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-border-light bg-white">
-          <table className="w-full">
-            <thead className="border-b border-border-light bg-stone">
+        <div className="overflow-x-auto rounded-2xl border border-border-light bg-white">
+          <table className="w-full min-w-[720px]">
+            <thead className="border-b border-border-light bg-cream">
               <tr>
                 <th className="px-5 py-3 text-left text-[11px] font-bold uppercase tracking-[0.02em] text-ink-muted">
                   Farmer
@@ -137,7 +119,7 @@ export default async function AdminFarmersPage({
                 return (
                   <tr
                     key={farmer.id}
-                    className="border-b border-border-light last:border-b-0 hover:bg-stone/40"
+                    className="border-b border-border-light last:border-b-0 hover:bg-cream/60"
                   >
                     <td className="px-5 py-4 text-[13px] font-semibold text-ink">
                       {farmer.full_name ?? "—"}

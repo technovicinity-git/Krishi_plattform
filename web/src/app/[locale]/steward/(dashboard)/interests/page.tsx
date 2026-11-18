@@ -1,10 +1,10 @@
-import { Link } from "@/i18n/navigation";
 import { getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { redirect } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { InterestApprovalCard } from "@/components/steward/InterestApprovalCard";
 import { InterestHistoryCard } from "@/components/steward/InterestHistoryCard";
+import { EmptyState, PageHeader, Tabs } from "@/components/dashboard/ui";
 import type { StewardInterestRow } from "@/components/steward/types";
 
 export const dynamic = "force-dynamic";
@@ -40,14 +40,8 @@ export default async function StewardInterestsPage({ searchParams }: PageProps) 
   if (offeringIds.length === 0) {
     return (
       <div className="flex flex-col gap-6">
-        <div className="flex flex-col gap-2">
-          <h1 className="font-serif text-[28px] leading-tight text-ink">
-            {t("title")}
-          </h1>
-          <p className="text-[13px] text-ink-secondary">
-            {t("noOfferings")}
-          </p>
-        </div>
+        <PageHeader title={t("title")} />
+        <EmptyState icon="inbox" title={t("noOfferings")} />
       </div>
     );
   }
@@ -71,37 +65,20 @@ export default async function StewardInterestsPage({ searchParams }: PageProps) 
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <h1 className="font-serif text-[28px] leading-tight text-ink">
-          {t("title")}
-        </h1>
-        <p className="text-[13px] text-ink-secondary">
-          {t("subtitle")}
-        </p>
-      </div>
+      <PageHeader title={t("title")} description={t("subtitle")} />
 
-      {/* Tabs */}
-      <div className="flex gap-1 border-b border-border-light">
-        <TabLink
-          href="/steward/interests"
-          active={view === "pending"}
-          label={t("pending")}
-        />
-        <TabLink
-          href="/steward/interests?view=history"
-          active={view === "history"}
-          label={t("history")}
-        />
-      </div>
+      <Tabs
+        items={[
+          { label: t("pending"), href: "/steward/interests", active: view === "pending" },
+          { label: t("history"), href: "/steward/interests?view=history", active: view === "history" },
+        ]}
+      />
 
       {!interests || interests.length === 0 ? (
-        <div className="rounded-2xl border border-border-light bg-white px-8 py-16 text-center">
-          <p className="text-[14px] text-ink-secondary">
-            {view === "pending"
-              ? t("emptyPending")
-              : t("emptyHistory")}
-          </p>
-        </div>
+        <EmptyState
+          icon="inbox"
+          title={view === "pending" ? t("emptyPending") : t("emptyHistory")}
+        />
       ) : (
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           {(interests as unknown as StewardInterestRow[]).map((interest) =>
@@ -114,28 +91,5 @@ export default async function StewardInterestsPage({ searchParams }: PageProps) 
         </div>
       )}
     </div>
-  );
-}
-
-function TabLink({
-  href,
-  active,
-  label,
-}: {
-  href: string;
-  active: boolean;
-  label: string;
-}) {
-  return (
-    <Link
-      href={href}
-      className={`-mb-px border-b-2 px-4 py-2.5 text-[13px] font-semibold transition-colors ${
-        active
-          ? "border-brand text-ink"
-          : "border-transparent text-ink-muted hover:text-ink"
-      }`}
-    >
-      {label}
-    </Link>
   );
 }

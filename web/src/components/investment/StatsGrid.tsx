@@ -1,4 +1,5 @@
 import { formatBDT } from "@/lib/utils";
+import { cn } from "@/lib/cn";
 
 interface StatsGridProps {
   items: Array<{ label: string; value: string; accent?: boolean }>;
@@ -10,15 +11,19 @@ export function StatsGrid({ items }: StatsGridProps) {
       {items.map((item) => (
         <div
           key={item.label}
-          className="rounded-xl border border-border-light bg-white p-4"
+          className={cn(
+            "rounded-2xl border bg-white px-5 py-4",
+            item.accent ? "border-brand/40 bg-brand-tint/50" : "border-border-light",
+          )}
         >
-          <div className="text-[10px] font-semibold uppercase tracking-[0.02em] text-ink-muted">
+          <div className="text-[11px] font-bold uppercase tracking-[0.05em] text-ink-muted">
             {item.label}
           </div>
           <div
-            className={`mt-1 text-[18px] font-bold ${
-              item.accent ? "text-brand" : "text-ink"
-            }`}
+            className={cn(
+              "mt-1.5 text-[20px] font-bold leading-tight",
+              item.accent ? "text-green-deep" : "text-ink",
+            )}
           >
             {item.value}
           </div>

@@ -271,7 +271,7 @@ export function StewardOfferingsSection({
               type="button"
               onClick={handleCreate}
               disabled={saving || !newStewardId}
-              className="h-[38px] rounded-[6px] bg-ink px-5 text-[12px] font-bold text-white hover:bg-[#2A2A2A] disabled:opacity-60"
+              className="h-[38px] rounded-[6px] bg-brand px-5 text-[12px] font-bold text-white hover:bg-brand-hover disabled:opacity-60"
             >
               {saving ? "Saving…" : "Create offering"}
             </button>

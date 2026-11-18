@@ -3,6 +3,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { redirect } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { PageHeader } from "@/components/dashboard/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -52,14 +53,10 @@ export default async function InvestorInterestsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <h1 className="font-serif text-[28px] leading-tight text-ink">
-          {t("title")}
-        </h1>
-        <p className="text-[13px] text-ink-secondary">
-          {t("subtitle")}
-        </p>
-      </div>
+      <PageHeader
+        title={t("title")}
+        description={t("subtitle")}
+      />
 
       {!interests || interests.length === 0 ? (
         <div className="rounded-2xl border border-border-light bg-white px-8 py-16 text-center">
@@ -74,9 +71,9 @@ export default async function InvestorInterestsPage() {
           </Link>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-border-light bg-white">
-          <table className="w-full">
-            <thead className="border-b border-border-light bg-stone">
+        <div className="overflow-x-auto rounded-2xl border border-border-light bg-white">
+          <table className="w-full min-w-[720px]">
+            <thead className="border-b border-border-light bg-cream">
               <tr>
                 <th className="px-5 py-3 text-left text-[11px] font-bold uppercase tracking-[0.02em] text-ink-muted">
                   {t("reference")}
@@ -111,7 +108,7 @@ export default async function InvestorInterestsPage() {
                 return (
                   <tr
                     key={interest.id}
-                    className="border-b border-border-light last:border-b-0 hover:bg-stone/40"
+                    className="border-b border-border-light last:border-b-0 hover:bg-cream/60"
                   >
                     <td className="px-5 py-3 font-mono text-[12px] text-ink">
                       {interest.reference}

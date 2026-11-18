@@ -139,7 +139,7 @@ export function FarmerActivationPanel({
           type="button"
           onClick={handleResend}
           disabled={resending}
-          className="inline-flex h-[42px] items-center justify-center rounded-[8px] bg-ink px-5 text-[13px] font-bold text-white transition-colors hover:bg-[#2A2A2A] disabled:opacity-60"
+          className="inline-flex h-[42px] items-center justify-center rounded-[8px] bg-brand px-5 text-[13px] font-bold text-white transition-colors hover:bg-brand-hover disabled:opacity-60"
         >
           {resending ? t("regenerating") : t("regenerate")}
         </button>
