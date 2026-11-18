@@ -148,7 +148,7 @@ export async function notifyOfferingChange(
   const plan = data.investment_plans as unknown as { name_en: string | null; name_bn: string | null } | null;
   await notify(
     kind,
-    { userId: data.steward_id, href: "/steward" },
+    { userId: data.steward_id, href: "/steward/plans" },
     {
       plan: plan?.name_en ?? undefined,
       planBn: plan?.name_bn ?? plan?.name_en ?? undefined,

@@ -1474,6 +1474,7 @@
       "comingSoon": "Coming Soon",
       "locked": "Locked",
       "items": {
+        "plans": "My plans",
         "dashboard": "Dashboard",
         "farmers": "Farmers",
         "settings": "Settings",
@@ -1647,6 +1648,33 @@
     }
   },
   "app": {
+    "stewardPlans": {
+      "title": "My plans",
+      "subtitle": "Plans Krishi has added you to, with how many units you offer and how many are funded.",
+      "livePlans": "Live plans",
+      "unitsOffered": "Units offered",
+      "unitsFunded": "Units funded",
+      "openInterests": "Interests to review",
+      "empty": "You haven't been added to any plan yet.",
+      "emptyHint": "When Krishi adds you to a plan, it appears here and you get a notification.",
+      "months": "{count, plural, one {# month} other {# months}}",
+      "unitPrice": "Unit price",
+      "estReturn": "Est. return",
+      "left": "Units left",
+      "funded": "{funded} of {offered} units funded",
+      "pendingNote": "Waiting for Krishi's approval. Investors can't see it yet.",
+      "rejectedNote": "Not approved: {reason}",
+      "interestsLink": "{count, plural, =0 {No interests to review} one {# interest to review} other {# interests to review}}",
+      "batchesLink": "{count, plural, =0 {No active batches} one {# active batch} other {# active batches}}",
+      "viewPublic": "View public page"
+    },
+    "offeringStatus": {
+      "approved": "Live",
+      "pending_approval": "Pending approval",
+      "paused": "Paused",
+      "closed": "Closed",
+      "rejected": "Not approved"
+    },
     "farmerSales": {
       "title": "Sales",
       "subtitle": "Record a sale when your animals are sold, then send the money to Krishi. Your profit share is added to your wallet when the batch is settled.",

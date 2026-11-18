@@ -101,6 +101,7 @@ export default async function StewardDashboardLayout({
           label: tp("workspace"),
           items: [
             { label: ts("items.dashboard"), href: "/steward", icon: "home", exact: true },
+            { label: ts("items.plans"), href: "/steward/plans", icon: "clipboard" },
             { label: ts("items.farmers"), href: "/steward/farmers", icon: "users" },
             { label: ts("items.interests"), href: "/steward/interests", icon: "inbox", badge: counts.interests },
             { label: ts("items.investments"), href: "/steward/investments", icon: "briefcase", badge: counts.awaitingFarmer },
