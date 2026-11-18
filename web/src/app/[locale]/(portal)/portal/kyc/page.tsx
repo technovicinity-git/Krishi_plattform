@@ -4,6 +4,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getSignedKycUrls } from "@/lib/admin/storage";
+import { KycDocPreview } from "@/components/kyc/KycDocPreview";
 
 function formatDateTime(iso: string | null, locale: string): string {
   if (!iso) return "—";
@@ -145,8 +146,8 @@ export default async function PortalKycPage() {
             {t("documentsHeading")}
           </h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <DocPreview label={t("nidFront")} url={urls.nidFront} emptyLabel={t("notProvided")} />
-            <DocPreview label={t("nidBack")} url={urls.nidBack} emptyLabel={t("notProvided")} />
+            <KycDocPreview label={t("nidFront")} url={urls.nidFront} path={kyc.nid_front_path} emptyLabel={t("notProvided")} pdfLabel={t("pdfDocument")} fileLabel={t("document")} openLabel={t("openFile")} />
+            <KycDocPreview label={t("nidBack")} url={urls.nidBack} path={kyc.nid_back_path} emptyLabel={t("notProvided")} pdfLabel={t("pdfDocument")} fileLabel={t("document")} openLabel={t("openFile")} />
           </div>
         </div>
       )}
@@ -159,29 +160,6 @@ function Row({ label, value }: { label: string; value: string }) {
     <div className="flex items-start justify-between gap-4 border-b border-border-light py-3 last:border-b-0">
       <span className="shrink-0 text-[12px] text-ink-muted">{label}</span>
       <span className="text-right text-[13px] font-medium text-ink">{value}</span>
-    </div>
-  );
-}
-
-function DocPreview({ label, url, emptyLabel }: { label: string; url: string | null; emptyLabel: string }) {
-  return (
-    <div className="flex flex-col gap-2">
-      <span className="text-[11px] font-semibold text-ink-muted">{label}</span>
-      {url ? (
-        <a
-          href={url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block overflow-hidden rounded-[8px] border border-border-light bg-stone hover:border-brand"
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={url} alt={label} className="h-[180px] w-full object-cover" />
-        </a>
-      ) : (
-        <div className="flex h-[180px] items-center justify-center rounded-[8px] border border-dashed border-border-light bg-stone text-[12px] text-ink-muted">
-          {emptyLabel}
-        </div>
-      )}
     </div>
   );
 }

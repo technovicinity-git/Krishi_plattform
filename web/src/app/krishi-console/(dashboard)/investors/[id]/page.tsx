@@ -3,6 +3,7 @@ import { requireAdmin } from "@/lib/admin/current-admin";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getSignedKycUrls } from "@/lib/admin/storage";
 import { BackLink } from "@/components/ui/BackLink";
+import { KycDocPreview } from "@/components/kyc/KycDocPreview";
 import { KycReviewActions } from "@/components/admin/KycReviewActions";
 
 function formatDateTime(iso: string | null): string {
@@ -141,8 +142,8 @@ export default async function AdminInvestorDetailPage({
           </h2>
           {kyc ? (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <DocPreview label="NID Front" url={urls.nidFront} isImage={/\.(jpe?g|png|webp)$/i.test(kyc.nid_front_path ?? "")} />
-              <DocPreview label="NID Back" url={urls.nidBack} isImage={/\.(jpe?g|png|webp)$/i.test(kyc.nid_back_path ?? "")} />
+              <KycDocPreview label="NID Front" url={urls.nidFront} path={kyc.nid_front_path} />
+              <KycDocPreview label="NID Back" url={urls.nidBack} path={kyc.nid_back_path} />
             </div>
           ) : (
             <p className="text-[13px] text-ink-muted">—</p>
@@ -181,43 +182,6 @@ function Row({ label, value }: { label: string; value: string }) {
     <div className="flex items-start justify-between gap-4 border-b border-border-light py-3 last:border-b-0">
       <span className="shrink-0 text-[12px] text-ink-muted">{label}</span>
       <span className="text-right text-[13px] font-medium text-ink">{value}</span>
-    </div>
-  );
-}
-
-function DocPreview({
-  label,
-  url,
-  isImage,
-}: {
-  label: string;
-  url: string | null;
-  isImage: boolean;
-}) {
-  return (
-    <div className="flex flex-col gap-2">
-      <span className="text-[11px] font-semibold text-ink-muted">{label}</span>
-      {url ? (
-        <a
-          href={url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group block overflow-hidden rounded-[8px] border border-border-light bg-stone hover:border-brand"
-        >
-          {isImage ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={url} alt={label} className="h-[160px] w-full object-cover" />
-          ) : (
-            <div className="flex h-[160px] items-center justify-center text-[12px] font-semibold text-brand">
-              Open PDF →
-            </div>
-          )}
-        </a>
-      ) : (
-        <div className="flex h-[160px] items-center justify-center rounded-[8px] border border-dashed border-border-light bg-stone text-[12px] text-ink-muted">
-          Not provided
-        </div>
-      )}
     </div>
   );
 }

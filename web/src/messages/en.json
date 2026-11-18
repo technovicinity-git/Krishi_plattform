@@ -2097,7 +2097,10 @@
       "documentsHeading": "Submitted Documents",
       "nidFront": "NID Front",
       "nidBack": "NID Back",
-      "notProvided": "Not provided"
+      "notProvided": "Not provided",
+      "pdfDocument": "PDF document",
+      "document": "Document",
+      "openFile": "Click to open"
     },
     "logExpense": {
       "uploadFailed": "Failed to upload receipt",

@@ -2096,7 +2096,10 @@
       "documentsHeading": "জমা দেওয়া নথিপত্র",
       "nidFront": "এনআইডি সামনের অংশ",
       "nidBack": "এনআইডি পেছনের অংশ",
-      "notProvided": "দেওয়া হয়নি"
+      "notProvided": "দেওয়া হয়নি",
+      "pdfDocument": "PDF ডকুমেন্ট",
+      "document": "ডকুমেন্ট",
+      "openFile": "খুলতে ক্লিক করুন"
     },
     "logExpense": {
       "uploadFailed": "রসিদ আপলোড করা যায়নি",
