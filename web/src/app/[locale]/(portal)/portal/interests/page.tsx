@@ -27,7 +27,13 @@ function formatDate(iso: string | null, locale: string): string {
   });
 }
 
-export default async function InvestorInterestsPage() {
+export default async function InvestorInterestsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ payment?: string }>;
+}) {
+  const { payment } = await searchParams;
+  const tp = await getTranslations("app.onlinePayment");
   const user = await getCurrentUser();
   if (!user || user.role !== "investor") {
     redirect("/login");
@@ -57,6 +63,17 @@ export default async function InvestorInterestsPage() {
         title={t("title")}
         description={t("subtitle")}
       />
+
+      {payment === "review" && (
+        <div className="rounded-xl border border-[#C9DCEA] bg-[#EAF1F6] px-4 py-3 text-[13px] text-[#2F5D7C]">
+          {tp("review")}
+        </div>
+      )}
+      {(payment === "failed" || payment === "fail" || payment === "cancel") && (
+        <div className="rounded-xl border border-[#F0C9C0] bg-[#FAF0ED] px-4 py-3 text-[13px] text-danger">
+          {payment === "cancel" ? tp("cancelled") : tp("failedReturn")}
+        </div>
+      )}
 
       {!interests || interests.length === 0 ? (
         <div className="rounded-2xl border border-border-light bg-white px-8 py-16 text-center">

@@ -23,8 +23,10 @@ export const dynamic = "force-dynamic";
 
 export default async function InvestorInvestmentDetailPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ payment?: string }>;
 }) {
   const user = await getCurrentUser();
   if (!user || user.role !== "investor") redirect("/login");
@@ -55,6 +57,12 @@ export default async function InvestorInvestmentDetailPage({
           </div>
         }
       />
+
+      {(await searchParams).payment === "success" && (
+        <div className="rounded-xl border border-brand/30 bg-brand-tint px-4 py-3 text-[13px] font-semibold text-green-deep">
+          {(await getTranslations("app.onlinePayment"))("success", { reference: inv.reference })}
+        </div>
+      )}
 
       <StageTimeline currentStage={inv.currentStage} />
 

@@ -131,6 +131,8 @@ Partial unique indexes allow only one *active* interest (`submitted`, `under_rev
 
 **`steward_reviews`** (`20261118000006_steward_reviews.sql`): one per settled investment, written by its investor: `rating` 1–5, optional `comment`, `status` `published` | `hidden` (admin, with `hidden_reason`). Public pages show only published reviews, with the reviewer's first name and last initial.
 
+**`online_payments`** (`20261118000007_online_payments.sql`): one row per SSLCommerz payment attempt (`tran_id` `KR-TXN-0000001`). `initiated` → `paid` | `failed` | `cancelled` | `invalid`. A payment is marked paid only after the SSLCommerz validation API confirms the transaction ID, amount and currency; it then creates a `deposits` row (`method = 'online'`) and approves it automatically through `approveDeposit()` (`web/src/lib/deposits/approve.ts`, shared with admin approval). Payments SSLCommerz flags as risky, or that can't be approved (e.g. units sold out), leave the deposit `pending` for an admin, with the reason in `failure_reason`.
+
 ### Tables from the baseline migration (20261016000001)
 
 | Table | Key columns | Statuses / stages |

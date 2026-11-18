@@ -22,6 +22,7 @@ Found while reading the codebase on 2026-11-17. Ordered by priority.
 ## 🟡 Feature gaps
 
 - **SMS delivery** for OTPs is a `TODO` everywhere.
+- **Online payment refunds** are manual: if a paid SSLCommerz deposit can't be approved (units sold out), an admin must refund it from the SSLCommerz merchant panel and reject the deposit.
 - **Fund disbursement:** the detail code treats `disbursed` as a status, but the steward route only sets `approved`/`rejected`.
 - **Admin console:** offerings default to `approved` when the admin creates them, and stewards have no self-serve way to propose offerings (`pending_approval` exists in the schema but is unused).
 - **No automated tests** and no CI configuration.

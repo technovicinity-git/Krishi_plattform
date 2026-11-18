@@ -4,15 +4,20 @@ import { getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { DepositForm } from "@/components/onboarding/DepositForm";
+import { PayOnlineButton } from "@/components/onboarding/PayOnlineButton";
+import { isSslcommerzEnabled, isSslcommerzSandbox } from "@/lib/payments/sslcommerz";
 
 export const dynamic = "force-dynamic";
 
 export default async function OnboardingWizardPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string; reference: string }>;
+  searchParams: Promise<{ payment?: string }>;
 }) {
   const { locale, reference } = await params;
+  const { payment } = await searchParams;
   const user = await getCurrentUser();
   if (!user || user.role !== "investor") redirect("/login");
 
@@ -48,6 +53,7 @@ export default async function OnboardingWizardPage({
     .select("*")
     .eq("interest_id", interest.id)
     .order("created_at", { ascending: false })
+    .limit(1)
     .maybeSingle();
 
   // Determine current step (1 to 4)
@@ -78,6 +84,12 @@ export default async function OnboardingWizardPage({
           {t("subtitle", { plan: planName })}
         </p>
       </div>
+
+      {(payment === "fail" || payment === "cancel" || payment === "failed") && currentStep === 3 && (
+        <div className="mb-6 rounded-xl border border-[#F0C9C0] bg-[#FAF0ED] px-4 py-3 text-[13px] text-danger">
+          {payment === "cancel" ? t("paymentCancelled") : t("paymentFailed")}
+        </div>
+      )}
 
       {/* Stepper */}
       <div className="mb-10 grid grid-cols-4 gap-2">
@@ -127,6 +139,22 @@ export default async function OnboardingWizardPage({
               })}
             </p>
             
+            {isSslcommerzEnabled() && (
+              <>
+                <PayOnlineButton
+                  interestId={interest.id}
+                  amount={totalAmount}
+                  locale={locale === "en" ? "en" : "bn"}
+                  sandbox={isSslcommerzSandbox()}
+                />
+                <div className="mt-8 flex items-center gap-3 text-[11px] font-bold uppercase tracking-[0.05em] text-ink-muted">
+                  <span className="h-px flex-1 bg-border-light" />
+                  {t("orManual")}
+                  <span className="h-px flex-1 bg-border-light" />
+                </div>
+              </>
+            )}
+
             <div className="mt-6 flex flex-col gap-3">
               {accounts?.map((acc) => (
                 <div key={acc.id} className="rounded-lg border border-border-light bg-cream p-4">

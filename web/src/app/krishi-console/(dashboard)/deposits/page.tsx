@@ -102,9 +102,11 @@ export default async function AdminDepositsPage({
                 </div>
                 <div>
                   <span className="text-ink-muted">Payment Method</span>
-                  <div className="font-semibold uppercase text-ink">{dep.method}</div>
+                  <div className="font-semibold uppercase text-ink">
+                    {dep.method === "online" ? "Online · SSLCommerz" : dep.method}
+                  </div>
                   <div className="text-ink-secondary">
-                    {dep.method === "bank" ? `TXN: ${dep.txn_id}` : `Sender: ${dep.sender_number}`}
+                    {dep.method === "mfs" ? `Sender: ${dep.sender_number}` : `TXN: ${dep.txn_id}`}
                   </div>
                 </div>
               </div>

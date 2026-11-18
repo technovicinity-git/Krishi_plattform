@@ -1647,6 +1647,19 @@
     }
   },
   "app": {
+    "onlinePayment": {
+      "title": "Pay online",
+      "body": "Card, bKash, Nagad, Rocket or internet banking through SSLCommerz. Your investment starts as soon as the payment is confirmed.",
+      "pay": "Pay {amount} now",
+      "redirecting": "Opening the payment page...",
+      "secure": "You'll be taken to SSLCommerz's secure page.",
+      "sandbox": "Test mode: no real money is charged",
+      "failed": "Could not start the payment",
+      "success": "Payment received. Your investment {reference} has started.",
+      "review": "Payment received. Krishi is checking it before your investment starts; you'll get a notification.",
+      "failedReturn": "The online payment did not go through. No money was taken.",
+      "cancelled": "You cancelled the online payment."
+    },
     "pdf": {
       "investmentTitle": "Investment Statement",
       "walletTitle": "Wallet Statement",
@@ -2687,6 +2700,9 @@
       "view": "View Investment →"
     },
     "onboardingWizard": {
+      "orManual": "or pay by bank / mobile transfer",
+      "paymentFailed": "The online payment did not go through. No money was taken. You can try again or pay by transfer.",
+      "paymentCancelled": "You cancelled the online payment. You can try again or pay by transfer.",
       "defaultPlanName": "Investment Plan",
       "title": "Investment Readiness",
       "subtitle": "Complete the required steps to activate your investment in {plan}.",

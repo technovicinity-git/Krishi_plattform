@@ -69,6 +69,7 @@ Required variables in `web/.env.local`:
 | `SUPABASE_SECRET_KEY` | Service-role key, **server only** |
 | `DATABASE_URL` | Session-pooler Postgres URL, used only by the scripts |
 | `KRISHI_SESSION_SECRET` | Session signing key, 32+ characters |
+| `SSLCOMMERZ_STORE_ID` / `SSLCOMMERZ_STORE_PASSWORD` / `SSLCOMMERZ_SANDBOX` | Online payments (optional; see docs/development.md) |
 | `DEV_SHOW_OTP` | Optional, dev only: set to `true` to show OTPs on screen (there is no SMS provider yet) |
 
 Generate a session secret with:
