@@ -2098,6 +2098,8 @@
       "unreadCount": "{count, plural, =0 {কোনো অপঠিত নোটিফিকেশন নেই} other {#টি অপঠিত}}"
     },
     "notify": {
+      "payment_refund_started": {"title": "রিফান্ড শুরু হয়েছে: {amount}", "body": "{reference}-এর অনলাইন পেমেন্ট ফেরত দেওয়া হচ্ছে: {reason}। আপনার অ্যাকাউন্টে পৌঁছাতে কয়েক কর্মদিবস লাগতে পারে।"},
+      "payment_refunded": {"title": "ফেরত দেওয়া হয়েছে: {amount}", "body": "{reference}-এর অনলাইন পেমেন্ট ফেরত দেওয়া হয়েছে।"},
       "settlement_recalculated_payout": {"title": "নিষ্পত্তি সংশোধন: {plan}", "body": "{reference} পুনরায় হিসাব করা হয়েছে: শুধু অনুমোদিত খরচই খরচ হিসেবে ধরা হয়। আপনার প্রাপ্য এখন {amount}; আপনার ওয়ালেট সমন্বয় করা হয়েছে।"},
       "settlement_recalculated_share": {"title": "নিষ্পত্তি সংশোধন: {plan}", "body": "{reference} পুনরায় হিসাব করা হয়েছে: শুধু অনুমোদিত খরচই খরচ হিসেবে ধরা হয়। আপনার ভাগ এখন {amount}; আপনার ওয়ালেট সমন্বয় করা হয়েছে।"},
       "total_loss_return_funds": {"title": "অব্যবহৃত তহবিল ফেরত পাঠান: {plan}", "body": "{reference}-এর সব পশু মারা গেছে। আপনি যে {amount} পেয়েছেন কিন্তু খরচ করেননি, তা কৃষিতে পাঠান।"},

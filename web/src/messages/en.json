@@ -2099,6 +2099,8 @@
       "unreadCount": "{count, plural, =0 {No unread notifications} one {# unread} other {# unread}}"
     },
     "notify": {
+      "payment_refund_started": {"title": "Refund started: {amount}", "body": "Your online payment for {reference} is being refunded: {reason}. It can take a few working days to reach your account."},
+      "payment_refunded": {"title": "Refunded: {amount}", "body": "Your online payment for {reference} was refunded."},
       "settlement_recalculated_payout": {"title": "Settlement corrected: {plan}", "body": "{reference} was recalculated: only approved expenses count as spent. Your payout is now {amount}; your wallet was adjusted."},
       "settlement_recalculated_share": {"title": "Settlement corrected: {plan}", "body": "{reference} was recalculated: only approved expenses count as spent. Your share is now {amount}; your wallet was adjusted."},
       "total_loss_return_funds": {"title": "Send back unspent fund money: {plan}", "body": "Every animal in {reference} died. Send the {amount} you received but didn't spend to Krishi."},

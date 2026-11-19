@@ -18,7 +18,7 @@ export default async function AdminDashboardLayout({
   const admin = await requireAdmin();
   const db = createAdminClient();
 
-  const [{ count: kyc }, { count: deposits }, { count: stewards }, { count: sales }, { count: withdrawals }, unread] = await Promise.all([
+  const [{ count: kyc }, { count: deposits }, { count: stewards }, { count: sales }, { count: withdrawals }, unread, { count: orphanPayments }] = await Promise.all([
     db.from("kyc_profiles").select("*", { count: "exact", head: true }).eq("status", "pending"),
     db.from("deposits").select("*", { count: "exact", head: true }).eq("status", "pending"),
     db
@@ -35,6 +35,8 @@ export default async function AdminDashboardLayout({
       .select("*", { count: "exact", head: true })
       .eq("status", "pending"),
     getUnreadCount(admin.id),
+    // Paid online but no deposit was recorded: only visible under Deposits → Online payments.
+    db.from("online_payments").select("*", { count: "exact", head: true }).eq("status", "paid").is("deposit_id", null),
   ]);
 
   return (
@@ -68,7 +70,7 @@ export default async function AdminDashboardLayout({
           label: "Review",
           items: [
             { label: "KYC Queue", href: "/krishi-console/kyc", icon: "shield", badge: kyc ?? 0 },
-            { label: "Deposits", href: "/krishi-console/deposits", icon: "coins", badge: deposits ?? 0 },
+            { label: "Deposits", href: "/krishi-console/deposits", icon: "coins", badge: (deposits ?? 0) + (orphanPayments ?? 0) },
             { label: "Sales", href: "/krishi-console/sales", icon: "tag", badge: sales ?? 0 },
             { label: "Withdrawals", href: "/krishi-console/withdrawals", icon: "wallet", badge: withdrawals ?? 0 },
           ],

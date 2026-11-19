@@ -13,7 +13,7 @@ Create **`web/.env.local`**. The npm scripts load this file. Never commit it; `.
 | Variable | Scope | Purpose |
 |----------|-------|---------|
 | `NEXT_PUBLIC_SUPABASE_URL` | Public | Supabase project URL. Also whitelisted for `next/image`. |
-| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Public | Publishable (anon) key |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Public | Publishable (anon) key. Not used by the app any more (all access is server-side); safe to leave unset |
 | `SUPABASE_SECRET_KEY` | **Server only** | Service-role key used by `createAdminClient()`. Bypasses RLS. |
 | `DATABASE_URL` | **Scripts only** | Postgres session-pooler URL for `migrate.mjs` / `seed-admin.mjs`. URL-encode special characters in the password. |
 | `KRISHI_SESSION_SECRET` | **Server only** | HMAC key for session JWTs, **32+ characters**. The app throws in development if it is missing. |

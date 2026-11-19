@@ -25,6 +25,15 @@ export async function POST(
   const parsed = schema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: "Reason is required" }, { status: 400 });
 
+  // Money paid online has to be given back: use the refund instead.
+  const { data: current } = await db.from("deposits").select("method").eq("id", id).maybeSingle();
+  if (current?.method === "online") {
+    return NextResponse.json(
+      { error: "This deposit was paid online. Refund it instead of rejecting it." },
+      { status: 400 },
+    );
+  }
+
   // 1. Reject the deposit, only if it is still pending (guards against double submits)
   const { data: rejected } = await db
     .from("deposits")

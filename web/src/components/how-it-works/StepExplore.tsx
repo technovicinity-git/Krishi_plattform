@@ -4,7 +4,6 @@ import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { Heading } from "@/components/ui/Heading";
 import { Pill } from "@/components/ui/Pill";
-import { Badge } from "@/components/ui/Badge";
 
 const PARAMS = ["unit", "duration", "roi", "location", "category", "availability"] as const;
 

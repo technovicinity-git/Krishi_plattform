@@ -1,4 +1,3 @@
-const MAX_DIMENSION = 1600;
 const COMPRESS_THRESHOLD_BYTES = 800 * 1024; // 800 KB
 
 /**

@@ -4,7 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDialog } from "@/components/ui/dialog-provider";
 
-export function DepositApprovalActions({ depositId }: { depositId: string }) {
+/** Approve or reject a deposit. Online payments can't be rejected (they're refunded instead). */
+export function DepositApprovalActions({ depositId, canReject = true }: { depositId: string; canReject?: boolean }) {
   const router = useRouter();
   const { confirm, alert } = useDialog();
   const [loading, setLoading] = useState(false);
@@ -77,6 +78,7 @@ export function DepositApprovalActions({ depositId }: { depositId: string }) {
 
   return (
     <div className="flex gap-2">
+      {canReject && (
       <button
         onClick={() => setShowReject(true)}
         disabled={loading}
@@ -84,6 +86,7 @@ export function DepositApprovalActions({ depositId }: { depositId: string }) {
       >
         Reject
       </button>
+      )}
       <button
         onClick={handleApprove}
         disabled={loading}

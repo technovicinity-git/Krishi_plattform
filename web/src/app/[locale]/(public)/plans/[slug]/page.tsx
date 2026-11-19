@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getLocale, getTranslations } from "next-intl/server";
+import { getLocale } from "next-intl/server";
 import { Container } from "@/components/ui/Container";
 import { Breadcrumbs } from "@/components/plan-detail/Breadcrumbs";
 import { Hero } from "@/components/plan-detail/Hero";
@@ -15,7 +15,6 @@ import { InvestmentSidebar } from "@/components/plan-detail/InvestmentSidebar";
 import { DocumentsPanel } from "@/components/plan-detail/DocumentsPanel";
 import { RiskCard } from "@/components/plan-detail/RiskCard";
 import { FinalCta } from "@/components/plan-detail/FinalCta";
-import { RelatedPlans } from "@/components/plan-detail/RelatedPlans";
 import { findPublicOfferingBySlug } from "@/lib/public/plans";
 
 export const dynamic = "force-dynamic";
@@ -68,7 +67,6 @@ export default async function PlanDetailPage({
       </section>
 
       <FinalCta />
-      <RelatedPlans offeringId={offering.offeringId} />
     </>
   );
 }

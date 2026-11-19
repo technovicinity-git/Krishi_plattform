@@ -159,3 +159,6 @@ Partial unique indexes allow only one *active* interest (`submitted`, `under_rev
 - `touch_updated_at()`: BEFORE UPDATE trigger on most tables.
 - `generate_interest_reference()`: default for `investment_interests.reference`.
 - `current_user_role()`, `current_user_status()`, `is_admin()`, `handle_new_auth_user()`: from the original Supabase Auth design. They depend on `auth.uid()` and are no longer used by the custom-auth app.
+
+
+**Refunds** (`20261119000004_online_refunds.sql`): `online_payments.status` adds `refund_pending` and `refunded`, with `refund_method` (`gateway` | `manual`), `refund_amount`, `refund_reason`, `refund_reference` (manual transfer ID), `refund_ref_id` and `refund_response` (SSLCommerz), `refund_requested_at`, `refunded_at`, `refunded_by`. `deposits.status` adds `refunded`.

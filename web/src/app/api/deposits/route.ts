@@ -64,7 +64,7 @@ export async function POST(request: Request) {
     .from("investment_interests")
     .select(`
       id, status, requested_units,
-      offering:steward_plan_offerings!offering_id ( investment_plans ( unit_price ) )
+      offering:steward_plan_offerings!offering_id ( units_offered, units_funded, investment_plans ( unit_price ) )
     `)
     .eq("id", data.interest_id)
     .eq("investor_id", user.id)
@@ -74,10 +74,16 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid interest or not approved" }, { status: 400 });
   }
 
-  const unitPrice = Number(
-    (interest.offering as unknown as { investment_plans: { unit_price: number | string } | null } | null)
-      ?.investment_plans?.unit_price ?? 0,
-  );
+  const offering = interest.offering as unknown as {
+    units_offered: number;
+    units_funded: number;
+    investment_plans: { unit_price: number | string } | null;
+  } | null;
+  // Don't take a transfer for units someone else has funded meanwhile.
+  if (offering && offering.units_funded + interest.requested_units > offering.units_offered) {
+    return NextResponse.json({ error: "Not enough units left on this offering" }, { status: 409 });
+  }
+  const unitPrice = Number(offering?.investment_plans?.unit_price ?? 0);
   const amount = unitPrice * interest.requested_units;
   if (!(amount > 0)) {
     return NextResponse.json({ error: "This plan has no unit price set" }, { status: 400 });

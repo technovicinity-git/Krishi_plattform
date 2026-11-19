@@ -66,7 +66,7 @@ Required variables in `web/.env.local`:
 | Variable | Purpose |
 |----------|---------|
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
-| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Supabase publishable (anon) key |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Supabase publishable (anon) key (optional; no longer used) |
 | `SUPABASE_SECRET_KEY` | Service-role key, **server only** |
 | `DATABASE_URL` | Session-pooler Postgres URL, used only by the scripts |
 | `KRISHI_SESSION_SECRET` | Session signing key, 32+ characters |

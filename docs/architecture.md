@@ -70,7 +70,13 @@ Browser
                               └─ logAdminAction() for admin mutations
 ```
 
-Most data access runs on the server with the **Supabase service-role client** (`lib/supabase/admin.ts`). That client **bypasses Row Level Security**. RLS is enabled on every table but has almost no policies for app tables. Authorization is enforced **in application code**: layout guards plus explicit role and ownership checks in each route handler.
+Most data access runs on the server with the **Supabase service-role client** (`lib/supabase/admin.ts`). That client **bypasses Row Level Security**. Authorization is enforced **in application code**: layout guards plus explicit role and ownership checks in each route handler.
+
+**The database is closed to the public API roles.** The Supabase URL and publishable key ship to the browser, so anyone can call PostgREST directly as `anon` (or `authenticated` after a Supabase Auth sign-up, which the app doesn't use). Since `20261119000005_lock_down_public_roles.sql`:
+
+- RLS is on for every table, with **no policies** for `anon` / `authenticated` (deny by default).
+- Those roles have **no table, sequence or function rights**; only `service_role` does. Default privileges keep it that way for tables added by future migrations.
+- `tests/db-security.test.ts` builds the schema with Supabase-like default grants and fails if any table, policy, function or sequence is reachable by the public roles. New migrations need nothing extra: just don't grant to `anon` / `authenticated` or add policies for them.
 
 ## Authentication and sessions
 
