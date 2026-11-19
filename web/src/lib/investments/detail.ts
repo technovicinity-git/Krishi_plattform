@@ -65,6 +65,8 @@ export interface InvestmentDetail {
     amount: number | null;
     createdAt: string;
     authorRole: string | null;
+    /** Replaced by a later correction; shown crossed out. */
+    superseded: boolean;
   }>;
   stats: {
     animalBudgetTotal: number;
@@ -201,7 +203,7 @@ export async function getInvestmentDetail(
   // Fetch updates
   const { data: updatesData } = await db
     .from("investment_updates")
-    .select("id, update_type, title, body, photo_path, amount, created_at, author_role")
+    .select("id, update_type, title, body, photo_path, amount, created_at, author_role, metadata")
     .eq("investment_id", investmentId)
     .order("created_at", { ascending: false })
     .limit(50);
@@ -340,6 +342,7 @@ export async function getInvestmentDetail(
       amount: u.amount ? Number(u.amount) : null,
       createdAt: u.created_at,
       authorRole: u.author_role,
+      superseded: Boolean((u.metadata as { superseded?: boolean } | null)?.superseded),
     })),
     stats: {
       animalBudgetTotal,

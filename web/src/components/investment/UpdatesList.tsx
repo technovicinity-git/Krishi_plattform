@@ -13,6 +13,8 @@ interface Update {
   amount: number | null;
   createdAt: string;
   authorRole: string | null;
+  /** Replaced by a later correction: shown crossed out with a note. */
+  superseded?: boolean;
 }
 
 const TYPE_TONE: Record<string, BadgeTone> = {
@@ -59,7 +61,7 @@ export function UpdatesList({
                   aria-hidden="true"
                   className="relative z-10 mt-1 h-[15px] w-[15px] shrink-0 rounded-full border-[3px] border-white bg-brand ring-1 ring-brand/30"
                 />
-                <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+                <div className={`flex min-w-0 flex-1 flex-col gap-1.5 ${u.superseded ? "opacity-60" : ""}`}>
                   <div className="flex flex-wrap items-center gap-2">
                     <StatusBadge tone={TYPE_TONE[u.updateType] ?? "neutral"}>
                       {t.has(`type.${u.updateType}`) ? t(`type.${u.updateType}`) : u.updateType}
@@ -74,11 +76,14 @@ export function UpdatesList({
                         <> · {tr.has(u.authorRole) ? tr(u.authorRole) : u.authorRole}</>
                       )}
                     </span>
+                    {u.superseded && <StatusBadge tone="danger">{t("superseded")}</StatusBadge>}
                   </div>
                   <div className="flex flex-wrap items-baseline justify-between gap-2">
-                    <span className="text-[14px] font-semibold text-ink">{u.title}</span>
+                    <span className={`text-[14px] font-semibold text-ink ${u.superseded ? "line-through" : ""}`}>{u.title}</span>
                     {u.amount !== null && u.amount > 0 && (
-                      <span className="text-[13px] font-bold text-green-deep">{formatBDT(u.amount)}</span>
+                      <span className={`text-[13px] font-bold ${u.superseded ? "text-ink-muted line-through" : "text-green-deep"}`}>
+                        {formatBDT(u.amount)}
+                      </span>
                     )}
                   </div>
                   {u.body && (
@@ -86,6 +91,7 @@ export function UpdatesList({
                       {u.body}
                     </p>
                   )}
+                  {u.superseded && <p className="text-[12px] font-semibold text-danger">{t("supersededNote")}</p>}
                   {photo && (
                     <a href={photo} target="_blank" rel="noopener noreferrer" className="mt-1 block w-fit">
                       {/* eslint-disable-next-line @next/next/no-img-element -- storage URL, sizes vary */}

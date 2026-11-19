@@ -3011,6 +3011,8 @@
       "otherStewards": "View Other Stewards"
     },
     "updates": {
+      "superseded": "Replaced",
+      "supersededNote": "This calculation was wrong and has been replaced by the correction above.",
       "heading": "Updates & Activity",
       "empty": "No updates yet.",
       "type": {
