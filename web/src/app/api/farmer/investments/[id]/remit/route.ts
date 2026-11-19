@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { uploadUpdatePhoto } from "@/lib/investments/photos";
+import { timeline } from "@/lib/investments/timeline";
 
 export const runtime = "nodejs";
 
@@ -113,7 +114,11 @@ export async function POST(
       data.note ||
       `Sent ৳${amount.toLocaleString("en-IN")} to Krishi${data.txn_id ? ` (Txn ${data.txn_id})` : ""}. Waiting for admin confirmation.`,
     amount,
-    metadata: { reference: sale.reference, method: data.method },
+    metadata: {
+      reference: sale.reference,
+      method: data.method,
+      i18n: timeline("remitted", { amount, ...(data.txn_id ? { txn: data.txn_id } : {}) }, data.note),
+    },
   });
 
   return NextResponse.json({ success: true });

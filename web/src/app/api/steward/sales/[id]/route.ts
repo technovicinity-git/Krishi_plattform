@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { notify, investmentParties } from "@/lib/notifications/notify";
+import { timeline } from "@/lib/investments/timeline";
 
 export const runtime = "nodejs";
 
@@ -103,7 +104,11 @@ export async function PATCH(
       ? `Sale of ৳${amount.toLocaleString("en-IN")} confirmed. The farmer can now send the money to Krishi.`
       : `The steward did not confirm the sale. Reason: ${reason}`,
     amount: approve ? amount : null,
-    metadata: { reference: sale.reference, action },
+    metadata: {
+      reference: sale.reference,
+      action,
+      i18n: approve ? timeline("sale_confirmed", { amount }) : timeline("sale_rejected", { reason }),
+    },
   });
 
   const parties = await investmentParties(sale.investment_id);

@@ -2,6 +2,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { capitalSpent, releasedFunds } from "./settlement";
 import { signFileUrls } from "@/lib/storage/private-files";
 import { getAnimalsForInvestment, type Animal } from "@/lib/animals";
+import type { TimelineI18n } from "./timeline";
 
 export interface InvestmentDetail {
   id: string;
@@ -67,6 +68,8 @@ export interface InvestmentDetail {
     authorRole: string | null;
     /** Replaced by a later correction; shown crossed out. */
     superseded: boolean;
+    /** Message key + values, so the entry shows in the reader's language. */
+    i18n: TimelineI18n | null;
   }>;
   stats: {
     animalBudgetTotal: number;
@@ -343,6 +346,7 @@ export async function getInvestmentDetail(
       createdAt: u.created_at,
       authorRole: u.author_role,
       superseded: Boolean((u.metadata as { superseded?: boolean } | null)?.superseded),
+      i18n: (u.metadata as { i18n?: TimelineI18n } | null)?.i18n ?? null,
     })),
     stats: {
       animalBudgetTotal,

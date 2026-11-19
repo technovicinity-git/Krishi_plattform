@@ -5,6 +5,7 @@ import { getCurrentAdmin } from "@/lib/admin/current-admin";
 import { logAdminAction } from "@/lib/admin/audit";
 import { previewSettlement } from "@/lib/investments/settle";
 import { notify, investmentParties } from "@/lib/notifications/notify";
+import { timeline } from "@/lib/investments/timeline";
 
 export const runtime = "nodejs";
 
@@ -81,7 +82,14 @@ export async function POST(
           : "Settled at break-even",
     body: `Krishi received the sale money. Investor payout: ${fmt(b.investorPayout)}.`,
     amount: b.investorPayout,
-    metadata: { reference: preview.sale.reference, settlement_id: settlementId },
+    metadata: {
+      reference: preview.sale.reference,
+      settlement_id: settlementId,
+      i18n: timeline(
+        b.outcome === "profit" ? "settled_profit" : b.outcome === "loss" ? "settled_loss" : "settled_even",
+        { net: Math.abs(b.netResult), amount: b.investorPayout },
+      ),
+    },
   });
 
   const parties = await investmentParties(preview.sale.investmentId);

@@ -3,6 +3,7 @@ import { formatBDT } from "@/lib/utils";
 import type { InvestmentDetail } from "@/lib/investments/detail";
 import type { Wallet } from "@/lib/wallet";
 import { PdfReport } from "./doc";
+import { localizeUpdate } from "@/lib/investments/timeline";
 
 export type ReportLocale = "en" | "bn";
 
@@ -16,6 +17,7 @@ async function translator(locale: ReportLocale) {
     tSale: createTranslator({ locale, messages, namespace: "app.saleStatus" }),
     tAnimal: createTranslator({ locale, messages, namespace: "app.animals" }),
     tWallet: createTranslator({ locale, messages, namespace: "app.wallet" }),
+    tTimeline: createTranslator({ locale, messages, namespace: "app.timeline" }),
   };
 }
 
@@ -42,7 +44,7 @@ export async function investmentStatementPdf(
   inv: InvestmentDetail,
   locale: ReportLocale,
 ): Promise<Buffer> {
-  const { t, tStage, tStatus, tPurpose, tSale, tAnimal } = await translator(locale);
+  const { t, tStage, tStatus, tPurpose, tSale, tAnimal, tTimeline } = await translator(locale);
   const date = dateFmt(locale);
   const bn = locale === "bn";
   const plan = bn ? inv.offering.planNameBn : inv.offering.planNameEn;
@@ -204,11 +206,14 @@ export async function investmentStatementPdf(
       { header: t("colUpdate"), width: 0.63 },
       { header: t("colAmount"), width: 0.2, align: "right" },
     ],
-    inv.updates.map((u) => [
+    inv.updates.map((u) => {
+      const text = localizeUpdate(u, tTimeline, tPurpose, money);
+      return [
       date(u.createdAt),
-      u.body ? `${u.title} — ${u.body}` : u.title,
+      (u.superseded ? `[${t("replaced")}] ` : "") + (text.body ? `${text.title} — ${text.body}` : text.title),
       u.amount !== null ? money(u.amount) : "",
-    ]),
+      ];
+    }),
     t("noUpdates"),
   );
 

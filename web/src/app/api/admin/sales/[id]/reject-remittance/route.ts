@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentAdmin } from "@/lib/admin/current-admin";
 import { logAdminAction } from "@/lib/admin/audit";
 import { notify } from "@/lib/notifications/notify";
+import { timeline } from "@/lib/investments/timeline";
 
 export const runtime = "nodejs";
 
@@ -55,6 +56,7 @@ export async function POST(
     update_type: "note",
     title: "Sale payment not received",
     body: `Krishi could not confirm the payment. Reason: ${parsed.data.reason}`,
+    metadata: { i18n: timeline("remit_rejected", { reason: parsed.data.reason }) },
   });
 
   await notify(

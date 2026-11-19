@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { notify } from "@/lib/notifications/notify";
+import { timeline } from "@/lib/investments/timeline";
 
 export const runtime = "nodejs";
 
@@ -78,6 +79,11 @@ export async function PATCH(
       ? `Approved ৳${fundReq.amount.toLocaleString("en-IN")} for ${fundReq.purpose}.` 
       : `Rejected request for ${fundReq.purpose}. Reason: ${parsed.data.reason || "None"}`,
     amount: isApproved ? fundReq.amount : null,
+    metadata: {
+      i18n: isApproved
+        ? timeline("fund_approved", { amount: Number(fundReq.amount), purpose: fundReq.purpose })
+        : timeline("fund_rejected", { amount: Number(fundReq.amount), purpose: fundReq.purpose, reason: parsed.data.reason || "—" }),
+    },
   });
 
   await notify(

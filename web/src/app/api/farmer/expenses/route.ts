@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { uploadUpdatePhoto } from "@/lib/investments/photos";
 import { notify, investmentParties } from "@/lib/notifications/notify";
+import { timeline } from "@/lib/investments/timeline";
 
 export const runtime = "nodejs";
 
@@ -85,6 +86,7 @@ export async function POST(request: Request) {
     body: description || `Spent ৳${amount.toLocaleString("en-IN")} on ${category.replace(/_/g, " ")}.`,
     amount,
     photo_path: receipt.path,
+    metadata: { i18n: timeline("expense_logged", { amount, purpose: category }, description) },
   });
 
   const parties = await investmentParties(inv.id);

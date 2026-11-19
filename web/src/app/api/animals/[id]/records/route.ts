@@ -6,6 +6,7 @@ import { investmentRoleFor } from "@/lib/investments/access";
 import { uploadUpdatePhoto } from "@/lib/investments/photos";
 import { ANIMAL_RECORD_KINDS } from "@/lib/animals";
 import { notify, investmentParties } from "@/lib/notifications/notify";
+import { timeline } from "@/lib/investments/timeline";
 
 export const runtime = "nodejs";
 
@@ -116,6 +117,7 @@ export async function POST(
       title: `Animal ${animal.tag} died`,
       body: data.note,
       photo_path: photo.path,
+      metadata: { i18n: timeline("animal_died", { tag: animal.tag }, data.note) },
     });
     const parties = await investmentParties(animal.investment_id);
     if (parties) {

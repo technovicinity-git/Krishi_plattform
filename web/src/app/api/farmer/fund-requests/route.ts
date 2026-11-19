@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { getCapitalSpent } from "@/lib/investments/spending";
 import { notify, investmentParties } from "@/lib/notifications/notify";
+import { timeline } from "@/lib/investments/timeline";
 
 export const runtime = "nodejs";
 
@@ -93,6 +94,9 @@ export async function POST(request: Request) {
     title: `Fund Request: ${parsed.data.purpose.replace(/_/g, " ")}`,
     body: parsed.data.note || `Requested ৳${parsed.data.amount.toLocaleString("en-IN")} for ${parsed.data.purpose}.`,
     amount: parsed.data.amount,
+    metadata: {
+      i18n: timeline("fund_request", { amount: parsed.data.amount, purpose: parsed.data.purpose }, parsed.data.note),
+    },
   });
 
   const parties = await investmentParties(inv.id);

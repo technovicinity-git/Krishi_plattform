@@ -1648,6 +1648,73 @@
     }
   },
   "app": {
+    "timeline": {
+      "purchase": {
+        "title": "Purchased {count, plural, one {# animal} other {# animals}}",
+        "body": "Bought {count, plural, one {# animal} other {# animals}} for {amount}."
+      },
+      "fund_request": {
+        "title": "Fund request: {purpose}",
+        "body": "Requested {amount} for {purpose}."
+      },
+      "fund_approved": {
+        "title": "Funds approved: {purpose}",
+        "body": "Approved {amount} for {purpose}."
+      },
+      "fund_rejected": {
+        "title": "Fund request rejected",
+        "body": "Rejected the {amount} request for {purpose}. Reason: {reason}"
+      },
+      "expense_logged": {
+        "title": "Expense logged: {purpose}",
+        "body": "Spent {amount} on {purpose}."
+      },
+      "expense_rejected": {
+        "title": "Expense not accepted",
+        "body": "{amount} for {purpose} was not accepted. Reason: {reason}"
+      },
+      "sale_recorded": {
+        "title": "Sold {count, plural, one {# animal} other {# animals}}",
+        "body": "Sold {count, plural, one {# animal} other {# animals}} for {amount}. Waiting for steward confirmation."
+      },
+      "sale_confirmed": {
+        "title": "Sale confirmed by steward",
+        "body": "Sale of {amount} confirmed. The farmer can now send the money to Krishi."
+      },
+      "sale_rejected": {
+        "title": "Sale not confirmed",
+        "body": "The steward did not confirm the sale. Reason: {reason}"
+      },
+      "remitted": {
+        "title": "Sale money sent to Krishi",
+        "body": "Sent {amount} to Krishi. Waiting for admin confirmation.",
+        "bodyTxn": "Sent {amount} to Krishi (Txn {txn}). Waiting for admin confirmation."
+      },
+      "remit_rejected": {
+        "title": "Sale payment not received",
+        "body": "Krishi could not confirm the payment. Reason: {reason}"
+      },
+      "settled_profit": {
+        "title": "Settled with a profit of {net}",
+        "body": "Krishi received the sale money. Investor payout: {amount}."
+      },
+      "settled_loss": {
+        "title": "Settled with a loss of {net}",
+        "body": "Krishi received the sale money. Investor payout: {amount}."
+      },
+      "settled_even": {
+        "title": "Settled at break-even",
+        "body": "Krishi received the sale money. Investor payout: {amount}."
+      },
+      "settlement_corrected": {
+        "title": "Settlement corrected: loss of {net}",
+        "body": "Corrected: the {purchase} animal purchase was not counted as spent in the first calculation. Investor payout: {amount}."
+      },
+      "animal_died": {
+        "title": "Animal {tag} died",
+        "body": ""
+      }
+    },
     "stewardPlans": {
       "title": "My plans",
       "subtitle": "Plans Krishi has added you to, with how many units you offer and how many are funded.",
@@ -1713,6 +1780,7 @@
       "cancelled": "You cancelled the online payment."
     },
     "pdf": {
+      "replaced": "Replaced",
       "animalPurchase": "Animal purchase",
       "fundRequestsApproved": "Fund requests approved",
       "investmentTitle": "Investment Statement",

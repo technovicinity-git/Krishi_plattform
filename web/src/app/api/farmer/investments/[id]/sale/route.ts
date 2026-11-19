@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { uploadUpdatePhoto } from "@/lib/investments/photos";
 import { notify, investmentParties } from "@/lib/notifications/notify";
+import { timeline } from "@/lib/investments/timeline";
 
 export const runtime = "nodejs";
 
@@ -176,7 +177,12 @@ export async function POST(
       `Sold ${animals} for ৳${data.sale_amount.toLocaleString("en-IN")}. Waiting for steward confirmation.`,
     amount: data.sale_amount,
     photo_path: photo.path,
-    metadata: { reference: sale.reference, from_stage: "growing_care", to_stage: "sale_pending" },
+    metadata: {
+      reference: sale.reference,
+      from_stage: "growing_care",
+      to_stage: "sale_pending",
+      i18n: timeline("sale_recorded", { count: data.animals_sold, amount: data.sale_amount }, data.note),
+    },
   });
 
   const parties = await investmentParties(inv.id);
