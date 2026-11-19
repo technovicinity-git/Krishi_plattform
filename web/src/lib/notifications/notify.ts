@@ -35,6 +35,8 @@ export type NotificationKind =
   | "steward_approved"
   | "steward_rejected"
   | "animal_died"
+  | "animal_death_reported"
+  | "animal_death_rejected"
   | "review_received"
   | "offering_assigned"
   | "offering_assigned_pending"

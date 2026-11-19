@@ -4,6 +4,9 @@ import { signFileUrls } from "@/lib/storage/private-files";
 export const ANIMAL_RECORD_KINDS = ["weight", "health", "vaccination", "treatment", "note", "death"] as const;
 export type AnimalRecordKind = (typeof ANIMAL_RECORD_KINDS)[number];
 
+export const DEATH_CAUSES = ["disease", "accident", "calving", "unknown", "other"] as const;
+export type DeathCause = (typeof DEATH_CAUSES)[number];
+
 export interface AnimalRecord {
   id: string;
   kind: string;
@@ -13,6 +16,11 @@ export interface AnimalRecord {
   recordedOn: string;
   authorRole: string | null;
   createdAt: string;
+  /** Death records only: pending until the steward confirms. */
+  reviewStatus: "pending" | "approved" | "rejected" | null;
+  rejectionReason: string | null;
+  /** Vet certificate photo (death records). */
+  documentUrl: string | null;
 }
 
 export interface Animal {
@@ -31,6 +39,7 @@ export interface Animal {
   salePrice: number | null;
   soldAt: string | null;
   diedAt: string | null;
+  deathCause: string | null;
   notes: string | null;
   records: AnimalRecord[];
 }
@@ -41,7 +50,7 @@ export interface AnimalWithBatch extends Animal {
 }
 
 const ANIMAL_COLUMNS =
-  "id, reference, investment_id, tag, ear_tag, breed, sex, purchase_price, purchase_weight_kg, current_weight_kg, purchased_at, status, sale_price, sold_at, died_at, notes";
+  "id, reference, investment_id, tag, ear_tag, breed, sex, purchase_price, purchase_weight_kg, current_weight_kg, purchased_at, status, sale_price, sold_at, died_at, death_cause, notes";
 
 const num = (v: unknown) => (v === null || v === undefined ? null : Number(v));
 
@@ -63,6 +72,7 @@ function mapAnimal(a: any, records: AnimalRecord[]): Animal {
     salePrice: num(a.sale_price),
     soldAt: a.sold_at,
     diedAt: a.died_at,
+    deathCause: a.death_cause,
     notes: a.notes,
     records,
   };
@@ -74,11 +84,11 @@ async function loadRecords(animalIds: string[]): Promise<Map<string, AnimalRecor
   if (animalIds.length === 0) return byAnimal;
   const { data } = await createAdminClient()
     .from("animal_records")
-    .select("id, animal_id, kind, weight_kg, note, photo_path, recorded_on, author_role, created_at")
+    .select("id, animal_id, kind, weight_kg, note, photo_path, recorded_on, author_role, created_at, review_status, rejection_reason, document_path")
     .in("animal_id", animalIds)
     .order("recorded_on", { ascending: false })
     .order("created_at", { ascending: false });
-  const urls = await signFileUrls((data ?? []).map((r) => r.photo_path));
+  const urls = await signFileUrls((data ?? []).flatMap((r) => [r.photo_path, r.document_path]));
   for (const r of data ?? []) {
     const list = byAnimal.get(r.animal_id) ?? [];
     list.push({
@@ -90,6 +100,9 @@ async function loadRecords(animalIds: string[]): Promise<Map<string, AnimalRecor
       recordedOn: r.recorded_on,
       authorRole: r.author_role,
       createdAt: r.created_at,
+      reviewStatus: r.review_status,
+      rejectionReason: r.rejection_reason,
+      documentUrl: r.document_path ? urls.get(r.document_path) ?? null : null,
     });
     byAnimal.set(r.animal_id, list);
   }

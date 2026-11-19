@@ -24,7 +24,9 @@ export type TimelineKey =
   | "settled_loss"
   | "settled_even"
   | "settlement_corrected"
-  | "animal_died";
+  | "animal_died"
+  | "death_reported"
+  | "death_rejected";
 
 /** Values shown in the message. Money keys (amount, net, purchase) are formatted as BDT. */
 export type TimelineParams = Record<string, string | number>;

@@ -91,6 +91,18 @@ export async function POST(
     );
   }
 
+  const { count: reportedDeaths } = await db
+    .from("animals")
+    .select("id", { count: "exact", head: true })
+    .eq("investment_id", inv.id)
+    .eq("status", "death_reported");
+  if (reportedDeaths) {
+    return NextResponse.json(
+      { error: "Wait for your steward to review the reported animal death first" },
+      { status: 400 },
+    );
+  }
+
   // Batches with tracked animals must say which ones were sold.
   const { data: activeAnimals } = await db
     .from("animals")

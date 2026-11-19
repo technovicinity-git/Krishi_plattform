@@ -3,6 +3,7 @@ import type { Animal } from "@/lib/animals";
 
 export const ANIMAL_TONE: Record<string, BadgeTone> = {
   active: "success",
+  death_reported: "warning",
   sold: "info",
   dead: "danger",
 };
