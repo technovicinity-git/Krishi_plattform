@@ -30,7 +30,8 @@ Android; **a Mac with Xcode for iOS** (iOS can't be built on Windows).
 ```bash
 cd mobile
 flutter pub get
-flutter run --dart-define=API_BASE_URL=http://10.0.2.2:3000      # Android emulator → this computer
+flutter run                                                      # uses the deployed site
+flutter run --dart-define=API_BASE_URL=http://10.0.2.2:3000      # Android emulator → local dev server
 flutter run --dart-define=API_BASE_URL=http://192.168.0.10:3000  # real phone → your PC's LAN IP
 ```
 
@@ -41,16 +42,16 @@ Settings (all `--dart-define`):
 
 | Name | Default | |
 |---|---|---|
-| `API_BASE_URL` | `http://10.0.2.2:3000` | Backend the app calls |
+| `API_BASE_URL` | `https://krishi-plattform.vercel.app` | Backend the app calls |
 | `WEB_BASE_URL` | same as `API_BASE_URL` | Website the app opens for payment, KYC, sign-up |
 
 Release builds must use **https**; plain http is only allowed in debug builds
 (Android `debug/AndroidManifest.xml`, iOS local networking).
 
 ```bash
-flutter build apk --release --dart-define=API_BASE_URL=https://your-domain
-flutter build appbundle --release --dart-define=API_BASE_URL=https://your-domain   # Play Store
-flutter build ipa --release --dart-define=API_BASE_URL=https://your-domain         # on a Mac
+flutter build apk --release        # installable APK for testing on a phone
+flutter build appbundle --release  # Play Store
+flutter build ipa --release        # on a Mac
 ```
 
 Before publishing: add a release signing key (`android/app/build.gradle.kts`
