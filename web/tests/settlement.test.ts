@@ -107,32 +107,34 @@ describe("capitalSpent", () => {
     expect(spent.spent).toBe(750000);
   });
 
-  it("adds an animal-purchase request made after the purchase was recorded (KR-INV-000016 case)", () => {
-    // Invested 10,00,000; bought 2 animals for 8,00,000 at 08:17; then approved
-    // requests: animal purchase 10,000, medical 10,000, feed 30,000. All animals died.
+  it("counts an animal-purchase request inside the purchase, even one made later (KR-INV-000016 case)", () => {
+    // Invested 10,00,000; bought 2 animals for 8,00,000; approved requests:
+    // animal purchase 10,000 (toward the 8,00,000), medical 10,000, feed 30,000. All animals died.
     const spent = capitalSpent({
       purchaseCost: 800000,
-      purchasedAt: "2026-11-19T08:17:36Z",
       requests: [
-        { status: "approved", amount: 10000, purpose: "animal_purchase", createdAt: "2026-11-19T08:21:09Z" },
-        { status: "approved", amount: 10000, purpose: "medical", createdAt: "2026-11-19T08:21:20Z" },
-        { status: "approved", amount: 30000, purpose: "feed", createdAt: "2026-11-19T08:21:29Z" },
+        { status: "approved", amount: 10000, purpose: "animal_purchase" },
+        { status: "approved", amount: 10000, purpose: "medical" },
+        { status: "approved", amount: 30000, purpose: "feed" },
       ],
     });
-    expect(spent.purchase).toBe(810000);
-    expect(spent.spent).toBe(850000);
+    expect(spent.spent).toBe(840000);
     const b = computeSettlement({ capital: 1000000, fundsReleased: spent.spent, saleAmount: 0 });
-    expect(b.investorPayout).toBe(150000);
-    expect(b.netResult).toBe(-850000);
+    expect(b.investorPayout).toBe(160000);
   });
 
-  it("still counts a request made before the purchase only once", () => {
+  it("counts released fund requests as spent even when fewer expenses were logged (KR-INV-000018 case)", () => {
     const spent = capitalSpent({
-      purchaseCost: 800000,
-      purchasedAt: "2026-11-19T10:00:00Z",
-      requests: [{ status: "approved", amount: 800000, purpose: "animal_purchase", createdAt: "2026-11-18T10:00:00Z" }],
+      purchaseCost: 600000,
+      requests: [
+        { status: "approved", amount: 30000, purpose: "feed" },
+        { status: "approved", amount: 20000, purpose: "medical" },
+        { status: "approved", amount: 1000, purpose: "transport" },
+      ],
     });
-    expect(spent.spent).toBe(800000);
+    expect(spent.spent).toBe(651000);
+    const b = computeSettlement({ capital: 1000000, fundsReleased: spent.spent, saleAmount: 800000 });
+    expect(b).toMatchObject({ netResult: 149000, investorPayout: 1044700, farmerShare: 89400, stewardShare: 7450, platformShare: 7450 });
   });
 
   it("ignores rejected requests and counts pending only when asked", () => {

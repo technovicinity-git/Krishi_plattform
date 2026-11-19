@@ -2060,6 +2060,7 @@
       "unreadCount": "{count, plural, =0 {কোনো অপঠিত নোটিফিকেশন নেই} other {#টি অপঠিত}}"
     },
     "notify": {
+      "settlement_correction_reversed": {"title": "নিষ্পত্তি পুনর্বহাল: {plan}", "body": "{reference}: আগের সংশোধন বাতিল করা হয়েছে। আপনার প্রাপ্য আবার {amount}; আপনার ওয়ালেট সমন্বয় করা হয়েছে।"},
       "settlement_corrected_request_payout": {"title": "নিষ্পত্তি সংশোধন: {plan}", "body": "{reference} পুনরায় হিসাব করা হয়েছে: প্রথমবার একটি পশু ক্রয়ের অনুরোধ বাদ পড়েছিল। আপনার প্রাপ্য এখন {amount}; আপনার ওয়ালেট সমন্বয় করা হয়েছে।"},
       "admin_kyc_submitted": {"title": "যাচাইয়ের জন্য নতুন KYC", "body": "{name} যাচাইয়ের জন্য এনআইডি জমা দিয়েছেন।"},
       "admin_deposit_submitted": {"title": "নতুন জমা {reference}", "body": "{name} {amount} পাঠিয়েছেন। প্রমাণ দেখে অনুমোদন করুন।"},
