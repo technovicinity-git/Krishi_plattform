@@ -46,10 +46,15 @@ export async function submitInterest(
   if (!Number.isFinite(input.requestedUnits) || input.requestedUnits < 1) {
     return { ok: false, error: "Please choose at least 1 unit." };
   }
-  if (input.requestedUnits > offering.units_offered) {
+  // Units already funded by other investors aren't available.
+  const unitsLeft = Math.max(0, offering.units_offered - offering.units_funded);
+  if (unitsLeft === 0) {
+    return { ok: false, error: "All units on this plan are taken.", code: "unavailable" };
+  }
+  if (input.requestedUnits > unitsLeft) {
     return {
       ok: false,
-      error: `Only ${offering.units_offered} units are offered on this plan.`,
+      error: `Only ${unitsLeft} ${unitsLeft === 1 ? "unit is" : "units are"} left on this plan.`,
     };
   }
 
