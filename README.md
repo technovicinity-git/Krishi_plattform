@@ -90,9 +90,19 @@ Run from `web/`:
 | `npm run dev` | Dev server at http://localhost:3000 |
 | `npm run build` / `npm start` | Production build / serve |
 | `npm run lint` | ESLint |
+| `yarn typecheck` | TypeScript check without building |
 | `npm run db:migrate` | Apply pending SQL migrations from `web/supabase/migrations/` |
 | `npm run db:status` | Show applied and pending migrations without changing anything |
 | `yarn test` | Run the automated tests (money rules, safety switches) |
 | `npm run seed:admin -- <email> <password> [name]` | Create or update an admin (password 12+ characters) |
 
 Never edit a migration that has already been applied. Add a new file instead. See [docs/development.md](docs/development.md) for details.
+
+## Continuous integration
+
+[.github/workflows/ci.yml](.github/workflows/ci.yml) runs on every pull request and every push to `main`:
+
+- **Web:** `yarn typecheck`, `yarn lint`, `yarn test`, `yarn build` (no secrets or database needed)
+- **Mobile:** generated label/translation files up to date, `flutter analyze`, `flutter test`
+
+Run the same commands locally before opening a pull request.

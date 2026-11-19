@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { useDialog } from "@/components/ui/dialog-provider";
@@ -59,11 +59,11 @@ export function StewardDetailsForm({
     [districts, divisionId],
   );
 
-  useEffect(() => {
-    if (!divisionId) return;
-    const stillValid = filteredDistricts.some((d) => d.id === districtId);
-    if (!stillValid) setDistrictId("");
-  }, [divisionId, districtId, filteredDistricts]);
+  // A new division clears a district that isn't in it.
+  const changeDivision = (id: string) => {
+    setDivisionId(id);
+    if (!districts.some((d) => d.id === districtId && d.division_id === id)) setDistrictId("");
+  };
 
   const toggleCategory = (cat: string) => {
     setCategories((prev) =>
@@ -182,7 +182,7 @@ export function StewardDetailsForm({
         label={t("divisionLabel")}
         name="division"
         value={divisionId}
-        onChange={setDivisionId}
+        onChange={changeDivision}
         placeholder={t("divisionPlaceholder")}
         required
         options={divisions.map((d) => ({ value: d.id, label: d.name_en }))}

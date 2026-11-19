@@ -32,10 +32,13 @@ export function PlanListing({ items, total, page, hasMore }: PlanListingProps) {
   const status = searchParams.get("status") ?? "open";
 
   // Controlled input for search — syncs with URL
+  // When the URL's search changes (back button, a cleared filter), show it.
   const [searchInput, setSearchInput] = useState(search);
-  useEffect(() => {
+  const [shownSearch, setShownSearch] = useState(search);
+  if (search !== shownSearch) {
+    setShownSearch(search);
     setSearchInput(search);
-  }, [search]);
+  }
 
   const updateParam = (key: string, value: string | null) => {
     const params = new URLSearchParams(searchParams.toString());

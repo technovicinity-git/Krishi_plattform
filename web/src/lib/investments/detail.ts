@@ -201,11 +201,31 @@ export async function getInvestmentDetail(
 
   if (error || !data) return null;
 
-  const offering: any = data.offering;
-  const plan: any = offering?.investment_plans;
-  const steward: any = offering?.users;
-  const investor: any = data.investor;
-  const farmer: any = data.farmer;
+  // Supabase can't infer the shape of these joins; describe what we selected.
+  type Named = { name_en: string | null; name_bn: string | null } | null;
+  type Person = { id: string; full_name: string | null; phone: string | null } | null;
+  type OfferingRow = {
+    id: string;
+    users: { id: string; full_name: string | null } | null;
+    investment_plans: {
+      name_en: string | null;
+      name_bn: string | null;
+      duration_months: number | null;
+      estimated_roi_min: number | string | null;
+      estimated_roi_max: number | string | null;
+      unit_price: number | string | null;
+      animal_allocation: number | string | null;
+      care_allocation: number | string | null;
+      image_path: string | null;
+      livestock_categories: Named;
+      districts: Named;
+    } | null;
+  } | null;
+  const offering = data.offering as unknown as OfferingRow;
+  const plan = offering?.investment_plans;
+  const steward = offering?.users;
+  const investor = data.investor as unknown as Person;
+  const farmer = data.farmer as unknown as Person;
 
   // Fetch fund requests
   const { data: fundReqs } = await db

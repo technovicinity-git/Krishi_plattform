@@ -2,7 +2,7 @@ import { PlansHero } from "@/components/plans/PlansHero";
 import { PlanListing } from "@/components/plans/PlanListing";
 import { TrustIndicators } from "@/components/plans/TrustIndicators";
 import { PlansRiskDisclosure } from "@/components/plans/PlansRiskDisclosure";
-import { listPublicOfferings } from "@/lib/public/plans";
+import { listPublicOfferings, type PlanFilters } from "@/lib/public/plans";
 
 export const dynamic = "force-dynamic";
 
@@ -28,10 +28,11 @@ export default async function PlansPage({ searchParams }: PageProps) {
     divisionSlug: readStr(params.division),
     districtSlug: readStr(params.district),
     thanaSlug: readStr(params.thana),
-    durationBucket: readStr(params.duration) as any,
-    roiBucket: readStr(params.roi) as any,
-    status: (readStr(params.status) as any) ?? "open",
-    sort: readStr(params.sort) as any,
+    // Unknown values are ignored by listPublicOfferings.
+    durationBucket: readStr(params.duration) as PlanFilters["durationBucket"],
+    roiBucket: readStr(params.roi) as PlanFilters["roiBucket"],
+    status: (readStr(params.status) as PlanFilters["status"]) ?? "open",
+    sort: readStr(params.sort) as PlanFilters["sort"],
     page,
     limit: 12,
   });

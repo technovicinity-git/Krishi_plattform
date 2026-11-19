@@ -8,6 +8,24 @@ import { PageHeader } from "@/components/dashboard/ui";
 
 export const dynamic = "force-dynamic";
 
+/** The columns this page selects (Supabase can't infer the join's shape). */
+type InvestmentRow = {
+  id: string;
+  reference: string;
+  status: string;
+  units: number;
+  amount: number;
+  offering: {
+    investment_plans: {
+      name_en: string | null;
+      name_bn: string | null;
+      duration_months: number | null;
+      estimated_roi_min: number | string | null;
+      estimated_roi_max: number | string | null;
+    } | null;
+  } | null;
+};
+
 export default async function InvestorInvestmentsPage() {
   const user = await getCurrentUser();
   if (!user || user.role !== "investor") redirect("/login");
@@ -50,7 +68,7 @@ export default async function InvestorInvestmentsPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {investments.map((inv: any) => {
+          {(investments as unknown as InvestmentRow[]).map((inv) => {
             const plan = inv.offering?.investment_plans;
             const planName = (locale === "bn" ? plan?.name_bn : plan?.name_en) || plan?.name_en || t("unknownPlan");
             
