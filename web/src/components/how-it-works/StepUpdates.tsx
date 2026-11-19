@@ -41,7 +41,7 @@ export function StepUpdates() {
               </div>
 
               <div className="flex flex-col gap-4">
-                {EVENTS.map((key, i) => {
+                {EVENTS.map((key) => {
                   const isHighlight = key === "health";
                   return (
                     <div key={key} className="flex items-start gap-4">

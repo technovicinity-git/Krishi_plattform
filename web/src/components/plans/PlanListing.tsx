@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useMemo, useRef, useState, useEffect, useTransition } from "react";
+import { useId, useRef, useState, useEffect, useTransition } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { Container } from "@/components/ui/Container";

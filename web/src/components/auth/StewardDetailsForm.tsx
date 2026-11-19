@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
-import { useDialog } from "@/components/ui/dialog-provider";
 import { FormInput } from "./FormInput";
 import { FormSelect } from "./FormSelect";
 import { FormTextarea } from "./FormTextarea";
@@ -42,7 +41,6 @@ export function StewardDetailsForm({
   const tf = useTranslations("app.forms");
   const tcm = useTranslations("app.common");
   const router = useRouter();
-  const { alert } = useDialog();
 
   const [stewardType, setStewardType] = useState<"individual" | "organization">("individual");
   const [fullName, setFullName] = useState("");

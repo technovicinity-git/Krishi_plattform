@@ -27,7 +27,6 @@ interface InterestStatusProps {
   heading: string;
   description: string;
   referenceLabel?: string;
-  referenceValue?: string;
   badgeLabel?: string;
   badgeTone?: StatusTone;
   rows: StatusRow[];
@@ -65,7 +64,6 @@ export function InterestStatus({
   heading,
   description,
   referenceLabel,
-  referenceValue,
   badgeLabel,
   badgeTone = "success",
   rows,

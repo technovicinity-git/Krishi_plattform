@@ -15,7 +15,6 @@
     "seed:admin": "node --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/seed-admin.mjs"
   },
   "dependencies": {
-    "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.117.2",
     "bcryptjs": "^3.0.3",
     "jose": "^6.2.12",

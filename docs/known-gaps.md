@@ -15,9 +15,9 @@ Found while reading the codebase on 2026-11-17. Ordered by priority.
 
 1. ~~Missing migrations~~ — fixed 2026-11-18: `20261016000001_baseline_untracked_tables.sql` creates the hand-made tables and storage buckets. A database built from all migrations was checked to match the live schema column for column.
 2. ~~Duplicate deposit-approval routes~~ — fixed 2026-11-18: the legacy `/api/deposits/[id]/approve` is deleted; admin approval and online payments share `approveDeposit()`. Previously: `/api/deposits/[id]/approve` and `/api/admin/deposits/[id]/approve` both exist. Only the admin route increments `steward_plan_offerings.units_funded`. Delete the legacy route or make the two the same.
-3. **No transactions in multi-step writes.** Deposit approval updates the deposit, the interest, the investment and the offering in separate calls. A failure partway leaves inconsistent state, e.g. a deposit marked approved with no investment. The `units_funded` increment is a read-then-write and can race. Move these into a Postgres function (RPC).
-4. **No overselling guard at interest or deposit time.** Interest checks `requested_units ≤ units_offered`, not the remaining `units_offered − units_funded`. The DB CHECK constraint will reject the final increment, but only after the deposit is already approved.
-5. **Legacy Supabase Auth leftovers.** The `auth.users` trigger and `is_admin()` / `current_user_role()` RLS helpers are unused. `proxy.ts` still calls `supabase.auth.getUser()` on every page request, which adds latency for no benefit.
+3. **Deposit approval is several calls, not one transaction.** `lib/deposits/approve.ts` claims the deposit, reserves units with a compare-and-set on `units_funded` (no race), creates the investment and undoes the earlier steps if a later one fails. A crash between steps could still leave a half-done approval; a single Postgres function would remove that window.
+4. ~~No overselling guard at interest or deposit time~~ — fixed 2026-11-19: interests, manual deposits and online payments all check units *left* (`units_offered − units_funded`).
+5. ~~Legacy Supabase Auth leftovers~~ — fixed 2026-11-19: `proxy.ts` no longer calls Supabase Auth, the unused browser/cookie Supabase clients and `@supabase/ssr` are gone, and the old RLS policies were dropped. The `is_admin()` / `current_user_role()` helpers remain but nobody can execute them.
 
 ## 🟡 Feature gaps
 
