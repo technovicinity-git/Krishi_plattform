@@ -103,13 +103,16 @@ export async function POST(
     );
   }
 
-  // Batches with tracked animals must say which ones were sold.
-  const { data: activeAnimals } = await db
+  // Batches with tracked animals must say which ones were sold; only live
+  // (active) animals can be sold.
+  const { data: batchAnimals } = await db
     .from("animals")
-    .select("id")
-    .eq("investment_id", inv.id)
-    .eq("status", "active");
-  const activeIds = new Set((activeAnimals ?? []).map((a) => a.id));
+    .select("id, status")
+    .eq("investment_id", inv.id);
+  const activeIds = new Set((batchAnimals ?? []).filter((a) => a.status === "active").map((a) => a.id));
+  if ((batchAnimals ?? []).length > 0 && activeIds.size === 0) {
+    return NextResponse.json({ error: "There are no live animals left in this batch to sell" }, { status: 400 });
+  }
   if (activeIds.size > 0) {
     if (animalIds.length === 0) {
       return NextResponse.json({ error: "Choose the animals you sold" }, { status: 400 });

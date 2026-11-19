@@ -34,7 +34,7 @@ export function FarmerActions({
   units: number;
   /** The steward sent the last recorded sale back; offer to record it again. */
   saleRejected?: boolean;
-  activeAnimals?: Pick<Animal, "id" | "tag" | "earTag" | "currentWeightKg">[];
+  activeAnimals?: Pick<Animal, "id" | "tag" | "earTag" | "currentWeightKg" | "status">[];
 }) {
   const t = useTranslations("app.farmerActions");
   const t2 = useTranslations("app.farmerActions2");

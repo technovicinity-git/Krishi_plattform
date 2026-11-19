@@ -29,11 +29,16 @@ export function RecordSaleModal({
 }: {
   investmentId: string;
   defaultAnimals: number;
-  /** Active animals in the batch; when present the farmer ticks which were sold. */
-  animals?: Pick<Animal, "id" | "tag" | "earTag" | "currentWeightKg">[];
+  /**
+   * Unsold animals in the batch; when present the farmer ticks which were
+   * sold. Only active ones can be ticked; dead or death-reported ones are
+   * shown greyed out.
+   */
+  animals?: Pick<Animal, "id" | "tag" | "earTag" | "currentWeightKg" | "status">[];
   onClose: () => void;
 }) {
   const t = useTranslations("app.saleForm");
+  const tAnimal = useTranslations("app.animals");
   const tc = useTranslations("app.common");
   const router = useRouter();
   const ids = {
@@ -45,8 +50,10 @@ export function RecordSaleModal({
     note: useId(),
   };
   const tracked = animals.length > 0;
+  const sellable = animals.filter((a) => a.status === "active");
+  const nothingToSell = tracked && sellable.length === 0;
   const [count, setCount] = useState(String(defaultAnimals || 1));
-  const [picked, setPicked] = useState<Set<string>>(() => new Set(animals.map((a) => a.id)));
+  const [picked, setPicked] = useState<Set<string>>(() => new Set(sellable.map((a) => a.id)));
   const toggle = (id: string) =>
     setPicked((prev) => {
       const next = new Set(prev);
@@ -101,24 +108,43 @@ export function RecordSaleModal({
               {t("whichAnimals", { count: picked.size })}
             </legend>
             <div className="mt-1.5 grid grid-cols-2 gap-2 sm:grid-cols-3">
-              {animals.map((a) => (
-                <label
-                  key={a.id}
-                  className={`flex cursor-pointer items-center gap-2 rounded-[8px] border px-3 py-2 text-[13px] ${
-                    picked.has(a.id) ? "border-brand bg-brand-tint/60" : "border-border-light"
-                  }`}
-                >
-                  <input
-                    type="checkbox"
-                    checked={picked.has(a.id)}
-                    onChange={() => toggle(a.id)}
-                    className="h-4 w-4 accent-[#3A7D44]"
-                  />
-                  <span className="font-semibold text-ink">{a.tag}</span>
-                  {a.earTag && <span className="truncate text-[11px] text-ink-muted">{a.earTag}</span>}
-                </label>
-              ))}
+              {animals.map((a) => {
+                const canSell = a.status === "active";
+                return (
+                  <label
+                    key={a.id}
+                    title={canSell ? undefined : tAnimal(`status.${a.status}`)}
+                    className={`flex items-center gap-2 rounded-[8px] border px-3 py-2 text-[13px] ${
+                      !canSell
+                        ? "cursor-not-allowed border-border-light bg-cream opacity-60"
+                        : picked.has(a.id)
+                          ? "cursor-pointer border-brand bg-brand-tint/60"
+                          : "cursor-pointer border-border-light"
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={canSell && picked.has(a.id)}
+                      disabled={!canSell}
+                      onChange={() => toggle(a.id)}
+                      className="h-4 w-4 accent-[#3A7D44]"
+                    />
+                    <span className={`font-semibold ${canSell ? "text-ink" : "text-ink-muted line-through"}`}>{a.tag}</span>
+                    <span className="truncate text-[11px] text-ink-muted">
+                      {canSell ? a.earTag : tAnimal(`status.${a.status}`)}
+                    </span>
+                  </label>
+                );
+              })}
             </div>
+            {nothingToSell && (
+              <p className="mt-2 rounded-xl border border-[#F0C9C0] bg-[#FAF0ED] px-4 py-3 text-[12.5px] text-danger">
+                {animals.some((a) => a.status === "death_reported") ? t("waitDeathReview") : t("noLiveAnimals")}
+              </p>
+            )}
+            {!nothingToSell && sellable.length < animals.length && (
+              <p className="mt-2 text-[12px] text-ink-muted">{t("deadNotSellable")}</p>
+            )}
           </fieldset>
         )}
         <div className="grid grid-cols-2 gap-3">
@@ -203,7 +229,7 @@ export function RecordSaleModal({
           onCancel={onClose}
           cancelLabel={tc("cancel")}
           submitLabel={loading ? t("submitting") : t("submit")}
-          disabled={loading || (tracked ? picked.size === 0 : !count) || !amount || !date}
+          disabled={loading || nothingToSell || (tracked ? picked.size === 0 : !count) || !amount || !date}
         />
       </form>
     </Modal>

@@ -2208,6 +2208,9 @@
       }
     },
     "saleForm": {
+      "deadNotSellable": "Animals that died, or whose death is waiting for the steward, can't be sold.",
+      "noLiveAnimals": "There are no live animals left in this batch to sell.",
+      "waitDeathReview": "Wait for your steward to review the reported death before recording the sale.",
       "whichAnimals": "Animals sold ({count})",
       "title": "Record the sale",
       "subtitle": "Enter what the animals sold for. Your steward confirms it, then you send the money to Krishi.",

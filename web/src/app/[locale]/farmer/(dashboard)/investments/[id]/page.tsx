@@ -102,7 +102,7 @@ export default async function FarmerInvestmentDetailPage({
         currentStage={inv.currentStage}
         units={inv.units}
         saleRejected={inv.sale?.status === "rejected"}
-        activeAnimals={inv.animals.filter((a) => a.status === "active")}
+        activeAnimals={inv.animals.filter((a) => a.status !== "sold")}
       />
 
       {inv.animals.length > 0 && <AnimalsPanel animals={inv.animals} canEdit recordAs="farmer" />}
