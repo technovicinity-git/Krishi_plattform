@@ -5,7 +5,7 @@ Found while reading the codebase on 2026-11-17. Ordered by priority.
 ## 🔴 Security
 
 1. ~~Real credentials in `web/.env.example`~~ — checked 2026-11-18: the file and the whole git history contain no keys, database URLs or session secrets.
-2. **RLS is enabled but authorization lives only in app code.** Every query uses the service-role client, so one missing role or ownership check in a route handler exposes data. New routes need careful review.
+2. **Authorization lives in app code.** Every query uses the service-role client, so one missing role or ownership check in a route handler exposes data through that route. New routes need careful review. (The database itself is closed to direct public access since 2026-11-19; see architecture.md.)
 3. ~~`GET /api/interests/[reference]` is public~~ — fixed 2026-11-18: it now answers only the investor who owns the interest, and the shared lookup no longer returns guest name, phone or message.
 4. ~~No rate limiting on user OTP or login endpoints~~ — fixed 2026-11-18: `hit_rate_limit()` + `web/src/lib/security/rate-limit.ts` limit login, sign-up, forgot/reset password, code verification, farmer activation, steward sign-up and interest submission per IP (and per phone for login/sign-up). Behind a proxy, make sure it sets `X-Forwarded-For`.
 5. ~~`DEV_SHOW_OTP` / `FIXED_OTP` could run in production~~ — fixed 2026-11-18: both are ignored in production builds unless `KRISHI_STAGING=true` (`web/src/lib/auth/dev-flags.ts`), with a logged warning.
