@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { WITHDRAWAL_MIN } from "@/lib/wallet/config";
+import { notifyAdmins } from "@/lib/notifications/notify";
 
 export const runtime = "nodejs";
 
@@ -46,6 +47,11 @@ export async function POST(request: Request) {
     console.error("[wallet/withdrawals] request failed:", error);
     return NextResponse.json({ error: "Could not create the withdrawal" }, { status: 500 });
   }
+
+  await notifyAdmins("admin_withdrawal_requested", "/krishi-console/withdrawals", {
+    name: user.fullName ?? user.phone ?? "A user",
+    amount,
+  });
 
   return NextResponse.json({ success: true, id });
 }

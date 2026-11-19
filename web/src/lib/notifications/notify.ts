@@ -39,6 +39,14 @@ export type NotificationKind =
   | "animal_death_rejected"
   | "total_loss_requested"
   | "total_loss_rejected"
+  // Admin console: something is waiting in an admin queue.
+  | "admin_kyc_submitted"
+  | "admin_deposit_submitted"
+  | "admin_payment_review"
+  | "admin_steward_applied"
+  | "admin_remittance_submitted"
+  | "admin_total_loss"
+  | "admin_withdrawal_requested"
   | "review_received"
   | "offering_assigned"
   | "offering_assigned_pending"
@@ -92,6 +100,27 @@ export async function notify(
     if (error) console.error(`[notify] ${kind} failed:`, error);
   } catch (err) {
     console.error(`[notify] ${kind} failed:`, err);
+  }
+}
+
+/**
+ * Notifies every admin (for the Krishi console). `href` is a console path,
+ * e.g. "/krishi-console/sales/<id>". Never throws.
+ */
+export async function notifyAdmins(
+  kind: Extract<NotificationKind, `admin_${string}`>,
+  href: string,
+  params: NotificationParams = {},
+): Promise<void> {
+  try {
+    const { data } = await createAdminClient()
+      .from("users")
+      .select("id")
+      .eq("role", "admin")
+      .eq("status", "active");
+    await notify(kind, (data ?? []).map((a) => ({ userId: a.id, href })), params);
+  } catch (err) {
+    console.error(`[notifyAdmins] ${kind} failed:`, err);
   }
 }
 

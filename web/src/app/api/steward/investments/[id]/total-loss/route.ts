@@ -4,7 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { investmentRoleFor } from "@/lib/investments/access";
 import { totalLossBlocker } from "@/lib/investments/total-loss";
-import { notify, investmentParties } from "@/lib/notifications/notify";
+import { notify, investmentParties, notifyAdmins } from "@/lib/notifications/notify";
 import { timeline } from "@/lib/investments/timeline";
 
 export const runtime = "nodejs";
@@ -127,6 +127,11 @@ export async function POST(
   });
 
   const parties = await investmentParties(id);
+  await notifyAdmins("admin_total_loss", `/krishi-console/sales/${sale.id}`, {
+    reference: parties?.reference ?? sale.reference,
+    plan: parties?.plan,
+    name: user.fullName ?? "The steward",
+  });
   if (parties) {
     const params = { reference: parties.reference, plan: parties.plan, planBn: parties.planBn };
     await notify("total_loss_requested", [

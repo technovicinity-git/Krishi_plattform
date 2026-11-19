@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { uploadPrivateImage } from "@/lib/storage/private-files";
+import { notifyAdmins } from "@/lib/notifications/notify";
 
 export const runtime = "nodejs";
 
@@ -107,6 +108,11 @@ export async function POST(request: Request) {
   }
 
   await db.from("investment_interests").update({ status: "onboarding" }).eq("id", interest.id);
+  await notifyAdmins("admin_deposit_submitted", "/krishi-console/deposits", {
+    name: user.fullName ?? user.phone ?? "An investor",
+    amount,
+    reference: deposit.reference,
+  });
 
   return NextResponse.json({ success: true, reference: deposit.reference });
 }

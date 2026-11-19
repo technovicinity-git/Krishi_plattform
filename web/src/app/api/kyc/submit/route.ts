@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { notifyAdmins } from "@/lib/notifications/notify";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getSessionFromCookie } from "@/lib/auth/session";
 
@@ -107,7 +108,7 @@ export async function POST(request: Request) {
     }
 
     // Upsert KYC profile row
-    const { error: kycError } = await admin
+    const { data: kycRow, error: kycError } = await admin
       .from("kyc_profiles")
       .upsert(
         {
@@ -124,7 +125,9 @@ export async function POST(request: Request) {
           submitted_by: userId,
         },
         { onConflict: "user_id" },
-      );
+      )
+      .select("id")
+      .maybeSingle();
 
     if (kycError) {
       console.error("[kyc/submit] kyc_profiles upsert failed:", kycError);
@@ -133,6 +136,13 @@ export async function POST(request: Request) {
         { status: 500 },
       );
     }
+
+    const { data: who } = await admin.from("users").select("full_name, phone").eq("id", userId).maybeSingle();
+    await notifyAdmins(
+      "admin_kyc_submitted",
+      kycRow ? `/krishi-console/kyc/${kycRow.id}` : "/krishi-console/kyc",
+      { name: who?.full_name ?? who?.phone ?? "An investor" },
+    );
 
     return NextResponse.json({ success: true });
   } catch (err) {

@@ -1,5 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { approveDeposit } from "@/lib/deposits/approve";
+import { notifyAdmins } from "@/lib/notifications/notify";
 import { validate } from "./sslcommerz";
 
 export type CompleteResult =
@@ -91,6 +92,11 @@ export async function completeOnlinePayment(tranId: string, valId: string): Prom
     // Money was taken but we couldn't record it: keep the payment row for admin follow-up.
     console.error("[completeOnlinePayment] deposit insert failed:", error);
     await db.from("online_payments").update({ failure_reason: "Paid, but the deposit could not be recorded" }).eq("id", payment.id);
+    await notifyAdmins("admin_payment_review", "/krishi-console/deposits", {
+      amount: Number(payment.amount),
+      reference: payment.tran_id,
+      reason: "Paid, but the deposit could not be recorded",
+    });
     return { state: "review", locale, interestReference: interestReference ?? "" };
   }
   await db.from("online_payments").update({ deposit_id: deposit.id }).eq("id", payment.id);
@@ -99,6 +105,11 @@ export async function completeOnlinePayment(tranId: string, valId: string): Prom
   // A risky payment (per SSLCommerz) is left for an admin to approve by hand.
   if (v.risk_level === "1") {
     await db.from("online_payments").update({ failure_reason: `Held for review: ${v.risk_title ?? "risky payment"}` }).eq("id", payment.id);
+    await notifyAdmins("admin_payment_review", "/krishi-console/deposits", {
+      amount: Number(payment.amount),
+      reference: payment.tran_id,
+      reason: `Held for review: ${v.risk_title ?? "risky payment"}`,
+    });
     return { state: "review", locale, interestReference: interestReference ?? "" };
   }
 
@@ -106,6 +117,11 @@ export async function completeOnlinePayment(tranId: string, valId: string): Prom
   if (!approved.ok) {
     // E.g. units sold out meanwhile: the deposit stays pending in the admin queue.
     await db.from("online_payments").update({ failure_reason: `Paid; needs admin review: ${approved.error}` }).eq("id", payment.id);
+    await notifyAdmins("admin_payment_review", "/krishi-console/deposits", {
+      amount: Number(payment.amount),
+      reference: payment.tran_id,
+      reason: approved.error,
+    });
     return { state: "review", locale, interestReference: interestReference ?? "" };
   }
   return { state: "paid", locale, interestReference: interestReference ?? "", investmentId: approved.investmentId };

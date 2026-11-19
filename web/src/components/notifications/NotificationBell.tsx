@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+import NextLink from "next/link";
 import { Link } from "@/i18n/navigation";
 import { NavIcon } from "@/components/dashboard/NavIcon";
 import type { NotificationItem } from "@/lib/notifications/read";
@@ -13,11 +14,15 @@ const POLL_MS = 60_000;
 export function NotificationBell({
   initialUnread,
   allHref,
+  localized = true,
 }: {
   initialUnread: number;
   /** The role's full notifications page, e.g. "/portal/notifications". */
   allHref: string;
+  /** false for the admin console, whose paths have no locale. */
+  localized?: boolean;
 }) {
+  const LinkTag = localized ? Link : NextLink;
   const t = useTranslations("app.notifications");
   const [unread, setUnread] = useState(initialUnread);
   const [items, setItems] = useState<NotificationItem[] | null>(null);
@@ -122,6 +127,7 @@ export function NotificationBell({
                     <NotificationRow
                       item={n}
                       compact
+                      localized={localized}
                       onOpen={(item) => {
                         if (!item.readAt) markRead([item.id]);
                         setOpen(false);
@@ -132,13 +138,13 @@ export function NotificationBell({
               </ul>
             )}
           </div>
-          <Link
+          <LinkTag
             href={allHref}
             onClick={() => setOpen(false)}
             className="block border-t border-border-light px-4 py-3 text-center text-[13px] font-semibold text-brand hover:bg-brand-tint/50"
           >
             {t("viewAll")}
-          </Link>
+          </LinkTag>
         </div>
       )}
     </div>

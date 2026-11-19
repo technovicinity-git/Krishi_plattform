@@ -3,6 +3,7 @@
 import { useLocale, useTranslations } from "next-intl";
 import { cn } from "@/lib/cn";
 import { formatBDT } from "@/lib/utils";
+import NextLink from "next/link";
 import { Link } from "@/i18n/navigation";
 import type { NotificationItem } from "@/lib/notifications/read";
 
@@ -51,10 +52,13 @@ export function NotificationRow({
   item,
   onOpen,
   compact = false,
+  localized = true,
 }: {
   item: NotificationItem;
   onOpen?: (item: NotificationItem) => void;
   compact?: boolean;
+  /** false for the admin console, whose paths have no locale. */
+  localized?: boolean;
 }) {
   const text = useNotificationText()(item);
   const timeAgo = useTimeAgo();
@@ -85,10 +89,11 @@ export function NotificationRow({
     unread && "bg-brand-tint/30",
   );
 
+  const LinkTag = localized ? Link : NextLink;
   return item.href ? (
-    <Link href={item.href} onClick={() => onOpen?.(item)} className={className}>
+    <LinkTag href={item.href} onClick={() => onOpen?.(item)} className={className}>
       {inner}
-    </Link>
+    </LinkTag>
   ) : (
     <button type="button" onClick={() => onOpen?.(item)} className={className}>
       {inner}

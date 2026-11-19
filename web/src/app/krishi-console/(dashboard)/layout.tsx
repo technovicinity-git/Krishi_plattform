@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { requireAdmin } from "@/lib/admin/current-admin";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
+import { NotificationBell } from "@/components/notifications/NotificationBell";
+import { getUnreadCount } from "@/lib/notifications/read";
 
 export const metadata: Metadata = {
   title: "Krishi Console",
@@ -16,7 +18,7 @@ export default async function AdminDashboardLayout({
   const admin = await requireAdmin();
   const db = createAdminClient();
 
-  const [{ count: kyc }, { count: deposits }, { count: stewards }, { count: sales }, { count: withdrawals }] = await Promise.all([
+  const [{ count: kyc }, { count: deposits }, { count: stewards }, { count: sales }, { count: withdrawals }, unread] = await Promise.all([
     db.from("kyc_profiles").select("*", { count: "exact", head: true }).eq("status", "pending"),
     db.from("deposits").select("*", { count: "exact", head: true }).eq("status", "pending"),
     db
@@ -32,6 +34,7 @@ export default async function AdminDashboardLayout({
       .from("withdrawal_requests")
       .select("*", { count: "exact", head: true })
       .eq("status", "pending"),
+    getUnreadCount(admin.id),
   ]);
 
   return (
@@ -45,6 +48,9 @@ export default async function AdminDashboardLayout({
         { label: "KYC Queue", href: "/krishi-console/kyc" },
         { label: "Audit Log", href: "/krishi-console/audit" },
       ]}
+      headerActions={
+        <NotificationBell initialUnread={unread} allHref="/krishi-console/notifications" localized={false} />
+      }
       logoutEndpoint="/api/admin/auth/logout"
       logoutRedirect="/krishi-console/login"
       labels={{
@@ -86,7 +92,10 @@ export default async function AdminDashboardLayout({
         },
         {
           label: "System",
-          items: [{ label: "Audit Log", href: "/krishi-console/audit", icon: "history" }],
+          items: [
+            { label: "Notifications", href: "/krishi-console/notifications", icon: "bell", badge: unread },
+            { label: "Audit Log", href: "/krishi-console/audit", icon: "history" },
+          ],
         },
       ]}
     >

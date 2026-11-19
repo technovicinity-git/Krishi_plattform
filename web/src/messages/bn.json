@@ -2059,6 +2059,13 @@
       "unreadCount": "{count, plural, =0 {কোনো অপঠিত নোটিফিকেশন নেই} other {#টি অপঠিত}}"
     },
     "notify": {
+      "admin_kyc_submitted": {"title": "যাচাইয়ের জন্য নতুন KYC", "body": "{name} যাচাইয়ের জন্য এনআইডি জমা দিয়েছেন।"},
+      "admin_deposit_submitted": {"title": "নতুন জমা {reference}", "body": "{name} {amount} পাঠিয়েছেন। প্রমাণ দেখে অনুমোদন করুন।"},
+      "admin_payment_review": {"title": "অনলাইন পেমেন্ট যাচাই করতে হবে", "body": "{amount} পরিশোধিত ({reference})। {reason}"},
+      "admin_steward_applied": {"title": "নতুন স্টুয়ার্ড আবেদন", "body": "{name} স্টুয়ার্ড হওয়ার আবেদন করেছেন।"},
+      "admin_remittance_submitted": {"title": "বিক্রয়ের টাকা পাঠানো হয়েছে: {reference}", "body": "{name} {amount} পাঠিয়েছেন বলে জানিয়েছেন। পেমেন্ট নিশ্চিত করে নিষ্পত্তি করুন।"},
+      "admin_total_loss": {"title": "নিষ্পত্তির জন্য সম্পূর্ণ ক্ষতি: {reference}", "body": "সব পশু মারা যাওয়ায় {name} {plan} বন্ধ করেছেন। যাচাই করে নিষ্পত্তি করুন।"},
+      "admin_withdrawal_requested": {"title": "উত্তোলনের অনুরোধ", "body": "{name} {amount} উত্তোলন করতে চেয়েছেন।"},
       "total_loss_requested": {"title": "{plan}: সম্পূর্ণ ক্ষতি হিসেবে বন্ধ", "body": "{reference}-এর সব পশু মারা গেছে। কৃষি ব্যাচটির নিষ্পত্তি করবে।"},
       "total_loss_rejected": {"title": "সম্পূর্ণ ক্ষতি গ্রহণ করা হয়নি: {plan}", "body": "{reason}"},
       "animal_death_reported": {"title": "পশু {name}-এর মৃত্যুর খবর", "body": "{plan} ({reference}): খবরটি যাচাই করে নিশ্চিত করুন।"},

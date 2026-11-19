@@ -5,6 +5,7 @@ import { hashPassword } from "@/lib/auth/password";
 import { setSessionCookie } from "@/lib/auth/session";
 import { toE164, isValidBDPhone } from "@/lib/auth/phone";
 import { LIMITS, clientIp, tooManyRequests, withinLimits } from "@/lib/security/rate-limit";
+import { notifyAdmins } from "@/lib/notifications/notify";
 
 export const runtime = "nodejs";
 
@@ -74,6 +75,10 @@ export async function POST(request: Request) {
         { status: 500 },
       );
     }
+
+    await notifyAdmins("admin_steward_applied", `/krishi-console/stewards/${user.id}`, {
+      name: parsed.data.fullName,
+    });
 
     const response = NextResponse.json({ success: true });
     await setSessionCookie(response, { sub: user.id, role: "steward" });

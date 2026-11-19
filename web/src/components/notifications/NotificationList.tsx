@@ -8,7 +8,14 @@ import { EmptyState } from "@/components/dashboard/ui";
 import { NotificationRow } from "./NotificationRow";
 
 /** Full notifications page body. */
-export function NotificationList({ initial }: { initial: NotificationItem[] }) {
+export function NotificationList({
+  initial,
+  localized = true,
+}: {
+  initial: NotificationItem[];
+  /** false for the admin console, whose paths have no locale. */
+  localized?: boolean;
+}) {
   const t = useTranslations("app.notifications");
   const router = useRouter();
   const [items, setItems] = useState(initial);
@@ -46,7 +53,7 @@ export function NotificationList({ initial }: { initial: NotificationItem[] }) {
       <ul className="divide-y divide-border-light">
         {items.map((n) => (
           <li key={n.id}>
-            <NotificationRow item={n} onOpen={(item) => !item.readAt && markRead([item.id])} />
+            <NotificationRow localized={localized} item={n} onOpen={(item) => !item.readAt && markRead([item.id])} />
           </li>
         ))}
       </ul>
