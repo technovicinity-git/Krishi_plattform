@@ -93,7 +93,7 @@ export async function investmentStatementPdf(
     [t("careBudget"), money(inv.stats.careBudgetTotal)],
     [t("animalPurchase"), money(inv.stats.purchaseCost)],
     [t("fundRequestsApproved"), money(inv.stats.fundsDisbursed)],
-    [t("fundsReleased"), money(inv.stats.capitalSpent)],
+    [t("fundsReleased"), money(inv.stats.fundsReleased)],
     [t("expensesApproved"), money(inv.stats.expensesApproved)],
   ]);
 

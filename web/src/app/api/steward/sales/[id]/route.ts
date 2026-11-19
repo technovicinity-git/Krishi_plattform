@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { notify, investmentParties } from "@/lib/notifications/notify";
 import { timeline } from "@/lib/investments/timeline";
+import { getCapitalSpent } from "@/lib/investments/spending";
 
 export const runtime = "nodejs";
 
@@ -55,10 +56,26 @@ export async function PATCH(
   }
 
   const approve = action === "approve";
+
+  // The leftover fund money is fixed now, so every expense must be reviewed.
+  let fundsReturned = 0;
+  if (approve) {
+    const { count: pendingExpenses } = await db
+      .from("expenses")
+      .select("id", { count: "exact", head: true })
+      .eq("investment_id", sale.investment_id)
+      .eq("status", "pending");
+    if (pendingExpenses) {
+      return NextResponse.json({ error: "Review the farmer's pending expenses before confirming the sale" }, { status: 400 });
+    }
+    fundsReturned = (await getCapitalSpent(sale.investment_id)).leftover;
+  }
+
   const { data: updated, error } = await db
     .from("investment_sales")
     .update({
       status: approve ? "awaiting_remittance" : "rejected",
+      funds_returned: fundsReturned,
       rejection_reason: approve ? null : reason,
       reviewed_by: user.id,
       reviewed_at: new Date().toISOString(),
@@ -115,7 +132,12 @@ export async function PATCH(
   if (parties) {
     const params = { reference: sale.reference, amount, plan: parties.plan, planBn: parties.planBn };
     if (approve) {
-      await notify("sale_confirmed", { userId: parties.farmerId, href: `/farmer/investments/${sale.investment_id}` }, params);
+      // The farmer sends the sale money plus any unspent fund money.
+      await notify(
+        "sale_confirmed",
+        { userId: parties.farmerId, href: `/farmer/investments/${sale.investment_id}` },
+        { ...params, amount: amount + fundsReturned },
+      );
       await notify(
         "sale_confirmed_investor",
         { userId: parties.investorId, href: `/portal/investments/${sale.investment_id}` },

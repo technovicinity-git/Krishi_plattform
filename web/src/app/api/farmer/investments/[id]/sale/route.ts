@@ -91,6 +91,18 @@ export async function POST(
     );
   }
 
+  const { count: pendingExpenses } = await db
+    .from("expenses")
+    .select("id", { count: "exact", head: true })
+    .eq("investment_id", inv.id)
+    .eq("status", "pending");
+  if (pendingExpenses) {
+    return NextResponse.json(
+      { error: "Wait for your steward to review your pending expenses first" },
+      { status: 400 },
+    );
+  }
+
   const { count: reportedDeaths } = await db
     .from("animals")
     .select("id", { count: "exact", head: true })
@@ -166,6 +178,7 @@ export async function POST(
     reviewed_by: null,
     reviewed_at: null,
     // Clear anything left from a closing that was sent back.
+    funds_returned: 0,
     remitted_at: null,
     remit_rejection_reason: null,
   };

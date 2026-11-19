@@ -39,6 +39,7 @@ export type NotificationKind =
   | "animal_death_rejected"
   | "total_loss_requested"
   | "total_loss_rejected"
+  | "total_loss_return_funds"
   // Admin console: something is waiting in an admin queue.
   | "admin_kyc_submitted"
   | "admin_deposit_submitted"
@@ -58,7 +59,9 @@ export type NotificationKind =
   | "settlement_corrected_payout"
   | "settlement_corrected_share"
   | "settlement_corrected_request_payout"
-  | "settlement_correction_reversed";
+  | "settlement_correction_reversed"
+  | "settlement_recalculated_payout"
+  | "settlement_recalculated_share";
 
 export interface NotificationParams {
   reference?: string;

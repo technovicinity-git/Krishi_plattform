@@ -54,8 +54,8 @@ export async function POST(request: Request) {
   // Spending (animal purchase + pending/approved requests) may not exceed the
   // money the investor put in.
   const capital = Number(inv.amount ?? 0);
-  const { spent: committed } = await getCapitalSpent(inv.id, { includePending: true });
-  const { spent: withNew } = await getCapitalSpent(inv.id, {
+  const { released: committed } = await getCapitalSpent(inv.id, { includePending: true });
+  const { released: withNew } = await getCapitalSpent(inv.id, {
     includePending: true,
     extra: { amount: parsed.data.amount, purpose: parsed.data.purpose },
   });

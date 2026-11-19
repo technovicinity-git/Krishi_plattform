@@ -36,15 +36,19 @@ export async function POST(
   }
 
   const db = createAdminClient();
-  const { data: current } = await db.from("investment_sales").select("kind").eq("id", id).maybeSingle();
-  if (current?.kind === "total_loss") return rejectTotalLoss(request, id, admin.id, parsed.data.reason);
+  const { data: current } = await db.from("investment_sales").select("kind, remit_method").eq("id", id).maybeSingle();
+  // A total loss with no money involved goes back to the steward; one where the
+  // farmer sent back unspent fund money is a payment check like any sale.
+  if (current?.kind === "total_loss" && !current.remit_method) {
+    return rejectTotalLoss(request, id, admin.id, parsed.data.reason);
+  }
 
   const { data: updated, error } = await db
     .from("investment_sales")
     .update({ status: "awaiting_remittance", remit_rejection_reason: parsed.data.reason })
     .eq("id", id)
     .eq("status", "remittance_submitted")
-    .select("id, investment_id, reference, farmer_id, sale_amount");
+    .select("id, investment_id, reference, farmer_id, sale_amount, funds_returned");
 
   if (error) {
     console.error("[admin/sales/reject-remittance] failed:", error);
@@ -68,7 +72,7 @@ export async function POST(
   await notify(
     "remittance_rejected",
     { userId: sale.farmer_id, href: `/farmer/investments/${sale.investment_id}` },
-    { reference: sale.reference, amount: Number(sale.sale_amount), reason: parsed.data.reason },
+    { reference: sale.reference, amount: Number(sale.sale_amount) + Number(sale.funds_returned ?? 0), reason: parsed.data.reason },
   );
 
   await logAdminAction({

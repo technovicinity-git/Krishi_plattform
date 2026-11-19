@@ -123,18 +123,54 @@ describe("capitalSpent", () => {
     expect(b.investorPayout).toBe(160000);
   });
 
-  it("counts released fund requests as spent even when fewer expenses were logged (KR-INV-000018 case)", () => {
+  it("counts approved expenses, not released fund money (KR-SALE-00014 case)", () => {
+    // Invested 1,00,000; animals 60,000; requests feed 10,000 + medical 2,000;
+    // expenses feed 7,000 + medical 1,000; sold for 1,40,000.
     const spent = capitalSpent({
-      purchaseCost: 600000,
+      purchaseCost: 60000,
       requests: [
-        { status: "approved", amount: 30000, purpose: "feed" },
-        { status: "approved", amount: 20000, purpose: "medical" },
-        { status: "approved", amount: 1000, purpose: "transport" },
+        { status: "approved", amount: 10000, purpose: "feed" },
+        { status: "approved", amount: 2000, purpose: "medical" },
+      ],
+      expenses: [
+        { status: "approved", amount: 7000, category: "feed" },
+        { status: "approved", amount: 1000, category: "medical" },
+        { status: "rejected", amount: 500, category: "feed" },
       ],
     });
-    expect(spent.spent).toBe(651000);
-    const b = computeSettlement({ capital: 1000000, fundsReleased: spent.spent, saleAmount: 800000 });
-    expect(b).toMatchObject({ netResult: 149000, investorPayout: 1044700, farmerShare: 89400, stewardShare: 7450, platformShare: 7450 });
+    expect(spent).toMatchObject({ released: 72000, careSpent: 8000, leftover: 4000, spent: 68000 });
+
+    // The farmer sends 1,40,000 + 4,000; settlement counts only what was spent.
+    const b = computeSettlement({ capital: 100000, fundsReleased: spent.released - spent.leftover, saleAmount: 140000 });
+    expect(b).toMatchObject({
+      unspent: 32000,
+      totalReturn: 172000,
+      netResult: 72000,
+      investorPayout: 121600,
+      farmerShare: 43200,
+      stewardShare: 3600,
+      platformShare: 3600,
+    });
+  });
+
+  it("does not count expenses beyond the care money released, or animal-purchase expenses", () => {
+    const spent = capitalSpent({
+      purchaseCost: 60000,
+      requests: [{ status: "approved", amount: 5000, purpose: "feed" }],
+      expenses: [
+        { status: "approved", amount: 9000, category: "feed" },
+        { status: "approved", amount: 60000, category: "animal_purchase" },
+      ],
+    });
+    expect(spent).toMatchObject({ careSpent: 5000, leftover: 0, spent: 65000 });
+  });
+
+  it("counts all released care money as spent when no expenses are given", () => {
+    const spent = capitalSpent({
+      purchaseCost: 600000,
+      requests: [{ status: "approved", amount: 51000, purpose: "feed" }],
+    });
+    expect(spent).toMatchObject({ released: 651000, leftover: 0, spent: 651000 });
   });
 
   it("ignores rejected requests and counts pending only when asked", () => {

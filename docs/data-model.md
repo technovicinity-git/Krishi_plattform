@@ -107,7 +107,7 @@ _migrations, _smoke_test    (tooling)
 
 Partial unique indexes allow only one *active* interest (`submitted`, `under_review`, `approved`, `onboarding`) per investor or guest phone per offering.
 
-**`investment_sales`** (`20261118000001_sales_and_settlements.sql`): one per investment. The farmer records the sale (`animals_sold`, `sale_amount`, `sale_date`, buyer, photo); the steward confirms it; the farmer then reports sending the money to Krishi (`remit_method` bank/mfs/cash, `remit_txn_id`, `remit_proof_path`). `kind` (`20261119000002_total_loss.sql`) is `sale` or `total_loss`; a total loss has `animals_sold = 0` and `sale_amount = 0`, is created by the steward when every animal died, and is settled by the admin like a sale.
+**`investment_sales`** (`20261118000001_sales_and_settlements.sql`): one per investment. The farmer records the sale (`animals_sold`, `sale_amount`, `sale_date`, buyer, photo); the steward confirms it; the farmer then reports sending the money to Krishi (`remit_method` bank/mfs/cash, `remit_txn_id`, `remit_proof_path`). `kind` (`20261119000002_total_loss.sql`) is `sale` or `total_loss`; a total loss has `animals_sold = 0` and `sale_amount = 0`, is created by the steward when every animal died, and is settled by the admin like a sale. `funds_returned` (`20261119000003_sale_funds_returned.sql`) is the unspent fund money (approved care requests minus approved care expenses) the farmer sends back with the sale money; the settlement's `funds_released` is the money actually spent (paid out minus `funds_returned`).
 
 | `status` | Meaning | Investment stage |
 |----------|---------|------------------|

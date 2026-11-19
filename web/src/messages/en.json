@@ -1671,6 +1671,7 @@
       }
     },
     "timeline": {
+      "settlement_recalculated": {"title": "Settlement corrected: profit of {net}", "body": "Corrected: only approved expenses count as spent. The farmer kept {returned} of unspent fund money, which was taken from the farmer's share. Investor payout: {amount}."},
       "settlement_corrected_request": {"title": "Settlement corrected: loss of {net}", "body": "Corrected: a {purchase} animal-purchase fund request made after the purchase was not counted as spent in the first calculation. Investor payout: {amount}."},
       "total_loss_requested": {"title": "Closing as a total loss", "body": "All {count, plural, one {# animal} other {# animals}} died. Waiting for Krishi to settle."},
       "total_loss_rejected": {"title": "Total loss not accepted", "body": "Krishi sent the total-loss closing back. Reason: {reason}"},
@@ -2061,6 +2062,9 @@
       "unreadCount": "{count, plural, =0 {No unread notifications} one {# unread} other {# unread}}"
     },
     "notify": {
+      "settlement_recalculated_payout": {"title": "Settlement corrected: {plan}", "body": "{reference} was recalculated: only approved expenses count as spent. Your payout is now {amount}; your wallet was adjusted."},
+      "settlement_recalculated_share": {"title": "Settlement corrected: {plan}", "body": "{reference} was recalculated: only approved expenses count as spent. Your share is now {amount}; your wallet was adjusted."},
+      "total_loss_return_funds": {"title": "Send back unspent fund money: {plan}", "body": "Every animal in {reference} died. Send the {amount} you received but didn't spend to Krishi."},
       "settlement_correction_reversed": {"title": "Settlement restored: {plan}", "body": "{reference}: the earlier correction was reversed. Your payout is back to {amount}; your wallet was adjusted."},
       "settlement_corrected_request_payout": {"title": "Settlement corrected: {plan}", "body": "{reference} was recalculated: an animal-purchase request was missed the first time. Your payout is now {amount}; your wallet was adjusted."},
       "admin_kyc_submitted": {"title": "New KYC to review", "body": "{name} submitted their NID for verification."},
@@ -2287,6 +2291,7 @@
       "failed": "Could not submit the payment"
     },
     "sale": {
+      "fundsReturned": "Unspent fund money to return",
       "totalLossHeading": "Total loss",
       "totalLossChecking": "Krishi review",
       "closedOn": "Closed on",
@@ -2323,6 +2328,9 @@
       "settled": "Settled"
     },
     "saleNotice": {
+      "includesReturn": "This includes {amount} of fund money that was released but not spent.",
+      "totalLossFarmerReturn": "Every animal died. Send the {amount} of fund money you received but didn't spend to Krishi, then Krishi settles the batch.",
+      "totalLossAwaitingReturn": "Every animal died. Waiting for the farmer to send back {amount} of unspent fund money before Krishi settles.",
       "totalLossPending": "Every animal in this batch died. The steward closed it as a total loss and Krishi is checking before settling.",
       "totalLossAdmin": "The steward reports every animal died. Check the death records, then settle: the investor gets back the unspent capital.",
       "totalLossRejected": "Krishi sent the total-loss closing back:",

@@ -59,7 +59,7 @@ export async function POST(
   const db = createAdminClient();
   const { data: sale } = await db
     .from("investment_sales")
-    .select("id, investment_id, sale_amount, status, reference")
+    .select("id, investment_id, sale_amount, funds_returned, status, reference")
     .eq("investment_id", id)
     .eq("farmer_id", user.id)
     .maybeSingle();
@@ -104,7 +104,8 @@ export async function POST(
     return NextResponse.json({ error: "Already submitted" }, { status: 409 });
   }
 
-  const amount = Number(sale.sale_amount);
+  // Sale money plus any unspent fund money coming back.
+  const amount = Number(sale.sale_amount) + Number(sale.funds_returned ?? 0);
   await db.from("investment_updates").insert({
     investment_id: sale.investment_id,
     author_id: user.id,

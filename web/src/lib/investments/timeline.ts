@@ -25,6 +25,7 @@ export type TimelineKey =
   | "settled_even"
   | "settlement_corrected"
   | "settlement_corrected_request"
+  | "settlement_recalculated"
   | "animal_died"
   | "death_reported"
   | "death_rejected"
@@ -47,7 +48,7 @@ export function timeline(key: TimelineKey, params: TimelineParams = {}, userNote
   return userNote ? { key, params, userNote: true } : { key, params };
 }
 
-export const MONEY_PARAMS = ["amount", "net", "purchase"] as const;
+export const MONEY_PARAMS = ["amount", "net", "purchase", "returned"] as const;
 
 type Translate = ((key: string, values?: Record<string, string | number>) => string) & {
   has: (key: string) => boolean;

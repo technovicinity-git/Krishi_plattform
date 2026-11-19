@@ -103,7 +103,7 @@ export default async function FarmerSalesPage() {
 
   const totalSold = [...sales.values()].filter((s) => s.status !== "rejected" && s.kind === "sale").reduce((sum, s) => sum + s.saleAmount, 0);
   const totalShare = [...settlements.values()].reduce((sum, s) => sum + s.share, 0);
-  const owed = toSend.reduce((sum, [, s]) => sum + s.saleAmount, 0);
+  const owed = toSend.reduce((sum, [, s]) => sum + s.saleAmount + s.fundsReturned, 0);
 
   const date = (iso: string | null) =>
     iso
@@ -145,7 +145,7 @@ export default async function FarmerSalesPage() {
                 </span>
                 {s.remitRejectionReason && <span className="text-danger">{t("notConfirmed", { reason: s.remitRejectionReason })}</span>}
               </div>
-              <SendMoneyButton investmentId={id} amount={s.saleAmount} accounts={accounts} />
+              <SendMoneyButton investmentId={id} amount={s.saleAmount + s.fundsReturned} accounts={accounts} />
             </Row>
           ))}
         </Section>

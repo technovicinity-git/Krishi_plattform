@@ -73,7 +73,7 @@ export default async function FarmerFundRequestsPage() {
   // Already committed per batch: animal purchase + pending/approved requests.
   const committed = new Map<string, number>(
     await Promise.all(
-      (batchRows ?? []).map(async (b) => [b.id, (await getCapitalSpent(b.id, { includePending: true })).spent] as const),
+      (batchRows ?? []).map(async (b) => [b.id, (await getCapitalSpent(b.id, { includePending: true })).released] as const),
     ),
   );
   const batches = (batchRows ?? []).map((b) => {

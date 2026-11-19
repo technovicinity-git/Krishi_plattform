@@ -6,6 +6,7 @@ import { investmentRoleFor } from "@/lib/investments/access";
 import { totalLossBlocker } from "@/lib/investments/total-loss";
 import { notify, investmentParties, notifyAdmins } from "@/lib/notifications/notify";
 import { timeline } from "@/lib/investments/timeline";
+import { getCapitalSpent } from "@/lib/investments/spending";
 
 export const runtime = "nodejs";
 
@@ -65,6 +66,14 @@ export async function POST(
   if (blocker) {
     return NextResponse.json({ error: BLOCKER_MESSAGES[blocker] }, { status: blocker === "sale_exists" ? 409 : 400 });
   }
+  const { count: pendingExpenses } = await db
+    .from("expenses")
+    .select("id", { count: "exact", head: true })
+    .eq("investment_id", id)
+    .eq("status", "pending");
+  if (pendingExpenses) {
+    return NextResponse.json({ error: "Review the farmer's pending expenses first" }, { status: 400 });
+  }
   if (!inv.farmer_id) {
     return NextResponse.json({ error: "This batch has no farmer" }, { status: 400 });
   }
@@ -80,6 +89,8 @@ export async function POST(
     return NextResponse.json({ error: BLOCKER_MESSAGES.sale_exists }, { status: 409 });
   }
 
+  // Unspent fund money: the farmer sends it to Krishi before Krishi settles.
+  const fundsReturned = (await getCapitalSpent(id)).leftover;
   const now = new Date().toISOString();
   const row = {
     farmer_id: inv.farmer_id,
@@ -92,7 +103,8 @@ export async function POST(
     buyer_phone: null,
     photo_path: null,
     animal_ids: null,
-    status: "remittance_submitted",
+    funds_returned: fundsReturned,
+    status: fundsReturned > 0 ? "awaiting_remittance" : "remittance_submitted",
     rejection_reason: null,
     reviewed_by: user.id,
     reviewed_at: now,
@@ -101,7 +113,7 @@ export async function POST(
     remit_sender: null,
     remit_note: null,
     remit_proof_path: null,
-    remitted_at: now,
+    remitted_at: fundsReturned > 0 ? null : now,
     remit_rejection_reason: null,
   };
   const { data: sale, error } = existing
@@ -127,7 +139,7 @@ export async function POST(
   });
 
   const parties = await investmentParties(id);
-  await notifyAdmins("admin_total_loss", `/krishi-console/sales/${sale.id}`, {
+  if (fundsReturned === 0) await notifyAdmins("admin_total_loss", `/krishi-console/sales/${sale.id}`, {
     reference: parties?.reference ?? sale.reference,
     plan: parties?.plan,
     name: user.fullName ?? "The steward",
@@ -136,8 +148,15 @@ export async function POST(
     const params = { reference: parties.reference, plan: parties.plan, planBn: parties.planBn };
     await notify("total_loss_requested", [
       { userId: parties.investorId, href: `/portal/investments/${id}` },
-      { userId: parties.farmerId, href: `/farmer/investments/${id}` },
+      ...(fundsReturned > 0 ? [] : [{ userId: parties.farmerId, href: `/farmer/investments/${id}` }]),
     ], params);
+    if (fundsReturned > 0) {
+      await notify(
+        "total_loss_return_funds",
+        { userId: parties.farmerId, href: `/farmer/investments/${id}` },
+        { ...params, amount: fundsReturned },
+      );
+    }
   }
 
   return NextResponse.json({ success: true });
