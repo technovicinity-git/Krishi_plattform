@@ -10,7 +10,7 @@ import { getCapitalSpent } from "./spending";
 export async function previewSettlement(saleId: string): Promise<
   | {
       ok: true;
-      sale: { id: string; investmentId: string; status: string; reference: string };
+      sale: { id: string; investmentId: string; status: string; reference: string; kind: string };
       breakdown: SettlementBreakdown;
     }
   | { ok: false; error: string }
@@ -18,7 +18,7 @@ export async function previewSettlement(saleId: string): Promise<
   const db = createAdminClient();
   const { data: sale } = await db
     .from("investment_sales")
-    .select("id, investment_id, sale_amount, status, reference, investment:investments!investment_id ( amount )")
+    .select("id, investment_id, sale_amount, funds_returned, status, reference, kind, investment:investments!investment_id ( amount )")
     .eq("id", saleId)
     .maybeSingle();
   if (!sale) return { ok: false, error: "Sale not found" };
@@ -26,8 +26,10 @@ export async function previewSettlement(saleId: string): Promise<
   const capital = Number(
     (sale.investment as unknown as { amount: number | string } | null)?.amount ?? 0,
   );
-  // Animal purchase + approved fund requests (not just the requests).
-  const { spent } = await getCapitalSpent(sale.investment_id);
+  // Everything paid out of the capital, minus the unspent fund money the
+  // farmer sent back with the sale money (fixed when the sale was confirmed).
+  const { released } = await getCapitalSpent(sale.investment_id);
+  const spent = Math.max(0, released - Number(sale.funds_returned ?? 0));
   const breakdown = computeSettlement({
     capital,
     fundsReleased: spent,
@@ -41,6 +43,7 @@ export async function previewSettlement(saleId: string): Promise<
       investmentId: sale.investment_id,
       status: sale.status,
       reference: sale.reference,
+      kind: sale.kind,
     },
     breakdown,
   };

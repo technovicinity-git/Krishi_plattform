@@ -5,6 +5,7 @@ import { getCurrentUser } from "@/lib/auth/current-user";
 import { uploadUpdatePhoto } from "@/lib/investments/photos";
 import { createAnimalsForPurchase } from "@/lib/animals";
 import { notify, investmentParties } from "@/lib/notifications/notify";
+import { timeline } from "@/lib/investments/timeline";
 
 export const runtime = "nodejs";
 
@@ -113,7 +114,12 @@ export async function POST(
       `Bought ${animals} ${animals === 1 ? "animal" : "animals"} for ৳${total_cost.toLocaleString("en-IN")}.`,
     amount: total_cost,
     photo_path: photo.path,
-    metadata: { animals, from_stage: "awaiting_purchase", to_stage: "growing_care" },
+    metadata: {
+      animals,
+      from_stage: "awaiting_purchase",
+      to_stage: "growing_care",
+      i18n: timeline("purchase", { count: animals, amount: total_cost }, note),
+    },
   });
 
   const parties = await investmentParties(inv.id);

@@ -104,17 +104,38 @@ export function releasedFunds(requests: Array<{ status: string; amount: number }
 }
 
 /**
- * Capital spent on a batch: the animal purchase cost recorded when the farmer
- * confirmed the purchase, plus approved fund requests. An "animal_purchase"
- * fund request pays for that same purchase, so the larger of the two counts —
- * never both. `includePending` also counts requests still waiting for the
- * steward (used to cap new requests).
+ * Money taken out of a batch's capital, and how much of it was really spent.
+ *
+ * - purchase: the animal purchase cost recorded when the farmer confirmed the
+ *   purchase. An "animal_purchase" fund request pays toward that same
+ *   purchase (whenever it was made), so the larger of the two counts.
+ * - otherRequests: approved fund requests for care (feed, medical, ...).
+ * - released: purchase + otherRequests, everything paid out of the capital.
+ *   `includePending` also counts requests still waiting for the steward
+ *   (used to cap new requests).
+ * - careSpent: approved care expenses, up to the care money released.
+ * - leftover: care money released but not spent; the farmer sends it back
+ *   with the sale money.
+ * - spent: purchase + careSpent, what counts against the investor.
+ *
+ * Without `expenses`, all released care money counts as spent.
  */
+export interface CapitalSpending {
+  purchase: number;
+  otherRequests: number;
+  released: number;
+  careSpent: number;
+  leftover: number;
+  spent: number;
+}
+
 export function capitalSpent(input: {
   purchaseCost: number;
   requests: Array<{ status: string; amount: number; purpose: string }>;
+  /** Expenses the farmer logged (only approved ones count). */
+  expenses?: Array<{ status: string; amount: number; category: string }>;
   includePending?: boolean;
-}): { purchase: number; otherRequests: number; spent: number } {
+}): CapitalSpending {
   const counted = input.requests.filter(
     (r) =>
       r.status === "approved" ||
@@ -128,10 +149,20 @@ export function capitalSpent(input: {
     .filter((r) => r.purpose !== "animal_purchase")
     .reduce((s, r) => s + Number(r.amount), 0);
   const purchase = Math.max(Number(input.purchaseCost) || 0, animalRequests);
+  // Animal-purchase expenses belong to the purchase, which is counted above.
+  const careExpenses = input.expenses
+    ? input.expenses
+        .filter((e) => e.status === "approved" && e.category !== "animal_purchase")
+        .reduce((s, e) => s + Number(e.amount), 0)
+    : otherRequests;
+  const careSpent = Math.min(careExpenses, otherRequests);
   return {
     purchase: round2(purchase),
     otherRequests: round2(otherRequests),
-    spent: round2(purchase + otherRequests),
+    released: round2(purchase + otherRequests),
+    careSpent: round2(careSpent),
+    leftover: round2(otherRequests - careSpent),
+    spent: round2(purchase + careSpent),
   };
 }
 

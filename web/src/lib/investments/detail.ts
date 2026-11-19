@@ -1,7 +1,9 @@
 import { createAdminClient } from "@/lib/supabase/admin";
-import { capitalSpent, releasedFunds } from "./settlement";
+import { releasedFunds } from "./settlement";
+import { getCapitalSpent } from "./spending";
 import { signFileUrls } from "@/lib/storage/private-files";
 import { getAnimalsForInvestment, type Animal } from "@/lib/animals";
+import type { TimelineI18n } from "./timeline";
 
 export interface InvestmentDetail {
   id: string;
@@ -65,6 +67,10 @@ export interface InvestmentDetail {
     amount: number | null;
     createdAt: string;
     authorRole: string | null;
+    /** Replaced by a later correction; shown crossed out. */
+    superseded: boolean;
+    /** Message key + values, so the entry shows in the reader's language. */
+    i18n: TimelineI18n | null;
   }>;
   stats: {
     animalBudgetTotal: number;
@@ -74,8 +80,12 @@ export interface InvestmentDetail {
     fundsDisbursed: number;
     /** Animal purchase cost recorded at purchase confirmation. */
     purchaseCost: number;
-    /** Capital spent: purchase + approved fund requests (no double counting). */
+    /** Paid out of the capital: purchase + approved fund requests. */
+    fundsReleased: number;
+    /** Counts against the investor: purchase + approved expenses (up to released care money). */
     capitalSpent: number;
+    /** Care money released but not spent; the farmer sends it back with the sale money. */
+    leftover: number;
     expensesApproved: number;
   };
 }
@@ -92,6 +102,10 @@ export interface InvestmentSale {
   photoPath: string | null;
   photoUrl: string | null;
   status: string;
+  /** "total_loss": every animal died; no sale, no money (see 20261119000002). */
+  kind: "sale" | "total_loss";
+  /** Unspent fund money the farmer sends back with the sale money. */
+  fundsReturned: number;
   rejectionReason: string | null;
   reviewedAt: string | null;
   remitMethod: string | null;
@@ -122,7 +136,7 @@ export interface InvestmentSettlement {
 }
 
 const SALE_COLUMNS =
-  "id, reference, animals_sold, sale_amount, buyer_name, buyer_phone, sale_date, note, photo_path, status, rejection_reason, reviewed_at, remit_method, remit_txn_id, remit_sender, remit_note, remit_proof_path, remitted_at, remit_rejection_reason, received_at, created_at";
+  "id, reference, kind, funds_returned, animals_sold, sale_amount, buyer_name, buyer_phone, sale_date, note, photo_path, status, rejection_reason, reviewed_at, remit_method, remit_txn_id, remit_sender, remit_note, remit_proof_path, remitted_at, remit_rejection_reason, received_at, created_at";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function mapSale(row: any, urls: Map<string, string> = new Map()): InvestmentSale {
@@ -138,6 +152,8 @@ export function mapSale(row: any, urls: Map<string, string> = new Map()): Invest
     photoPath: row.photo_path,
     photoUrl: urls.get(row.photo_path) ?? null,
     status: row.status,
+    kind: row.kind === "total_loss" ? "total_loss" : "sale",
+    fundsReturned: Number(row.funds_returned ?? 0),
     rejectionReason: row.rejection_reason,
     reviewedAt: row.reviewed_at,
     remitMethod: row.remit_method,
@@ -201,7 +217,7 @@ export async function getInvestmentDetail(
   // Fetch updates
   const { data: updatesData } = await db
     .from("investment_updates")
-    .select("id, update_type, title, body, photo_path, amount, created_at, author_role")
+    .select("id, update_type, title, body, photo_path, amount, created_at, author_role, metadata")
     .eq("investment_id", investmentId)
     .order("created_at", { ascending: false })
     .limit(50);
@@ -236,13 +252,9 @@ export async function getInvestmentDetail(
       .filter((e) => e.category !== "animal_purchase")
       .reduce((sum, e) => sum + Number(e.amount), 0) || 0;
 
-  const purchaseCost = (updatesData ?? [])
-    .filter((u) => u.update_type === "purchase")
-    .reduce((sum, u) => sum + Number(u.amount ?? 0), 0);
-  const spending = capitalSpent({
-    purchaseCost,
-    requests: (fundReqs ?? []).map((r) => ({ status: r.status, amount: Number(r.amount), purpose: r.purpose })),
-  });
+  // Same query and rule as the settlement, so the page and the payout agree
+  // (the timeline above is capped at 50 entries, so it can't be used here).
+  const spending = await getCapitalSpent(investmentId);
 
   // Photos and receipts are private: sign every path shown on this page.
   const urls = await signFileUrls([
@@ -340,6 +352,8 @@ export async function getInvestmentDetail(
       amount: u.amount ? Number(u.amount) : null,
       createdAt: u.created_at,
       authorRole: u.author_role,
+      superseded: Boolean((u.metadata as { superseded?: boolean } | null)?.superseded),
+      i18n: (u.metadata as { i18n?: TimelineI18n } | null)?.i18n ?? null,
     })),
     stats: {
       animalBudgetTotal,
@@ -348,7 +362,9 @@ export async function getInvestmentDetail(
       careBudgetRemaining: careBudgetTotal - careBudgetUsed,
       fundsDisbursed,
       purchaseCost: spending.purchase,
+      fundsReleased: spending.released,
       capitalSpent: spending.spent,
+      leftover: spending.leftover,
       expensesApproved,
     },
   };

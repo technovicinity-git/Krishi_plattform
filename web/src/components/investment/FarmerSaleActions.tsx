@@ -17,7 +17,7 @@ export function RecordSaleButton({
 }: {
   investmentId: string;
   units: number;
-  animals: Pick<Animal, "id" | "tag" | "earTag" | "currentWeightKg">[];
+  animals: Pick<Animal, "id" | "tag" | "earTag" | "currentWeightKg" | "status">[];
   again?: boolean;
 }) {
   const t = useTranslations("app.farmerActions2");

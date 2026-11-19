@@ -1,6 +1,7 @@
 import { useLocale, useTranslations } from "next-intl";
 import { formatBDT } from "@/lib/utils";
 import { StatusBadge, type BadgeTone } from "@/components/dashboard/ui";
+import { localizeUpdate, type TimelineI18n } from "@/lib/investments/timeline";
 
 interface Update {
   id: string;
@@ -13,6 +14,9 @@ interface Update {
   amount: number | null;
   createdAt: string;
   authorRole: string | null;
+  /** Replaced by a later correction: shown crossed out with a note. */
+  superseded?: boolean;
+  i18n?: TimelineI18n | null;
 }
 
 const TYPE_TONE: Record<string, BadgeTone> = {
@@ -37,6 +41,8 @@ export function UpdatesList({
 }) {
   const t = useTranslations("app.updates");
   const tr = useTranslations("app.roles");
+  const tl = useTranslations("app.timeline");
+  const tp = useTranslations("app.purpose");
   const locale = useLocale();
 
   return (
@@ -50,6 +56,7 @@ export function UpdatesList({
         <ol className="flex flex-col px-6 py-5">
           {updates.map((u, i) => {
             const photo = u.photoUrl;
+            const text = localizeUpdate(u, tl, tp, formatBDT);
             return (
               <li key={u.id} className="relative flex gap-4 pb-6 last:pb-0">
                 {i < updates.length - 1 && (
@@ -59,7 +66,7 @@ export function UpdatesList({
                   aria-hidden="true"
                   className="relative z-10 mt-1 h-[15px] w-[15px] shrink-0 rounded-full border-[3px] border-white bg-brand ring-1 ring-brand/30"
                 />
-                <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+                <div className={`flex min-w-0 flex-1 flex-col gap-1.5 ${u.superseded ? "opacity-60" : ""}`}>
                   <div className="flex flex-wrap items-center gap-2">
                     <StatusBadge tone={TYPE_TONE[u.updateType] ?? "neutral"}>
                       {t.has(`type.${u.updateType}`) ? t(`type.${u.updateType}`) : u.updateType}
@@ -74,24 +81,28 @@ export function UpdatesList({
                         <> · {tr.has(u.authorRole) ? tr(u.authorRole) : u.authorRole}</>
                       )}
                     </span>
+                    {u.superseded && <StatusBadge tone="danger">{t("superseded")}</StatusBadge>}
                   </div>
                   <div className="flex flex-wrap items-baseline justify-between gap-2">
-                    <span className="text-[14px] font-semibold text-ink">{u.title}</span>
+                    <span className={`text-[14px] font-semibold text-ink ${u.superseded ? "line-through" : ""}`}>{text.title}</span>
                     {u.amount !== null && u.amount > 0 && (
-                      <span className="text-[13px] font-bold text-green-deep">{formatBDT(u.amount)}</span>
+                      <span className={`text-[13px] font-bold ${u.superseded ? "text-ink-muted line-through" : "text-green-deep"}`}>
+                        {formatBDT(u.amount)}
+                      </span>
                     )}
                   </div>
-                  {u.body && (
+                  {text.body && (
                     <p className="whitespace-pre-line text-[13px] leading-[1.55] text-ink-secondary">
-                      {u.body}
+                      {text.body}
                     </p>
                   )}
+                  {u.superseded && <p className="text-[12px] font-semibold text-danger">{t("supersededNote")}</p>}
                   {photo && (
                     <a href={photo} target="_blank" rel="noopener noreferrer" className="mt-1 block w-fit">
                       {/* eslint-disable-next-line @next/next/no-img-element -- storage URL, sizes vary */}
                       <img
                         src={photo}
-                        alt={u.title}
+                        alt={text.title}
                         loading="lazy"
                         className="h-36 w-auto max-w-full rounded-xl border border-border-light object-cover transition-opacity hover:opacity-90"
                       />

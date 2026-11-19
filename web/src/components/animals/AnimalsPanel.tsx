@@ -8,26 +8,30 @@ import type { Animal } from "@/lib/animals";
 import { ANIMAL_TONE, weightGain } from "./shared";
 import { AnimalDetailModal } from "./AnimalDetailModal";
 import { AnimalRecordModal } from "./AnimalRecordModal";
+import { DeathReviewList } from "./DeathReviewList";
 
 /**
  * The animals in one batch. Farmers (and stewards) add weight and health
- * records; farmers can also edit details. Investors see everything read-only.
+ * records; farmers can also edit details and report deaths, which the
+ * steward confirms here. Investors see everything read-only.
  */
 export function AnimalsPanel({
   animals,
   canEdit = false,
-  canRecord = false,
+  recordAs,
 }: {
   animals: Animal[];
   canEdit?: boolean;
-  canRecord?: boolean;
+  /** Who adds records (and how deaths are handled); omit for read-only. */
+  recordAs?: "farmer" | "steward";
 }) {
+  const canRecord = recordAs !== undefined;
   const t = useTranslations("app.animals");
   const [openId, setOpenId] = useState<string | null>(null);
-  const [recordId, setRecordId] = useState<string | null>(null);
+  const [recording, setRecording] = useState<{ id: string; kind: "weight" | "death" } | null>(null);
 
   const open = animals.find((a) => a.id === openId) ?? null;
-  const recording = animals.find((a) => a.id === recordId) ?? null;
+  const recordAnimal = recording ? animals.find((a) => a.id === recording.id) ?? null : null;
 
   const count = (s: string) => animals.filter((a) => a.status === s).length;
   const gains = animals.map(weightGain).filter((g): g is number => g !== null);
@@ -41,11 +45,14 @@ export function AnimalsPanel({
           {animals.length > 0 && (
             <span className="text-[12px] text-ink-muted">
               {t("summary", { active: count("active"), sold: count("sold"), dead: count("dead") })}
+              {count("death_reported") > 0 && ` · ${t("reportedSummary", { count: count("death_reported") })}`}
               {avgGain !== null && ` · ${t("avgGain", { value: avgGain })}`}
             </span>
           )}
         </div>
       </div>
+
+      {recordAs === "steward" && <DeathReviewList animals={animals} />}
 
       {animals.length === 0 ? (
         <p className="px-6 py-6 text-[13px] text-ink-muted">{t("emptyBatch")}</p>
@@ -85,13 +92,24 @@ export function AnimalsPanel({
                     )}
                   </button>
                   {canRecord && a.status === "active" && (
-                    <button
-                      type="button"
-                      onClick={() => setRecordId(a.id)}
-                      className="mt-auto inline-flex h-[34px] items-center justify-center rounded-[8px] border border-brand/40 text-[12.5px] font-semibold text-green-deep hover:bg-brand-tint"
-                    >
-                      {t("addRecord")}
-                    </button>
+                    <div className="mt-auto flex gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setRecording({ id: a.id, kind: "weight" })}
+                        className="inline-flex h-[34px] flex-1 items-center justify-center rounded-[8px] border border-brand/40 text-[12.5px] font-semibold text-green-deep hover:bg-brand-tint"
+                      >
+                        {t("addRecord")}
+                      </button>
+                      {recordAs === "farmer" && (
+                        <button
+                          type="button"
+                          onClick={() => setRecording({ id: a.id, kind: "death" })}
+                          className="inline-flex h-[34px] items-center justify-center rounded-[8px] border border-border-light px-3 text-[12.5px] font-semibold text-ink-secondary hover:border-danger hover:text-danger"
+                        >
+                          {t("reportDeath")}
+                        </button>
+                      )}
+                    </div>
                   )}
                 </div>
               </li>
@@ -100,16 +118,23 @@ export function AnimalsPanel({
         </ul>
       )}
 
-      {open && !recording && (
+      {open && !recordAnimal && (
         <AnimalDetailModal
           animal={open}
           canEdit={canEdit}
           canRecord={canRecord}
-          onAddRecord={() => setRecordId(open.id)}
+          onAddRecord={() => setRecording({ id: open.id, kind: "weight" })}
           onClose={() => setOpenId(null)}
         />
       )}
-      {recording && <AnimalRecordModal animal={recording} onClose={() => setRecordId(null)} />}
+      {recordAnimal && recording && recordAs && (
+        <AnimalRecordModal
+          animal={recordAnimal}
+          role={recordAs}
+          initialKind={recording.kind}
+          onClose={() => setRecording(null)}
+        />
+      )}
     </section>
   );
 }

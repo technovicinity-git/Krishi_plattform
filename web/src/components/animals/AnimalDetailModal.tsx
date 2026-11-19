@@ -161,6 +161,9 @@ export function AnimalDetailModal({
               <DetailRow label={t("sold")} value={`${fmtDate(animal.soldAt)} · ${animal.salePrice !== null ? formatBDT(animal.salePrice) : "—"}`} />
             )}
             {animal.status === "dead" && <DetailRow label={t("died")} value={fmtDate(animal.diedAt)} />}
+            {(animal.status === "dead" || animal.status === "death_reported") && animal.deathCause && (
+              <DetailRow label={t("causeLabel")} value={t(`causes.${animal.deathCause}`)} />
+            )}
             {animal.notes && <p className="mt-3 rounded-xl bg-cream px-4 py-3 text-[13px] text-ink-secondary">{animal.notes}</p>}
           </div>
         )}
@@ -175,13 +178,26 @@ export function AnimalDetailModal({
                 <li key={r.id} className="flex gap-3 rounded-xl border border-border-light px-4 py-3">
                   <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                     <div className="flex flex-wrap items-baseline justify-between gap-2">
-                      <span className={cn("text-[13px] font-semibold", r.kind === "death" ? "text-danger" : "text-ink")}>
+                      <span className={cn("text-[13px] font-semibold", r.kind === "death" && r.reviewStatus !== "rejected" ? "text-danger" : "text-ink")}>
                         {t(`kind.${r.kind}`)}
                         {r.weightKg !== null && ` · ${t("kg", { value: r.weightKg })}`}
                       </span>
                       <span className="text-[11px] text-ink-muted">{fmtDate(r.recordedOn)}</span>
                     </div>
                     {r.note && <span className="text-[12.5px] text-ink-secondary">{r.note}</span>}
+                    {r.kind === "death" && r.reviewStatus === "pending" && (
+                      <span className="text-[11.5px] font-semibold text-[#9A6B12]">{t("reviewPending")}</span>
+                    )}
+                    {r.kind === "death" && r.reviewStatus === "rejected" && (
+                      <span className="text-[11.5px] font-semibold text-danger">
+                        {t("reviewRejected", { reason: r.rejectionReason ?? "" })}
+                      </span>
+                    )}
+                    {r.documentUrl && (
+                      <a href={r.documentUrl} target="_blank" rel="noopener noreferrer" className="text-[11.5px] font-semibold text-brand hover:underline">
+                        {t("vetCertificate")}
+                      </a>
+                    )}
                     {r.authorRole && <span className="text-[11px] text-ink-muted">{t(`by.${r.authorRole}`)}</span>}
                   </div>
                   {r.photoUrl && (

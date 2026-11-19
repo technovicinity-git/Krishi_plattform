@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import NextLink from "next/link";
 import { Link, useRouter } from "@/i18n/navigation";
 import { loginSchema } from "@/lib/auth/schemas";
 import { FormInput } from "./FormInput";
@@ -127,7 +128,8 @@ export function LoginForm() {
             {t("createAccount")}
           </Link>
         </p>
-        <Link
+        {/* The admin console has no language prefix, so this is a plain link. */}
+        <NextLink
           href="/krishi-console/login"
           className="group inline-flex items-center gap-1 rounded-full px-2 py-1 text-[12px] font-medium text-ink-muted transition-colors hover:text-brand focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/40"
         >
@@ -144,7 +146,7 @@ export function LoginForm() {
           >
             <path d="M6 3.5L10.5 8 6 12.5" />
           </svg>
-        </Link>
+        </NextLink>
       </div>
     </form>
   );

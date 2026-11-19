@@ -63,7 +63,7 @@ export default async function FarmerSalesPage() {
     ? await Promise.all([
         db.from("investment_sales").select(`investment_id, ${SALE_COLUMNS}`).in("investment_id", ids),
         db.from("investment_settlements").select("investment_id, farmer_share, net_result, outcome").in("investment_id", ids),
-        db.from("animals").select("id, investment_id, tag, ear_tag, current_weight_kg").in("investment_id", ids).eq("status", "active").order("tag"),
+        db.from("animals").select("id, investment_id, tag, ear_tag, current_weight_kg, status").in("investment_id", ids).neq("status", "sold").order("tag"),
       ])
     : [{ data: [] }, { data: [] }, { data: [] }];
 
@@ -73,10 +73,10 @@ export default async function FarmerSalesPage() {
   const settlements = new Map(
     (settlementRows ?? []).map((s) => [s.investment_id, { share: Number(s.farmer_share), net: Number(s.net_result), outcome: s.outcome }]),
   );
-  const activeAnimals = new Map<string, { id: string; tag: string; earTag: string | null; currentWeightKg: number | null }[]>();
+  const activeAnimals = new Map<string, { id: string; tag: string; earTag: string | null; currentWeightKg: number | null; status: string }[]>();
   for (const a of animalRows ?? []) {
     const list = activeAnimals.get(a.investment_id) ?? [];
-    list.push({ id: a.id, tag: a.tag, earTag: a.ear_tag, currentWeightKg: a.current_weight_kg === null ? null : Number(a.current_weight_kg) });
+    list.push({ id: a.id, tag: a.tag, earTag: a.ear_tag, currentWeightKg: a.current_weight_kg === null ? null : Number(a.current_weight_kg), status: a.status });
     activeAnimals.set(a.investment_id, list);
   }
 
@@ -101,9 +101,9 @@ export default async function FarmerSalesPage() {
     branchName: a.branch_name,
   }));
 
-  const totalSold = [...sales.values()].filter((s) => s.status !== "rejected").reduce((sum, s) => sum + s.saleAmount, 0);
+  const totalSold = [...sales.values()].filter((s) => s.status !== "rejected" && s.kind === "sale").reduce((sum, s) => sum + s.saleAmount, 0);
   const totalShare = [...settlements.values()].reduce((sum, s) => sum + s.share, 0);
-  const owed = toSend.reduce((sum, [, s]) => sum + s.saleAmount, 0);
+  const owed = toSend.reduce((sum, [, s]) => sum + s.saleAmount + s.fundsReturned, 0);
 
   const date = (iso: string | null) =>
     iso
@@ -145,7 +145,7 @@ export default async function FarmerSalesPage() {
                 </span>
                 {s.remitRejectionReason && <span className="text-danger">{t("notConfirmed", { reason: s.remitRejectionReason })}</span>}
               </div>
-              <SendMoneyButton investmentId={id} amount={s.saleAmount} accounts={accounts} />
+              <SendMoneyButton investmentId={id} amount={s.saleAmount + s.fundsReturned} accounts={accounts} />
             </Row>
           ))}
         </Section>
@@ -160,10 +160,14 @@ export default async function FarmerSalesPage() {
               <Row key={b.id}>
                 {batchLine(b.id)}
                 <div className="flex flex-col gap-1 text-[12.5px] text-ink-secondary">
-                  <span>{animals.length > 0 ? t("animalsActive", { count: animals.length }) : t("units", { count: b.units })}</span>
+                  <span>{animals.length > 0 ? t("animalsActive", { count: animals.filter((a) => a.status === "active").length }) : t("units", { count: b.units })}</span>
                   {rejected?.rejectionReason && <span className="text-danger">{t("sentBack", { reason: rejected.rejectionReason })}</span>}
                 </div>
-                <RecordSaleButton investmentId={b.id} units={b.units} animals={animals} again={Boolean(rejected)} />
+                {animals.length > 0 && animals.every((a) => a.status === "dead") ? (
+                  <span className="max-w-[260px] text-[12.5px] text-danger">{t("allDied")}</span>
+                ) : (
+                  <RecordSaleButton investmentId={b.id} units={b.units} animals={animals} again={Boolean(rejected)} />
+                )}
               </Row>
             );
           })}
@@ -176,7 +180,7 @@ export default async function FarmerSalesPage() {
             <Row key={id}>
               {batchLine(id)}
               <span className="text-[12.5px] text-ink-secondary">
-                <span className="font-mono">{s.reference}</span> · {formatBDT(s.saleAmount)}
+                <span className="font-mono">{s.reference}</span> · {s.kind === "total_loss" ? t("totalLoss") : formatBDT(s.saleAmount)}
               </span>
               <StatusBadge tone={SALE_TONE[s.status] ?? "neutral"}>{ts.has(s.status) ? ts(s.status) : s.status}</StatusBadge>
             </Row>
@@ -192,7 +196,7 @@ export default async function FarmerSalesPage() {
               <Row key={id}>
                 {batchLine(id)}
                 <span className="text-[12.5px] text-ink-secondary">
-                  {t("soldFor", { amount: formatBDT(s.saleAmount) })} · {date(s.receivedAt)}
+                  {s.kind === "total_loss" ? t("totalLoss") : t("soldFor", { amount: formatBDT(s.saleAmount) })} · {date(s.receivedAt)}
                 </span>
                 <div className="flex flex-col items-start gap-0.5 sm:items-end">
                   <span className="text-[15px] font-bold text-green-deep">{formatBDT(st?.share ?? 0)}</span>

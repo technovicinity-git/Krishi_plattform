@@ -102,10 +102,10 @@ export default async function FarmerInvestmentDetailPage({
         currentStage={inv.currentStage}
         units={inv.units}
         saleRejected={inv.sale?.status === "rejected"}
-        activeAnimals={inv.animals.filter((a) => a.status === "active")}
+        activeAnimals={inv.animals.filter((a) => a.status !== "sold")}
       />
 
-      {inv.animals.length > 0 && <AnimalsPanel animals={inv.animals} canEdit canRecord />}
+      {inv.animals.length > 0 && <AnimalsPanel animals={inv.animals} canEdit recordAs="farmer" />}
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
         <div className="flex min-w-0 flex-col gap-6">

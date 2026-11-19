@@ -79,7 +79,12 @@ export default async function AdminSaleDetailPage({
 
         <div className="flex flex-col gap-6">
           {awaitingDecision && b && (
-            <SettleSaleActions saleId={sale.id} amount={sale.saleAmount} outcomeText={outcomeText} />
+            <SettleSaleActions
+              saleId={sale.id}
+              amount={sale.saleAmount + sale.fundsReturned}
+              outcomeText={outcomeText}
+              totalLoss={sale.kind === "total_loss" && sale.fundsReturned === 0}
+            />
           )}
           <Panel title="Investment" className="h-fit">
             <DetailRow label="Investor" value={inv.investor.fullName ?? "—"} />
@@ -90,7 +95,9 @@ export default async function AdminSaleDetailPage({
             <DetailRow label="Invested" value={formatBDT(inv.amount)} />
             <DetailRow label="Animal purchase" value={formatBDT(inv.stats.purchaseCost)} />
             <DetailRow label="Fund requests approved" value={formatBDT(inv.stats.fundsDisbursed)} />
-            <DetailRow label="Spent on the batch" value={formatBDT(inv.stats.capitalSpent)} />
+            <DetailRow label="Paid out of capital" value={formatBDT(inv.stats.fundsReleased)} />
+            <DetailRow label="Unspent fund money returned" value={formatBDT(sale.fundsReturned)} />
+            <DetailRow label="Spent on the batch" value={formatBDT(Math.max(0, inv.stats.fundsReleased - sale.fundsReturned))} />
             <DetailRow label="Expenses approved" value={formatBDT(inv.stats.expensesApproved)} />
             <DetailRow label="Category" value={inv.offering.categoryName} />
             <DetailRow label="District" value={inv.offering.districtName} />

@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { notify } from "@/lib/notifications/notify";
+import { timeline } from "@/lib/investments/timeline";
 
 export const runtime = "nodejs";
 
@@ -79,6 +80,7 @@ export async function PATCH(
       update_type: "note",
       title: "Expense not accepted",
       body: `৳${amount.toLocaleString("en-IN")} for ${String(expense.category).replace(/_/g, " ")} was not accepted. Reason: ${reason}`,
+      metadata: { i18n: timeline("expense_rejected", { amount, purpose: String(expense.category), reason }) },
     });
     await notify(
       "expense_rejected",

@@ -89,6 +89,9 @@ export function SalePanel({
     }
   };
 
+  const totalLoss = sale.kind === "total_loss";
+  /** What the farmer sends Krishi: sale money + unspent fund money. */
+  const toSend = sale.saleAmount + sale.fundsReturned;
   const photo = sale.photoUrl;
   const proof = sale.remitProofUrl;
   const remitted = Boolean(sale.remittedAt) && sale.status !== "awaiting_remittance";
@@ -97,22 +100,33 @@ export function SalePanel({
     <section className="rounded-2xl border border-border-light bg-white">
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border-light px-6 py-4">
         <div className="flex flex-col">
-          <h2 className="text-[15px] font-semibold text-ink">{t("heading")}</h2>
+          <h2 className="text-[15px] font-semibold text-ink">{totalLoss ? t("totalLossHeading") : t("heading")}</h2>
           <span className="font-mono text-[11px] text-ink-muted">{sale.reference}</span>
         </div>
         <StatusBadge tone={SALE_TONE[sale.status] ?? "neutral"} className="text-[11px]">
-          {ts.has(sale.status) ? ts(sale.status) : sale.status}
+          {totalLoss && sale.status === "remittance_submitted"
+            ? t("totalLossChecking")
+            : ts.has(sale.status) ? ts(sale.status) : sale.status}
         </StatusBadge>
       </div>
 
       <div className="flex flex-col gap-5 px-6 py-5">
         <Notice sale={sale} viewer={viewer} />
 
+        {totalLoss ? (
+          <div className="flex flex-col">
+            <DetailRow label={t("closedOn")} value={fmtDate(sale.saleDate)} />
+            {sale.fundsReturned > 0 && <DetailRow label={t("fundsReturned")} value={formatBDT(sale.fundsReturned)} />}
+          </div>
+        ) : (
         <div className="grid grid-cols-1 gap-x-8 md:grid-cols-2">
           <div className="flex flex-col">
             <DetailRow label={t("saleAmount")} value={<strong className="text-green-deep">{formatBDT(sale.saleAmount)}</strong>} />
             <DetailRow label={t("animalsSold")} value={String(sale.animalsSold)} />
             <DetailRow label={t("saleDate")} value={fmtDate(sale.saleDate)} />
+            {sale.fundsReturned > 0 && (
+              <DetailRow label={t("fundsReturned")} value={formatBDT(sale.fundsReturned)} />
+            )}
           </div>
           <div className="flex flex-col">
             <DetailRow label={t("buyer")} value={sale.buyerName ?? "—"} />
@@ -133,9 +147,10 @@ export function SalePanel({
             />
           </div>
         </div>
+        )}
         {sale.note && <p className="rounded-xl bg-cream px-4 py-3 text-[13px] text-ink-secondary">{sale.note}</p>}
 
-        {remitted && (
+        {remitted && (!totalLoss || sale.fundsReturned > 0) && (
           <div className="flex flex-col gap-2">
             <span className="text-[11px] font-bold uppercase tracking-[0.05em] text-ink-muted">
               {t("remittance")}
@@ -173,7 +188,7 @@ export function SalePanel({
             onClick={() => setRemitOpen(true)}
             className="inline-flex h-[46px] items-center justify-center rounded-[8px] bg-brand px-5 text-[14px] font-bold text-white transition-colors hover:bg-brand-hover"
           >
-            {t("sendMoney", { amount: formatBDT(sale.saleAmount) })}
+            {t("sendMoney", { amount: formatBDT(toSend) })}
           </button>
         )}
 
@@ -247,7 +262,7 @@ export function SalePanel({
       {remitOpen && (
         <RemitModal
           investmentId={investmentId}
-          amount={sale.saleAmount}
+          amount={toSend}
           accounts={accounts}
           onClose={() => setRemitOpen(false)}
         />
@@ -262,7 +277,25 @@ function Notice({ sale, viewer }: { sale: InvestmentSale; viewer: SaleViewer }) 
   let tone: "info" | "danger" | "success" = "info";
   let text: string | null = null;
 
-  switch (sale.status) {
+  const returning = sale.fundsReturned > 0 ? formatBDT(sale.fundsReturned) : null;
+  if (sale.kind === "total_loss") {
+    if (sale.status === "awaiting_remittance") {
+      tone = sale.remitRejectionReason ? "danger" : "info";
+      text = sale.remitRejectionReason
+        ? `${t("remitRejected")} ${sale.remitRejectionReason}`
+        : viewer === "farmer"
+          ? t("totalLossFarmerReturn", { amount: returning ?? "" })
+          : t("totalLossAwaitingReturn", { amount: returning ?? "" });
+    } else if (sale.status === "remittance_submitted") {
+      tone = "danger";
+      text = viewer === "admin" ? t("totalLossAdmin") : t("totalLossPending");
+    } else if (sale.status === "rejected") {
+      tone = "danger";
+      text = `${t("totalLossRejected")} ${sale.rejectionReason ?? ""}`.trim();
+    } else if (sale.status === "settled") {
+      text = t("totalLossSettled");
+    }
+  } else switch (sale.status) {
     case "pending_review":
       text = viewer === "steward" ? t("stewardReview") : t("pendingReview");
       break;
@@ -277,6 +310,7 @@ function Notice({ sale, viewer }: { sale: InvestmentSale; viewer: SaleViewer }) 
         text = `${t("remitRejected")} ${sale.remitRejectionReason}`;
       } else {
         text = viewer === "farmer" ? t("farmerRemit") : t("awaitingRemittance");
+        if (returning) text += ` ${t("includesReturn", { amount: returning })}`;
       }
       break;
     case "remittance_submitted":

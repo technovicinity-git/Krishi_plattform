@@ -6,6 +6,14 @@ import { routing } from "./i18n/routing";
 const intlMiddleware = createMiddleware(routing);
 
 export default async function proxy(request: NextRequest) {
+  // The admin console is not localized: /en/krishi-console/... -> /krishi-console/...
+  const consolePath = request.nextUrl.pathname.match(/^\/(?:en|bn)(\/krishi-console(?:\/.*)?)$/);
+  if (consolePath) {
+    const url = request.nextUrl.clone();
+    url.pathname = consolePath[1];
+    return NextResponse.redirect(url);
+  }
+
   const response = intlMiddleware(request);
 
   const supabase = createServerClient(

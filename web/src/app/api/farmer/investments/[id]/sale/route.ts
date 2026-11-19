@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { uploadUpdatePhoto } from "@/lib/investments/photos";
 import { notify, investmentParties } from "@/lib/notifications/notify";
+import { timeline } from "@/lib/investments/timeline";
 
 export const runtime = "nodejs";
 
@@ -90,13 +91,40 @@ export async function POST(
     );
   }
 
-  // Batches with tracked animals must say which ones were sold.
-  const { data: activeAnimals } = await db
-    .from("animals")
-    .select("id")
+  const { count: pendingExpenses } = await db
+    .from("expenses")
+    .select("id", { count: "exact", head: true })
     .eq("investment_id", inv.id)
-    .eq("status", "active");
-  const activeIds = new Set((activeAnimals ?? []).map((a) => a.id));
+    .eq("status", "pending");
+  if (pendingExpenses) {
+    return NextResponse.json(
+      { error: "Wait for your steward to review your pending expenses first" },
+      { status: 400 },
+    );
+  }
+
+  const { count: reportedDeaths } = await db
+    .from("animals")
+    .select("id", { count: "exact", head: true })
+    .eq("investment_id", inv.id)
+    .eq("status", "death_reported");
+  if (reportedDeaths) {
+    return NextResponse.json(
+      { error: "Wait for your steward to review the reported animal death first" },
+      { status: 400 },
+    );
+  }
+
+  // Batches with tracked animals must say which ones were sold; only live
+  // (active) animals can be sold.
+  const { data: batchAnimals } = await db
+    .from("animals")
+    .select("id, status")
+    .eq("investment_id", inv.id);
+  const activeIds = new Set((batchAnimals ?? []).filter((a) => a.status === "active").map((a) => a.id));
+  if ((batchAnimals ?? []).length > 0 && activeIds.size === 0) {
+    return NextResponse.json({ error: "There are no live animals left in this batch to sell" }, { status: 400 });
+  }
   if (activeIds.size > 0) {
     if (animalIds.length === 0) {
       return NextResponse.json({ error: "Choose the animals you sold" }, { status: 400 });
@@ -136,6 +164,7 @@ export async function POST(
   const row = {
     investment_id: inv.id,
     farmer_id: user.id,
+    kind: "sale",
     animals_sold: data.animals_sold,
     animal_ids: animalIds.length > 0 ? animalIds : null,
     sale_amount: data.sale_amount,
@@ -148,6 +177,10 @@ export async function POST(
     rejection_reason: null,
     reviewed_by: null,
     reviewed_at: null,
+    // Clear anything left from a closing that was sent back.
+    funds_returned: 0,
+    remitted_at: null,
+    remit_rejection_reason: null,
   };
   const { data: sale, error } = existing
     ? await db.from("investment_sales").update(row).eq("id", existing.id).select("reference").single()
@@ -176,7 +209,12 @@ export async function POST(
       `Sold ${animals} for ৳${data.sale_amount.toLocaleString("en-IN")}. Waiting for steward confirmation.`,
     amount: data.sale_amount,
     photo_path: photo.path,
-    metadata: { reference: sale.reference, from_stage: "growing_care", to_stage: "sale_pending" },
+    metadata: {
+      reference: sale.reference,
+      from_stage: "growing_care",
+      to_stage: "sale_pending",
+      i18n: timeline("sale_recorded", { count: data.animals_sold, amount: data.sale_amount }, data.note),
+    },
   });
 
   const parties = await investmentParties(inv.id);

@@ -12,7 +12,7 @@ import {
   fieldClass,
 } from "@/components/dashboard/Modal";
 import { PhotoField } from "@/components/investment/PhotoField";
-import type { Animal } from "@/lib/animals";
+import { DEATH_CAUSES, type Animal } from "@/lib/animals";
 
 const KINDS = ["weight", "health", "vaccination", "treatment", "note", "death"] as const;
 
@@ -22,31 +22,43 @@ function today(): string {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 }
 
-/** Add a weight / health / vaccination / treatment / note / death record. */
+/**
+ * Add a weight / health / vaccination / treatment / note / death record.
+ * A farmer's death record is a report the steward confirms; it needs a
+ * photo and the cause. A steward's death record is final.
+ */
 export function AnimalRecordModal({
   animal,
+  role,
   onClose,
   initialKind = "weight",
 }: {
   animal: Animal;
+  role: "farmer" | "steward";
   onClose: () => void;
   initialKind?: (typeof KINDS)[number];
 }) {
   const t = useTranslations("app.animals");
   const tc = useTranslations("app.common");
   const router = useRouter();
-  const ids = { kind: useId(), weight: useId(), date: useId(), note: useId() };
+  const ids = { kind: useId(), weight: useId(), date: useId(), note: useId(), cause: useId() };
   const [kind, setKind] = useState<(typeof KINDS)[number]>(initialKind);
   const [weight, setWeight] = useState("");
   const [date, setDate] = useState(today);
   const [note, setNote] = useState("");
   const [photo, setPhoto] = useState<File | null>(null);
+  const [cause, setCause] = useState("");
+  const [certificate, setCertificate] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const isWeight = kind === "weight";
   const isDeath = kind === "death";
-  const valid = isWeight ? Number(weight) > 0 : note.trim().length > 0;
+  const isReport = isDeath && role === "farmer";
+  const valid =
+    (isWeight ? Number(weight) > 0 : note.trim().length > 0) &&
+    (!isDeath || cause !== "") &&
+    (!isReport || photo !== null);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,6 +71,10 @@ export function AnimalRecordModal({
       fd.set("note", note.trim());
       fd.set("recorded_on", date);
       if (photo) fd.set("photo", await compressImage(photo, 1600, 1));
+      if (isDeath) {
+        fd.set("cause", cause);
+        if (certificate) fd.set("document", await compressImage(certificate, 2000, 1));
+      }
       const res = await fetch(`/api/animals/${animal.id}/records`, { method: "POST", body: fd });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error ?? t("saveFailed"));
@@ -124,10 +140,37 @@ export function AnimalRecordModal({
           </div>
         )}
 
+        {isReport && (
+          <div className="rounded-xl border border-border-light bg-cream px-4 py-3">
+            <p className="text-[13px] font-semibold text-ink">{t("deathGuideTitle")}</p>
+            <ol className="mt-1.5 list-decimal space-y-1 pl-5 text-[12.5px] text-ink-secondary">
+              {(t.raw("deathGuide") as string[]).map((line) => (
+                <li key={line}>{line}</li>
+              ))}
+            </ol>
+          </div>
+        )}
+
         {isDeath && (
-          <p className="rounded-xl border border-[#F0C9C0] bg-[#FAF0ED] px-4 py-3 text-[12.5px] text-danger">
-            {t("deathWarning")}
-          </p>
+          <div>
+            <FieldLabel htmlFor={ids.cause}>{t("cause")}</FieldLabel>
+            <select
+              id={ids.cause}
+              required
+              value={cause}
+              onChange={(e) => setCause(e.target.value)}
+              className={`${fieldClass} h-[44px]`}
+            >
+              <option value="" disabled>
+                —
+              </option>
+              {DEATH_CAUSES.map((c) => (
+                <option key={c} value={c}>
+                  {t(`causes.${c}`)}
+                </option>
+              ))}
+            </select>
+          </div>
         )}
 
         <div>
@@ -141,12 +184,23 @@ export function AnimalRecordModal({
             className={`${fieldClass} py-2.5`}
           />
         </div>
-        <PhotoField label={t("photoOptional")} file={photo} onChange={setPhoto} />
+        <PhotoField
+          label={isReport ? t("deathPhoto") : t("photoOptional")}
+          file={photo}
+          onChange={setPhoto}
+          required={isReport}
+        />
+        {isDeath && <PhotoField label={t("vetDocument")} file={certificate} onChange={setCertificate} />}
+        {isDeath && (
+          <p className="rounded-xl border border-[#F0C9C0] bg-[#FAF0ED] px-4 py-3 text-[12.5px] text-danger">
+            {isReport ? t("reportWarning") : t("stewardDeathWarning")}
+          </p>
+        )}
         <FormError>{error}</FormError>
         <ModalActions
           onCancel={onClose}
           cancelLabel={tc("cancel")}
-          submitLabel={loading ? tc("saving") : isDeath ? t("confirmDeath") : t("saveRecord")}
+          submitLabel={loading ? tc("saving") : isReport ? t("reportDeath") : isDeath ? t("confirmDeath") : t("saveRecord")}
           disabled={loading || !valid}
         />
       </form>

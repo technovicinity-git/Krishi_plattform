@@ -18,6 +18,8 @@ import {
 } from "@/components/dashboard/ui";
 import { AnimalsPanel } from "@/components/animals/AnimalsPanel";
 import { ReportDownload } from "@/components/reports/ReportDownload";
+import { TotalLossCard } from "@/components/investment/TotalLossCard";
+import { totalLossBlocker } from "@/lib/investments/total-loss";
 
 export const dynamic = "force-dynamic";
 
@@ -38,6 +40,22 @@ export default async function StewardInvestmentDetailPage({
   const locale = await getLocale();
   const bn = locale === "bn";
   const planName = bn ? inv.offering.planNameBn : inv.offering.planNameEn;
+
+  // Every animal died (or is reported dead): offer to close as a total loss.
+  const saleOpen = inv.sale && inv.sale.status !== "rejected";
+  const showTotalLoss =
+    inv.currentStage === "growing_care" &&
+    !saleOpen &&
+    inv.animals.length > 0 &&
+    inv.animals.every((a) => a.status === "dead" || a.status === "death_reported");
+  const lossBlocker = showTotalLoss
+    ? totalLossBlocker({
+        stage: inv.currentStage,
+        animalStatuses: inv.animals.map((a) => a.status),
+        pendingFundRequests: inv.fundRequests.filter((r) => r.status === "pending").length,
+        saleStatus: inv.sale?.status ?? null,
+      })
+    : null;
 
   return (
     <div className="flex flex-col gap-6">
@@ -62,15 +80,26 @@ export default async function StewardInvestmentDetailPage({
           { label: t("units"), value: `${inv.units}` },
           { label: t("investor"), value: inv.investor.fullName ?? "—" },
           { label: t("farmer"), value: inv.farmer?.fullName ?? t("unassigned") },
-          { label: t("fundsReleased"), value: formatBDT(inv.stats.capitalSpent), accent: true },
+          { label: t("fundsReleased"), value: formatBDT(inv.stats.fundsReleased), accent: true },
         ]}
       />
 
-      {inv.sale && (
+      {showTotalLoss && (
+        <TotalLossCard
+          investmentId={inv.id}
+          capital={inv.amount}
+          spent={inv.stats.capitalSpent}
+          animals={inv.animals.length}
+          blocker={lossBlocker}
+          sentBackReason={inv.sale?.kind === "total_loss" ? inv.sale.rejectionReason : null}
+        />
+      )}
+
+      {inv.sale && !(showTotalLoss && inv.sale.kind === "total_loss") && (
         <SalePanel investmentId={inv.id} sale={inv.sale} settlement={inv.settlement} viewer="steward" />
       )}
 
-      {inv.animals.length > 0 && <AnimalsPanel animals={inv.animals} canRecord />}
+      {inv.animals.length > 0 && <AnimalsPanel animals={inv.animals} recordAs="steward" />}
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
         <div className="flex min-w-0 flex-col gap-6">

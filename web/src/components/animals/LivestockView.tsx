@@ -35,14 +35,16 @@ export async function LivestockView({
   const count = (s: string) => animals.filter((a) => a.status === s).length;
   const gains = animals.filter((a) => a.status === "active").map(weightGain).filter((g): g is number => g !== null);
   const avgGain = gains.length ? Math.round((gains.reduce((s, g) => s + g, 0) / gains.length) * 10) / 10 : null;
-  const shown = filter === "all" ? animals : animals.filter((a) => a.status === filter);
+  // Animals with a death report waiting for the steward still count as active.
+  const inFilter = (s: string) => s === filter || (filter === "active" && s === "death_reported");
+  const shown = filter === "all" ? animals : animals.filter((a) => inFilter(a.status));
 
   return (
     <div className="flex flex-col gap-6">
       <PageHeader title={t("title")} description={t("subtitle")} />
 
       <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
-        <StatCard label={t("active")} value={count("active")} tone="brand" icon="leaf" />
+        <StatCard label={t("active")} value={count("active") + count("death_reported")} tone="brand" icon="leaf" />
         <StatCard label={t("sold")} value={count("sold")} />
         <StatCard label={t("dead")} value={count("dead")} />
         <StatCard label={t("avgGain")} value={avgGain !== null ? ta("kg", { value: avgGain }) : "—"} />
