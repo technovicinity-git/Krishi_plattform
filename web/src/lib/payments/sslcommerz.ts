@@ -139,3 +139,63 @@ export async function validate(valId: string): Promise<Validation | null> {
     return null;
   }
 }
+
+// ─── Refunds ─────────────────────────────────────────────────────────────────
+// SSLCommerz Refund API (merchantTransIDvalidationAPI.php). Verify against the
+// sandbox once the store account exists: SSLCommerz has changed these
+// parameters before.
+
+export interface RefundResult {
+  /** "success" = accepted, "processing" = in progress, "failed" = refused. */
+  status: "success" | "processing" | "failed" | "refunded" | "cancelled" | string;
+  refundRefId: string | null;
+  error: string | null;
+  raw: Record<string, unknown> | null;
+}
+
+async function refundCall(params: Record<string, string>): Promise<RefundResult> {
+  const cfg = config();
+  if (!cfg) return { status: "failed", refundRefId: null, error: "SSLCommerz is not configured", raw: null };
+  const url = new URL(`${cfg.host}/validator/api/merchantTransIDvalidationAPI.php`);
+  for (const [k, v] of Object.entries(params)) url.searchParams.set(k, v);
+  url.searchParams.set("store_id", cfg.storeId);
+  url.searchParams.set("store_passwd", cfg.storePassword);
+  url.searchParams.set("v", "1");
+  url.searchParams.set("format", "json");
+  try {
+    const res = await fetch(url, { cache: "no-store", signal: AbortSignal.timeout(30_000) });
+    const raw = (await res.json().catch(() => null)) as Record<string, unknown> | null;
+    if (!raw) return { status: "failed", refundRefId: null, error: `SSLCommerz answered ${res.status}`, raw: null };
+    const connected = raw.APIConnect === "DONE";
+    return {
+      status: connected ? String(raw.status ?? "failed").toLowerCase() : "failed",
+      refundRefId: raw.refund_ref_id ? String(raw.refund_ref_id) : null,
+      error: connected ? (raw.errorReason ? String(raw.errorReason) : null) : `SSLCommerz: ${String(raw.APIConnect ?? "no connection")}`,
+      raw,
+    };
+  } catch (err) {
+    console.error("[sslcommerz] refund call failed:", err);
+    return { status: "failed", refundRefId: null, error: "Could not reach SSLCommerz", raw: null };
+  }
+}
+
+/** Asks SSLCommerz to refund a payment (by its bank_tran_id). */
+export function initiateRefund(input: {
+  bankTranId: string;
+  tranId: string;
+  amount: number;
+  remarks: string;
+}): Promise<RefundResult> {
+  return refundCall({
+    bank_tran_id: input.bankTranId,
+    // Unique per refund request on our side.
+    refund_trans_id: `${input.tranId}-R`,
+    refund_amount: input.amount.toFixed(2),
+    refund_remarks: input.remarks.slice(0, 250),
+  });
+}
+
+/** Status of a refund started earlier: "refunded", "processing" or "cancelled". */
+export function refundStatus(refundRefId: string): Promise<RefundResult> {
+  return refundCall({ refund_ref_id: refundRefId });
+}

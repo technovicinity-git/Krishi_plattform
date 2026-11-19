@@ -40,6 +40,8 @@ export type NotificationKind =
   | "total_loss_requested"
   | "total_loss_rejected"
   | "total_loss_return_funds"
+  | "payment_refund_started"
+  | "payment_refunded"
   // Admin console: something is waiting in an admin queue.
   | "admin_kyc_submitted"
   | "admin_deposit_submitted"

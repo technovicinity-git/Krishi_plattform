@@ -94,3 +94,6 @@ All three roles see the same investment detail, assembled by `lib/investments/de
 
 
 **What counts as spent.** `capitalSpent()` in `lib/investments/settlement.ts`: the animal purchase (the larger of the recorded purchase cost and any animal-purchase fund requests) plus approved care expenses, up to the care money released. Fund money released but not spent is returned by the farmer with the sale money, so only real spending reduces the investor's return. New fund requests are capped by money *released* (purchase + approved/pending requests), not by expenses.
+
+
+**Online payment refunds.** A paid SSLCommerz payment that can't become an investment (units sold out, held as risky, or the deposit couldn't be recorded) is refunded, never rejected: the reject API refuses online deposits. In the console, *Deposits → Online payments* lists them. **Refund via SSLCommerz** calls the gateway's refund API (payment `refund_pending` until *Check refund status* sees it refunded); **Refunded manually** records money returned another way with its transaction ID (`refunded` at once). Either way the deposit becomes `refunded`, the interest is cancelled (or reopened if the admin lets the investor pay again), the investor is notified and the action is audit-logged. Code: `lib/payments/refund.ts`, `/api/admin/payments/[id]/refund` and `/refund-status`.
