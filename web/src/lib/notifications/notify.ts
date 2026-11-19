@@ -37,6 +37,8 @@ export type NotificationKind =
   | "animal_died"
   | "animal_death_reported"
   | "animal_death_rejected"
+  | "total_loss_requested"
+  | "total_loss_rejected"
   | "review_received"
   | "offering_assigned"
   | "offering_assigned_pending"

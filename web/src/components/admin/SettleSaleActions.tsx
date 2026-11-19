@@ -11,10 +11,13 @@ export function SettleSaleActions({
   saleId,
   amount,
   outcomeText,
+  totalLoss = false,
 }: {
   saleId: string;
   amount: number;
   outcomeText: string;
+  /** Every animal died: no payment to check, the steward closed the batch. */
+  totalLoss?: boolean;
 }) {
   const router = useRouter();
   const { confirm } = useDialog();
@@ -45,8 +48,10 @@ export function SettleSaleActions({
 
   const settle = async () => {
     const ok = await confirm({
-      title: "Confirm payment and settle?",
-      message: `You confirm Krishi received ${formatBDT(amount)} from the farmer. ${outcomeText} This closes the batch and is logged in the audit trail.`,
+      title: totalLoss ? "Settle as a total loss?" : "Confirm payment and settle?",
+      message: totalLoss
+        ? `You confirm every animal in this batch died and there is no sale money. ${outcomeText} This closes the batch and is logged in the audit trail.`
+        : `You confirm Krishi received ${formatBDT(amount)} from the farmer. ${outcomeText} This closes the batch and is logged in the audit trail.`,
       confirmLabel: "Confirm & settle",
       cancelLabel: "Cancel",
       variant: "success",
@@ -59,7 +64,9 @@ export function SettleSaleActions({
       <div className="flex flex-col gap-1">
         <h2 className="text-[11px] font-bold uppercase tracking-[0.02em] text-ink-muted">Decision</h2>
         <p className="text-[12.5px] text-ink-secondary">
-          Check the transaction ID and proof against Krishi&apos;s account before confirming.
+          {totalLoss
+            ? "The steward reports that every animal died. Check the death records and photos below before settling."
+            : "Check the transaction ID and proof against Krishi’s account before confirming."}
         </p>
       </div>
 
@@ -72,14 +79,19 @@ export function SettleSaleActions({
       {rejecting ? (
         <div className="flex flex-col gap-3">
           <label htmlFor="remit-reason" className="text-[12px] font-semibold text-ink">
-            Why couldn&apos;t the payment be confirmed? <span className="text-danger">*</span>
+            {totalLoss ? "Why is the total loss not accepted?" : "Why couldn’t the payment be confirmed?"}{" "}
+            <span className="text-danger">*</span>
           </label>
           <textarea
             id="remit-reason"
             rows={3}
             value={reason}
             onChange={(e) => setReason(e.target.value)}
-            placeholder="E.g. No transfer with this transaction ID reached the bKash account."
+            placeholder={
+              totalLoss
+                ? "E.g. A02 has no death photo. Visit the farm and confirm."
+                : "E.g. No transfer with this transaction ID reached the bKash account."
+            }
             className={`${fieldClass} py-2.5`}
           />
           <div className="flex flex-col gap-3 sm:flex-row">
@@ -89,7 +101,7 @@ export function SettleSaleActions({
               disabled={busy !== null || reason.trim().length < 5}
               className="inline-flex h-[44px] flex-1 items-center justify-center rounded-[8px] bg-danger text-[14px] font-bold text-white hover:bg-[#8A2F20] disabled:opacity-60"
             >
-              {busy === "reject" ? "Sending back..." : "Send back to farmer"}
+              {busy === "reject" ? "Sending back..." : totalLoss ? "Send back to steward" : "Send back to farmer"}
             </button>
             <button
               type="button"
@@ -123,7 +135,7 @@ export function SettleSaleActions({
               disabled={busy !== null}
               className="inline-flex h-[46px] flex-1 items-center justify-center rounded-[8px] bg-green-deep text-[14px] font-bold text-white hover:bg-[#24492F] disabled:opacity-60"
             >
-              {busy === "settle" ? "Settling..." : "Confirm payment & settle"}
+              {busy === "settle" ? "Settling..." : totalLoss ? "Settle as total loss" : "Confirm payment & settle"}
             </button>
             <button
               type="button"
@@ -131,7 +143,7 @@ export function SettleSaleActions({
               disabled={busy !== null}
               className="inline-flex h-[46px] flex-1 items-center justify-center rounded-[8px] border border-border-light bg-white text-[14px] font-semibold text-danger hover:bg-[#FAF0ED] disabled:opacity-60"
             >
-              Payment not received
+              {totalLoss ? "Not accepted" : "Payment not received"}
             </button>
           </div>
         </>

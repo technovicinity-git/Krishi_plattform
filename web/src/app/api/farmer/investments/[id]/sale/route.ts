@@ -152,6 +152,7 @@ export async function POST(
   const row = {
     investment_id: inv.id,
     farmer_id: user.id,
+    kind: "sale",
     animals_sold: data.animals_sold,
     animal_ids: animalIds.length > 0 ? animalIds : null,
     sale_amount: data.sale_amount,
@@ -164,6 +165,9 @@ export async function POST(
     rejection_reason: null,
     reviewed_by: null,
     reviewed_at: null,
+    // Clear anything left from a closing that was sent back.
+    remitted_at: null,
+    remit_rejection_reason: null,
   };
   const { data: sale, error } = existing
     ? await db.from("investment_sales").update(row).eq("id", existing.id).select("reference").single()

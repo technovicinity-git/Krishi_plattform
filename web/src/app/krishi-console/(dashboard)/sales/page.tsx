@@ -28,6 +28,7 @@ interface SaleRow {
   id: string;
   reference: string;
   sale_amount: number;
+  kind: string;
   sale_date: string;
   status: string;
   remitted_at: string | null;
@@ -60,7 +61,7 @@ export default async function AdminSalesPage({
   let query = db
     .from("investment_sales")
     .select(`
-      id, reference, sale_amount, sale_date, status, remitted_at,
+      id, reference, kind, sale_amount, sale_date, status, remitted_at,
       farmer:users!farmer_id ( full_name ),
       investment:investments!investment_id (
         reference, amount,
@@ -131,7 +132,11 @@ export default async function AdminSalesPage({
                     </td>
                     <td className="px-5 py-4 text-[13px] text-ink-secondary">{s.farmer?.full_name ?? "—"}</td>
                     <td className="px-5 py-4 text-[13px] text-ink-secondary">{formatBDT(capital)}</td>
-                    <td className="px-5 py-4 text-[13px] font-bold text-green-deep">{formatBDT(amount)}</td>
+                    {s.kind === "total_loss" ? (
+                      <td className="px-5 py-4 text-[13px] font-bold text-danger">Total loss</td>
+                    ) : (
+                      <td className="px-5 py-4 text-[13px] font-bold text-green-deep">{formatBDT(amount)}</td>
+                    )}
                     <td className="px-5 py-4">
                       <StatusBadge tone={st.tone}>{st.label}</StatusBadge>
                     </td>

@@ -1648,7 +1648,32 @@
     }
   },
   "app": {
+    "totalLoss": {
+      "heading": "Close as a total loss",
+      "intro": "{count, plural, one {The only animal} other {All # animals}} in this batch died, so there is nothing to sell. Close the batch and Krishi settles it: the investor gets back the money that wasn't spent, and nobody gets a profit share.",
+      "invested": "Invested",
+      "returned": "Investor gets back",
+      "loss": "Loss",
+      "note": "What happened",
+      "notePlaceholder": "e.g. Both animals died of FMD in November; vet certificates attached to the death records.",
+      "submit": "Close as total loss",
+      "confirmTitle": "Close this batch as a total loss?",
+      "confirmMessage": "Krishi will check it and settle. The investor gets back {amount}. The farmer and you get no share.",
+      "failed": "Could not close the batch",
+      "sentBack": "Krishi sent the last closing back: {reason}",
+      "blocker": {
+        "death_pending": "Review the reported deaths above first.",
+        "fund_requests": "Answer the pending fund requests first.",
+        "animals_alive": "Some animals are still alive.",
+        "not_growing": "Only a batch that is being raised can be closed.",
+        "no_animals": "This batch has no animal records.",
+        "sale_exists": "A sale or closing is already in progress."
+      }
+    },
     "timeline": {
+      "total_loss_requested": {"title": "Closing as a total loss", "body": "All {count, plural, one {# animal} other {# animals}} died. Waiting for Krishi to settle."},
+      "total_loss_rejected": {"title": "Total loss not accepted", "body": "Krishi sent the total-loss closing back. Reason: {reason}"},
+      "settled_total_loss": {"title": "Closed as a total loss", "body": "All animals died. The investor gets back the unspent capital: {amount}."},
       "death_reported": {"title": "Death reported: animal {tag}", "body": ""},
       "death_rejected": {"title": "Death report not accepted: animal {tag}", "body": "Reason: {reason}"},
       "purchase": {
@@ -1745,6 +1770,8 @@
       "rejected": "Not approved"
     },
     "farmerSales": {
+      "allDied": "All animals in this batch died. Your steward will close it.",
+      "totalLoss": "Total loss",
       "title": "Sales",
       "subtitle": "Record a sale when your animals are sold, then send the money to Krishi. Your profit share is added to your wallet when the batch is settled.",
       "totalSold": "Total sold",
@@ -2033,6 +2060,8 @@
       "unreadCount": "{count, plural, =0 {No unread notifications} one {# unread} other {# unread}}"
     },
     "notify": {
+      "total_loss_requested": {"title": "{plan}: closed as a total loss", "body": "Every animal in {reference} died. Krishi will settle the batch."},
+      "total_loss_rejected": {"title": "Total loss not accepted: {plan}", "body": "{reason}"},
       "animal_death_reported": {"title": "Animal {name} reported dead", "body": "{plan} ({reference}): check the report and confirm it."},
       "animal_death_rejected": {"title": "Death report for {name} not accepted", "body": "{reason}"},
       "settlement_corrected_payout": {"title": "Settlement corrected: {plan}", "body": "{reference} was recalculated as a loss (the animal purchase was missed the first time). Your payout is now {amount}; your wallet was adjusted."},
@@ -2248,6 +2277,9 @@
       "failed": "Could not submit the payment"
     },
     "sale": {
+      "totalLossHeading": "Total loss",
+      "totalLossChecking": "Krishi review",
+      "closedOn": "Closed on",
       "heading": "Sale",
       "saleAmount": "Sold for",
       "animalsSold": "Animals sold",
@@ -2281,6 +2313,10 @@
       "settled": "Settled"
     },
     "saleNotice": {
+      "totalLossPending": "Every animal in this batch died. The steward closed it as a total loss and Krishi is checking before settling.",
+      "totalLossAdmin": "The steward reports every animal died. Check the death records, then settle: the investor gets back the unspent capital.",
+      "totalLossRejected": "Krishi sent the total-loss closing back:",
+      "totalLossSettled": "Closed as a total loss. The investor got back the unspent capital; there were no profit shares.",
       "pendingReview": "The sale is recorded and waiting for the steward to confirm it.",
       "stewardReview": "Check the price and details with the farmer, then confirm the sale or send it back.",
       "rejected": "The steward sent this sale back.",

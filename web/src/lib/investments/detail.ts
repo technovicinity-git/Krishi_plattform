@@ -97,6 +97,8 @@ export interface InvestmentSale {
   photoPath: string | null;
   photoUrl: string | null;
   status: string;
+  /** "total_loss": every animal died; no sale, no money (see 20261119000002). */
+  kind: "sale" | "total_loss";
   rejectionReason: string | null;
   reviewedAt: string | null;
   remitMethod: string | null;
@@ -127,7 +129,7 @@ export interface InvestmentSettlement {
 }
 
 const SALE_COLUMNS =
-  "id, reference, animals_sold, sale_amount, buyer_name, buyer_phone, sale_date, note, photo_path, status, rejection_reason, reviewed_at, remit_method, remit_txn_id, remit_sender, remit_note, remit_proof_path, remitted_at, remit_rejection_reason, received_at, created_at";
+  "id, reference, kind, animals_sold, sale_amount, buyer_name, buyer_phone, sale_date, note, photo_path, status, rejection_reason, reviewed_at, remit_method, remit_txn_id, remit_sender, remit_note, remit_proof_path, remitted_at, remit_rejection_reason, received_at, created_at";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function mapSale(row: any, urls: Map<string, string> = new Map()): InvestmentSale {
@@ -143,6 +145,7 @@ export function mapSale(row: any, urls: Map<string, string> = new Map()): Invest
     photoPath: row.photo_path,
     photoUrl: urls.get(row.photo_path) ?? null,
     status: row.status,
+    kind: row.kind === "total_loss" ? "total_loss" : "sale",
     rejectionReason: row.rejection_reason,
     reviewedAt: row.reviewed_at,
     remitMethod: row.remit_method,

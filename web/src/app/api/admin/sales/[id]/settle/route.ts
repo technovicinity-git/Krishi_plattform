@@ -69,26 +69,32 @@ export async function POST(
   }
 
   const fmt = (n: number) => `৳${n.toLocaleString("en-IN")}`;
+  const totalLoss = preview.sale.kind === "total_loss";
   await db.from("investment_updates").insert({
     investment_id: preview.sale.investmentId,
     author_id: admin.id,
     author_role: "admin",
     update_type: "settlement",
-    title:
-      b.outcome === "profit"
+    title: totalLoss
+      ? "Closed as a total loss"
+      : b.outcome === "profit"
         ? `Settled with a profit of ${fmt(b.netResult)}`
         : b.outcome === "loss"
           ? `Settled with a loss of ${fmt(Math.abs(b.netResult))}`
           : "Settled at break-even",
-    body: `Krishi received the sale money. Investor payout: ${fmt(b.investorPayout)}.`,
+    body: totalLoss
+      ? `All animals died. The investor gets back the unspent capital: ${fmt(b.investorPayout)}.`
+      : `Krishi received the sale money. Investor payout: ${fmt(b.investorPayout)}.`,
     amount: b.investorPayout,
     metadata: {
       reference: preview.sale.reference,
       settlement_id: settlementId,
-      i18n: timeline(
-        b.outcome === "profit" ? "settled_profit" : b.outcome === "loss" ? "settled_loss" : "settled_even",
-        { net: Math.abs(b.netResult), amount: b.investorPayout },
-      ),
+      i18n: totalLoss
+        ? timeline("settled_total_loss", { net: Math.abs(b.netResult), amount: b.investorPayout })
+        : timeline(
+            b.outcome === "profit" ? "settled_profit" : b.outcome === "loss" ? "settled_loss" : "settled_even",
+            { net: Math.abs(b.netResult), amount: b.investorPayout },
+          ),
     },
   });
 
@@ -115,6 +121,7 @@ export async function POST(
     targetId: id,
     metadata: {
       reference: preview.sale.reference,
+      kind: preview.sale.kind,
       outcome: b.outcome,
       net_result: b.netResult,
       investor_payout: b.investorPayout,

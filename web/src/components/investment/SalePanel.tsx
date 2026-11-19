@@ -89,6 +89,7 @@ export function SalePanel({
     }
   };
 
+  const totalLoss = sale.kind === "total_loss";
   const photo = sale.photoUrl;
   const proof = sale.remitProofUrl;
   const remitted = Boolean(sale.remittedAt) && sale.status !== "awaiting_remittance";
@@ -97,17 +98,22 @@ export function SalePanel({
     <section className="rounded-2xl border border-border-light bg-white">
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border-light px-6 py-4">
         <div className="flex flex-col">
-          <h2 className="text-[15px] font-semibold text-ink">{t("heading")}</h2>
+          <h2 className="text-[15px] font-semibold text-ink">{totalLoss ? t("totalLossHeading") : t("heading")}</h2>
           <span className="font-mono text-[11px] text-ink-muted">{sale.reference}</span>
         </div>
         <StatusBadge tone={SALE_TONE[sale.status] ?? "neutral"} className="text-[11px]">
-          {ts.has(sale.status) ? ts(sale.status) : sale.status}
+          {totalLoss && sale.status === "remittance_submitted"
+            ? t("totalLossChecking")
+            : ts.has(sale.status) ? ts(sale.status) : sale.status}
         </StatusBadge>
       </div>
 
       <div className="flex flex-col gap-5 px-6 py-5">
         <Notice sale={sale} viewer={viewer} />
 
+        {totalLoss ? (
+          <DetailRow label={t("closedOn")} value={fmtDate(sale.saleDate)} />
+        ) : (
         <div className="grid grid-cols-1 gap-x-8 md:grid-cols-2">
           <div className="flex flex-col">
             <DetailRow label={t("saleAmount")} value={<strong className="text-green-deep">{formatBDT(sale.saleAmount)}</strong>} />
@@ -133,9 +139,10 @@ export function SalePanel({
             />
           </div>
         </div>
+        )}
         {sale.note && <p className="rounded-xl bg-cream px-4 py-3 text-[13px] text-ink-secondary">{sale.note}</p>}
 
-        {remitted && (
+        {remitted && !totalLoss && (
           <div className="flex flex-col gap-2">
             <span className="text-[11px] font-bold uppercase tracking-[0.05em] text-ink-muted">
               {t("remittance")}
@@ -262,7 +269,17 @@ function Notice({ sale, viewer }: { sale: InvestmentSale; viewer: SaleViewer }) 
   let tone: "info" | "danger" | "success" = "info";
   let text: string | null = null;
 
-  switch (sale.status) {
+  if (sale.kind === "total_loss") {
+    if (sale.status === "remittance_submitted") {
+      tone = "danger";
+      text = viewer === "admin" ? t("totalLossAdmin") : t("totalLossPending");
+    } else if (sale.status === "rejected") {
+      tone = "danger";
+      text = `${t("totalLossRejected")} ${sale.rejectionReason ?? ""}`.trim();
+    } else if (sale.status === "settled") {
+      text = t("totalLossSettled");
+    }
+  } else switch (sale.status) {
     case "pending_review":
       text = viewer === "steward" ? t("stewardReview") : t("pendingReview");
       break;

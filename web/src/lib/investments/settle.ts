@@ -10,7 +10,7 @@ import { getCapitalSpent } from "./spending";
 export async function previewSettlement(saleId: string): Promise<
   | {
       ok: true;
-      sale: { id: string; investmentId: string; status: string; reference: string };
+      sale: { id: string; investmentId: string; status: string; reference: string; kind: string };
       breakdown: SettlementBreakdown;
     }
   | { ok: false; error: string }
@@ -18,7 +18,7 @@ export async function previewSettlement(saleId: string): Promise<
   const db = createAdminClient();
   const { data: sale } = await db
     .from("investment_sales")
-    .select("id, investment_id, sale_amount, status, reference, investment:investments!investment_id ( amount )")
+    .select("id, investment_id, sale_amount, status, reference, kind, investment:investments!investment_id ( amount )")
     .eq("id", saleId)
     .maybeSingle();
   if (!sale) return { ok: false, error: "Sale not found" };
@@ -41,6 +41,7 @@ export async function previewSettlement(saleId: string): Promise<
       investmentId: sale.investment_id,
       status: sale.status,
       reference: sale.reference,
+      kind: sale.kind,
     },
     breakdown,
   };

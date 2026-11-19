@@ -86,4 +86,8 @@ All three roles see the same investment detail, assembled by `lib/investments/de
 
 ## 9. Sale, settlement and profit sharing
 
-The marketing pages (`how-it-works`: `StepSale`, `Settlement`, `ProfitSharing`) describe the sale and the profit split. The UI knows the stages `purchased`, `completed` and `settled`. **No API moves an investment past `awaiting_purchase`, records a sale, or pays out to `withdrawal_preferences`.** This part of the lifecycle has not been built yet.
+**Sale.** While the batch is in `growing_care`, the farmer records the sale and ticks the live animals sold (dead or death-reported animals can't be chosen). Stage → `sale_pending`. The steward confirms it (→ `sold`, sale `awaiting_remittance`) or sends it back (→ `growing_care`). The farmer sends the money to Krishi and submits the transfer (`remittance_submitted`). The admin confirms the payment and settles; settlement credits each wallet (see `lib/investments/settlement.ts` for the 60/30/5/5 split and the loss rule).
+
+**Animal deaths.** A farmer reports a death with a photo, cause and optional vet certificate (animal → `death_reported`). The steward confirms (→ `dead`) or rejects with a reason (→ `active`). No sale can be recorded while a report is pending.
+
+**Total loss.** When every animal in a `growing_care` batch is dead (none reported-pending, no pending fund requests), the steward can **Close as total loss** with a note (`POST /api/steward/investments/[id]/total-loss`). This creates an `investment_sales` row with `kind = 'total_loss'`, no animals and ৳0, already at `remittance_submitted` (stage `sale_pending`). The admin reviews it on the Sales page: **Settle as total loss** runs the normal settlement with sale amount 0 (the investor gets back the unspent capital, no shares), or **Not accepted** sends it back to the steward (closing `rejected`, stage back to `growing_care`).

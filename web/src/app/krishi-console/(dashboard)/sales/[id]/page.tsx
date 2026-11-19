@@ -79,7 +79,12 @@ export default async function AdminSaleDetailPage({
 
         <div className="flex flex-col gap-6">
           {awaitingDecision && b && (
-            <SettleSaleActions saleId={sale.id} amount={sale.saleAmount} outcomeText={outcomeText} />
+            <SettleSaleActions
+              saleId={sale.id}
+              amount={sale.saleAmount}
+              outcomeText={outcomeText}
+              totalLoss={sale.kind === "total_loss"}
+            />
           )}
           <Panel title="Investment" className="h-fit">
             <DetailRow label="Investor" value={inv.investor.fullName ?? "—"} />
