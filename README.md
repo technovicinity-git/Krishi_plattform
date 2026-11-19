@@ -18,6 +18,7 @@ The UI is bilingual: Bangla is the default, English is available under `/en`.
 ```
 krishi-platform-main/
 ├── docs/                    # Project documentation (start here)
+├── mobile/                  # Flutter app (Android + iOS) for investors, stewards, farmers — see mobile/README.md
 └── web/                     # Next.js application
     ├── src/
     │   ├── app/             # Pages ([locale]/, krishi-console/) and API routes (api/)
