@@ -24,6 +24,7 @@ export type TimelineKey =
   | "settled_loss"
   | "settled_even"
   | "settlement_corrected"
+  | "settlement_corrected_request"
   | "animal_died"
   | "death_reported"
   | "death_rejected"

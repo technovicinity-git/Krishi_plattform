@@ -1670,6 +1670,7 @@
       }
     },
     "timeline": {
+      "settlement_corrected_request": {"title": "নিষ্পত্তি সংশোধন: {net} ক্ষতি", "body": "সংশোধিত: পশু কেনার পরে করা {purchase}-এর পশু ক্রয়ের তহবিল অনুরোধ প্রথম হিসাবে খরচ হিসেবে ধরা হয়নি। বিনিয়োগকারীর প্রাপ্য: {amount}।"},
       "total_loss_requested": {"title": "সম্পূর্ণ ক্ষতি হিসেবে বন্ধ করা হচ্ছে", "body": "সব {count}টি পশু মারা গেছে। কৃষির নিষ্পত্তির অপেক্ষায়।"},
       "total_loss_rejected": {"title": "সম্পূর্ণ ক্ষতি গ্রহণ করা হয়নি", "body": "কৃষি সম্পূর্ণ ক্ষতির আবেদন ফেরত পাঠিয়েছে। কারণ: {reason}"},
       "settled_total_loss": {"title": "সম্পূর্ণ ক্ষতি হিসেবে বন্ধ হয়েছে", "body": "সব পশু মারা গেছে। বিনিয়োগকারী অব্যবহৃত মূলধন ফেরত পাবেন: {amount}।"},
@@ -2059,6 +2060,7 @@
       "unreadCount": "{count, plural, =0 {কোনো অপঠিত নোটিফিকেশন নেই} other {#টি অপঠিত}}"
     },
     "notify": {
+      "settlement_corrected_request_payout": {"title": "নিষ্পত্তি সংশোধন: {plan}", "body": "{reference} পুনরায় হিসাব করা হয়েছে: প্রথমবার একটি পশু ক্রয়ের অনুরোধ বাদ পড়েছিল। আপনার প্রাপ্য এখন {amount}; আপনার ওয়ালেট সমন্বয় করা হয়েছে।"},
       "admin_kyc_submitted": {"title": "যাচাইয়ের জন্য নতুন KYC", "body": "{name} যাচাইয়ের জন্য এনআইডি জমা দিয়েছেন।"},
       "admin_deposit_submitted": {"title": "নতুন জমা {reference}", "body": "{name} {amount} পাঠিয়েছেন। প্রমাণ দেখে অনুমোদন করুন।"},
       "admin_payment_review": {"title": "অনলাইন পেমেন্ট যাচাই করতে হবে", "body": "{amount} পরিশোধিত ({reference})। {reason}"},

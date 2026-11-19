@@ -1671,6 +1671,7 @@
       }
     },
     "timeline": {
+      "settlement_corrected_request": {"title": "Settlement corrected: loss of {net}", "body": "Corrected: a {purchase} animal-purchase fund request made after the purchase was not counted as spent in the first calculation. Investor payout: {amount}."},
       "total_loss_requested": {"title": "Closing as a total loss", "body": "All {count, plural, one {# animal} other {# animals}} died. Waiting for Krishi to settle."},
       "total_loss_rejected": {"title": "Total loss not accepted", "body": "Krishi sent the total-loss closing back. Reason: {reason}"},
       "settled_total_loss": {"title": "Closed as a total loss", "body": "All animals died. The investor gets back the unspent capital: {amount}."},
@@ -2060,6 +2061,7 @@
       "unreadCount": "{count, plural, =0 {No unread notifications} one {# unread} other {# unread}}"
     },
     "notify": {
+      "settlement_corrected_request_payout": {"title": "Settlement corrected: {plan}", "body": "{reference} was recalculated: an animal-purchase request was missed the first time. Your payout is now {amount}; your wallet was adjusted."},
       "admin_kyc_submitted": {"title": "New KYC to review", "body": "{name} submitted their NID for verification."},
       "admin_deposit_submitted": {"title": "New deposit {reference}", "body": "{name} sent {amount}. Check the proof and approve it."},
       "admin_payment_review": {"title": "Online payment needs review", "body": "{amount} paid ({reference}). {reason}"},

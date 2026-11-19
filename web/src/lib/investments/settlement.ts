@@ -105,16 +105,27 @@ export function releasedFunds(requests: Array<{ status: string; amount: number }
 
 /**
  * Capital spent on a batch: the animal purchase cost recorded when the farmer
- * confirmed the purchase, plus approved fund requests. An "animal_purchase"
- * fund request pays for that same purchase, so the larger of the two counts —
- * never both. `includePending` also counts requests still waiting for the
- * steward (used to cap new requests).
+ * confirmed the purchase, plus approved fund requests.
+ *
+ * An "animal_purchase" fund request made before the purchase was recorded
+ * paid for that same purchase, so the larger of the two counts, never both.
+ * One made after the purchase was recorded is extra money and counts in full.
+ * Without `purchasedAt` (or request dates) every animal_purchase request is
+ * treated as made before.
+ *
+ * `includePending` also counts requests still waiting for the steward (used
+ * to cap new requests).
  */
 export function capitalSpent(input: {
   purchaseCost: number;
-  requests: Array<{ status: string; amount: number; purpose: string }>;
+  /** When the purchase was first recorded (ISO). */
+  purchasedAt?: string | null;
+  requests: Array<{ status: string; amount: number; purpose: string; createdAt?: string | null }>;
   includePending?: boolean;
 }): { purchase: number; otherRequests: number; spent: number } {
+  const purchasedAt = input.purchasedAt ? new Date(input.purchasedAt).getTime() : null;
+  const madeAfterPurchase = (r: { createdAt?: string | null }) =>
+    purchasedAt !== null && Boolean(r.createdAt) && new Date(r.createdAt as string).getTime() > purchasedAt;
   const counted = input.requests.filter(
     (r) =>
       r.status === "approved" ||
@@ -122,12 +133,15 @@ export function capitalSpent(input: {
       (input.includePending && r.status === "pending"),
   );
   const animalRequests = counted
-    .filter((r) => r.purpose === "animal_purchase")
+    .filter((r) => r.purpose === "animal_purchase" && !madeAfterPurchase(r))
+    .reduce((s, r) => s + Number(r.amount), 0);
+  const animalExtra = counted
+    .filter((r) => r.purpose === "animal_purchase" && madeAfterPurchase(r))
     .reduce((s, r) => s + Number(r.amount), 0);
   const otherRequests = counted
     .filter((r) => r.purpose !== "animal_purchase")
     .reduce((s, r) => s + Number(r.amount), 0);
-  const purchase = Math.max(Number(input.purchaseCost) || 0, animalRequests);
+  const purchase = Math.max(Number(input.purchaseCost) || 0, animalRequests) + animalExtra;
   return {
     purchase: round2(purchase),
     otherRequests: round2(otherRequests),

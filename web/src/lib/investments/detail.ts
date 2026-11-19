@@ -1,5 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/admin";
-import { capitalSpent, releasedFunds } from "./settlement";
+import { releasedFunds } from "./settlement";
+import { getCapitalSpent } from "./spending";
 import { signFileUrls } from "@/lib/storage/private-files";
 import { getAnimalsForInvestment, type Animal } from "@/lib/animals";
 import type { TimelineI18n } from "./timeline";
@@ -244,13 +245,9 @@ export async function getInvestmentDetail(
       .filter((e) => e.category !== "animal_purchase")
       .reduce((sum, e) => sum + Number(e.amount), 0) || 0;
 
-  const purchaseCost = (updatesData ?? [])
-    .filter((u) => u.update_type === "purchase")
-    .reduce((sum, u) => sum + Number(u.amount ?? 0), 0);
-  const spending = capitalSpent({
-    purchaseCost,
-    requests: (fundReqs ?? []).map((r) => ({ status: r.status, amount: Number(r.amount), purpose: r.purpose })),
-  });
+  // Same query and rule as the settlement, so the page and the payout agree
+  // (the timeline above is capped at 50 entries, so it can't be used here).
+  const spending = await getCapitalSpent(investmentId);
 
   // Photos and receipts are private: sign every path shown on this page.
   const urls = await signFileUrls([

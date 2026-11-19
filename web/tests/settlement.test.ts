@@ -107,6 +107,34 @@ describe("capitalSpent", () => {
     expect(spent.spent).toBe(750000);
   });
 
+  it("adds an animal-purchase request made after the purchase was recorded (KR-INV-000016 case)", () => {
+    // Invested 10,00,000; bought 2 animals for 8,00,000 at 08:17; then approved
+    // requests: animal purchase 10,000, medical 10,000, feed 30,000. All animals died.
+    const spent = capitalSpent({
+      purchaseCost: 800000,
+      purchasedAt: "2026-11-19T08:17:36Z",
+      requests: [
+        { status: "approved", amount: 10000, purpose: "animal_purchase", createdAt: "2026-11-19T08:21:09Z" },
+        { status: "approved", amount: 10000, purpose: "medical", createdAt: "2026-11-19T08:21:20Z" },
+        { status: "approved", amount: 30000, purpose: "feed", createdAt: "2026-11-19T08:21:29Z" },
+      ],
+    });
+    expect(spent.purchase).toBe(810000);
+    expect(spent.spent).toBe(850000);
+    const b = computeSettlement({ capital: 1000000, fundsReleased: spent.spent, saleAmount: 0 });
+    expect(b.investorPayout).toBe(150000);
+    expect(b.netResult).toBe(-850000);
+  });
+
+  it("still counts a request made before the purchase only once", () => {
+    const spent = capitalSpent({
+      purchaseCost: 800000,
+      purchasedAt: "2026-11-19T10:00:00Z",
+      requests: [{ status: "approved", amount: 800000, purpose: "animal_purchase", createdAt: "2026-11-18T10:00:00Z" }],
+    });
+    expect(spent.spent).toBe(800000);
+  });
+
   it("ignores rejected requests and counts pending only when asked", () => {
     const requests = [
       { status: "rejected", amount: 99999, purpose: "feed" },
