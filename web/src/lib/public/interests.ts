@@ -38,7 +38,7 @@ export async function submitInterest(
     return { ok: false, error: "This offering is no longer available.", code: "unavailable" };
   }
 
-  const planStatus = (offering.investment_plans as any)?.status;
+  const planStatus = (offering.investment_plans as unknown as { status: string } | null)?.status;
   if (planStatus !== "open" && planStatus !== "coming_soon") {
     return { ok: false, error: "This plan is not accepting investors.", code: "unavailable" };
   }
@@ -233,9 +233,33 @@ export async function getInterestByReference(
 
   if (error || !data) return null;
 
-  const offering: any = data.offering;
-  const plan: any = offering?.investment_plans;
-  const steward: any = offering?.users;
+  // Supabase can't infer the shape of these joins; describe what we selected.
+  type OfferingRow = {
+    id: string;
+    units_offered: number;
+    units_funded: number;
+    investment_plans: {
+      id: string;
+      slug: string;
+      name_en: string | null;
+      name_bn: string | null;
+      image_path: string | null;
+      duration_months: number | null;
+      estimated_roi_min: number | string | null;
+      estimated_roi_max: number | string | null;
+      unit_price: number | string | null;
+      animal_allocation: number | string | null;
+      care_allocation: number | string | null;
+      status: string;
+      divisions: { name_en: string | null } | null;
+      districts: { name_en: string | null; slug: string | null } | null;
+      livestock_categories: { name_en: string | null } | null;
+    } | null;
+    users: { id: string; full_name: string | null } | null;
+  } | null;
+  const offering = data.offering as unknown as OfferingRow;
+  const plan = offering?.investment_plans;
+  const steward = offering?.users;
   const stewardSlug = (steward?.full_name ?? "steward")
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")

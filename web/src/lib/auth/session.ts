@@ -1,4 +1,4 @@
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { verifySession, signSession, type SessionPayload } from "./jwt";
 
@@ -7,12 +7,22 @@ export const SESSION_COOKIE = "krishi_session";
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 7; // 7 days
 const isProd = process.env.NODE_ENV === "production";
 
-/** Read + verify the current session from cookies (server-side). */
+/**
+ * Read + verify the current session (server-side): the website's cookie, or
+ * for the mobile app an `Authorization: Bearer <token>` header carrying the
+ * same signed session token.
+ */
 export async function getSessionFromCookie(): Promise<SessionPayload | null> {
   const store = await cookies();
-  const token = store.get(SESSION_COOKIE)?.value;
+  const token = store.get(SESSION_COOKIE)?.value ?? (await bearerToken());
   if (!token) return null;
   return verifySession(token);
+}
+
+async function bearerToken(): Promise<string | null> {
+  const auth = (await headers()).get("authorization");
+  const match = auth?.match(/^Bearer\s+(\S+)$/i);
+  return match ? match[1] : null;
 }
 
 /** Attach a signed session cookie to a NextResponse. */

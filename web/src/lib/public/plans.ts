@@ -186,7 +186,33 @@ export async function listPublicOfferings(filters: PlanFilters = {}) {
     return { items: [], total: 0, page, limit, hasMore: false };
   }
 
-  const items: OfferingListItem[] = (data ?? []).map((row: any) => {
+  // Supabase can't infer the shape of these joins; describe what we selected.
+  type Place = { slug: string; name_en: string; name_bn: string };
+  type OfferingListRow = {
+    id: string;
+    units_offered: number;
+    units_funded: number;
+    thanas: { name_en: string | null; name_bn: string | null } | null;
+    users: { id: string; full_name: string | null };
+    investment_plans: {
+      slug: string;
+      name_en: string;
+      name_bn: string;
+      status: OfferingListItem["status"];
+      image_path: string | null;
+      duration_months: number;
+      estimated_roi_min: number | string;
+      estimated_roi_max: number | string;
+      unit_price: number | string;
+      animal_allocation: number | string;
+      care_allocation: number | string;
+      livestock_categories: Place;
+      divisions: Place;
+      districts: Place;
+    };
+  };
+  const rows = (data ?? []) as unknown as OfferingListRow[];
+  const items: OfferingListItem[] = rows.map((row) => {
     const plan = row.investment_plans;
     const steward = row.users;
     return {

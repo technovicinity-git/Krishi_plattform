@@ -1,0 +1,92 @@
+# Checks every pull request and every push to main.
+#   web:    type-check, lint, tests, production build (no secrets needed)
+#   mobile: generated files up to date, analyzer, tests
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# A newer push to the same branch cancels the older run.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  web:
+    name: Web (Next.js)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: web
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+          cache-dependency-path: web/yarn.lock
+
+      - name: Install
+        run: yarn install --frozen-lockfile --non-interactive
+
+      - name: Type-check
+        run: yarn typecheck
+
+      - name: Lint
+        run: yarn lint
+
+      # Builds a throwaway Postgres (PGlite) from the migrations; no database needed.
+      - name: Tests
+        run: yarn test
+
+      - name: Build
+        run: yarn build
+
+  mobile:
+    name: Mobile (Flutter)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.44.4
+          channel: stable
+          cache: true
+
+      - name: Install
+        run: flutter pub get
+
+      # labels.g.dart is copied from the website's messages, and app_localizations*.dart
+      # is generated from the .arb files. Fail if someone changed the source but not these.
+      - name: Generated files are up to date
+        run: |
+          node tool/sync_labels.mjs
+          flutter gen-l10n
+          git diff --exit-code -- lib/l10n || {
+            echo "::error::Run 'node tool/sync_labels.mjs' and 'flutter gen-l10n' in mobile/ and commit the result."
+            exit 1
+          }
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Tests
+        run: flutter test

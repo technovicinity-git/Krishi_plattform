@@ -49,10 +49,26 @@ export default async function StewardProfilePage({
     | null
     | undefined;
 
-  const allOfferings = steward.steward_plan_offerings ?? [];
+  // Supabase can't infer the shape of this join; describe what we selected.
+  type PublicOffering = {
+    id: string;
+    status: string;
+    investment_plans: {
+      status: string;
+      slug: string;
+      name_en: string;
+      name_bn: string | null;
+      duration_months: number;
+      image_path: string | null;
+      estimated_roi_min: number;
+      estimated_roi_max: number;
+      unit_price: number;
+      districts: { slug: string | null; name_en: string | null; name_bn: string | null } | null;
+    } | null;
+  };
+  const allOfferings = (steward.steward_plan_offerings ?? []) as unknown as PublicOffering[];
   const activeOfferings = allOfferings.filter(
-    (o: any) =>
-      o.status === "approved" && o.investment_plans?.status === "open",
+    (o) => o.status === "approved" && o.investment_plans?.status === "open",
   );
 
   const operatingArea = profile
@@ -232,7 +248,7 @@ export default async function StewardProfilePage({
             </div>
           ) : (
             <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {activeOfferings.map((o: any) => {
+              {activeOfferings.map((o) => {
                 const plan = o.investment_plans;
                 if (!plan) return null;
                 const districtSlug = plan.districts?.slug ?? "district";
@@ -242,7 +258,7 @@ export default async function StewardProfilePage({
                   stewardName,
                 );
                 const planName =
-                  locale === "bn" ? plan.name_bn : plan.name_en;
+                  (locale === "bn" ? plan.name_bn : null) ?? plan.name_en;
                 const imageUrl = planImageUrl(plan.image_path);
                 return (
                   <article

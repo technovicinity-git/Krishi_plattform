@@ -50,11 +50,26 @@ export async function listPublicStewards(opts: {
     return { items: [], total: 0, page, limit, hasMore: false };
   }
 
-  const items: StewardListItem[] = (data ?? []).map((row: any) => {
+  // Supabase can't infer the shape of these joins; describe what we selected.
+  type ProfileRow = {
+    steward_type: string | null;
+    upazila: string | null;
+    categories: StewardListItem["categories"] | null;
+    divisions: { name_en: string | null } | null;
+    districts: { name_en: string | null } | null;
+  };
+  type StewardRow = {
+    id: string;
+    full_name: string | null;
+    steward_profiles: ProfileRow | ProfileRow[] | null;
+    steward_plan_offerings: { status: string }[] | null;
+  };
+  const rows = (data ?? []) as unknown as StewardRow[];
+  const items: StewardListItem[] = rows.map((row) => {
     const rawProfile = row.steward_profiles;
     const profile = Array.isArray(rawProfile) ? rawProfile[0] : rawProfile;
     const offerings = (row.steward_plan_offerings ?? []).filter(
-      (o: any) => o.status === "approved",
+      (o) => o.status === "approved",
     );
     return {
       id: row.id,

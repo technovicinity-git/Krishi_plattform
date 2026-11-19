@@ -27,6 +27,16 @@ function formatDate(iso: string | null, locale: string): string {
   });
 }
 
+/** The columns this page selects (Supabase can't infer the join's shape). */
+type InterestRow = {
+  id: string;
+  reference: string;
+  status: string;
+  requested_units: number;
+  created_at: string;
+  offering: { investment_plans: { name_en: string | null; name_bn: string | null } | null } | null;
+};
+
 export default async function InvestorInterestsPage({
   searchParams,
 }: {
@@ -113,7 +123,7 @@ export default async function InvestorInterestsPage({
               </tr>
             </thead>
             <tbody>
-              {interests.map((interest: any) => {
+              {(interests as unknown as InterestRow[]).map((interest) => {
                 const plan = interest.offering?.investment_plans;
                 const planName =
                   (locale === "bn" ? plan?.name_bn : plan?.name_en) ??

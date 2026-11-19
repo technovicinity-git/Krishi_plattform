@@ -30,13 +30,15 @@ export interface SessionPayload {
 }
 
 const SESSION_TTL = "7d";
+/** The mobile app keeps people signed in longer; the token lives in secure storage. */
+export const MOBILE_SESSION_TTL = "30d";
 
-export async function signSession(payload: SessionPayload): Promise<string> {
+export async function signSession(payload: SessionPayload, ttl: string = SESSION_TTL): Promise<string> {
   return new SignJWT({ role: payload.role })
     .setProtectedHeader({ alg: "HS256" })
     .setSubject(payload.sub)
     .setIssuedAt()
-    .setExpirationTime(SESSION_TTL)
+    .setExpirationTime(ttl)
     .sign(getKey());
 }
 
