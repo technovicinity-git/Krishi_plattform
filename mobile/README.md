@@ -7,20 +7,22 @@ English, phone-first, with a side rail on tablets.
 - App name: **Krishi** · Package / bundle ID: **com.krishi.app**
 - Talks to the Next.js backend in `../web` (same database, same rules)
 
-## What it does (phase 1)
+## What it does
 
 | | Investor | Farmer | Steward |
 |---|---|---|---|
-| Home | Invested, batches, wallet, returns; KYC and "pay now" reminders | Batches, pending requests, purchase / money-to-send reminders | Items waiting for a decision, batches, wallet |
-| Batches | Read-only detail, sale & settlement, animals, timeline | Confirm purchase, request funds, log expenses (receipt photo), record sale, send money to Krishi, post updates | Confirm/reject sales, fund requests, expenses; close as total loss |
+| Account | Sign up + phone verification, forgot password, profile, change password | Activate with the code from the steward, forgot password, profile | Sign up, details form, waits for Krishi's approval; profile |
+| Home | Invested, batches, wallet, returns; reminders for KYC and payment | Batches, pending requests, purchase / money-to-send reminders | Items waiting for a decision, batches, wallet |
+| Plans | Browse (also before signing in), filter, plan detail with reviews, send interest | — | My plans (units, interests, batches) |
+| Getting started | My interests → identity (NID upload) → payout account → pay online (SSLCommerz) or report a bank/bKash transfer → Krishi checks → batch | — | Review interests (approve / decline), add farmers, resend activation codes, assign a farmer to a batch |
+| Batches | Detail, sale & settlement, animals, timeline, PDF statement, rate the steward when settled | Confirm purchase, request funds, log expenses (receipt photo), record sale, send money to Krishi, post updates | Confirm/reject sales, fund requests, expenses; close as total loss |
 | Animals | View | Weight/health records with photos, report a death (photo + cause + vet certificate) | Records, confirm/reject death reports |
-| Approvals | — | — | One list of everything pending across batches |
-| Wallet | Balance, transactions, withdraw, cancel, payout account | same | same |
-| Notifications | List, mark read, open the related batch | same | same |
+| Approvals | — | — | One list: interests, death reports, sales, fund requests, expenses |
+| Wallet | Balance, transactions, withdraw, cancel, payout account, PDF statement | same | same |
+| Notifications | List, mark read, opens the related batch / interest / payment; count refreshes when the app comes back to the front | same | same |
 
-Still on the website for now: browsing plans, sending an interest, payment,
-KYC upload, steward interest review and assigning farmers. The app links there
-where needed.
+Not in the app yet: push notifications (needs a Firebase project and Apple push
+key), and admin work (the Krishi console stays on the website).
 
 ## Run it
 
@@ -59,15 +61,18 @@ still signs release with the debug key), app icons, and the Apple team in Xcode.
 
 ## How it talks to the backend
 
-- **Sign-in:** `POST /api/auth/login` with `client: "mobile"` returns a session
-  token (30 days) instead of a cookie. It is kept in the Keychain / Keystore
+- **Sign-in:** the app sends `X-Krishi-Client: mobile`, so login, sign-up and
+  farmer activation return a session token (30 days) instead of a cookie
+  (`signedInResponse()` in `web/src/lib/auth/session.ts`). It is kept in the Keychain / Keystore
   (`flutter_secure_storage`) and sent as `Authorization: Bearer <token>`. The
   server accepts it everywhere the website's cookie works. Admins can't sign in
   to the app.
-- **Reading:** `GET /api/mobile/v1/*` (`me`, `dashboard`, `investments`,
-  `investments/[id]`, `livestock`, `wallet`, `notifications`,
-  `steward/pending`). Text the server writes (timeline, notifications) comes in
-  the app's language via `Accept-Language`.
+- **Reading:** `GET /api/mobile/v1/*` (`me`, `dashboard`, `plans`, `plans/[id]`,
+  `interests`, `onboarding/[reference]`, `investments`, `investments/[id]`,
+  `livestock`, `wallet`, `notifications`, `locations`, `steward/pending`,
+  `steward/farmers`, `steward/plans`). `plans` and `locations` are public.
+  Text the server writes (timeline, notifications) comes in the app's
+  language via `Accept-Language`.
 - **Actions:** the same APIs as the website (`/api/farmer/*`, `/api/steward/*`,
   `/api/animals/*`, `/api/wallet/*`, …), so every rule is enforced in one place.
 

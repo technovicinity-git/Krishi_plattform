@@ -83,7 +83,7 @@ export async function POST(request: Request) {
 
     // TODO: send SMS via the local provider in production.
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, ...(showOtpOnScreen() ? { devOtp: otp } : {}) });
   } catch (err) {
     console.error("[auth/forgot-password] unexpected:", err);
     return NextResponse.json({ error: "Server error" }, { status: 500 });

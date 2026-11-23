@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../core/session.dart';
@@ -127,14 +128,33 @@ class _LoginScreenState extends State<LoginScreen> {
                         : Text(l.signIn),
                   ),
                   const SizedBox(height: 8),
-                  TextButton(
-                    onPressed: () => openWebsite(session.locale == 'en' ? '/en/forgot-password' : '/forgot-password'),
-                    child: Text(l.forgotPassword),
+                  TextButton(onPressed: () => context.push('/forgot'), child: Text(l.forgotPassword)),
+                  const SizedBox(height: 12),
+                  Row(children: [
+                    const Expanded(child: Divider()),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Text(l.noAccountYet, style: const TextStyle(color: KColors.inkSecondary)),
+                    ),
+                    const Expanded(child: Divider()),
+                  ]),
+                  const SizedBox(height: 12),
+                  OutlinedButton.icon(
+                    onPressed: () => context.push('/register'),
+                    icon: const Icon(Icons.person_add_alt_1_outlined),
+                    label: Text(l.signUpInvestor),
                   ),
-                  TextButton(
-                    onPressed: () => openWebsite(session.locale == 'en' ? '/en/register' : '/register'),
-                    child: Text(l.newHere, textAlign: TextAlign.center),
+                  const SizedBox(height: 8),
+                  OutlinedButton.icon(
+                    onPressed: () => context.push('/explore'),
+                    icon: const Icon(Icons.storefront_outlined),
+                    label: Text(l.browsePlans),
                   ),
+                  const SizedBox(height: 8),
+                  Wrap(alignment: WrapAlignment.center, children: [
+                    TextButton(onPressed: () => context.push('/steward-register'), child: Text(l.becomeSteward)),
+                    TextButton(onPressed: () => context.push('/activate'), child: Text(l.farmerActivateLink)),
+                  ]),
                 ]),
               ),
             ),

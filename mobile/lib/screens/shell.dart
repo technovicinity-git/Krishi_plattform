@@ -14,19 +14,46 @@ class _Tab {
 }
 
 /// Bottom tabs, chosen by role. On tablets the tabs move to a side rail.
-class AppShell extends StatelessWidget {
+/// Also refreshes the unread notification count whenever the app comes back
+/// to the foreground (push notifications aren't set up yet).
+class AppShell extends StatefulWidget {
   const AppShell({super.key, required this.location, required this.child});
   final String location;
   final Widget child;
 
   @override
+  State<AppShell> createState() => _AppShellState();
+}
+
+class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) context.read<Session>().refreshMe().catchError((_) {});
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final location = widget.location;
+    final child = widget.child;
     final me = context.watch<Session>().me;
     final l = context.l;
     if (me == null) return const SizedBox.shrink();
 
     final tabs = <_Tab>[
       _Tab('/home', Icons.home_outlined, Icons.home_rounded, l.navHome),
+      if (me.isInvestor) _Tab('/plans', Icons.storefront_outlined, Icons.storefront, l.navPlans),
       if (me.isSteward) _Tab('/approvals', Icons.fact_check_outlined, Icons.fact_check, l.navApprovals),
       _Tab('/batches', Icons.inventory_2_outlined, Icons.inventory_2, l.navBatches),
       if (me.isFarmer) _Tab('/livestock', Icons.pets_outlined, Icons.pets, l.navLivestock),

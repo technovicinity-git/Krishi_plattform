@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
+import '../core/files.dart';
 import '../core/format.dart';
 import '../core/models.dart';
 import '../ui/theme.dart';
@@ -57,7 +58,16 @@ class _WalletScreenState extends State<WalletScreen> {
     final l = context.l;
     final lang = context.lang;
     return Scaffold(
-      appBar: AppBar(title: Text(l.walletTitle)),
+      appBar: AppBar(
+        title: Text(l.walletTitle),
+        actions: [
+          IconButton(
+            tooltip: l.downloadStatement,
+            icon: const Icon(Icons.picture_as_pdf_outlined),
+            onPressed: () => openStatement(context, '/api/reports/wallet', 'krishi-wallet.pdf'),
+          ),
+        ],
+      ),
       body: Loader<WalletData>(
         key: _loader,
         load: () async => WalletData(await context.api.get('/api/mobile/v1/wallet')),

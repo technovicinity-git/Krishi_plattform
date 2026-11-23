@@ -100,7 +100,7 @@ export async function POST(request: Request) {
 
     // TODO: send SMS to farmer with activation link + OTP
 
-    return NextResponse.json({ success: true, farmerId: farmer.id });
+    return NextResponse.json({ success: true, farmerId: farmer.id, ...(showOtpOnScreen() ? { devOtp: otp } : {}) });
   } catch (err) {
     console.error("[steward/farmers] unexpected:", err);
     return NextResponse.json({ error: "Server error" }, { status: 500 });

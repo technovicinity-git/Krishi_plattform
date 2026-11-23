@@ -997,4 +997,573 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get role_farmer => 'কৃষক';
+
+  @override
+  String get email => 'ইমেইল';
+
+  @override
+  String get fullName => 'পুরো নাম';
+
+  @override
+  String get passwordHint => 'অন্তত ৮ অক্ষর, একটি অক্ষর ও একটি সংখ্যাসহ';
+
+  @override
+  String get passwordRule => 'অন্তত ৮ অক্ষর, একটি অক্ষর ও একটি সংখ্যা দিন';
+
+  @override
+  String get confirmPassword => 'পাসওয়ার্ড নিশ্চিত করুন';
+
+  @override
+  String get passwordsDontMatch => 'পাসওয়ার্ড মিলছে না';
+
+  @override
+  String get haveAccount => 'আগে থেকেই অ্যাকাউন্ট আছে? সাইন ইন করুন';
+
+  @override
+  String get noAccountYet => 'কৃষিতে নতুন?';
+
+  @override
+  String get signUpInvestor => 'বিনিয়োগকারী অ্যাকাউন্ট খুলুন';
+
+  @override
+  String get becomeSteward => 'স্টুয়ার্ড হোন';
+
+  @override
+  String get farmerActivateLink => 'আমি কৃষক, আমার কাছে অ্যাক্টিভেশন কোড আছে';
+
+  @override
+  String get browsePlans => 'প্ল্যান দেখুন';
+
+  @override
+  String get registerTitle => 'অ্যাকাউন্ট খুলুন';
+
+  @override
+  String get registerSubtitle =>
+      'বিশ্বস্ত কৃষকদের লালন-পালন করা আসল পশুতে বিনিয়োগ করুন।';
+
+  @override
+  String get createAccount => 'অ্যাকাউন্ট খুলুন';
+
+  @override
+  String get verifyTitle => 'আপনার ফোন যাচাই করুন';
+
+  @override
+  String verifyBody(Object phone) {
+    return '$phone নম্বরে পাঠানো ৬ সংখ্যার কোড দিন।';
+  }
+
+  @override
+  String get codeLabel => '৬ সংখ্যার কোড';
+
+  @override
+  String get verify => 'যাচাই করুন';
+
+  @override
+  String devCode(Object code) {
+    return 'পরীক্ষার কোড: $code';
+  }
+
+  @override
+  String get useAnotherNumber => 'অন্য নম্বর ব্যবহার করুন';
+
+  @override
+  String get forgotTitle => 'পাসওয়ার্ড রিসেট করুন';
+
+  @override
+  String get forgotBody => 'আপনার ফোন নম্বর দিন। আমরা একটি কোড পাঠাব।';
+
+  @override
+  String get sendCode => 'কোড পাঠান';
+
+  @override
+  String resetBody(Object phone) {
+    return '$phone নম্বরে পাঠানো কোড দিন এবং নতুন পাসওয়ার্ড বেছে নিন।';
+  }
+
+  @override
+  String get newPassword => 'নতুন পাসওয়ার্ড';
+
+  @override
+  String get resetPassword => 'পাসওয়ার্ড রিসেট করুন';
+
+  @override
+  String get passwordResetDone =>
+      'পাসওয়ার্ড বদলানো হয়েছে। নতুন পাসওয়ার্ড দিয়ে সাইন ইন করুন।';
+
+  @override
+  String get activateTitle => 'কৃষক অ্যাকাউন্ট চালু করুন';
+
+  @override
+  String get activateBody =>
+      'আপনার স্টুয়ার্ডের দেওয়া কোড দিন এবং একটি পাসওয়ার্ড বেছে নিন।';
+
+  @override
+  String get activate => 'চালু করুন';
+
+  @override
+  String get stewardSignupTitle => 'কৃষি স্টুয়ার্ড হোন';
+
+  @override
+  String get stewardSignupBody =>
+      'পশু প্ল্যান এবং যে কৃষকরা পশু লালন-পালন করেন তাদের পরিচালনা করুন। কৃষি প্রতিটি আবেদন যাচাই করে।';
+
+  @override
+  String get continueLabel => 'এগিয়ে যান';
+
+  @override
+  String get stewardDetailsTitle => 'আপনার কাজের তথ্য';
+
+  @override
+  String get stewardType => 'আপনি';
+
+  @override
+  String get individual => 'ব্যক্তি';
+
+  @override
+  String get organization => 'প্রতিষ্ঠান';
+
+  @override
+  String get division => 'বিভাগ';
+
+  @override
+  String get district => 'জেলা';
+
+  @override
+  String get upazila => 'উপজেলা / এলাকা';
+
+  @override
+  String get livestockYouRaise => 'যে পশু নিয়ে কাজ করেন';
+
+  @override
+  String get experience => 'আপনার অভিজ্ঞতা';
+
+  @override
+  String get experienceHint =>
+      'পশু নিয়ে কত বছর, প্রশিক্ষণ, কোন কৃষকদের সাথে কাজ করেন (অন্তত ১০ অক্ষর)';
+
+  @override
+  String get submitForReview => 'যাচাইয়ের জন্য জমা দিন';
+
+  @override
+  String get stewardPendingTitle => 'কৃষির অনুমোদনের অপেক্ষায়';
+
+  @override
+  String get stewardPendingBody =>
+      'আবেদনের জন্য ধন্যবাদ। কৃষি আপনার তথ্য যাচাই করছে এবং আপনাকে জানাবে। সাধারণত কয়েক কর্মদিবস লাগে।';
+
+  @override
+  String get stewardRejectedTitle => 'আপনার আবেদন অনুমোদিত হয়নি';
+
+  @override
+  String get checkAgain => 'আবার দেখুন';
+
+  @override
+  String get cat_cattle => 'গরু';
+
+  @override
+  String get cat_goats => 'ছাগল';
+
+  @override
+  String get cat_sheep => 'ভেড়া';
+
+  @override
+  String get cat_dumba => 'দুম্বা';
+
+  @override
+  String get cat_garoleSheep => 'গাড়ল ভেড়া';
+
+  @override
+  String get cat_other => 'অন্যান্য';
+
+  @override
+  String get navPlans => 'প্ল্যান';
+
+  @override
+  String get plansTitle => 'বিনিয়োগ প্ল্যান';
+
+  @override
+  String get searchPlans => 'প্ল্যান খুঁজুন';
+
+  @override
+  String get allCategories => 'সব';
+
+  @override
+  String get planStatus_open => 'চালু';
+
+  @override
+  String get planStatus_coming_soon => 'শীঘ্রই আসছে';
+
+  @override
+  String get planStatus_fully_funded => 'সম্পূর্ণ বিনিয়োগ হয়েছে';
+
+  @override
+  String get planStatus_all => 'সব';
+
+  @override
+  String unitsLeft(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countটি ইউনিট বাকি',
+      zero: 'কোনো ইউনিট বাকি নেই',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get unitPrice => 'ইউনিট মূল্য';
+
+  @override
+  String get noPlans => 'কোনো প্ল্যান মেলেনি।';
+
+  @override
+  String get noPlansHint => 'অন্য ধরন বা অবস্থা বেছে দেখুন।';
+
+  @override
+  String get planAbout => 'এই প্ল্যান সম্পর্কে';
+
+  @override
+  String get whereMoneyGoes => 'প্রতি ইউনিটের টাকা কোথায় যায়';
+
+  @override
+  String get allocAnimals => 'পশু ক্রয়';
+
+  @override
+  String get allocCare => 'খাবার, পরিচর্যা ও চিকিৎসা';
+
+  @override
+  String get risks => 'ঝুঁকি';
+
+  @override
+  String get reviewsTitle => 'বিনিয়োগকারীদের মতামত';
+
+  @override
+  String get noReviews => 'এখনো কোনো মতামত নেই।';
+
+  @override
+  String ratingCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countটি মতামত',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get investInPlan => 'এই প্ল্যানে বিনিয়োগ করুন';
+
+  @override
+  String get signInToInvest => 'বিনিয়োগ করতে সাইন ইন করুন';
+
+  @override
+  String get interestTitle => 'কতটি ইউনিট?';
+
+  @override
+  String get unitsLabel => 'ইউনিট';
+
+  @override
+  String get totalAmount => 'মোট';
+
+  @override
+  String get sendInterest => 'আগ্রহ পাঠান';
+
+  @override
+  String get interestSent =>
+      'আগ্রহ পাঠানো হয়েছে। স্টুয়ার্ড যাচাই করবেন এবং আপনি নোটিফিকেশন পাবেন।';
+
+  @override
+  String haveInterest(Object reference, Object status) {
+    return 'এই প্ল্যানে আপনার একটি আগ্রহ আছে: $reference ($status)।';
+  }
+
+  @override
+  String fundedOf(int funded, int offered) {
+    return '$offeredটির মধ্যে $fundedটি ইউনিটে বিনিয়োগ হয়েছে';
+  }
+
+  @override
+  String get soldOut => 'সব ইউনিট নেওয়া হয়ে গেছে';
+
+  @override
+  String get myInterests => 'আমার আগ্রহ';
+
+  @override
+  String get noInterests => 'এখনো কোনো আগ্রহ নেই';
+
+  @override
+  String get noInterestsHint => 'শুরু করতে প্ল্যান দেখে আগ্রহ পাঠান।';
+
+  @override
+  String get continuePayment => 'এগিয়ে যান';
+
+  @override
+  String get openBatch => 'ব্যাচ খুলুন';
+
+  @override
+  String interestNotApproved(Object reason) {
+    return 'অনুমোদিত হয়নি: $reason';
+  }
+
+  @override
+  String get onboardingTitle => 'বিনিয়োগ শুরু করুন';
+
+  @override
+  String get stepKyc => 'পরিচয়';
+
+  @override
+  String get stepPayout => 'পেআউট';
+
+  @override
+  String get stepPayment => 'পেমেন্ট';
+
+  @override
+  String get stepReview => 'যাচাই';
+
+  @override
+  String get kycNeeded => 'পেমেন্টের আগে এনআইডি দিয়ে আপনার পরিচয় যাচাই করুন।';
+
+  @override
+  String get kycPendingNote =>
+      'আপনার কাগজপত্র যাচাই করা হচ্ছে। এগোনো যাবে হলে নোটিফিকেশন পাবেন।';
+
+  @override
+  String kycRejectedNote(Object reason) {
+    return 'কৃষি পরিবর্তন চেয়েছে: $reason';
+  }
+
+  @override
+  String get verifyNow => 'এখন যাচাই করুন';
+
+  @override
+  String get payoutNeeded => 'কৃষি আপনার রিটার্ন কোথায় পাঠাবে তা যোগ করুন।';
+
+  @override
+  String get amountToPay => 'পরিশোধের পরিমাণ';
+
+  @override
+  String get payOnline => 'অনলাইনে পেমেন্ট করুন';
+
+  @override
+  String get payOnlineHint =>
+      'SSLCommerz-এর মাধ্যমে কার্ড, বিকাশ, নগদ বা রকেট। শেষ হলে অ্যাপে ফিরে আসুন।';
+
+  @override
+  String get orTransfer =>
+      'অথবা কৃষিতে ব্যাংক বা মোবাইল ট্রান্সফার পাঠিয়ে জানান।';
+
+  @override
+  String get reportTransfer => 'আমি টাকা পাঠিয়েছি';
+
+  @override
+  String depositReview(Object reference) {
+    return 'কৃষি আপনার পেমেন্ট $reference যাচাই করছে। আপনি নোটিফিকেশন পাবেন।';
+  }
+
+  @override
+  String depositNotAccepted(Object reason) {
+    return 'আপনার আগের পেমেন্ট গ্রহণ করা হয়নি: $reason';
+  }
+
+  @override
+  String get onboardingDone => 'আপনার ব্যাচ শুরু হয়েছে।';
+
+  @override
+  String get interestClosed => 'এই আগ্রহে আর পেমেন্ট করা যাবে না।';
+
+  @override
+  String notEnoughUnits(int count) {
+    return 'এই প্ল্যানে মাত্র $countটি ইউনিট বাকি আছে।';
+  }
+
+  @override
+  String get refresh => 'রিফ্রেশ';
+
+  @override
+  String get transferTitle => 'আপনার ট্রান্সফার জানান';
+
+  @override
+  String get dateSent => 'পাঠানোর তারিখ';
+
+  @override
+  String get senderNumber => 'যে মোবাইল নম্বর থেকে পাঠিয়েছেন';
+
+  @override
+  String get transferProof => 'ট্রান্সফারের স্ক্রিনশট বা ছবি';
+
+  @override
+  String get kycTitle => 'আপনার পরিচয় যাচাই করুন';
+
+  @override
+  String get kycIntro =>
+      'বিনিয়োগ নিরাপদ রাখতে কৃষির আপনার জাতীয় পরিচয়পত্র দরকার। ছবি পরিষ্কার ও পড়ার মতো হতে হবে।';
+
+  @override
+  String get nidNumber => 'এনআইডি নম্বর';
+
+  @override
+  String get nidHint => '১০ থেকে ১৭ সংখ্যা';
+
+  @override
+  String get presentAddress => 'বর্তমান ঠিকানা';
+
+  @override
+  String get permanentAddress => 'স্থায়ী ঠিকানা';
+
+  @override
+  String get sameAsPresent => 'বর্তমান ঠিকানার মতোই';
+
+  @override
+  String get nidFront => 'এনআইডি সামনের দিক';
+
+  @override
+  String get nidBack => 'এনআইডি পেছনের দিক';
+
+  @override
+  String get yourPhoto => 'আপনার ছবি';
+
+  @override
+  String get submit => 'জমা দিন';
+
+  @override
+  String get kycSubmitted =>
+      'জমা দেওয়া হয়েছে। কৃষি আপনার কাগজপত্র যাচাই করবে।';
+
+  @override
+  String get interestsToReview => 'আগ্রহ';
+
+  @override
+  String get guest => 'অতিথি';
+
+  @override
+  String get approveInterestTitle => 'এই আগ্রহ অনুমোদন করবেন?';
+
+  @override
+  String approveInterestBody(Object name, int count) {
+    return 'এরপর $name $countটি ইউনিটের জন্য পেমেন্ট করতে পারবেন।';
+  }
+
+  @override
+  String get farmersTitle => 'কৃষক';
+
+  @override
+  String get addFarmer => 'কৃষক যোগ করুন';
+
+  @override
+  String get farmerAddress => 'ঠিকানা';
+
+  @override
+  String get farmerAdded =>
+      'কৃষক যোগ হয়েছে। কৃষি তাকে একটি অ্যাক্টিভেশন কোড পাঠিয়েছে।';
+
+  @override
+  String activationCode(Object code) {
+    return 'অ্যাক্টিভেশন কোড: $code';
+  }
+
+  @override
+  String get resendCode => 'আবার কোড পাঠান';
+
+  @override
+  String get codeSent => 'নতুন কোড পাঠানো হয়েছে।';
+
+  @override
+  String get pendingActivation => 'এখনো চালু হয়নি';
+
+  @override
+  String activeBatchesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countটি সক্রিয় ব্যাচ',
+      zero: 'কোনো সক্রিয় ব্যাচ নেই',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noFarmers => 'এখনো কোনো কৃষক নেই';
+
+  @override
+  String get noFarmersHint =>
+      'যে কৃষকরা আপনার ব্যাচ লালন-পালন করবেন তাদের যোগ করুন।';
+
+  @override
+  String get assignFarmer => 'কৃষক নির্ধারণ করুন';
+
+  @override
+  String get chooseFarmer => 'একজন কৃষক বেছে নিন';
+
+  @override
+  String get farmerAssigned => 'কৃষক নির্ধারণ করা হয়েছে।';
+
+  @override
+  String get noActiveFarmers =>
+      'এখনো কোনো চালু কৃষক নেই। কৃষক যোগ করে তাকে অ্যাকাউন্ট চালু করতে বলুন।';
+
+  @override
+  String get myPlansTitle => 'আমার প্ল্যান';
+
+  @override
+  String get noStewardPlans => 'এখনো কোনো প্ল্যান নেই';
+
+  @override
+  String get noStewardPlansHint =>
+      'কৃষি আপনাকে প্ল্যানে যোগ করলে এখানে দেখা যাবে।';
+
+  @override
+  String openInterestsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'যাচাই করার জন্য $countটি আগ্রহ',
+      zero: 'যাচাই করার মতো আগ্রহ নেই',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get offeringStatus_approved => 'চালু';
+
+  @override
+  String get offeringStatus_pending_approval => 'অনুমোদনের অপেক্ষায়';
+
+  @override
+  String get offeringStatus_paused => 'স্থগিত';
+
+  @override
+  String get offeringStatus_closed => 'বন্ধ';
+
+  @override
+  String get offeringStatus_rejected => 'অনুমোদিত হয়নি';
+
+  @override
+  String get profileTitle => 'প্রোফাইল';
+
+  @override
+  String get changePassword => 'পাসওয়ার্ড বদলান';
+
+  @override
+  String get currentPassword => 'বর্তমান পাসওয়ার্ড';
+
+  @override
+  String get passwordChanged => 'পাসওয়ার্ড বদলানো হয়েছে।';
+
+  @override
+  String get downloadStatement => 'স্টেটমেন্ট ডাউনলোড (PDF)';
+
+  @override
+  String get rateSteward => 'আপনার স্টুয়ার্ডকে রেটিং দিন';
+
+  @override
+  String get yourReview => 'আপনার মতামত';
+
+  @override
+  String get reviewComment => 'মন্তব্য';
+
+  @override
+  String get submitReview => 'মতামত জমা দিন';
+
+  @override
+  String get reviewThanks => 'আপনার মতামতের জন্য ধন্যবাদ।';
 }

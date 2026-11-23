@@ -62,12 +62,56 @@ class Session extends ChangeNotifier implements ApiAuth {
       'password': password,
       'client': 'mobile',
     });
+    await _useToken(data);
+  }
+
+  /// Stores a token from any sign-in route (login, sign-up, activation) and loads the user.
+  Future<void> _useToken(Map<String, dynamic> data) async {
     final token = data['token'] as String?;
     if (token == null) throw ApiException('Sign-in failed');
     _token = token;
     sessionExpired = false;
     await _storage.write(key: _tokenKey, value: token);
     await refreshMe();
+  }
+
+  /// Investor sign-up. Signs in straight away; the phone is verified next.
+  /// Returns the code when the server shows it (development / staging only).
+  Future<String?> registerInvestor({required String name, required String phone, String? email, required String password}) async {
+    final data = await api.post('/api/auth/register', {
+      'fullName': name.trim(),
+      'phone': phone.trim(),
+      if (email != null && email.trim().isNotEmpty) 'email': email.trim(),
+      'password': password,
+    });
+    await _useToken(data);
+    return data['devOtp'] as String?;
+  }
+
+  Future<void> verifyPhone(String code) async {
+    await api.post('/api/auth/verify-otp', {'otp': code.trim()});
+    await refreshMe();
+  }
+
+  /// A farmer sets their password with the code their steward gave them.
+  Future<void> activateFarmer({required String phone, required String code, required String password}) async {
+    final data = await api.post('/api/auth/farmer-activate', {
+      'phone': phone.trim(),
+      'otp': code.trim(),
+      'password': password,
+    });
+    await _useToken(data);
+  }
+
+  /// Steward sign-up (step 1). Details and Krishi's approval come next.
+  Future<void> registerSteward({required String name, required String phone, String? email, required String password}) async {
+    final data = await api.post('/api/auth/steward-register', {
+      'fullName': name.trim(),
+      'phone': phone.trim(),
+      if (email != null && email.trim().isNotEmpty) 'email': email.trim(),
+      'password': password,
+    });
+    await _useToken(data);
   }
 
   Future<void> signOut() async {

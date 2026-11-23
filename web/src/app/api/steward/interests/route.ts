@@ -12,13 +12,15 @@ export async function GET() {
 
   const db = createAdminClient();
 
-  // Fetch interests where the offering's steward_id is the current user
+  // Interests on this steward's offerings only. `!inner` makes the filter on
+  // the joined offering drop other rows; without it they come back with
+  // offering = null (other stewards' investors and phone numbers).
   const { data, error } = await db
     .from("investment_interests")
     .select(`
       id, reference, status, requested_units, created_at, guest_name, guest_phone,
       investor:users!investor_id ( full_name, phone ),
-      offering:steward_plan_offerings!offering_id (
+      offering:steward_plan_offerings!offering_id!inner (
         id,
         investment_plans!inner ( name_en, name_bn )
       )

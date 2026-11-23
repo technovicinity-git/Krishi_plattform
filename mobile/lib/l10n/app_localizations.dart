@@ -1837,6 +1837,1002 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Farmer'**
   String get role_farmer;
+
+  /// No description provided for @email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get email;
+
+  /// No description provided for @fullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Full name'**
+  String get fullName;
+
+  /// No description provided for @passwordHint.
+  ///
+  /// In en, this message translates to:
+  /// **'At least 8 characters, with a letter and a number'**
+  String get passwordHint;
+
+  /// No description provided for @passwordRule.
+  ///
+  /// In en, this message translates to:
+  /// **'Use at least 8 characters with a letter and a number'**
+  String get passwordRule;
+
+  /// No description provided for @confirmPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm password'**
+  String get confirmPassword;
+
+  /// No description provided for @passwordsDontMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'The passwords don\'t match'**
+  String get passwordsDontMatch;
+
+  /// No description provided for @haveAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account? Sign in'**
+  String get haveAccount;
+
+  /// No description provided for @noAccountYet.
+  ///
+  /// In en, this message translates to:
+  /// **'New to Krishi?'**
+  String get noAccountYet;
+
+  /// No description provided for @signUpInvestor.
+  ///
+  /// In en, this message translates to:
+  /// **'Create an investor account'**
+  String get signUpInvestor;
+
+  /// No description provided for @becomeSteward.
+  ///
+  /// In en, this message translates to:
+  /// **'Become a steward'**
+  String get becomeSteward;
+
+  /// No description provided for @farmerActivateLink.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m a farmer with an activation code'**
+  String get farmerActivateLink;
+
+  /// No description provided for @browsePlans.
+  ///
+  /// In en, this message translates to:
+  /// **'Browse plans'**
+  String get browsePlans;
+
+  /// No description provided for @registerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create your account'**
+  String get registerTitle;
+
+  /// No description provided for @registerSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Invest in real livestock raised by trusted farmers.'**
+  String get registerSubtitle;
+
+  /// No description provided for @createAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Create account'**
+  String get createAccount;
+
+  /// No description provided for @verifyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify your phone'**
+  String get verifyTitle;
+
+  /// No description provided for @verifyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the 6-digit code sent to {phone}.'**
+  String verifyBody(Object phone);
+
+  /// No description provided for @codeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'6-digit code'**
+  String get codeLabel;
+
+  /// No description provided for @verify.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify'**
+  String get verify;
+
+  /// No description provided for @devCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Test code: {code}'**
+  String devCode(Object code);
+
+  /// No description provided for @useAnotherNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Use a different number'**
+  String get useAnotherNumber;
+
+  /// No description provided for @forgotTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset your password'**
+  String get forgotTitle;
+
+  /// No description provided for @forgotBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your phone number. We\'ll send a code.'**
+  String get forgotBody;
+
+  /// No description provided for @sendCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Send code'**
+  String get sendCode;
+
+  /// No description provided for @resetBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the code sent to {phone} and choose a new password.'**
+  String resetBody(Object phone);
+
+  /// No description provided for @newPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'New password'**
+  String get newPassword;
+
+  /// No description provided for @resetPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset password'**
+  String get resetPassword;
+
+  /// No description provided for @passwordResetDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Password changed. Sign in with your new password.'**
+  String get passwordResetDone;
+
+  /// No description provided for @activateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Activate your farmer account'**
+  String get activateTitle;
+
+  /// No description provided for @activateBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the code your steward gave you and choose a password.'**
+  String get activateBody;
+
+  /// No description provided for @activate.
+  ///
+  /// In en, this message translates to:
+  /// **'Activate'**
+  String get activate;
+
+  /// No description provided for @stewardSignupTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Become a Krishi steward'**
+  String get stewardSignupTitle;
+
+  /// No description provided for @stewardSignupBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage livestock plans and the farmers who raise them. Krishi reviews every application.'**
+  String get stewardSignupBody;
+
+  /// No description provided for @continueLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continueLabel;
+
+  /// No description provided for @stewardDetailsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'About your work'**
+  String get stewardDetailsTitle;
+
+  /// No description provided for @stewardType.
+  ///
+  /// In en, this message translates to:
+  /// **'You are'**
+  String get stewardType;
+
+  /// No description provided for @individual.
+  ///
+  /// In en, this message translates to:
+  /// **'An individual'**
+  String get individual;
+
+  /// No description provided for @organization.
+  ///
+  /// In en, this message translates to:
+  /// **'An organization'**
+  String get organization;
+
+  /// No description provided for @division.
+  ///
+  /// In en, this message translates to:
+  /// **'Division'**
+  String get division;
+
+  /// No description provided for @district.
+  ///
+  /// In en, this message translates to:
+  /// **'District'**
+  String get district;
+
+  /// No description provided for @upazila.
+  ///
+  /// In en, this message translates to:
+  /// **'Upazila / area'**
+  String get upazila;
+
+  /// No description provided for @livestockYouRaise.
+  ///
+  /// In en, this message translates to:
+  /// **'Livestock you work with'**
+  String get livestockYouRaise;
+
+  /// No description provided for @experience.
+  ///
+  /// In en, this message translates to:
+  /// **'Your experience'**
+  String get experience;
+
+  /// No description provided for @experienceHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Years with livestock, training, farmers you work with (at least 10 characters)'**
+  String get experienceHint;
+
+  /// No description provided for @submitForReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit for review'**
+  String get submitForReview;
+
+  /// No description provided for @stewardPendingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for Krishi\'s approval'**
+  String get stewardPendingTitle;
+
+  /// No description provided for @stewardPendingBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Thanks for applying. Krishi is reviewing your details and will notify you. This usually takes a few working days.'**
+  String get stewardPendingBody;
+
+  /// No description provided for @stewardRejectedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your application wasn\'t approved'**
+  String get stewardRejectedTitle;
+
+  /// No description provided for @checkAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Check again'**
+  String get checkAgain;
+
+  /// No description provided for @cat_cattle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cattle'**
+  String get cat_cattle;
+
+  /// No description provided for @cat_goats.
+  ///
+  /// In en, this message translates to:
+  /// **'Goats'**
+  String get cat_goats;
+
+  /// No description provided for @cat_sheep.
+  ///
+  /// In en, this message translates to:
+  /// **'Sheep'**
+  String get cat_sheep;
+
+  /// No description provided for @cat_dumba.
+  ///
+  /// In en, this message translates to:
+  /// **'Dumba'**
+  String get cat_dumba;
+
+  /// No description provided for @cat_garoleSheep.
+  ///
+  /// In en, this message translates to:
+  /// **'Garole sheep'**
+  String get cat_garoleSheep;
+
+  /// No description provided for @cat_other.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get cat_other;
+
+  /// No description provided for @navPlans.
+  ///
+  /// In en, this message translates to:
+  /// **'Plans'**
+  String get navPlans;
+
+  /// No description provided for @plansTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Investment plans'**
+  String get plansTitle;
+
+  /// No description provided for @searchPlans.
+  ///
+  /// In en, this message translates to:
+  /// **'Search plans'**
+  String get searchPlans;
+
+  /// No description provided for @allCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get allCategories;
+
+  /// No description provided for @planStatus_open.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get planStatus_open;
+
+  /// No description provided for @planStatus_coming_soon.
+  ///
+  /// In en, this message translates to:
+  /// **'Coming soon'**
+  String get planStatus_coming_soon;
+
+  /// No description provided for @planStatus_fully_funded.
+  ///
+  /// In en, this message translates to:
+  /// **'Fully funded'**
+  String get planStatus_fully_funded;
+
+  /// No description provided for @planStatus_all.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get planStatus_all;
+
+  /// No description provided for @unitsLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No units left} one{# unit left} other{# units left}}'**
+  String unitsLeft(int count);
+
+  /// No description provided for @unitPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Unit price'**
+  String get unitPrice;
+
+  /// No description provided for @noPlans.
+  ///
+  /// In en, this message translates to:
+  /// **'No plans match.'**
+  String get noPlans;
+
+  /// No description provided for @noPlansHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Try another category or status.'**
+  String get noPlansHint;
+
+  /// No description provided for @planAbout.
+  ///
+  /// In en, this message translates to:
+  /// **'About this plan'**
+  String get planAbout;
+
+  /// No description provided for @whereMoneyGoes.
+  ///
+  /// In en, this message translates to:
+  /// **'Where each unit\'s money goes'**
+  String get whereMoneyGoes;
+
+  /// No description provided for @allocAnimals.
+  ///
+  /// In en, this message translates to:
+  /// **'Buying animals'**
+  String get allocAnimals;
+
+  /// No description provided for @allocCare.
+  ///
+  /// In en, this message translates to:
+  /// **'Feed, care and vet'**
+  String get allocCare;
+
+  /// No description provided for @risks.
+  ///
+  /// In en, this message translates to:
+  /// **'Risks'**
+  String get risks;
+
+  /// No description provided for @reviewsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Investor reviews'**
+  String get reviewsTitle;
+
+  /// No description provided for @noReviews.
+  ///
+  /// In en, this message translates to:
+  /// **'No reviews yet.'**
+  String get noReviews;
+
+  /// No description provided for @ratingCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{# review} other{# reviews}}'**
+  String ratingCount(int count);
+
+  /// No description provided for @investInPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Invest in this plan'**
+  String get investInPlan;
+
+  /// No description provided for @signInToInvest.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to invest'**
+  String get signInToInvest;
+
+  /// No description provided for @interestTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How many units?'**
+  String get interestTitle;
+
+  /// No description provided for @unitsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Units'**
+  String get unitsLabel;
+
+  /// No description provided for @totalAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get totalAmount;
+
+  /// No description provided for @sendInterest.
+  ///
+  /// In en, this message translates to:
+  /// **'Send interest'**
+  String get sendInterest;
+
+  /// No description provided for @interestSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Interest sent. The steward will review it and you\'ll get a notification.'**
+  String get interestSent;
+
+  /// No description provided for @haveInterest.
+  ///
+  /// In en, this message translates to:
+  /// **'You have an interest on this plan: {reference} ({status}).'**
+  String haveInterest(Object reference, Object status);
+
+  /// No description provided for @fundedOf.
+  ///
+  /// In en, this message translates to:
+  /// **'{funded} of {offered} units funded'**
+  String fundedOf(int funded, int offered);
+
+  /// No description provided for @soldOut.
+  ///
+  /// In en, this message translates to:
+  /// **'All units are taken'**
+  String get soldOut;
+
+  /// No description provided for @myInterests.
+  ///
+  /// In en, this message translates to:
+  /// **'My interests'**
+  String get myInterests;
+
+  /// No description provided for @noInterests.
+  ///
+  /// In en, this message translates to:
+  /// **'No interests yet'**
+  String get noInterests;
+
+  /// No description provided for @noInterestsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Browse plans and send an interest to start.'**
+  String get noInterestsHint;
+
+  /// No description provided for @continuePayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continuePayment;
+
+  /// No description provided for @openBatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Open batch'**
+  String get openBatch;
+
+  /// No description provided for @interestNotApproved.
+  ///
+  /// In en, this message translates to:
+  /// **'Not approved: {reason}'**
+  String interestNotApproved(Object reason);
+
+  /// No description provided for @onboardingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Start your investment'**
+  String get onboardingTitle;
+
+  /// No description provided for @stepKyc.
+  ///
+  /// In en, this message translates to:
+  /// **'Identity'**
+  String get stepKyc;
+
+  /// No description provided for @stepPayout.
+  ///
+  /// In en, this message translates to:
+  /// **'Payout'**
+  String get stepPayout;
+
+  /// No description provided for @stepPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment'**
+  String get stepPayment;
+
+  /// No description provided for @stepReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Check'**
+  String get stepReview;
+
+  /// No description provided for @kycNeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify your identity with your NID before paying.'**
+  String get kycNeeded;
+
+  /// No description provided for @kycPendingNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Your documents are being checked. You\'ll get a notification when you can continue.'**
+  String get kycPendingNote;
+
+  /// No description provided for @kycRejectedNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Krishi asked for a change: {reason}'**
+  String kycRejectedNote(Object reason);
+
+  /// No description provided for @verifyNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify now'**
+  String get verifyNow;
+
+  /// No description provided for @payoutNeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Add where Krishi should send your returns.'**
+  String get payoutNeeded;
+
+  /// No description provided for @amountToPay.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount to pay'**
+  String get amountToPay;
+
+  /// No description provided for @payOnline.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay online'**
+  String get payOnline;
+
+  /// No description provided for @payOnlineHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Card, bKash, Nagad or Rocket through SSLCommerz. Come back to the app when you\'re done.'**
+  String get payOnlineHint;
+
+  /// No description provided for @orTransfer.
+  ///
+  /// In en, this message translates to:
+  /// **'Or send a bank or mobile transfer to Krishi, then report it.'**
+  String get orTransfer;
+
+  /// No description provided for @reportTransfer.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'ve sent the money'**
+  String get reportTransfer;
+
+  /// No description provided for @depositReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Krishi is checking your payment {reference}. You\'ll get a notification.'**
+  String depositReview(Object reference);
+
+  /// No description provided for @depositNotAccepted.
+  ///
+  /// In en, this message translates to:
+  /// **'Your last payment wasn\'t accepted: {reason}'**
+  String depositNotAccepted(Object reason);
+
+  /// No description provided for @onboardingDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Your batch has started.'**
+  String get onboardingDone;
+
+  /// No description provided for @interestClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'This interest is no longer open for payment.'**
+  String get interestClosed;
+
+  /// No description provided for @notEnoughUnits.
+  ///
+  /// In en, this message translates to:
+  /// **'Only {count} units are left on this plan.'**
+  String notEnoughUnits(int count);
+
+  /// No description provided for @refresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get refresh;
+
+  /// No description provided for @transferTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Report your transfer'**
+  String get transferTitle;
+
+  /// No description provided for @dateSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Date sent'**
+  String get dateSent;
+
+  /// No description provided for @senderNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent from (mobile number)'**
+  String get senderNumber;
+
+  /// No description provided for @transferProof.
+  ///
+  /// In en, this message translates to:
+  /// **'Screenshot or photo of the transfer'**
+  String get transferProof;
+
+  /// No description provided for @kycTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify your identity'**
+  String get kycTitle;
+
+  /// No description provided for @kycIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Krishi needs your National ID to keep investments safe. Photos must be clear and readable.'**
+  String get kycIntro;
+
+  /// No description provided for @nidNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'NID number'**
+  String get nidNumber;
+
+  /// No description provided for @nidHint.
+  ///
+  /// In en, this message translates to:
+  /// **'10 to 17 digits'**
+  String get nidHint;
+
+  /// No description provided for @presentAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Present address'**
+  String get presentAddress;
+
+  /// No description provided for @permanentAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Permanent address'**
+  String get permanentAddress;
+
+  /// No description provided for @sameAsPresent.
+  ///
+  /// In en, this message translates to:
+  /// **'Same as present address'**
+  String get sameAsPresent;
+
+  /// No description provided for @nidFront.
+  ///
+  /// In en, this message translates to:
+  /// **'NID front'**
+  String get nidFront;
+
+  /// No description provided for @nidBack.
+  ///
+  /// In en, this message translates to:
+  /// **'NID back'**
+  String get nidBack;
+
+  /// No description provided for @yourPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Your photo'**
+  String get yourPhoto;
+
+  /// No description provided for @submit.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit'**
+  String get submit;
+
+  /// No description provided for @kycSubmitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Submitted. Krishi will review your documents.'**
+  String get kycSubmitted;
+
+  /// No description provided for @interestsToReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Interests'**
+  String get interestsToReview;
+
+  /// No description provided for @guest.
+  ///
+  /// In en, this message translates to:
+  /// **'Guest'**
+  String get guest;
+
+  /// No description provided for @approveInterestTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Approve this interest?'**
+  String get approveInterestTitle;
+
+  /// No description provided for @approveInterestBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} can then pay for {count, plural, one{# unit} other{# units}}.'**
+  String approveInterestBody(Object name, int count);
+
+  /// No description provided for @farmersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Farmers'**
+  String get farmersTitle;
+
+  /// No description provided for @addFarmer.
+  ///
+  /// In en, this message translates to:
+  /// **'Add farmer'**
+  String get addFarmer;
+
+  /// No description provided for @farmerAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get farmerAddress;
+
+  /// No description provided for @farmerAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Farmer added. Krishi sent them an activation code.'**
+  String get farmerAdded;
+
+  /// No description provided for @activationCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Activation code: {code}'**
+  String activationCode(Object code);
+
+  /// No description provided for @resendCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend code'**
+  String get resendCode;
+
+  /// No description provided for @codeSent.
+  ///
+  /// In en, this message translates to:
+  /// **'A new code was sent.'**
+  String get codeSent;
+
+  /// No description provided for @pendingActivation.
+  ///
+  /// In en, this message translates to:
+  /// **'Not activated yet'**
+  String get pendingActivation;
+
+  /// No description provided for @activeBatchesCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No active batches} one{# active batch} other{# active batches}}'**
+  String activeBatchesCount(int count);
+
+  /// No description provided for @noFarmers.
+  ///
+  /// In en, this message translates to:
+  /// **'No farmers yet'**
+  String get noFarmers;
+
+  /// No description provided for @noFarmersHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the farmers who will raise your batches.'**
+  String get noFarmersHint;
+
+  /// No description provided for @assignFarmer.
+  ///
+  /// In en, this message translates to:
+  /// **'Assign a farmer'**
+  String get assignFarmer;
+
+  /// No description provided for @chooseFarmer.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a farmer'**
+  String get chooseFarmer;
+
+  /// No description provided for @farmerAssigned.
+  ///
+  /// In en, this message translates to:
+  /// **'Farmer assigned.'**
+  String get farmerAssigned;
+
+  /// No description provided for @noActiveFarmers.
+  ///
+  /// In en, this message translates to:
+  /// **'No activated farmers yet. Add a farmer and ask them to activate their account.'**
+  String get noActiveFarmers;
+
+  /// No description provided for @myPlansTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My plans'**
+  String get myPlansTitle;
+
+  /// No description provided for @noStewardPlans.
+  ///
+  /// In en, this message translates to:
+  /// **'No plans yet'**
+  String get noStewardPlans;
+
+  /// No description provided for @noStewardPlansHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Krishi adds you to plans; they appear here.'**
+  String get noStewardPlansHint;
+
+  /// No description provided for @openInterestsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No interests to review} one{# interest to review} other{# interests to review}}'**
+  String openInterestsCount(int count);
+
+  /// No description provided for @offeringStatus_approved.
+  ///
+  /// In en, this message translates to:
+  /// **'Live'**
+  String get offeringStatus_approved;
+
+  /// No description provided for @offeringStatus_pending_approval.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending approval'**
+  String get offeringStatus_pending_approval;
+
+  /// No description provided for @offeringStatus_paused.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get offeringStatus_paused;
+
+  /// No description provided for @offeringStatus_closed.
+  ///
+  /// In en, this message translates to:
+  /// **'Closed'**
+  String get offeringStatus_closed;
+
+  /// No description provided for @offeringStatus_rejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Not approved'**
+  String get offeringStatus_rejected;
+
+  /// No description provided for @profileTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profileTitle;
+
+  /// No description provided for @changePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Change password'**
+  String get changePassword;
+
+  /// No description provided for @currentPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Current password'**
+  String get currentPassword;
+
+  /// No description provided for @passwordChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Password changed.'**
+  String get passwordChanged;
+
+  /// No description provided for @downloadStatement.
+  ///
+  /// In en, this message translates to:
+  /// **'Download statement (PDF)'**
+  String get downloadStatement;
+
+  /// No description provided for @rateSteward.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate your steward'**
+  String get rateSteward;
+
+  /// No description provided for @yourReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Your review'**
+  String get yourReview;
+
+  /// No description provided for @reviewComment.
+  ///
+  /// In en, this message translates to:
+  /// **'Comment'**
+  String get reviewComment;
+
+  /// No description provided for @submitReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit review'**
+  String get submitReview;
+
+  /// No description provided for @reviewThanks.
+  ///
+  /// In en, this message translates to:
+  /// **'Thanks for your review.'**
+  String get reviewThanks;
 }
 
 class _AppLocalizationsDelegate

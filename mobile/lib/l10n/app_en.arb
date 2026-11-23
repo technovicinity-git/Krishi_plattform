@@ -12,14 +12,17 @@
   "reject": "Reject",
   "notAccepted": "Not accepted",
   "optional": "{label} (optional)",
-  "@optional": { "placeholders": { "label": {} } },
+  "@optional": {
+    "placeholders": {
+      "label": {}
+    }
+  },
   "required": "Required",
   "errorNetwork": "Can't reach Krishi. Check your internet connection.",
   "errorGeneric": "Something went wrong. Please try again.",
   "reasonLabel": "Reason",
   "reasonHint": "Explain why (at least 5 characters)",
   "saved": "Saved",
-
   "signInTitle": "Welcome to Krishi",
   "signInSubtitle": "Sign in to follow your livestock, money and work.",
   "phoneLabel": "Phone number",
@@ -30,16 +33,18 @@
   "newHere": "New to Krishi? Create an account on the website.",
   "forgotPassword": "Forgot password?",
   "invalidPhone": "Enter an 11-digit mobile number",
-
   "navHome": "Home",
   "navBatches": "Batches",
   "navApprovals": "Approvals",
   "navLivestock": "Livestock",
   "navWallet": "Wallet",
   "navMore": "More",
-
   "hello": "Hello, {name}",
-  "@hello": { "placeholders": { "name": {} } },
+  "@hello": {
+    "placeholders": {
+      "name": {}
+    }
+  },
   "helloNoName": "Hello",
   "homeSubtitleInvestor": "Your batches and money at a glance.",
   "homeSubtitleFarmer": "Your batches and what to do next.",
@@ -47,7 +52,13 @@
   "statInvested": "Invested now",
   "statActiveBatches": "Active batches",
   "unitsCount": "{count, plural, one{# unit} other{# units}}",
-  "@unitsCount": { "placeholders": { "count": { "type": "int" } } },
+  "@unitsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "statWallet": "Wallet",
   "statReturns": "Returns so far",
   "statReturnsHint": "On settled batches",
@@ -61,28 +72,65 @@
   "kycWaitingTitle": "KYC under review",
   "kycWaitingBody": "Krishi is checking your documents. You'll get a notification.",
   "payTitle": "Ready to invest: {plan}",
-  "@payTitle": { "placeholders": { "plan": {} } },
+  "@payTitle": {
+    "placeholders": {
+      "plan": {}
+    }
+  },
   "payBody": "{reference} was approved. Make the payment on the website to start your batch.",
-  "@payBody": { "placeholders": { "reference": {} } },
+  "@payBody": {
+    "placeholders": {
+      "reference": {}
+    }
+  },
   "openWebsite": "Open website",
   "interestsWaiting": "{count, plural, one{# interest is waiting for a steward} other{# interests are waiting for a steward}}",
-  "@interestsWaiting": { "placeholders": { "count": { "type": "int" } } },
+  "@interestsWaiting": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "purchaseNeededTitle": "Confirm the purchase for {reference}",
-  "@purchaseNeededTitle": { "placeholders": { "reference": {} } },
+  "@purchaseNeededTitle": {
+    "placeholders": {
+      "reference": {}
+    }
+  },
   "purchaseNeededBody": "Record what you paid for the animals once you've bought them.",
   "moneyToSendTitle": "Send {amount} to Krishi",
-  "@moneyToSendTitle": { "placeholders": { "amount": {} } },
+  "@moneyToSendTitle": {
+    "placeholders": {
+      "amount": {}
+    }
+  },
   "moneyToSendBody": "{reference}: your steward confirmed it. Send the money and submit the details.",
-  "@moneyToSendBody": { "placeholders": { "reference": {} } },
+  "@moneyToSendBody": {
+    "placeholders": {
+      "reference": {}
+    }
+  },
   "approvalsWaitingTitle": "{count, plural, one{# item needs your decision} other{# items need your decision}}",
-  "@approvalsWaitingTitle": { "placeholders": { "count": { "type": "int" } } },
+  "@approvalsWaitingTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "approvalsWaitingBody": "Fund requests, expenses, sales and death reports from your farmers.",
   "awaitingFarmerTitle": "{count, plural, one{# batch needs a farmer} other{# batches need a farmer}}",
-  "@awaitingFarmerTitle": { "placeholders": { "count": { "type": "int" } } },
+  "@awaitingFarmerTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "awaitingFarmerBody": "Assign a farmer on the website.",
   "latestActivity": "Latest activity",
   "noActivity": "Nothing has happened yet.",
-
   "batchesTitle": "Batches",
   "activeBatches": "Active",
   "settledBatches": "Settled",
@@ -96,8 +144,11 @@
   "investor": "Investor",
   "notAssigned": "Not assigned yet",
   "startedOn": "Started {date}",
-  "@startedOn": { "placeholders": { "date": {} } },
-
+  "@startedOn": {
+    "placeholders": {
+      "date": {}
+    }
+  },
   "overview": "Overview",
   "spentOnBatch": "Spent on animals & care",
   "paidOut": "Paid out of capital",
@@ -106,13 +157,31 @@
   "expensesApproved": "Expenses approved",
   "duration": "Duration",
   "monthsCount": "{count, plural, one{# month} other{# months}}",
-  "@monthsCount": { "placeholders": { "count": { "type": "int" } } },
+  "@monthsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "estReturn": "Est. return",
   "call": "Call",
   "actions": "What you can do",
   "animalsTitle": "Animals",
   "animalsSummary": "{active} active · {sold} sold · {dead} died",
-  "@animalsSummary": { "placeholders": { "active": { "type": "int" }, "sold": { "type": "int" }, "dead": { "type": "int" } } },
+  "@animalsSummary": {
+    "placeholders": {
+      "active": {
+        "type": "int"
+      },
+      "sold": {
+        "type": "int"
+      },
+      "dead": {
+        "type": "int"
+      }
+    }
+  },
   "noAnimals": "Animals appear once the purchase is confirmed.",
   "fundRequestsTitle": "Fund requests",
   "noFundRequests": "No fund requests yet.",
@@ -122,7 +191,6 @@
   "noUpdates": "No updates yet.",
   "replaced": "Replaced",
   "receipt": "Receipt",
-
   "saleTitle": "Sale",
   "totalLossTitle": "Total loss",
   "soldFor": "Sold for",
@@ -135,26 +203,58 @@
   "salePendingReview": "Waiting for the steward to confirm the sale.",
   "salePendingReviewSteward": "Check the price with the farmer, then confirm the sale or send it back.",
   "saleRejected": "The steward sent this sale back: {reason}",
-  "@saleRejected": { "placeholders": { "reason": {} } },
+  "@saleRejected": {
+    "placeholders": {
+      "reason": {}
+    }
+  },
   "awaitingRemittanceFarmer": "Your steward confirmed the sale. Send {amount} to Krishi and submit the transfer details.",
-  "@awaitingRemittanceFarmer": { "placeholders": { "amount": {} } },
+  "@awaitingRemittanceFarmer": {
+    "placeholders": {
+      "amount": {}
+    }
+  },
   "awaitingRemittance": "Waiting for the farmer to send {amount} to Krishi.",
-  "@awaitingRemittance": { "placeholders": { "amount": {} } },
+  "@awaitingRemittance": {
+    "placeholders": {
+      "amount": {}
+    }
+  },
   "remitRejected": "Krishi could not confirm the payment: {reason}",
-  "@remitRejected": { "placeholders": { "reason": {} } },
+  "@remitRejected": {
+    "placeholders": {
+      "reason": {}
+    }
+  },
   "remittanceSubmitted": "The money was sent. Krishi is checking the payment before settling.",
   "settledNotice": "Settled. Each share was added to the person's wallet.",
   "totalLossPending": "Every animal died. Krishi is checking before settling.",
   "totalLossReturnFarmer": "Every animal died. Send the {amount} of fund money you didn't spend to Krishi.",
-  "@totalLossReturnFarmer": { "placeholders": { "amount": {} } },
+  "@totalLossReturnFarmer": {
+    "placeholders": {
+      "amount": {}
+    }
+  },
   "totalLossRejected": "Krishi sent the total-loss closing back: {reason}",
-  "@totalLossRejected": { "placeholders": { "reason": {} } },
+  "@totalLossRejected": {
+    "placeholders": {
+      "reason": {}
+    }
+  },
   "totalLossSettled": "Closed as a total loss. The investor got back the unspent capital.",
   "settlementTitle": "Settlement",
   "resultProfit": "Profit {amount}",
-  "@resultProfit": { "placeholders": { "amount": {} } },
+  "@resultProfit": {
+    "placeholders": {
+      "amount": {}
+    }
+  },
   "resultLoss": "Loss {amount}",
-  "@resultLoss": { "placeholders": { "amount": {} } },
+  "@resultLoss": {
+    "placeholders": {
+      "amount": {}
+    }
+  },
   "resultEven": "Break-even",
   "capital": "Invested capital",
   "totalReturn": "Total returned",
@@ -162,13 +262,16 @@
   "farmerShare": "Farmer (60%)",
   "stewardShare": "Steward (5%)",
   "platformShare": "Krishi (5%)",
-
   "actConfirmPurchase": "Confirm purchase",
   "actFundRequest": "Request funds",
   "actLogExpense": "Log expense",
   "actRecordSale": "Record sale",
   "actSendMoney": "Send {amount} to Krishi",
-  "@actSendMoney": { "placeholders": { "amount": {} } },
+  "@actSendMoney": {
+    "placeholders": {
+      "amount": {}
+    }
+  },
   "actPostUpdate": "Post update",
   "actConfirmSale": "Confirm sale",
   "actCloseTotalLoss": "Close as total loss",
@@ -177,7 +280,6 @@
   "waitDeathReview": "Your steward must review the reported death before you can record the sale.",
   "allAnimalsDied": "All animals in this batch died. Your steward will close it.",
   "assignFarmerOnWeb": "Assign a farmer to this batch on the website.",
-
   "purchaseTitle": "Confirm the purchase",
   "animalsBought": "Number of animals",
   "totalCost": "Total cost (BDT)",
@@ -199,7 +301,13 @@
   "receiptPhoto": "Receipt photo",
   "saleFormTitle": "Record the sale",
   "whichAnimals": "Animals sold ({count})",
-  "@whichAnimals": { "placeholders": { "count": { "type": "int" } } },
+  "@whichAnimals": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "salePrice": "Sale price (BDT)",
   "buyerName": "Buyer name",
   "buyerPhone": "Buyer phone",
@@ -223,10 +331,13 @@
   "updateNote": "Note",
   "titleLabel": "Title",
   "details": "Details",
-
   "addRecord": "Add record",
   "recordTitle": "Add a record for {tag}",
-  "@recordTitle": { "placeholders": { "tag": {} } },
+  "@recordTitle": {
+    "placeholders": {
+      "tag": {}
+    }
+  },
   "recordType": "Type",
   "date": "Date",
   "weightKg": "Weight (kg)",
@@ -247,19 +358,26 @@
   "stewardDeathWarning": "This marks the animal as dead straight away and tells the investor and farmer. It can't be undone.",
   "noWeight": "No weight yet",
   "earTag": "Ear tag {tag}",
-  "@earTag": { "placeholders": { "tag": {} } },
+  "@earTag": {
+    "placeholders": {
+      "tag": {}
+    }
+  },
   "earTagLabel": "Ear tag",
   "history": "History",
   "noRecords": "No records yet.",
   "waitingSteward": "Waiting for steward",
   "notAcceptedReason": "Not accepted: {reason}",
-  "@notAcceptedReason": { "placeholders": { "reason": {} } },
+  "@notAcceptedReason": {
+    "placeholders": {
+      "reason": {}
+    }
+  },
   "vetCertificate": "Vet certificate",
   "causeLabel": "Cause",
   "bought": "Bought",
   "startWeight": "Weight when bought",
   "currentWeight": "Current weight",
-
   "approvalsTitle": "Approvals",
   "nothingToApprove": "Nothing is waiting for you.",
   "nothingToApproveHint": "New fund requests, expenses, sales and death reports appear here.",
@@ -267,11 +385,19 @@
   "salesTitle": "Sales",
   "confirmDeath": "Confirm death",
   "reportedOn": "Reported {date}",
-  "@reportedOn": { "placeholders": { "date": {} } },
+  "@reportedOn": {
+    "placeholders": {
+      "date": {}
+    }
+  },
   "rejectTitle": "Why isn't it accepted?",
   "confirmSaleTitle": "Confirm this sale?",
   "confirmSaleBody": "You confirm the animals were sold for {amount}. The farmer will then send the money to Krishi.",
-  "@confirmSaleBody": { "placeholders": { "amount": {} } },
+  "@confirmSaleBody": {
+    "placeholders": {
+      "amount": {}
+    }
+  },
   "confirmDeathTitle": "Confirm this death?",
   "confirmDeathBody": "The animal is marked dead and the investor is told. This can't be undone.",
   "totalLossFormTitle": "Close as a total loss",
@@ -279,7 +405,6 @@
   "whatHappened": "What happened",
   "blocker_death_pending": "Review the reported deaths first.",
   "blocker_fund_requests": "Answer the pending fund requests first.",
-
   "walletTitle": "Wallet",
   "available": "Available",
   "pendingWithdrawal": "Being paid out",
@@ -288,9 +413,17 @@
   "withdraw": "Withdraw",
   "withdrawTitle": "Withdraw money",
   "minimumWithdrawal": "Minimum {amount}",
-  "@minimumWithdrawal": { "placeholders": { "amount": {} } },
+  "@minimumWithdrawal": {
+    "placeholders": {
+      "amount": {}
+    }
+  },
   "withdrawTo": "Paid to {destination}",
-  "@withdrawTo": { "placeholders": { "destination": {} } },
+  "@withdrawTo": {
+    "placeholders": {
+      "destination": {}
+    }
+  },
   "withdrawRequested": "Withdrawal requested. Krishi will pay it out soon.",
   "payoutAccount": "Payout account",
   "addPayout": "Add payout account",
@@ -311,11 +444,9 @@
   "accountNumber": "Account number",
   "branch": "Branch",
   "routingNumber": "Routing number",
-
   "notificationsTitle": "Notifications",
   "markAllRead": "Mark all read",
   "noNotifications": "No notifications yet.",
-
   "moreTitle": "More",
   "language": "Language",
   "bangla": "বাংলা",
@@ -333,5 +464,270 @@
   "signOutConfirm": "Sign out of Krishi on this phone?",
   "role_investor": "Investor",
   "role_steward": "Steward",
-  "role_farmer": "Farmer"
+  "role_farmer": "Farmer",
+  "email": "Email",
+  "fullName": "Full name",
+  "passwordHint": "At least 8 characters, with a letter and a number",
+  "passwordRule": "Use at least 8 characters with a letter and a number",
+  "confirmPassword": "Confirm password",
+  "passwordsDontMatch": "The passwords don't match",
+  "haveAccount": "Already have an account? Sign in",
+  "noAccountYet": "New to Krishi?",
+  "signUpInvestor": "Create an investor account",
+  "becomeSteward": "Become a steward",
+  "farmerActivateLink": "I'm a farmer with an activation code",
+  "browsePlans": "Browse plans",
+  "registerTitle": "Create your account",
+  "registerSubtitle": "Invest in real livestock raised by trusted farmers.",
+  "createAccount": "Create account",
+  "verifyTitle": "Verify your phone",
+  "verifyBody": "Enter the 6-digit code sent to {phone}.",
+  "@verifyBody": {
+    "placeholders": {
+      "phone": {}
+    }
+  },
+  "codeLabel": "6-digit code",
+  "verify": "Verify",
+  "devCode": "Test code: {code}",
+  "@devCode": {
+    "placeholders": {
+      "code": {}
+    }
+  },
+  "useAnotherNumber": "Use a different number",
+  "forgotTitle": "Reset your password",
+  "forgotBody": "Enter your phone number. We'll send a code.",
+  "sendCode": "Send code",
+  "resetBody": "Enter the code sent to {phone} and choose a new password.",
+  "@resetBody": {
+    "placeholders": {
+      "phone": {}
+    }
+  },
+  "newPassword": "New password",
+  "resetPassword": "Reset password",
+  "passwordResetDone": "Password changed. Sign in with your new password.",
+  "activateTitle": "Activate your farmer account",
+  "activateBody": "Enter the code your steward gave you and choose a password.",
+  "activate": "Activate",
+  "stewardSignupTitle": "Become a Krishi steward",
+  "stewardSignupBody": "Manage livestock plans and the farmers who raise them. Krishi reviews every application.",
+  "continueLabel": "Continue",
+  "stewardDetailsTitle": "About your work",
+  "stewardType": "You are",
+  "individual": "An individual",
+  "organization": "An organization",
+  "division": "Division",
+  "district": "District",
+  "upazila": "Upazila / area",
+  "livestockYouRaise": "Livestock you work with",
+  "experience": "Your experience",
+  "experienceHint": "Years with livestock, training, farmers you work with (at least 10 characters)",
+  "submitForReview": "Submit for review",
+  "stewardPendingTitle": "Waiting for Krishi's approval",
+  "stewardPendingBody": "Thanks for applying. Krishi is reviewing your details and will notify you. This usually takes a few working days.",
+  "stewardRejectedTitle": "Your application wasn't approved",
+  "checkAgain": "Check again",
+  "cat_cattle": "Cattle",
+  "cat_goats": "Goats",
+  "cat_sheep": "Sheep",
+  "cat_dumba": "Dumba",
+  "cat_garoleSheep": "Garole sheep",
+  "cat_other": "Other",
+  "navPlans": "Plans",
+  "plansTitle": "Investment plans",
+  "searchPlans": "Search plans",
+  "allCategories": "All",
+  "planStatus_open": "Open",
+  "planStatus_coming_soon": "Coming soon",
+  "planStatus_fully_funded": "Fully funded",
+  "planStatus_all": "All",
+  "unitsLeft": "{count, plural, =0{No units left} one{# unit left} other{# units left}}",
+  "@unitsLeft": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "unitPrice": "Unit price",
+  "noPlans": "No plans match.",
+  "noPlansHint": "Try another category or status.",
+  "planAbout": "About this plan",
+  "whereMoneyGoes": "Where each unit's money goes",
+  "allocAnimals": "Buying animals",
+  "allocCare": "Feed, care and vet",
+  "risks": "Risks",
+  "reviewsTitle": "Investor reviews",
+  "noReviews": "No reviews yet.",
+  "ratingCount": "{count, plural, one{# review} other{# reviews}}",
+  "@ratingCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "investInPlan": "Invest in this plan",
+  "signInToInvest": "Sign in to invest",
+  "interestTitle": "How many units?",
+  "unitsLabel": "Units",
+  "totalAmount": "Total",
+  "sendInterest": "Send interest",
+  "interestSent": "Interest sent. The steward will review it and you'll get a notification.",
+  "haveInterest": "You have an interest on this plan: {reference} ({status}).",
+  "@haveInterest": {
+    "placeholders": {
+      "reference": {},
+      "status": {}
+    }
+  },
+  "fundedOf": "{funded} of {offered} units funded",
+  "@fundedOf": {
+    "placeholders": {
+      "funded": {
+        "type": "int"
+      },
+      "offered": {
+        "type": "int"
+      }
+    }
+  },
+  "soldOut": "All units are taken",
+  "myInterests": "My interests",
+  "noInterests": "No interests yet",
+  "noInterestsHint": "Browse plans and send an interest to start.",
+  "continuePayment": "Continue",
+  "openBatch": "Open batch",
+  "interestNotApproved": "Not approved: {reason}",
+  "@interestNotApproved": {
+    "placeholders": {
+      "reason": {}
+    }
+  },
+  "onboardingTitle": "Start your investment",
+  "stepKyc": "Identity",
+  "stepPayout": "Payout",
+  "stepPayment": "Payment",
+  "stepReview": "Check",
+  "kycNeeded": "Verify your identity with your NID before paying.",
+  "kycPendingNote": "Your documents are being checked. You'll get a notification when you can continue.",
+  "kycRejectedNote": "Krishi asked for a change: {reason}",
+  "@kycRejectedNote": {
+    "placeholders": {
+      "reason": {}
+    }
+  },
+  "verifyNow": "Verify now",
+  "payoutNeeded": "Add where Krishi should send your returns.",
+  "amountToPay": "Amount to pay",
+  "payOnline": "Pay online",
+  "payOnlineHint": "Card, bKash, Nagad or Rocket through SSLCommerz. Come back to the app when you're done.",
+  "orTransfer": "Or send a bank or mobile transfer to Krishi, then report it.",
+  "reportTransfer": "I've sent the money",
+  "depositReview": "Krishi is checking your payment {reference}. You'll get a notification.",
+  "@depositReview": {
+    "placeholders": {
+      "reference": {}
+    }
+  },
+  "depositNotAccepted": "Your last payment wasn't accepted: {reason}",
+  "@depositNotAccepted": {
+    "placeholders": {
+      "reason": {}
+    }
+  },
+  "onboardingDone": "Your batch has started.",
+  "interestClosed": "This interest is no longer open for payment.",
+  "notEnoughUnits": "Only {count} units are left on this plan.",
+  "@notEnoughUnits": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "refresh": "Refresh",
+  "transferTitle": "Report your transfer",
+  "dateSent": "Date sent",
+  "senderNumber": "Sent from (mobile number)",
+  "transferProof": "Screenshot or photo of the transfer",
+  "kycTitle": "Verify your identity",
+  "kycIntro": "Krishi needs your National ID to keep investments safe. Photos must be clear and readable.",
+  "nidNumber": "NID number",
+  "nidHint": "10 to 17 digits",
+  "presentAddress": "Present address",
+  "permanentAddress": "Permanent address",
+  "sameAsPresent": "Same as present address",
+  "nidFront": "NID front",
+  "nidBack": "NID back",
+  "yourPhoto": "Your photo",
+  "submit": "Submit",
+  "kycSubmitted": "Submitted. Krishi will review your documents.",
+  "interestsToReview": "Interests",
+  "guest": "Guest",
+  "approveInterestTitle": "Approve this interest?",
+  "approveInterestBody": "{name} can then pay for {count, plural, one{# unit} other{# units}}.",
+  "@approveInterestBody": {
+    "placeholders": {
+      "name": {},
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "farmersTitle": "Farmers",
+  "addFarmer": "Add farmer",
+  "farmerAddress": "Address",
+  "farmerAdded": "Farmer added. Krishi sent them an activation code.",
+  "activationCode": "Activation code: {code}",
+  "@activationCode": {
+    "placeholders": {
+      "code": {}
+    }
+  },
+  "resendCode": "Resend code",
+  "codeSent": "A new code was sent.",
+  "pendingActivation": "Not activated yet",
+  "activeBatchesCount": "{count, plural, =0{No active batches} one{# active batch} other{# active batches}}",
+  "@activeBatchesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noFarmers": "No farmers yet",
+  "noFarmersHint": "Add the farmers who will raise your batches.",
+  "assignFarmer": "Assign a farmer",
+  "chooseFarmer": "Choose a farmer",
+  "farmerAssigned": "Farmer assigned.",
+  "noActiveFarmers": "No activated farmers yet. Add a farmer and ask them to activate their account.",
+  "myPlansTitle": "My plans",
+  "noStewardPlans": "No plans yet",
+  "noStewardPlansHint": "Krishi adds you to plans; they appear here.",
+  "openInterestsCount": "{count, plural, =0{No interests to review} one{# interest to review} other{# interests to review}}",
+  "@openInterestsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "offeringStatus_approved": "Live",
+  "offeringStatus_pending_approval": "Pending approval",
+  "offeringStatus_paused": "Paused",
+  "offeringStatus_closed": "Closed",
+  "offeringStatus_rejected": "Not approved",
+  "profileTitle": "Profile",
+  "changePassword": "Change password",
+  "currentPassword": "Current password",
+  "passwordChanged": "Password changed.",
+  "downloadStatement": "Download statement (PDF)",
+  "rateSteward": "Rate your steward",
+  "yourReview": "Your review",
+  "reviewComment": "Comment",
+  "submitReview": "Submit review",
+  "reviewThanks": "Thanks for your review."
 }

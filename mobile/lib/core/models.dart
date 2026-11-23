@@ -17,6 +17,10 @@ class Me {
     required this.kycStatus,
     this.kycRejectionReason,
     this.unreadNotifications = 0,
+    this.phoneVerified = true,
+    this.stewardApprovalStatus,
+    this.stewardRejectionReason,
+    this.stewardDetailsDone,
   });
 
   factory Me.fromJson(Json j) => Me(
@@ -28,6 +32,10 @@ class Me {
         kycStatus: _str(j['kycStatus']) ?? 'not_started',
         kycRejectionReason: _str(j['kycRejectionReason']),
         unreadNotifications: (j['unreadNotifications'] as num?)?.toInt() ?? 0,
+        phoneVerified: j['phoneVerified'] != false,
+        stewardApprovalStatus: _str(j['stewardApprovalStatus']),
+        stewardRejectionReason: _str(j['stewardRejectionReason']),
+        stewardDetailsDone: j['stewardDetailsDone'] as bool?,
       );
 
   final String id;
@@ -38,6 +46,17 @@ class Me {
   final String kycStatus;
   final String? kycRejectionReason;
   final int unreadNotifications;
+  final bool phoneVerified;
+  final String? stewardApprovalStatus;
+  final String? stewardRejectionReason;
+  final bool? stewardDetailsDone;
+
+  /// Investors verify their phone right after sign-up.
+  bool get needsPhoneVerification => role == 'investor' && !phoneVerified;
+
+  /// Stewards fill in their details, then wait for Krishi's approval.
+  bool get needsStewardDetails => role == 'steward' && stewardDetailsDone == false;
+  bool get stewardWaiting => role == 'steward' && !needsStewardDetails && stewardApprovalStatus != 'approved';
 
   bool get isInvestor => role == 'investor';
   bool get isFarmer => role == 'farmer';
@@ -53,6 +72,10 @@ class Me {
         kycStatus: kycStatus,
         kycRejectionReason: kycRejectionReason,
         unreadNotifications: unreadNotifications ?? this.unreadNotifications,
+        phoneVerified: phoneVerified,
+        stewardApprovalStatus: stewardApprovalStatus,
+        stewardRejectionReason: stewardRejectionReason,
+        stewardDetailsDone: stewardDetailsDone,
       );
 }
 
@@ -291,6 +314,8 @@ class InvestmentDetail {
   List<TimelineEntry> get updates => _list(j['updates']).map(TimelineEntry.new).toList();
   List<Json> get platformAccounts => _list(j['platformAccounts']);
   bool get canCloseTotalLoss => j['canCloseTotalLoss'] == true;
+  bool get canReview => j['canReview'] == true;
+  Json? get review => (j['review'] as Map?)?.cast<String, dynamic>();
   String? get totalLossBlocker => _str(j['totalLossBlocker']);
 
   bool get isFarmer => viewerRole == 'farmer';
@@ -321,4 +346,72 @@ class NotificationItem {
   String? get investmentId => _str(j['investmentId']);
   bool get read => j['read'] == true;
   DateTime get createdAt => DateTime.parse(j['createdAt'] as String);
+}
+
+/// A plan someone can invest in (an offering by a steward).
+class PlanItem {
+  PlanItem(this.j);
+  final Json j;
+  String get id => j['offeringId'] as String;
+  String name(String locale) => planName(locale, _str(j['planNameEn']), _str(j['planNameBn']));
+  String category(String locale) => planName(locale, _str(j['categoryNameEn']), _str(j['categoryNameBn']));
+  String district(String locale) => planName(locale, _str(j['districtNameEn']), _str(j['districtNameBn']));
+  String? get imageUrl => _str(j['imageUrl']);
+  int get durationMonths => (j['durationMonths'] as num?)?.toInt() ?? 0;
+  double get roiMin => _num(j['roiMin']);
+  double get roiMax => _num(j['roiMax']);
+  double get unitPrice => _num(j['unitPrice']);
+  double get animalAllocation => _num(j['animalAllocation']);
+  double get careAllocation => _num(j['careAllocation']);
+  int get unitsOffered => (j['unitsOffered'] as num?)?.toInt() ?? 0;
+  int get unitsFunded => (j['unitsFunded'] as num?)?.toInt() ?? 0;
+  int get unitsLeft => (j['unitsLeft'] as num?)?.toInt() ?? 0;
+  String get status => _str(j['status']) ?? 'open';
+  String get stewardName => _str((j['steward'] as Map?)?['name']) ?? '';
+  double get fundedShare => unitsOffered == 0 ? 0 : (unitsFunded / unitsOffered).clamp(0, 1).toDouble();
+
+  // Detail only
+  String? description(String locale) => locale == 'bn' ? _str(j['descriptionBn']) : _str(j['descriptionEn']);
+  String? get riskInformation => _str(j['riskInformation']);
+  double? get stewardRating => _numOrNull((j['stewardRating'] as Map?)?['avg']);
+  int get stewardRatingCount => ((j['stewardRating'] as Map?)?['count'] as num?)?.toInt() ?? 0;
+  List<Json> get reviews => _list(j['reviews']);
+  Json? get myInterest => (j['myInterest'] as Map?)?.cast<String, dynamic>();
+}
+
+class InterestItem {
+  InterestItem(this.j);
+  final Json j;
+  String get id => j['id'] as String;
+  String get reference => j['reference'] as String;
+  String get status => _str(j['status']) ?? '';
+  int get units => (j['units'] as num?)?.toInt() ?? 0;
+  double get amount => _num(j['amount']);
+  String plan(String locale) => planName(locale, _str(j['planEn']), _str(j['planBn']), reference);
+  String? get stewardName => _str(j['stewardName']);
+  String? get rejectionReason => _str(j['rejectionReason']);
+  String? get investmentId => _str(j['investmentId']);
+  String? get offeringId => _str(j['offeringId']);
+  DateTime get createdAt => DateTime.parse(j['createdAt'] as String);
+  bool get readyToPay => status == 'approved' || status == 'onboarding';
+}
+
+/// The steps from an approved interest to a running batch.
+class Onboarding {
+  Onboarding(this.j);
+  final Json j;
+  String get step => _str(j['step']) ?? 'closed';
+  Json get interest => (j['interest'] as Map).cast<String, dynamic>();
+  String get interestId => interest['id'] as String;
+  String get reference => interest['reference'] as String;
+  double get amount => _num(interest['amount']);
+  int get units => (interest['units'] as num?)?.toInt() ?? 0;
+  String plan(String locale) => planName(locale, _str(interest['planEn']), _str(interest['planBn']), reference);
+  String? get investmentId => _str(j['investmentId']);
+  String get kycStatus => _str(j['kycStatus']) ?? 'not_started';
+  String? get kycRejectionReason => _str(j['kycRejectionReason']);
+  Json? get deposit => (j['deposit'] as Map?)?.cast<String, dynamic>();
+  List<Json> get platformAccounts => _list(j['platformAccounts']);
+  bool get onlineEnabled => (j['onlinePayment'] as Map?)?['enabled'] == true;
+  int get unitsLeft => (j['unitsLeft'] as num?)?.toInt() ?? 0;
 }

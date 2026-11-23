@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { hashPassword } from "@/lib/auth/password";
-import { setSessionCookie } from "@/lib/auth/session";
+import { signedInResponse } from "@/lib/auth/session";
 import { toE164, isValidBDPhone } from "@/lib/auth/phone";
 import { LIMITS, clientIp, tooManyRequests, withinLimits } from "@/lib/security/rate-limit";
 import { notifyAdmins } from "@/lib/notifications/notify";
@@ -80,9 +80,7 @@ export async function POST(request: Request) {
       name: parsed.data.fullName,
     });
 
-    const response = NextResponse.json({ success: true });
-    await setSessionCookie(response, { sub: user.id, role: "steward" });
-    return response;
+    return signedInResponse(request, { success: true }, { sub: user.id, role: "steward" });
   } catch (err) {
     console.error("[steward-register] unexpected:", err);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
