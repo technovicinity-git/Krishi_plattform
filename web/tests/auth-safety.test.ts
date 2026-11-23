@@ -63,12 +63,20 @@ describe("session key", () => {
     vi.resetModules();
     const { signSession, verifySession } = await import("@/lib/auth/jwt");
     const token = await signSession({ sub: "u1", role: "investor" });
-    expect(await verifySession(token)).toEqual({ sub: "u1", role: "investor" });
+    // Tokens carry the session version (0 when not given).
+    expect(await verifySession(token)).toEqual({ sub: "u1", role: "investor", v: 0 });
+    const versioned = await signSession({ sub: "u1", role: "investor", v: 3 });
+    expect(await verifySession(versioned)).toEqual({ sub: "u1", role: "investor", v: 3 });
 
     const [h, p, sig] = token.split(".");
     const forged = JSON.parse(Buffer.from(p, "base64url").toString());
     forged.role = "admin";
     const tampered = `${h}.${Buffer.from(JSON.stringify(forged)).toString("base64url")}.${sig}`;
     expect(await verifySession(tampered)).toBeNull();
+
+    // Raising the version without the key (to dodge a sign-out) is rejected too.
+    const bumped = { ...JSON.parse(Buffer.from(versioned.split(".")[1], "base64url").toString()), v: 99 };
+    const [vh, , vsig] = versioned.split(".");
+    expect(await verifySession(`${vh}.${Buffer.from(JSON.stringify(bumped)).toString("base64url")}.${vsig}`)).toBeNull();
   });
 });
