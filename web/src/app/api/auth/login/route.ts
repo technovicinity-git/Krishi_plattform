@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { verifyPassword } from "@/lib/auth/password";
-import { setSessionCookie, isMobileClient } from "@/lib/auth/session";
-import { signSession, MOBILE_SESSION_TTL } from "@/lib/auth/jwt";
+import { verifyAgainstNothing, verifyPassword } from "@/lib/auth/password";
+import { setSessionCookie, isMobileClient, mobileToken } from "@/lib/auth/session";
 import { toE164, isValidBDPhone } from "@/lib/auth/phone";
 import { LIMITS, clientIp, tooManyRequests, withinLimits } from "@/lib/security/rate-limit";
 
@@ -42,20 +41,22 @@ export async function POST(request: Request) {
     // Generic error to prevent enumeration
     const genericError = "Incorrect phone number or password";
 
-    if (!user || !user.password_hash) {
+    // Always check a password (a dummy one when there is no account) so the
+    // answer takes as long either way.
+    const ok =
+      user?.password_hash
+        ? await verifyPassword(parsed.data.password, user.password_hash)
+        : await verifyAgainstNothing(parsed.data.password);
+    if (!user || !ok) {
       return NextResponse.json({ error: genericError }, { status: 401 });
     }
 
+    // Only someone with the right password learns the account is blocked.
     if (user.status === "suspended" || user.status === "deleted") {
       return NextResponse.json(
         { error: "This account is not accessible. Contact support." },
         { status: 403 },
       );
-    }
-
-    const ok = await verifyPassword(parsed.data.password, user.password_hash);
-    if (!ok) {
-      return NextResponse.json({ error: genericError }, { status: 401 });
     }
 
     const role = user.role as "investor" | "steward" | "farmer" | "admin";
@@ -64,7 +65,7 @@ export async function POST(request: Request) {
       if (role === "admin") {
         return NextResponse.json({ error: "Admins sign in on the Krishi console" }, { status: 403 });
       }
-      const token = await signSession({ sub: user.id, role }, MOBILE_SESSION_TTL);
+      const token = await mobileToken({ sub: user.id, role });
       return NextResponse.json({ success: true, role, token });
     }
 

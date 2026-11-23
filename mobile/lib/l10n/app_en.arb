@@ -742,5 +742,8 @@
   "downloadCsv": "Download CSV",
   "csvNoApp": "Saved, but no app on this phone opens CSV files. Install a spreadsheet app such as Google Sheets.",
   "payoutUpdated": "Last changed {date}",
-  "@payoutUpdated": {"placeholders": {"date": {"type": "String"}}}
+  "@payoutUpdated": {"placeholders": {"date": {"type": "String"}}},
+  "signOutAll": "Sign out of all devices",
+  "signOutAllHint": "Every phone and browser, including this one",
+  "signOutAllBody": "You will be signed out everywhere, including this phone. Use this if a phone was lost or you signed in somewhere you shouldn't have."
 }

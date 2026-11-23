@@ -3,7 +3,7 @@ import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { toE164, isValidBDPhone } from "@/lib/auth/phone";
-import { generateOtp, hashOtp, getOtpExpiry } from "@/lib/auth/otp";
+import { generateOtp, hashOtp, getActivationExpiry } from "@/lib/auth/otp";
 import { showOtpOnScreen } from "@/lib/auth/dev-flags";
 
 export const runtime = "nodejs";
@@ -84,7 +84,7 @@ export async function POST(request: Request) {
     // Generate activation OTP
     const otp = generateOtp();
     const codeHash = await hashOtp(otp);
-    const expiresAt = getOtpExpiry();
+    const expiresAt = getActivationExpiry();
 
     await admin.from("otp_codes").insert({
       phone: e164,

@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { PageHeader, Panel } from "@/components/dashboard/ui";
 import { ProfileEditForm } from "./ProfileEditForm";
 import { ChangePasswordForm } from "./ChangePasswordForm";
+import { SignOutEverywhere } from "./SignOutEverywhere";
 
 interface AccountSettingsProps {
   fullName: string;
@@ -31,6 +32,10 @@ export function AccountSettings({
 
       <Panel title={t("passwordTitle")} description={t("passwordHint")} bodyClassName="p-6 sm:p-8">
         <ChangePasswordForm />
+      </Panel>
+
+      <Panel title={t("devicesTitle")} bodyClassName="p-6 sm:p-8">
+        <SignOutEverywhere />
       </Panel>
     </div>
   );

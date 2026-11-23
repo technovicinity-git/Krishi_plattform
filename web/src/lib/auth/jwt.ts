@@ -27,14 +27,23 @@ export interface SessionPayload {
   /** User UUID (public.users.id) */
   sub: string;
   role: UserRole;
+  /**
+   * The user's session_version when the token was issued. A token older than
+   * the current version has been signed out (password change, sign out of all
+   * devices). Missing on tokens issued before versions existed: treated as 0.
+   */
+  v?: number;
 }
 
 const SESSION_TTL = "7d";
+/** Admins hold the keys to money: their sessions are short. */
+export const ADMIN_SESSION_TTL = "12h";
+export const ADMIN_SESSION_SECONDS = 12 * 60 * 60;
 /** The mobile app keeps people signed in longer; the token lives in secure storage. */
 export const MOBILE_SESSION_TTL = "30d";
 
 export async function signSession(payload: SessionPayload, ttl: string = SESSION_TTL): Promise<string> {
-  return new SignJWT({ role: payload.role })
+  return new SignJWT({ role: payload.role, v: payload.v ?? 0 })
     .setProtectedHeader({ alg: "HS256" })
     .setSubject(payload.sub)
     .setIssuedAt()
@@ -61,6 +70,7 @@ export async function verifySession(
     return {
       sub: payload.sub,
       role: payload.role as UserRole,
+      v: typeof payload.v === "number" ? payload.v : 0,
     };
   } catch {
     return null;

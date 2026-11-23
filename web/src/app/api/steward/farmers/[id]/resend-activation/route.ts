@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/current-user";
-import { generateOtp, hashOtp, getOtpExpiry } from "@/lib/auth/otp";
+import { generateOtp, hashOtp, getActivationExpiry } from "@/lib/auth/otp";
 import { showOtpOnScreen } from "@/lib/auth/dev-flags";
 
 export const runtime = "nodejs";
@@ -49,7 +49,7 @@ export async function POST(
     // Generate fresh OTP
     const otp = generateOtp();
     const codeHash = await hashOtp(otp);
-    const expiresAt = getOtpExpiry();
+    const expiresAt = getActivationExpiry();
 
     await db.from("otp_codes").insert({
       phone: farmer.phone,

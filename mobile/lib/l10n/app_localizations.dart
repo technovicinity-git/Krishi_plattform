@@ -2899,6 +2899,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Last changed {date}'**
   String payoutUpdated(String date);
+
+  /// No description provided for @signOutAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out of all devices'**
+  String get signOutAll;
+
+  /// No description provided for @signOutAllHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Every phone and browser, including this one'**
+  String get signOutAllHint;
+
+  /// No description provided for @signOutAllBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You will be signed out everywhere, including this phone. Use this if a phone was lost or you signed in somewhere you shouldn\'t have.'**
+  String get signOutAllBody;
 }
 
 class _AppLocalizationsDelegate

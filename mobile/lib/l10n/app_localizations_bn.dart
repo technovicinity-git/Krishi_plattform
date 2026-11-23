@@ -1605,4 +1605,14 @@ class AppLocalizationsBn extends AppLocalizations {
   String payoutUpdated(String date) {
     return 'সর্বশেষ পরিবর্তন $date';
   }
+
+  @override
+  String get signOutAll => 'সব ডিভাইস থেকে সাইন আউট';
+
+  @override
+  String get signOutAllHint => 'এই ফোনসহ সব ফোন ও ব্রাউজার';
+
+  @override
+  String get signOutAllBody =>
+      'এই ফোনসহ সব জায়গা থেকে আপনি সাইন আউট হবেন। ফোন হারালে বা কোথাও ভুল করে সাইন ইন থাকলে এটি ব্যবহার করুন।';
 }

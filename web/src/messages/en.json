@@ -2717,11 +2717,18 @@
       "uploadFailed": "Photo upload failed"
     },
     "accountSettings": {
+      "devicesTitle": "Signed-in devices",
+      "signOutAll": "Sign out of all devices",
+      "signOutAllBody": "Signs this account out on every phone and browser, including this one. Use it if a phone is lost or you forgot to sign out somewhere.",
+      "signOutAllConfirmTitle": "Sign out everywhere?",
+      "signOutAllConfirmBody": "You will be signed out on every device, including this one, and need to sign in again.",
+      "signOutAllFailed": "Could not sign out. Try again.",
+      "signingOut": "Signing out…",
       "title": "Account Settings",
       "profileTitle": "Profile",
       "profileHint": "Update your name and email. Phone number cannot be changed.",
       "passwordTitle": "Change Password",
-      "passwordHint": "Choose a strong password you don't use anywhere else."
+      "passwordHint": "Choose a strong password you don't use anywhere else. Changing it signs you out on your other devices."
     },
     "activation": {
       "pendingTitle": "Activation pending",

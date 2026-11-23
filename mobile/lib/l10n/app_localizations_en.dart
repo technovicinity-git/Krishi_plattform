@@ -1622,4 +1622,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String payoutUpdated(String date) {
     return 'Last changed $date';
   }
+
+  @override
+  String get signOutAll => 'Sign out of all devices';
+
+  @override
+  String get signOutAllHint => 'Every phone and browser, including this one';
+
+  @override
+  String get signOutAllBody =>
+      'You will be signed out everywhere, including this phone. Use this if a phone was lost or you signed in somewhere you shouldn\'t have.';
 }
