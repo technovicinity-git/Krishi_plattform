@@ -73,12 +73,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 28),
-                  Container(
-                    width: 64,
-                    height: 64,
-                    decoration: BoxDecoration(color: KColors.greenDeep, borderRadius: BorderRadius.circular(18)),
-                    child: const Icon(Icons.eco_rounded, color: Colors.white, size: 36),
-                  ),
+                  // The website logo (emblem and name).
+                  Image.asset('assets/logo.png', height: 76, alignment: Alignment.centerLeft, semanticLabel: 'Hadiana'),
                   const SizedBox(height: 20),
                   Text(l.signInTitle, style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w800)),
                   const SizedBox(height: 6),

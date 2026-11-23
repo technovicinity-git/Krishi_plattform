@@ -97,7 +97,8 @@ export default async function AdminDashboardLayout({
         {
           label: "System",
           items: [
-            { label: "Notifications", href: "/krishi-console/notifications", icon: "bell", badge: unread },
+            { label: "Notifications", href: "/krishi-console/notifications", icon: "bell", badge: unread, exact: true },
+            { label: "Send notification", href: "/krishi-console/notifications/send", icon: "inbox" },
             { label: "Audit Log", href: "/krishi-console/audit", icon: "history" },
           ],
         },

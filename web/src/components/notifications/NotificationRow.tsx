@@ -32,6 +32,13 @@ export function useNotificationText() {
   const bn = useLocale() === "bn";
   return (n: NotificationItem) => {
     const p = n.params;
+    // Written by an admin: the text itself, in the reader's language if given.
+    if (n.kind === "custom") {
+      return {
+        title: String((bn && p.titleBn) || p.title || ""),
+        body: String((bn && p.bodyBn) || p.body || ""),
+      };
+    }
     const values: Record<string, string> = {
       reference: String(p.reference ?? ""),
       name: String(p.name ?? ""),

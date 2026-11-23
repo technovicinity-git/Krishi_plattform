@@ -63,7 +63,9 @@ export type NotificationKind =
   | "settlement_corrected_request_payout"
   | "settlement_correction_reversed"
   | "settlement_recalculated_payout"
-  | "settlement_recalculated_share";
+  | "settlement_recalculated_share"
+  // Written by an admin in the console (title/body in params).
+  | "custom";
 
 export interface NotificationParams {
   reference?: string;
@@ -74,6 +76,10 @@ export interface NotificationParams {
   planBn?: string;
   reason?: string;
   title?: string;
+  /** Custom notifications: Bangla title, and the message in each language. */
+  titleBn?: string;
+  body?: string;
+  bodyBn?: string;
 }
 
 export interface NotifyTarget {
@@ -89,6 +95,8 @@ export async function notify(
   kind: NotificationKind,
   targets: NotifyTarget | NotifyTarget[],
   params: NotificationParams = {},
+  /** push: false keeps it in-app only (no push to phones). */
+  options: { push?: boolean } = {},
 ): Promise<void> {
   const list = (Array.isArray(targets) ? targets : [targets]).filter(
     (t): t is { userId: string; href?: string | null } => Boolean(t.userId),
@@ -106,7 +114,7 @@ export async function notify(
       .insert(list.map((t) => ({ user_id: t.userId, kind, params: clean, href: t.href ?? null })));
     if (error) console.error(`[notify] ${kind} failed:`, error);
     // Also to their phones. Admin queue alerts stay in the console.
-    if (!error && !kind.startsWith("admin_")) {
+    if (!error && options.push !== false && !kind.startsWith("admin_")) {
       const { sendPush } = await import("./push");
       await sendPush(list.map((t) => ({ userId: t.userId, kind, params: clean as Record<string, string | number>, href: t.href ?? null })));
     }
