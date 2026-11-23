@@ -3,15 +3,26 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Container } from "@/components/ui/Container";
 import { Heading } from "@/components/ui/Heading";
+import { NavIcon, type NavIconName } from "@/components/dashboard/NavIcon";
+
+const STAGES: { key: string; icon: NavIconName }[] = [
+  { key: "capital", icon: "wallet" },
+  { key: "onboarded", icon: "tag" },
+  { key: "updates", icon: "chart" },
+  { key: "sale", icon: "receipt" },
+  { key: "settlement", icon: "coins" },
+];
 
 export function Hero() {
   const t = useTranslations("home.hero");
+  const tStages = useTranslations("home.lifecycle.stages");
 
-  // TODO: Replace placeholder values with real data before launch (§32).
+  // What the platform actually does: the investor share of profit, live farm
+  // updates, and NID checks. No invented totals.
   const metrics = [
-    { value: "৳150M+", labelKey: "metricInvestedLabel" as const },
-    { value: "8,500+", labelKey: "metricAssetsLabel" as const },
-    { value: "99.8%", labelKey: "metricHealthLabel" as const },
+    { value: "30%", labelKey: "metricInvestedLabel" as const },
+    { value: t("metricLive"), labelKey: "metricAssetsLabel" as const },
+    { value: t("metricVerified"), labelKey: "metricHealthLabel" as const },
   ];
 
   return (
@@ -71,8 +82,8 @@ export function Hero() {
               </div>
             </div>
 
-            {/* Image */}
-            <div className="relative aspect-[550/580] w-full overflow-hidden rounded-2xl lg:aspect-auto lg:h-[580px]">
+            {/* Image, with the five steps of a batch on top */}
+            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl sm:aspect-[550/480] lg:aspect-auto lg:h-[580px]">
               <Image
                 src="/images/hero-image-wrapper.png"
                 alt={t("imageAlt")}
@@ -81,6 +92,25 @@ export function Hero() {
                 sizes="(min-width: 1024px) 550px, 100vw"
                 className="object-cover"
               />
+              <div className="absolute inset-x-3 bottom-3 rounded-xl bg-white/95 p-4 shadow-[0_8px_30px_rgba(0,0,0,0.12)] backdrop-blur sm:inset-x-5 sm:bottom-5 sm:p-5">
+                <div className="flex items-baseline justify-between gap-3">
+                  <span className="text-[13px] font-bold text-ink">{t("stagesTitle")}</span>
+                  <span className="hidden text-[11px] text-ink-muted sm:inline">{t("stagesBody")}</span>
+                </div>
+                <ol className="relative mt-4 grid grid-cols-5">
+                  <span aria-hidden className="absolute left-[10%] right-[10%] top-[15px] h-[2px] bg-brand/25" />
+                  {STAGES.map((stage) => (
+                    <li key={stage.key} className="relative flex flex-col items-center gap-1.5 text-center">
+                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand text-white ring-4 ring-white">
+                        <NavIcon name={stage.icon} className="h-4 w-4" />
+                      </span>
+                      <span className="text-[9.5px] font-semibold leading-tight text-ink-secondary sm:text-[10.5px]">
+                        {tStages(`${stage.key}.title`)}
+                      </span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
             </div>
           </div>
         </div>
