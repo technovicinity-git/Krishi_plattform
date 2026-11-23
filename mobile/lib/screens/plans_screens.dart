@@ -250,7 +250,7 @@ class PlanCard extends StatelessWidget {
               const SizedBox(height: 10),
               Row(children: [
                 _Fact(l.unitPrice, bdt(p.unitPrice)),
-                _Fact(l.estReturn, '${p.roiMin.toStringAsFixed(0)}–${p.roiMax.toStringAsFixed(0)}%'),
+                _Fact(l.estReturn, roiText(p.roiMin, p.roiMax)),
                 _Fact(l.duration, l.monthsCount(p.durationMonths)),
               ]),
               const SizedBox(height: 10),
@@ -347,7 +347,7 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
                       const SizedBox(height: 14),
                       StatGrid(children: [
                         StatCard(label: l.unitPrice, value: bdt(p.unitPrice), highlight: true),
-                        StatCard(label: l.estReturn, value: '${p.roiMin.toStringAsFixed(0)}–${p.roiMax.toStringAsFixed(0)}%'),
+                        StatCard(label: l.estReturn, value: roiText(p.roiMin, p.roiMax)),
                         StatCard(label: l.duration, value: l.monthsCount(p.durationMonths)),
                         StatCard(
                           label: l.unitsLabel,

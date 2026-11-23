@@ -282,7 +282,7 @@ class StewardPlansScreen extends StatelessWidget {
                                 ]),
                                 const SizedBox(height: 8),
                                 KeyValue(l.unitPrice, bdt(p['unitPrice'] as num)),
-                                KeyValue(l.estReturn, '${(p['roiMin'] as num).toStringAsFixed(0)}–${(p['roiMax'] as num).toStringAsFixed(0)}%'),
+                                KeyValue(l.estReturn, roiText(p['roiMin'] as num, p['roiMax'] as num)),
                                 KeyValue(l.unitsLabel, l.fundedOf((p['unitsFunded'] as num).toInt(), (p['unitsOffered'] as num).toInt())),
                                 const SizedBox(height: 6),
                                 ClipRRect(
