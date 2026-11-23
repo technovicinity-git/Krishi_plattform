@@ -2,7 +2,7 @@ import Link from "next/link";
 import { requireAdmin } from "@/lib/admin/current-admin";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { formatBDT } from "@/lib/utils";
-import { EmptyState, PageHeader, StatusBadge, Tabs, toneFor } from "@/components/dashboard/ui";
+import { EmptyState, PageHeader, StatusBadge, Tabs, toneFor, RowAction } from "@/components/dashboard/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -177,9 +177,7 @@ export default async function AdminInvestmentsPage({
                     </td>
                     <td className="px-5 py-3.5 text-[12px] text-[#9A6B12]">{waiting.length ? waiting.join(", ") : <span className="text-ink-muted">—</span>}</td>
                     <td className="px-5 py-3.5 text-right">
-                      <Link href={`/krishi-console/investments/${r.id}`} className="text-[12px] font-semibold text-brand hover:underline">
-                        View progress →
-                      </Link>
+                      <RowAction href={`/krishi-console/investments/${r.id}`} icon="chart">Progress</RowAction>
                     </td>
                   </tr>
                 );

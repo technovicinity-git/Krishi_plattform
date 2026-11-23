@@ -8,6 +8,7 @@ import { localizeUpdate, type TimelineI18n } from "@/lib/investments/timeline";
 import { formatBDT } from "@/lib/utils";
 import { ArrowRightIcon } from "@/components/icons";
 import { EmptyState, PageHeader, StatCard, StatusBadge, toneFor } from "@/components/dashboard/ui";
+import { rowActionClass } from "@/components/dashboard/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -232,10 +233,8 @@ export default async function InvestorDashboard() {
                   </dl>
                   <div className="flex items-center justify-between gap-3">
                     <span className="text-[12px] text-ink-muted">{t("started", { date: fmtDate(i.created_at) })}</span>
-                    <span className="flex items-center gap-1 text-[13px] font-bold text-brand">
-                      {t("open")}
-                      <ArrowRightIcon className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-                    </span>
+                    {/* The whole card is the link; this just looks like its button. */}
+                    <span className={rowActionClass()}>{t("open")}</span>
                   </div>
                 </Link>
               );

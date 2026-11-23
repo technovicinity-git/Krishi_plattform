@@ -21,7 +21,7 @@ export function MeetStewardsCta() {
           </p>
           <Link
             href="/stewards"
-            className="mt-2 inline-flex w-fit items-center justify-center rounded-[5px] bg-ink px-6 py-3.5 text-[14px] font-semibold text-white transition-colors hover:bg-[#2A2A2A]"
+            className="mt-2 inline-flex w-fit items-center justify-center rounded-[5px] bg-ink px-6 py-3.5 text-[14px] font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-brand"
           >
             {t("cta")}
           </Link>

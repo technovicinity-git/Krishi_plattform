@@ -42,8 +42,10 @@ export function StepPurchaseCare() {
 
               <div className="flex flex-col gap-2">
                 <div className="flex h-2.5 w-full overflow-hidden rounded-full bg-stone">
+                  <div className="k-grow-x flex h-full w-full">
                   <div className="h-full bg-green-olive" style={{ width: "97%" }} />
                   <div className="h-full bg-brand" style={{ width: "3%" }} />
+                  </div>
                 </div>
                 <div className="flex items-center justify-between text-[11px] text-ink-tertiary">
                   <span>{t("animalCard.barPrimaryLabel")}</span>
@@ -72,8 +74,10 @@ export function StepPurchaseCare() {
 
               <div className="flex flex-col gap-2">
                 <div className="flex h-2.5 w-full overflow-hidden rounded-full bg-stone">
+                  <div className="k-grow-x flex h-full w-full">
                   <div className="h-full bg-brand" style={{ width: "13%" }} />
                   <div className="h-full bg-green-olive" style={{ width: "87%" }} />
+                  </div>
                 </div>
                 <div className="flex items-center justify-between text-[11px] text-ink-tertiary">
                   <span>{t("careCard.barPrimaryLabel")}</span>

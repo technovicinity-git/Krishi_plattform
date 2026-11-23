@@ -3,6 +3,7 @@ import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { Heading } from "@/components/ui/Heading";
 import { Pill } from "@/components/ui/Pill";
+import { NavIcon } from "@/components/dashboard/NavIcon";
 
 const ROWS = ["one", "two", "five"] as const;
 
@@ -22,12 +23,14 @@ export function StepDeposit() {
               {t("paragraph")}
             </p>
 
-            <div className="rounded-lg border border-border-light p-5">
+            <div className="rounded-xl border border-border-light bg-white/60 p-5">
               <span className="text-[14px] font-semibold text-ink">
                 {t("paymentNotice.title")}
               </span>
               <div className="mt-3 flex items-start gap-3">
-                <span className="mt-0.5 h-8 w-8 shrink-0 rounded-[4px] bg-stone" />
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-brand-tint text-brand">
+                  <NavIcon name="shield" className="h-[18px] w-[18px]" />
+                </span>
                 <p className="text-[13px] leading-[1.5] text-ink-secondary">
                   {t("paymentNotice.body")}
                 </p>

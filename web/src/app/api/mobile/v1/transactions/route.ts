@@ -1,6 +1,6 @@
 import { createTranslator } from "next-intl";
 import { requireMobileUser, json, localeOf, messagesFor } from "@/lib/mobile/api";
-import { getLedger, kindsFor, parseLedgerFilters, type LedgerScope, type TxEntry } from "@/lib/transactions";
+import { getLedger, investorProfit, kindsFor, parseLedgerFilters, type LedgerScope, type TxEntry } from "@/lib/transactions";
 
 export const runtime = "nodejs";
 
@@ -23,6 +23,7 @@ export async function GET(request: Request) {
   const scope: LedgerScope = { kind: "user", userId: user.id, role: user.role };
   const params = Object.fromEntries(new URL(request.url).searchParams);
   const { entries, summary } = await getLedger(scope, parseLedgerFilters(params));
+  const profit = user.role === "investor" ? await investorProfit(entries) : null;
 
   const detail = (e: TxEntry) => {
     if (!e.detail) return null;
@@ -37,6 +38,12 @@ export async function GET(request: Request) {
 
   return json({
     summary,
+    // Investors: payouts minus the capital of the batches they settled.
+    profit: profit && {
+      amount: profit.amount,
+      label: t("sum_profit"),
+      hint: t("sum_profitHint", { count: profit.batches }),
+    },
     kinds: kindsFor(scope).map((k) => ({ kind: k, label: t(`kind.${k}`), summaryLabel: t.has(`sum_${k}`) ? t(`sum_${k}`) : t(`kind.${k}`) })),
     entries: entries.map((e) => ({
       id: e.id,

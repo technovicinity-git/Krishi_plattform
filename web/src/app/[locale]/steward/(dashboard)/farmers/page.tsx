@@ -1,10 +1,10 @@
 import { redirect } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { createAdminClient } from "@/lib/supabase/admin";
 import {
   ButtonLink,
+  RowAction,
   EmptyState,
   PageHeader,
   StatusBadge,
@@ -121,12 +121,9 @@ export default async function StewardFarmersPage({
                       {formatDate(f.created_at, locale)}
                     </td>
                     <td className="px-5 py-4 text-right">
-                      <Link
-                        href={`/steward/farmers/${f.id}`}
-                        className="text-[12.5px] font-semibold text-brand hover:underline"
-                      >
+                      <RowAction href={`/steward/farmers/${f.id}`} icon="eye" localized>
                         {t("view")}
-                      </Link>
+                      </RowAction>
                     </td>
                   </tr>
                 );

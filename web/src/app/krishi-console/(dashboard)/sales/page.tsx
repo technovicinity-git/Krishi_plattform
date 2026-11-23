@@ -1,8 +1,7 @@
-import Link from "next/link";
 import { requireAdmin } from "@/lib/admin/current-admin";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { formatBDT } from "@/lib/utils";
-import { EmptyState, PageHeader, StatusBadge, Tabs, type BadgeTone } from "@/components/dashboard/ui";
+import { EmptyState, PageHeader, StatusBadge, Tabs, type BadgeTone, RowAction } from "@/components/dashboard/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -141,12 +140,15 @@ export default async function AdminSalesPage({
                       <StatusBadge tone={st.tone}>{st.label}</StatusBadge>
                     </td>
                     <td className="px-5 py-4 text-right">
-                      <Link
-                        href={`/krishi-console/sales/${s.id}`}
-                        className="text-[12px] font-semibold text-brand hover:underline"
-                      >
-                        {s.status === "remittance_submitted" ? "Review →" : "Open →"}
-                      </Link>
+                      {s.status === "remittance_submitted" ? (
+                        <RowAction href={`/krishi-console/sales/${s.id}`} icon="receipt" primary>
+                          Review
+                        </RowAction>
+                      ) : (
+                        <RowAction href={`/krishi-console/sales/${s.id}`} icon="eye">
+                          View
+                        </RowAction>
+                      )}
                     </td>
                   </tr>
                 );

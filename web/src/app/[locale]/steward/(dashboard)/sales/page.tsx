@@ -4,8 +4,8 @@ import { getCurrentUser } from "@/lib/auth/current-user";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getStewardInvestmentIds } from "@/lib/steward/investments";
 import { formatBDT } from "@/lib/utils";
-import { Link } from "@/i18n/navigation";
 import { EmptyState, PageHeader, StatusBadge, Tabs, type BadgeTone } from "@/components/dashboard/ui";
+import { RowAction } from "@/components/dashboard/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -129,12 +129,17 @@ export default async function StewardSalesPage({
                   </div>
                 </div>
                 {s.investment && (
-                  <Link
-                    href={`/steward/investments/${s.investment.id}`}
-                    className="self-start text-[13px] font-semibold text-brand hover:underline"
-                  >
-                    {s.status === "pending_review" ? t("reviewSale") : t("openBatch")} →
-                  </Link>
+                  <div className="self-start">
+                    {s.status === "pending_review" ? (
+                      <RowAction href={`/steward/investments/${s.investment.id}`} icon="receipt" primary localized>
+                        {t("reviewSale")}
+                      </RowAction>
+                    ) : (
+                      <RowAction href={`/steward/investments/${s.investment.id}`} icon="briefcase" localized>
+                        {t("openBatch")}
+                      </RowAction>
+                    )}
+                  </div>
                 )}
               </li>
             );

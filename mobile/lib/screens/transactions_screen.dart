@@ -42,6 +42,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           final entries = (data['entries'] as List).map((e) => Json.from(e as Map)).toList();
           final summary = Json.from(data['summary'] as Map);
           final byKind = Json.from(summary['byKind'] as Map);
+          final profit = data['profit'] is Map ? Json.from(data['profit'] as Map) : null;
           return ListView(
             padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
             children: [
@@ -53,6 +54,13 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                         label: '${k['summaryLabel']}',
                         value: bdt((byKind[k['kind']] as num?) ?? 0),
                         highlight: i == 0,
+                      ),
+                    if (profit != null)
+                      StatCard(
+                        label: '${profit['label']}',
+                        value: bdt((profit['amount'] as num?) ?? 0),
+                        hint: profit['hint'] as String?,
+                        highlight: true,
                       ),
                   ]),
                   const SizedBox(height: 12),

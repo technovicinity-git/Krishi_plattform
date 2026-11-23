@@ -7,7 +7,7 @@ import { PlanCard } from "@/components/plans/PlanCard";
 import { Link } from "@/i18n/navigation";
 import { planImageUrl } from "@/lib/admin/plan-helpers";
 import { listPublicOfferings, type OfferingListItem } from "@/lib/public/plans";
-import { formatBDT } from "@/lib/utils";
+import { formatBDT, formatRoi } from "@/lib/utils";
 import { delay } from "./motion";
 
 export async function Opportunities() {
@@ -112,7 +112,7 @@ function HomePlanCard({
       meta={`${district} · ${item.durationMonths} ${monthsLabel} · ${item.steward.name}`}
       status={statusLabel}
       statusVariant={comingSoon ? "neutral" : funded ? "funded" : "success"}
-      estimatedReturn={`${item.roiMin}–${item.roiMax}%`}
+      estimatedReturn={formatRoi(item.roiMin, item.roiMax)}
       estimatedReturnLabel={estimatedReturnLabel}
       investmentPerUnit={formatBDT(item.unitPrice)}
       investmentPerUnitLabel={investmentPerUnitLabel}

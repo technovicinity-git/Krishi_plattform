@@ -2,9 +2,20 @@ import { useTranslations } from "next-intl";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { Heading } from "@/components/ui/Heading";
-import { ArrowDownIcon } from "@/components/icons";
+import { NavIcon, type NavIconName } from "@/components/dashboard/NavIcon";
 
 const STAGES = ["investor", "krishi", "steward", "farmer", "livestock"] as const;
+
+const ICON: Record<(typeof STAGES)[number], NavIconName> = {
+  investor: "user",
+  krishi: "shield",
+  steward: "clipboard",
+  farmer: "users",
+  livestock: "leaf",
+};
+
+const CARD_HOVER =
+  "transition-[translate,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-brand/30 hover:shadow-[0_12px_28px_-16px_rgba(0,0,0,0.2)]";
 
 export function ConnectedJourney() {
   const t = useTranslations("aboutPage.connected");
@@ -25,39 +36,37 @@ export function ConnectedJourney() {
           </div>
 
           {/* Right chain */}
-          <div className="flex flex-col items-center gap-2">
-            {STAGES.map((key, i) => {
-              const isLast = i === STAGES.length - 1;
+          <ol className="relative flex flex-col gap-3">
+            {/* The line that joins the chain. */}
+            <span aria-hidden className="k-grow-y absolute bottom-8 left-[43px] top-8 w-[2px] bg-gradient-to-b from-brand to-brand/15" />
+            {STAGES.map((key) => {
               const isHighlighted = key === "krishi";
               return (
-                <div key={key} className="flex w-full flex-col items-center gap-2">
-                  <div
-                    className={`flex w-full flex-row items-center gap-6 rounded-[8px] border px-6 py-5 ${
-                      isHighlighted
-                        ? "border-brand bg-cream"
-                        : "border-border-light bg-white"
-                    }`}
-                  >
+                <li
+                  key={key}
+                  className={`group relative flex w-full flex-col gap-3 rounded-xl border px-5 py-4 sm:flex-row sm:items-center sm:gap-6 ${CARD_HOVER} ${
+                    isHighlighted ? "border-brand bg-brand-tint" : "border-border-light bg-white"
+                  }`}
+                >
+                  <span className="flex items-center gap-4 sm:w-[190px] sm:shrink-0">
                     <span
-                      className={`w-[130px] shrink-0 font-serif text-[22px] leading-tight ${
-                        isHighlighted ? "text-brand" : "text-ink"
+                      className={`relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-full ring-4 transition-transform duration-300 group-hover:scale-110 ${
+                        isHighlighted ? "bg-brand text-white ring-brand-tint" : "bg-brand-tint text-brand ring-white"
                       }`}
                     >
+                      <NavIcon name={ICON[key]} className="h-5 w-5" />
+                    </span>
+                    <span className={`font-serif text-[21px] leading-tight ${isHighlighted ? "text-brand" : "text-ink"}`}>
                       {t(`stages.${key}.title`)}
                     </span>
-                    <span className="text-[14px] leading-[1.65] text-ink-secondary">
-                      {t(`stages.${key}.description`)}
-                    </span>
-                  </div>
-                  {!isLast && (
-                    <span className="text-brand" aria-hidden="true">
-                      <ArrowDownIcon />
-                    </span>
-                  )}
-                </div>
+                  </span>
+                  <span className="pl-[60px] text-[14px] leading-[1.6] text-ink-secondary sm:pl-0">
+                    {t(`stages.${key}.description`)}
+                  </span>
+                </li>
               );
             })}
-          </div>
+          </ol>
         </div>
       </Container>
     </Section>

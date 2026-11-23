@@ -96,6 +96,55 @@ export function ButtonLink({
   );
 }
 
+/* ─── Row actions (table action cells) ────────────────────── */
+
+/**
+ * A small action button for a table row ("Edit", "View", "Review").
+ * `primary` is filled (the row's main action); the default is outlined.
+ * Put several in a <RowActions> so they line up on the right.
+ */
+const ROW_ACTION_TONE = {
+  default:
+    "border border-border-light bg-white text-ink-nav hover:border-brand/40 hover:bg-brand-tint hover:text-green-deep",
+  primary: "bg-brand text-white hover:bg-brand-hover",
+  danger: "border border-border-light bg-white text-ink-nav hover:border-danger/40 hover:bg-[#FBEDEA] hover:text-danger",
+} as const;
+
+export type RowActionTone = keyof typeof ROW_ACTION_TONE;
+
+/** Classes for a row action, for buttons that are not links (see RowAction). */
+export function rowActionClass(tone: RowActionTone = "default") {
+  return cn(
+    "inline-flex h-8 items-center gap-1.5 whitespace-nowrap rounded-[7px] px-3 text-[12px] font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/30 disabled:cursor-not-allowed disabled:opacity-50",
+    ROW_ACTION_TONE[tone],
+  );
+}
+
+export function RowAction({
+  href,
+  children,
+  icon,
+  primary = false,
+  localized = false,
+}: {
+  href: string;
+  children: React.ReactNode;
+  icon?: NavIconName;
+  primary?: boolean;
+  localized?: boolean;
+}) {
+  return (
+    <AnyLink href={href} localized={localized} className={rowActionClass(primary ? "primary" : "default")}>
+      {icon && <NavIcon name={icon} className="h-[15px] w-[15px]" />}
+      {children}
+    </AnyLink>
+  );
+}
+
+export function RowActions({ children }: { children: React.ReactNode }) {
+  return <div className="flex items-center justify-end gap-2">{children}</div>;
+}
+
 /* ─── Stat card ───────────────────────────────────────────── */
 
 const STAT_TONE = {

@@ -13,10 +13,8 @@ export function WhyKrishiExists() {
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-20">
           <div className="flex flex-col gap-4">
             <Eyebrow>{t("eyebrow")}</Eyebrow>
-            <Heading as="h2" size="section">
-              {t("headingLine1")}
-              <br />
-              {t("headingLine2")}
+            <Heading as="h2" size="section" className="[text-wrap:balance]">
+              {t("headingLine1")} {t("headingLine2")}
             </Heading>
           </div>
 
@@ -24,7 +22,7 @@ export function WhyKrishiExists() {
             <p className="text-[16px] leading-[1.65] text-ink-secondary">
               {t("paragraph")}
             </p>
-            <p className="font-serif text-[24px] leading-[1.35] text-ink md:text-[26px]">
+            <p className="border-l-[3px] border-brand pl-5 font-serif text-[24px] leading-[1.35] text-ink md:text-[26px]">
               {t("purpose")}
             </p>
           </div>

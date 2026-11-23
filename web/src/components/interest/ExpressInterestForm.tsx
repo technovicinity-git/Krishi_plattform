@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useRouter } from "@/i18n/navigation";
 import { Link } from "@/i18n/navigation";
 import { planImageUrl } from "@/lib/admin/plan-helpers";
-import { formatBDT } from "@/lib/utils";
+import { formatBDT, formatRoi } from "@/lib/utils";
 import type { OfferingListItem } from "@/lib/public/plans";
 
 interface Props {
@@ -190,7 +190,7 @@ export function ExpressInterestForm({ offering, planName, currentUser }: Props) 
                 {te("estimatedReturnLabel")}
               </div>
               <div className="mt-1 text-[18px] font-bold text-brand">
-                {offering.roiMin}–{offering.roiMax}%
+                {formatRoi(offering.roiMin, offering.roiMax)}
               </div>
             </div>
             <div>

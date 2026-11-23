@@ -9,8 +9,9 @@ import {
 import { planImageUrl, type OfferingQueryRow } from "@/lib/admin/plan-helpers";
 import { BackLink } from "@/components/ui/BackLink";
 import Link from "next/link";
+import { NavIcon } from "@/components/dashboard/NavIcon";
 import { formatBDT } from "@/lib/utils";
-import { StatusBadge, toneFor } from "@/components/dashboard/ui";
+import { StatusBadge, toneFor, RowAction, rowActionClass } from "@/components/dashboard/ui";
 
 export default async function EditPlanPage({
   params,
@@ -186,9 +187,9 @@ export default async function EditPlanPage({
             <p className="text-[12px] text-ink-muted">Follow each batch from purchase to settlement.</p>
           </div>
           {planBatches.length > 0 && (
-            <Link href={`/krishi-console/investments?view=all&plan=${plan.id}`} className="text-[12.5px] font-semibold text-brand hover:underline">
-              Open in Batches →
-            </Link>
+            <RowAction href={`/krishi-console/investments?view=all&plan=${plan.id}`} icon="briefcase">
+              Open in Batches
+            </RowAction>
           )}
         </div>
         {planBatches.length === 0 ? (
@@ -210,7 +211,11 @@ export default async function EditPlanPage({
                   <div className="flex items-center gap-3">
                     <span className="text-[13px] font-semibold text-ink">{formatBDT(Number(b.amount))}</span>
                     <StatusBadge tone={toneFor(b.current_stage ?? "")}>{(b.current_stage ?? "").replace(/_/g, " ")}</StatusBadge>
-                    <span className="text-[12px] font-semibold text-brand">View progress →</span>
+                    {/* The whole row is the link; this just looks like the row's button. */}
+                    <span className={rowActionClass()}>
+                      <NavIcon name="chart" className="h-[15px] w-[15px]" />
+                      Progress
+                    </span>
                   </div>
                 </Link>
               </li>
