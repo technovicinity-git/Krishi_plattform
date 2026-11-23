@@ -4,6 +4,7 @@ import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { Heading } from "@/components/ui/Heading";
 import { Eyebrow } from "@/components/ui/Eyebrow";
+import { delay } from "./motion";
 
 const FEATURES = [
   { number: "01", key: "tracking" },
@@ -19,19 +20,19 @@ export function WhyKrishi() {
       <Container>
         <div className="grid grid-cols-1 gap-16 lg:grid-cols-[520px_minmax(0,1fr)] lg:items-center lg:gap-24">
           {/* Image */}
-          <div className="relative aspect-[520/560] w-full overflow-hidden rounded-[8px]">
+          <div data-reveal="left" className="group relative aspect-[520/560] w-full overflow-hidden rounded-[8px]">
             <Image
               src="/images/why-visual.png"
               alt={t("imageAlt")}
               fill
               sizes="(min-width: 1024px) 520px, 100vw"
-              className="object-cover"
+              className="object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.04]"
             />
           </div>
 
           {/* Content */}
           <div className="flex flex-col gap-12">
-            <div className="flex flex-col gap-4">
+            <div data-reveal className="flex flex-col gap-4">
               <Eyebrow>{t("eyebrow")}</Eyebrow>
               <Heading as="h2" size="section">
                 {t("heading")}
@@ -40,7 +41,7 @@ export function WhyKrishi() {
 
             <div className="flex flex-col gap-9">
               {FEATURES.map((feature, index) => (
-                <div key={feature.key}>
+                <div key={feature.key} data-reveal style={delay(120 + index * 120)}>
                   <div className="flex items-start gap-6">
                     <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-stone text-[14px] font-bold text-green-olive">
                       {feature.number}

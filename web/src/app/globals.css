@@ -53,3 +53,61 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+/* ─── Landing motion ────────────────────────────────────────────────
+   Hero: CSS-only entrance (k-in). Below the fold: [data-reveal] elements
+   fade/slide in when scrolled into view (RevealOnScroll adds .reveal-on to
+   <html> and .is-in to each element). Stagger with style="--d: 120ms".
+   Nothing is hidden without JS, and all of it is off for reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes k-in {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes k-zoom-in {
+    from { opacity: 0; transform: scale(1.08); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  @keyframes k-pop {
+    0% { opacity: 0; transform: scale(0.4); }
+    70% { transform: scale(1.12); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  @keyframes k-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgb(58 125 68 / 0); }
+    8% { box-shadow: 0 0 0 7px rgb(58 125 68 / 0.28); }
+    20% { box-shadow: 0 0 0 0 rgb(58 125 68 / 0); }
+  }
+  @keyframes k-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  .k-in { animation: k-in 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both; animation-delay: var(--d, 0ms); }
+  .k-zoom { animation: k-zoom-in 1.6s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+  .k-pop { animation: k-pop 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) both, k-pulse 7.5s ease-out infinite; animation-delay: var(--d, 0ms), var(--p, 2s); }
+  .k-float { animation: k-float 6s ease-in-out infinite; }
+
+  .reveal-on [data-reveal] {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.8s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+    transition-delay: var(--d, 0ms);
+  }
+  .reveal-on [data-reveal="left"] { transform: translateX(-32px); }
+  .reveal-on [data-reveal="right"] { transform: translateX(32px); }
+  .reveal-on [data-reveal="zoom"] { transform: scale(0.94); }
+  .reveal-on [data-reveal].is-in { opacity: 1; transform: none; }
+  /* Trigger only: draws the lines inside without moving itself. */
+  .reveal-on [data-reveal="none"] { opacity: 1; transform: none; }
+  /* Once revealed, hover effects respond at once and animate smoothly. */
+  .reveal-on [data-reveal].is-done {
+    transition: opacity 0.3s, transform 0.3s, translate 0.3s, box-shadow 0.3s, border-color 0.3s, background-color 0.3s;
+    transition-delay: 0ms;
+  }
+
+  /* Bars and lines that draw themselves once their section is in view. */
+  .reveal-on .k-grow-x { transform: scaleX(0); transform-origin: left; transition: transform 1.2s cubic-bezier(0.2, 0.7, 0.2, 1) var(--d, 200ms); }
+  .reveal-on .k-grow-y { transform: scaleY(0); transform-origin: top; transition: transform 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) var(--d, 200ms); }
+  .reveal-on .is-in .k-grow-x, .reveal-on .is-in.k-grow-x { transform: scaleX(1); }
+  .reveal-on .is-in .k-grow-y, .reveal-on .is-in.k-grow-y { transform: scaleY(1); }
+}

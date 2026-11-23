@@ -4,6 +4,7 @@ import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { Heading } from "@/components/ui/Heading";
 import { Eyebrow } from "@/components/ui/Eyebrow";
+import { delay } from "./motion";
 
 export function DashboardPreview() {
   const t = useTranslations("home.dashboard");
@@ -12,7 +13,7 @@ export function DashboardPreview() {
     <Section size="xl" className="bg-dark">
       <Container>
         <div className="flex flex-col items-center gap-16">
-          <div className="flex max-w-[760px] flex-col items-center gap-4 text-center">
+          <div data-reveal className="flex max-w-[760px] flex-col items-center gap-4 text-center">
             <Eyebrow>{t("eyebrow")}</Eyebrow>
             <Heading as="h2" size="section" variant="onDark">
               {t("heading")}
@@ -24,7 +25,7 @@ export function DashboardPreview() {
             </p>
           </div>
 
-          <div className="relative aspect-[1040/447] w-full max-w-[1040px] overflow-hidden rounded-2xl border border-[#2E2C28] shadow-2xl">
+          <div data-reveal="zoom" style={delay(150)} className="relative aspect-[1040/447] w-full max-w-[1040px] overflow-hidden rounded-2xl border border-[#2E2C28] shadow-2xl">
             <Image
               src="/images/dashboard-mockup.png"
               alt={t("imageAlt")}

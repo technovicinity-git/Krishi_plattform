@@ -6,6 +6,7 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { CheckBullet } from "@/components/icons";
 import { listPublicOfferings } from "@/lib/public/plans";
 import { formatBDT } from "@/lib/utils";
+import { delay } from "./motion";
 
 // Profit split after a sale: farmer / investor / steward / Krishi.
 const SHARES = [
@@ -35,7 +36,7 @@ export async function Transparency() {
     <Section size="xl" className="bg-stone">
       <Container>
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_520px] lg:items-center lg:gap-24">
-          <div className="flex flex-col gap-8 lg:gap-10">
+          <div data-reveal="left" className="flex flex-col gap-8 lg:gap-10">
             <div className="flex flex-col gap-4">
               <Eyebrow>{t("eyebrow")}</Eyebrow>
               <Heading as="h2" size="section">
@@ -53,7 +54,7 @@ export async function Transparency() {
             </ul>
           </div>
 
-          <div className="flex flex-col gap-7 rounded-xl border border-border-light bg-white p-6 md:p-10">
+          <div data-reveal="right" style={delay(150)} className="flex flex-col gap-7 rounded-xl border border-border-light bg-white p-6 shadow-[0_20px_50px_-30px_rgba(0,0,0,0.25)] md:p-10">
             <div className="flex flex-col gap-1.5">
               <span className="text-[11px] font-semibold uppercase tracking-[0.02em] text-ink-muted">{t("breakdown.label")}</span>
               <span className="font-serif text-[24px] leading-[1.35] text-ink md:text-[26px]">
@@ -67,7 +68,7 @@ export async function Transparency() {
             </div>
 
             {/* One stacked bar for the whole unit, then a line per part. */}
-            <div className="flex h-3 w-full gap-[2px] overflow-hidden rounded-full bg-stone">
+            <div style={delay(500)} className="k-grow-x flex h-3 w-full gap-[2px] overflow-hidden rounded-full bg-stone">
               {rows.map((r) => (
                 <div key={r.key} className={r.bar} style={{ width: `${pct(r.amount)}%` }} />
               ))}
@@ -97,7 +98,7 @@ export async function Transparency() {
                 <span className="text-[14px] font-semibold text-ink-button">{t("breakdown.saleTitle")}</span>
                 <span className="text-[12px] leading-snug text-ink-tertiary">{t("breakdown.saleNote")}</span>
               </div>
-              <div className="flex h-3 w-full gap-[2px] overflow-hidden rounded-full">
+              <div style={delay(900)} className="k-grow-x flex h-3 w-full gap-[2px] overflow-hidden rounded-full">
                 {SHARES.map((s) => (
                   <div key={s.key} className={s.color} style={{ width: `${s.pct}%` }} />
                 ))}

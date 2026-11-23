@@ -9,6 +9,7 @@ import { RiskDisclosure } from "@/components/home/RiskDisclosure";
 import { WhyKrishi } from "@/components/home/WhyKrishi";
 import { Faq } from "@/components/home/Faq";
 import { FinalCta } from "@/components/home/FinalCta";
+import { RevealOnScroll } from "@/components/home/RevealOnScroll";
 
 export default function HomePage() {
   return (
@@ -24,6 +25,7 @@ export default function HomePage() {
       <WhyKrishi />
       <Faq />
       <FinalCta />
+      <RevealOnScroll />
     </>
   );
 }
