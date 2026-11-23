@@ -4,6 +4,8 @@ import { Container } from "@/components/ui/Container";
 import { Badge } from "@/components/ui/Badge";
 import { ShieldIcon } from "@/components/icons";
 import type { OfferingListItem } from "@/lib/public/plans";
+import { formatRoi } from "@/lib/utils";
+import { delay } from "@/components/home/motion";
 
 interface HeroProps {
   offering: OfferingListItem;
@@ -42,14 +44,14 @@ export function Hero({ offering, title }: HeroProps) {
       <Container>
         <div className="grid grid-cols-1 gap-12 pt-6 pb-16 lg:grid-cols-[minmax(0,1fr)_560px] lg:gap-12">
           {/* Image */}
-          <div className="relative aspect-[672/480] w-full overflow-hidden rounded-2xl">
+          <div style={delay(100)} className="k-in group relative aspect-[672/480] w-full overflow-hidden rounded-2xl">
             <Image
               src={imageUrl}
               alt={title}
               fill
               priority
               sizes="(min-width: 1024px) 672px, 100vw"
-              className="object-cover"
+              className="k-zoom object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.04]"
             />
             <div className="absolute right-6 top-6">
               <Badge variant={statusVariant}>{statusLabel}</Badge>
@@ -58,7 +60,7 @@ export function Hero({ offering, title }: HeroProps) {
 
           {/* Content */}
           <div className="flex flex-col gap-7">
-            <div className="flex flex-col gap-3">
+            <div style={delay(200)} className="k-in flex flex-col gap-3">
               <span className="text-[11px] font-semibold uppercase tracking-[0.02em] text-green-olive">
                 {bn ? offering.categoryNameBn : offering.categoryNameEn} · {locationLabel} · {tp("months", { count: offering.durationMonths })}
               </span>
@@ -71,7 +73,7 @@ export function Hero({ offering, title }: HeroProps) {
             </div>
 
             {/* Metrics bar */}
-            <div className="grid grid-cols-3 gap-8 border-y border-border-light py-6">
+            <div style={delay(320)} className="k-in grid grid-cols-3 gap-8 border-y border-border-light py-6">
               <Metric
                 label={t("metrics.durationLabel")}
                 value={tp("months", { count: offering.durationMonths })}
@@ -79,18 +81,18 @@ export function Hero({ offering, title }: HeroProps) {
               />
               <Metric
                 label={t("metrics.returnLabel")}
-                value={`${offering.roiMin}–${offering.roiMax}%`}
+                value={formatRoi(offering.roiMin, offering.roiMax)}
                 valueColor="text-brand"
               />
               <Metric
                 label={t("metrics.unitsLabel")}
-                value={tp("unitsOf", { funded: offering.unitsFunded, total: offering.unitsOffered })}
+                value={tp("unitsOf", { funded: Math.max(0, offering.unitsOffered - offering.unitsFunded), total: offering.unitsOffered })}
                 valueColor="text-green-deep"
               />
             </div>
 
             {/* Verification note */}
-            <div className="flex items-start gap-3">
+            <div style={delay(420)} className="k-in flex items-start gap-3">
               <ShieldIcon className="mt-0.5 h-5 w-5 shrink-0 text-green-olive" />
               <p className="text-[13px] leading-tight text-ink-secondary">
                 {t("verification")}

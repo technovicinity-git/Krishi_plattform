@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/Badge";
 import { StarIcon } from "@/components/icons";
 import { Link } from "@/i18n/navigation";
 import { planImageUrl } from "@/lib/admin/plan-helpers";
-import { formatBDT } from "@/lib/utils";
+import { formatBDT, formatRoi } from "@/lib/utils";
 import { getStewardRatings, getStewardReviews } from "@/lib/reviews";
 import { Stars } from "@/components/reviews/Stars";
 import { ReviewList } from "@/components/reviews/ReviewList";
@@ -300,7 +300,7 @@ export default async function StewardProfilePage({
                           {t("estimatedRoi")}
                         </span>
                         <div className="mt-1 text-[22px] font-bold text-ink">
-                          {plan.estimated_roi_min}–{plan.estimated_roi_max}%
+                          {formatRoi(plan.estimated_roi_min, plan.estimated_roi_max)}
                         </div>
                       </div>
                       <div>

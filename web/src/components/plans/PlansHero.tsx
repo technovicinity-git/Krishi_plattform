@@ -3,6 +3,7 @@ import { Container } from "@/components/ui/Container";
 import { Heading } from "@/components/ui/Heading";
 import { Pill } from "@/components/ui/Pill";
 import { ShieldIcon, EyeIcon, ActivityIcon } from "@/components/icons";
+import { delay } from "@/components/home/motion";
 
 export function PlansHero() {
   const t = useTranslations("plansPage.hero");
@@ -17,17 +18,21 @@ export function PlansHero() {
     <section className="bg-cream">
       <Container>
         <div className="flex flex-col gap-6 pt-14 pb-8 md:pt-16 md:pb-10 lg:pt-20 lg:pb-12">
-          <Pill>{t("tag")}</Pill>
+          <div className="k-in" style={delay(0)}>
+            <Pill>{t("tag")}</Pill>
+          </div>
 
-          <Heading as="h1" size="section" className="max-w-[1280px]">
-            {t("heading")}
-          </Heading>
+          <div className="k-in" style={delay(100)}>
+            <Heading as="h1" size="section" className="max-w-[1280px]">
+              {t("heading")}
+            </Heading>
+          </div>
 
-          <p className="max-w-[640px] text-[15px] leading-[1.65] text-ink-secondary md:text-[16px]">
+          <p style={delay(200)} className="k-in max-w-[640px] text-[15px] leading-[1.65] text-ink-secondary md:text-[16px]">
             {t("paragraph")}
           </p>
 
-          <div className="flex flex-wrap items-center gap-x-8 gap-y-3 pt-4">
+          <div style={delay(300)} className="k-in flex flex-wrap items-center gap-x-8 gap-y-3 pt-4">
             {trust.map((item) => (
               <div key={item.key} className="flex items-center gap-2">
                 {item.icon}

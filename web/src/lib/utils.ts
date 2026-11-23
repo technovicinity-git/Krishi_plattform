@@ -6,3 +6,10 @@ export function formatBDT(n: number): string {
   const rest = s.slice(0, -3).replace(/\B(?=(\d{2})+(?!\d))/g, ",");
   return `৳${rest},${last3}`;
 }
+
+/** An estimated return range: "15–20%", or "20%" when both ends are equal. */
+export function formatRoi(min: number | string | null | undefined, max: number | string | null | undefined): string {
+  const a = Number(min ?? 0);
+  const b = Number(max ?? 0);
+  return a === b ? `${a}%` : `${a}–${b}%`;
+}

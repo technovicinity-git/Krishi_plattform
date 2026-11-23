@@ -24,7 +24,7 @@ export function TrustIndicators() {
             {ITEMS.map((key, i) => (
               <article
                 key={key}
-                className="flex flex-col gap-4 rounded-[8px] border border-border-light bg-cream p-7"
+                className="transition-[translate,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-brand/30 hover:shadow-[0_12px_28px_-16px_rgba(0,0,0,0.2)] flex flex-col gap-4 rounded-[8px] border border-border-light bg-cream p-7"
               >
                 <span className="text-[11px] font-bold uppercase leading-none tracking-[0.02em] text-brand">
                   {String(i + 1).padStart(2, "0")}

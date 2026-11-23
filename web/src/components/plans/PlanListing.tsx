@@ -7,6 +7,8 @@ import { Container } from "@/components/ui/Container";
 import { PlanCard } from "@/components/plans/PlanCard";
 import { CheckIcon, ChevronDownIcon, SearchIcon, XCircleIcon } from "@/components/icons";
 import type { OfferingListItem } from "@/lib/public/plans";
+import { formatRoi } from "@/lib/utils";
+import { delay } from "@/components/home/motion";
 
 interface PlanListingProps {
   items: OfferingListItem[];
@@ -172,9 +174,11 @@ export function PlanListing({ items, total, page, hasMore }: PlanListingProps) {
         {/* Active filters row */}
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border-light pb-4">
           <div className="flex flex-wrap items-center gap-2.5">
-            <span className="text-[12px] font-semibold uppercase tracking-[0.02em] text-ink-tertiary">
-              {t("filters.activeFiltersLabel")}
-            </span>
+            {hasActiveFilters && (
+              <span className="text-[12px] font-semibold uppercase tracking-[0.02em] text-ink-tertiary">
+                {t("filters.activeFiltersLabel")}
+              </span>
+            )}
             {category !== "all" && (
               <Chip
                 label={t(`filters.category${capitalize(category)}`)}
@@ -220,8 +224,10 @@ export function PlanListing({ items, total, page, hasMore }: PlanListingProps) {
         {/* Grid */}
         {items.length > 0 ? (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {items.map((item) => (
-              <OfferingCard key={item.offeringId} item={item} />
+            {items.map((item, i) => (
+              <div key={item.offeringId} data-reveal style={delay((i % 3) * 110)}>
+                <OfferingCard item={item} />
+              </div>
             ))}
           </div>
         ) : (
@@ -232,7 +238,8 @@ export function PlanListing({ items, total, page, hasMore }: PlanListingProps) {
           </div>
         )}
 
-        {/* Pagination */}
+        {/* Pagination (only when there is more than one page) */}
+        {(page > 1 || hasMore) && (
         <div className="flex items-center justify-center gap-2 pt-8">
           <button
             type="button"
@@ -254,6 +261,7 @@ export function PlanListing({ items, total, page, hasMore }: PlanListingProps) {
             {t("pagination.next")}
           </button>
         </div>
+        )}
       </div>
     </Container>
   );
@@ -320,7 +328,7 @@ function OfferingCard({ item }: { item: OfferingListItem }) {
       meta={`${bn ? item.districtNameBn : item.districtNameEn} · ${tp("months", { count: item.durationMonths })} · ${item.steward.name}`}
       status={statusLabel}
       statusVariant={statusVariant}
-      estimatedReturn={`${item.roiMin}–${item.roiMax}%`}
+      estimatedReturn={formatRoi(item.roiMin, item.roiMax)}
       estimatedReturnLabel={t("card.estimatedReturn")}
       investmentPerUnit={`৳${money(item.unitPrice)}`}
       investmentPerUnitLabel={t("card.investmentPerUnit")}

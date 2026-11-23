@@ -3,6 +3,7 @@ import { PlanListing } from "@/components/plans/PlanListing";
 import { TrustIndicators } from "@/components/plans/TrustIndicators";
 import { PlansRiskDisclosure } from "@/components/plans/PlansRiskDisclosure";
 import { listPublicOfferings, type PlanFilters } from "@/lib/public/plans";
+import { RevealOnScroll } from "@/components/home/RevealOnScroll";
 
 export const dynamic = "force-dynamic";
 
@@ -48,6 +49,7 @@ export default async function PlansPage({ searchParams }: PageProps) {
       />
       <TrustIndicators />
       <PlansRiskDisclosure />
+      <RevealOnScroll auto />
     </>
   );
 }

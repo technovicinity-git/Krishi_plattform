@@ -32,7 +32,22 @@ export function RevealOnScroll({ auto = false }: { auto?: boolean }) {
       { rootMargin: "0px 0px -10% 0px", threshold: 0.12 },
     );
     for (const el of els) if (!el.classList.contains("is-in")) io.observe(el);
+
+    // Content added later (a filtered list re-rendering): observe it too.
+    const mo = new MutationObserver((records) => {
+      for (const r of records) {
+        for (const node of Array.from(r.addedNodes)) {
+          if (!(node instanceof Element)) continue;
+          const found = [node, ...Array.from(node.querySelectorAll("[data-reveal]"))].filter(
+            (el) => el.hasAttribute("data-reveal") && !el.classList.contains("is-in"),
+          );
+          for (const el of found) io.observe(el);
+        }
+      }
+    });
+    mo.observe(document.body, { childList: true, subtree: true });
     return () => {
+      mo.disconnect();
       io.disconnect();
       root.classList.remove("reveal-on");
     };

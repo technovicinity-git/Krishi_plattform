@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { formatBDT } from "@/lib/utils";
+import { formatBDT, formatRoi } from "@/lib/utils";
 import { PageHeader } from "@/components/dashboard/ui";
 
 export const dynamic = "force-dynamic";
@@ -102,7 +102,7 @@ export default async function InvestorInvestmentsPage() {
                   <div className="flex items-center justify-between text-[13px]">
                     <span className="text-ink-muted">{t("estRoi")}</span>
                     <span className="font-semibold text-brand">
-                      {plan?.estimated_roi_min}–{plan?.estimated_roi_max}%
+                      {formatRoi(plan?.estimated_roi_min, plan?.estimated_roi_max)}
                     </span>
                   </div>
                   

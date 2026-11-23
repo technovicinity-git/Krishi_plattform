@@ -18,6 +18,7 @@ import { AnimalsPanel } from "@/components/animals/AnimalsPanel";
 import { ReviewPanel } from "@/components/reviews/ReviewPanel";
 import { getReviewForInvestment } from "@/lib/reviews";
 import { ReportDownload } from "@/components/reports/ReportDownload";
+import { formatRoi } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -72,7 +73,7 @@ export default async function InvestorInvestmentDetailPage({
           { label: t("units"), value: `${inv.units}` },
           inv.settlement
             ? { label: t("yourPayout"), value: formatBDT(inv.settlement.investorPayout), accent: true }
-            : { label: t("estReturn"), value: `${inv.offering.roiMin}–${inv.offering.roiMax}%`, accent: true },
+            : { label: t("estReturn"), value: formatRoi(inv.offering.roiMin, inv.offering.roiMax), accent: true },
           inv.settlement
             ? {
                 label: t("actualReturn"),
