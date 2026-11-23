@@ -3,12 +3,25 @@ import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { Heading } from "@/components/ui/Heading";
 import { Pill } from "@/components/ui/Pill";
-import { EyeIcon } from "@/components/icons";
+import { NavIcon, type NavIconName } from "@/components/dashboard/NavIcon";
 
 const ITEMS = [
   "investment", "livestock", "purchase", "photos", "expenses",
   "sale", "transactions", "documents", "reports", "settlement",
 ] as const;
+
+const ICON: Record<(typeof ITEMS)[number], NavIconName> = {
+  investment: "briefcase",
+  livestock: "tag",
+  purchase: "receipt",
+  photos: "eye",
+  expenses: "clipboard",
+  sale: "coins",
+  transactions: "history",
+  documents: "inbox",
+  reports: "chart",
+  settlement: "wallet",
+};
 
 export function Visibility() {
   const t = useTranslations("howItWorks.visibility");
@@ -27,14 +40,14 @@ export function Visibility() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
             {ITEMS.map((key) => (
               <article
                 key={key}
-                className="flex flex-col gap-3 rounded-[8px] border border-border-divider bg-white p-7"
+                className="group flex flex-col gap-3 rounded-xl border border-border-divider bg-white p-6 transition-[translate,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-brand/30 hover:shadow-[0_12px_28px_-16px_rgba(0,0,0,0.2)]"
               >
-                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#E8F0EA] text-green-olive">
-                  <EyeIcon />
+                <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-tint text-brand transition-colors duration-300 group-hover:bg-brand group-hover:text-white">
+                  <NavIcon name={ICON[key]} className="h-5 w-5" />
                 </span>
                 <h3 className="font-serif text-[18px] leading-tight text-ink">
                   {t(`items.${key}.title`)}

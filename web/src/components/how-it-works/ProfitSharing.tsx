@@ -70,7 +70,7 @@ export function ProfitSharing() {
                       </span>
                     </div>
                     <div className="h-2 w-full overflow-hidden rounded-full bg-stone">
-                      <div className={`h-full rounded-full ${row.color}`} style={{ width: row.width }} />
+                      <div className={`k-grow-x h-full rounded-full ${row.color}`} style={{ width: row.width }} />
                     </div>
                   </div>
                 ))}

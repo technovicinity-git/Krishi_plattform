@@ -15,6 +15,7 @@ import { Settlement } from "@/components/how-it-works/Settlement";
 import { Visibility } from "@/components/how-it-works/Visibility";
 import { FaqPreview } from "@/components/how-it-works/FaqPreview";
 import { FinalCta } from "@/components/how-it-works/FinalCta";
+import { RevealOnScroll } from "@/components/home/RevealOnScroll";
 
 export default function HowItWorksPage() {
   return (
@@ -36,6 +37,7 @@ export default function HowItWorksPage() {
       <Visibility />
       <FaqPreview />
       <FinalCta />
+      <RevealOnScroll auto />
     </>
   );
 }
