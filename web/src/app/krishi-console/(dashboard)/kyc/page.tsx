@@ -1,7 +1,6 @@
-import Link from "next/link";
 import { requireAdmin } from "@/lib/admin/current-admin";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { EmptyState, PageHeader, Tabs } from "@/components/dashboard/ui";
+import { EmptyState, PageHeader, Tabs, RowAction } from "@/components/dashboard/ui";
 
 const FILTERS = [
   { key: "pending", label: "Pending" },
@@ -154,12 +153,7 @@ export default async function KycQueuePage({
                       </span>
                     </td>
                     <td className="px-5 py-4 text-right">
-                      <Link
-                        href={`/krishi-console/kyc/${p.id}`}
-                        className="text-[12px] font-semibold text-brand hover:underline"
-                      >
-                        Review →
-                      </Link>
+                      <RowAction href={`/krishi-console/kyc/${p.id}`} icon="shield">Review</RowAction>
                     </td>
                   </tr>
                 );

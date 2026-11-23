@@ -1,7 +1,6 @@
-import Link from "next/link";
 import { requireAdmin } from "@/lib/admin/current-admin";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { EmptyState, PageHeader, Tabs } from "@/components/dashboard/ui";
+import { EmptyState, PageHeader, Tabs, RowAction } from "@/components/dashboard/ui";
 
 const FILTERS = [
   { key: "all", label: "All" },
@@ -143,12 +142,7 @@ export default async function AdminFarmersPage({
                       {formatDate(farmer.created_at)}
                     </td>
                     <td className="px-5 py-4 text-right">
-                      <Link
-                        href={`/krishi-console/farmers/${farmer.id}`}
-                        className="text-[12px] font-semibold text-brand hover:underline"
-                      >
-                        View →
-                      </Link>
+                      <RowAction href={`/krishi-console/farmers/${farmer.id}`} icon="eye">View</RowAction>
                     </td>
                   </tr>
                 );

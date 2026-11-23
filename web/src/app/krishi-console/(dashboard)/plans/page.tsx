@@ -3,7 +3,7 @@ import { requireAdmin } from "@/lib/admin/current-admin";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { planImageUrl } from "@/lib/admin/plan-helpers";
 import { formatBDT } from "@/lib/utils";
-import { EmptyState, PageHeader } from "@/components/dashboard/ui";
+import { EmptyState, PageHeader, RowAction, RowActions } from "@/components/dashboard/ui";
 
 const STATUS_STYLE: Record<string, string> = {
   draft: "bg-stone text-ink-muted",
@@ -228,21 +228,17 @@ export default async function AdminPlansPage() {
                         {STATUS_LABEL[plan.status] ?? plan.status}
                       </span>
                     </td>
-                    <td className="px-5 py-3 text-right">
-                      <Link
-                        href={`/krishi-console/plans/${plan.id}`}
-                        className="text-[12px] font-semibold text-brand hover:underline"
-                      >
-                        Edit →
-                      </Link>
-                      {batches.get(plan.id) && (
-                        <Link
-                          href={`/krishi-console/investments?view=all&plan=${plan.id}`}
-                          className="ml-3 text-[12px] font-semibold text-brand hover:underline"
-                        >
-                          Progress →
-                        </Link>
-                      )}
+                    <td className="px-5 py-3">
+                      <RowActions>
+                        {batches.get(plan.id) && (
+                          <RowAction href={`/krishi-console/investments?view=all&plan=${plan.id}`} icon="chart">
+                            Progress
+                          </RowAction>
+                        )}
+                        <RowAction href={`/krishi-console/plans/${plan.id}`} icon="edit">
+                          Edit
+                        </RowAction>
+                      </RowActions>
                     </td>
                   </tr>
                 );

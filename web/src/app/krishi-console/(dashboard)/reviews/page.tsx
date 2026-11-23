@@ -72,7 +72,7 @@ export default async function AdminReviewsPage({
                 </div>
                 {r.comment && <p className="text-[13.5px] text-ink">“{r.comment}”</p>}
                 <span className="text-[12px] text-ink-secondary">
-                  {r.investor?.full_name ?? "—"} →{" "}
+                  {r.investor?.full_name ?? "—"} reviewed{" "}
                   {r.steward ? (
                     <Link href={`/krishi-console/stewards/${r.steward.id}`} className="font-semibold text-brand hover:underline">
                       {r.steward.full_name ?? "Steward"}

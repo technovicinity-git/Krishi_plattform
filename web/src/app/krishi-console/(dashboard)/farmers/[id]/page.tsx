@@ -1,8 +1,8 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/current-admin";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { BackLink } from "@/components/ui/BackLink";
+import { RowAction } from "@/components/dashboard/ui";
 
 function formatDateTime(iso: string | null): string {
   if (!iso) return "—";
@@ -101,12 +101,9 @@ export default async function AdminFarmerDetailPage({
               <Row label="Name" value={steward.full_name ?? "—"} />
               <Row label="Phone" value={steward.phone ?? "—"} />
               <div className="mt-2">
-                <Link
-                  href={`/krishi-console/stewards/${steward.id}`}
-                  className="text-[12px] font-semibold text-brand hover:underline"
-                >
-                  View steward →
-                </Link>
+                <RowAction href={`/krishi-console/stewards/${steward.id}`} icon="user">
+                  View steward
+                </RowAction>
               </div>
             </>
           ) : (
