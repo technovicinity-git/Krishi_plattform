@@ -1,6 +1,5 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import { cn } from "@/lib/cn";
-import { Link } from "@/i18n/navigation";
 import { formatBDT } from "@/lib/utils";
 import { describeDestination, WITHDRAWAL_MIN, type Wallet } from "@/lib/wallet";
 import {
@@ -10,6 +9,7 @@ import {
   StatCard,
   StatusBadge,
   type BadgeTone,
+  RowAction,
 } from "@/components/dashboard/ui";
 import { WithdrawButton } from "./WithdrawButton";
 import { CancelWithdrawalButton } from "./CancelWithdrawalButton";
@@ -94,7 +94,7 @@ export async function WalletView({
               {wallet.transactions.map((tx) => {
                 const href = tx.investmentId && investmentHref ? investmentHref(tx.investmentId) : null;
                 return (
-                  <li key={tx.id} className="flex items-center justify-between gap-4 px-6 py-3.5">
+                  <li key={tx.id} className="flex flex-col gap-2 px-6 py-3.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
                     <div className="flex min-w-0 flex-col gap-0.5">
                       <span className="text-[13.5px] font-semibold text-ink">
                         {t.has(`type.${tx.type}`) ? t(`type.${tx.type}`) : tx.type}
@@ -102,25 +102,19 @@ export async function WalletView({
                       <span className="truncate text-[12px] text-ink-muted">
                         {fmtDate(tx.createdAt)}
                         {tx.description ? ` · ${tx.description}` : ""}
-                        {href && (
-                          <>
-                            {" · "}
-                            <Link href={href} className="font-semibold text-brand hover:underline">
-                              {t("viewBatch")}
-                            </Link>
-                          </>
-                        )}
                       </span>
                     </div>
-                    <span
-                      className={cn(
-                        "shrink-0 text-[15px] font-bold",
-                        tx.amount > 0 ? "text-green-deep" : "text-ink",
+                    <div className="flex shrink-0 items-center gap-3">
+                      <span className={cn("text-[15px] font-bold", tx.amount > 0 ? "text-green-deep" : "text-ink")}>
+                        {tx.amount > 0 ? "+" : "−"}
+                        {formatBDT(Math.abs(tx.amount))}
+                      </span>
+                      {href && (
+                        <RowAction href={href} icon="briefcase" localized>
+                          {t("viewBatch")}
+                        </RowAction>
                       )}
-                    >
-                      {tx.amount > 0 ? "+" : "−"}
-                      {formatBDT(Math.abs(tx.amount))}
-                    </span>
+                    </div>
                   </li>
                 );
               })}
