@@ -7,6 +7,7 @@ import { formatBDT } from "@/lib/utils";
 import { cn } from "@/lib/cn";
 import { Link } from "@/i18n/navigation";
 import { EmptyState, PageHeader, StatCard, StatusBadge, type BadgeTone } from "@/components/dashboard/ui";
+import { RowAction } from "@/components/dashboard/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -167,9 +168,11 @@ export default async function StewardPlansPage() {
                     {t("batchesLink", { count: batches })}
                   </Link>
                   {publicSlug && (
-                    <Link href={`/plans/${publicSlug}`} className="ml-auto font-semibold text-brand hover:underline">
-                      {t("viewPublic")} →
-                    </Link>
+                    <span className="ml-auto">
+                      <RowAction href={`/plans/${publicSlug}`} icon="eye" localized>
+                        {t("viewPublic")}
+                      </RowAction>
+                    </span>
                   )}
                 </div>
               </li>

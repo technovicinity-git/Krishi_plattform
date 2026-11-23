@@ -1,6 +1,5 @@
 "use client";
 
-import { Link } from "@/i18n/navigation";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
@@ -9,6 +8,7 @@ import { formatBDT } from "@/lib/utils";
 import { useDialog } from "@/components/ui/dialog-provider";
 
 import { StatusBadge, toneFor } from "@/components/dashboard/ui";
+import { RowAction } from "@/components/dashboard/ui";
 
 export interface FundRequestRow {
   id: string;
@@ -140,12 +140,9 @@ export function FundRequestsInlineList({
             )}
 
             <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-border-light pt-3">
-              <Link
-                href={`/steward/investments/${inv?.id}`}
-                className="text-[12px] font-semibold text-brand hover:underline"
-              >
+              <RowAction href={`/steward/investments/${inv?.id}`} icon="briefcase" localized>
                 {t("viewInvestment")}
-              </Link>
+              </RowAction>
 
               {showActions && (
                 <>

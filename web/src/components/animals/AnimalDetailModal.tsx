@@ -9,6 +9,8 @@ import { DetailRow, StatusBadge } from "@/components/dashboard/ui";
 import { FieldLabel, FormError, Modal, fieldClass } from "@/components/dashboard/Modal";
 import type { Animal } from "@/lib/animals";
 import { ANIMAL_TONE, weightGain } from "./shared";
+import { rowActionClass } from "@/components/dashboard/ui";
+import { NavIcon } from "@/components/dashboard/NavIcon";
 
 /** One animal: details, (farmer) edit form, and full record history. */
 export function AnimalDetailModal({
@@ -78,14 +80,18 @@ export function AnimalDetailModal({
       <div className="flex flex-col gap-5">
         <div className="flex items-center justify-between gap-2">
           <StatusBadge tone={ANIMAL_TONE[animal.status] ?? "neutral"}>{t(`status.${animal.status}`)}</StatusBadge>
-          <div className="flex gap-3">
+          <div className="flex gap-2">
             {canEdit && !editing && (
-              <button type="button" onClick={() => setEditing(true)} className="text-[12.5px] font-semibold text-brand hover:underline">
+              <button type="button" onClick={() => setEditing(true)} className={rowActionClass()}>
+                <NavIcon name="edit" className="h-[15px] w-[15px]" />
                 {t("editDetails")}
               </button>
             )}
             {canRecord && animal.status === "active" && (
-              <button type="button" onClick={onAddRecord} className="text-[12.5px] font-semibold text-brand hover:underline">
+              <button type="button" onClick={onAddRecord} className={rowActionClass("primary")}>
+                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="h-[14px] w-[14px]" aria-hidden="true">
+                  <path d="M10 4v12M4 10h12" />
+                </svg>
                 {t("addRecord")}
               </button>
             )}

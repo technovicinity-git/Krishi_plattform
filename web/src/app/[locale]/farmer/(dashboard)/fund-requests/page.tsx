@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { formatBDT } from "@/lib/utils";
@@ -13,6 +12,7 @@ import {
 } from "@/components/dashboard/ui";
 import { NewFundRequestButton } from "@/components/investment/NewFundRequestButton";
 import { getCapitalSpent } from "@/lib/investments/spending";
+import { RowAction } from "@/components/dashboard/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -147,12 +147,9 @@ export default async function FarmerFundRequestsPage() {
                   <div className="flex items-center gap-4 sm:flex-col sm:items-end sm:gap-1.5">
                     <span className="text-[17px] font-bold text-green-deep">{formatBDT(r.amount)}</span>
                     {r.investment && (
-                      <Link
-                        href={`/farmer/investments/${r.investment.id}`}
-                        className="text-[12.5px] font-semibold text-brand hover:underline"
-                      >
+                      <RowAction href={`/farmer/investments/${r.investment.id}`} icon="briefcase" localized>
                         {tf("viewInvestment")}
-                      </Link>
+                      </RowAction>
                     )}
                   </div>
                 </li>

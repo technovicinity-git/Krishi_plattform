@@ -4,6 +4,7 @@ import { getCurrentUser } from "@/lib/auth/current-user";
 import { redirect } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { PageHeader } from "@/components/dashboard/ui";
+import { RowAction } from "@/components/dashboard/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -157,12 +158,9 @@ export default async function InvestorInterestsPage({
                       {formatDate(interest.created_at, locale)}
                     </td>
                     <td className="px-5 py-3 text-right">
-                      <Link
-                        href={`/interest/${interest.reference}`}
-                        className="text-[12px] font-semibold text-brand hover:underline"
-                      >
+                      <RowAction href={`/interest/${interest.reference}`} icon="eye" localized>
                         {t("view")}
-                      </Link>
+                      </RowAction>
                     </td>
                   </tr>
                 );

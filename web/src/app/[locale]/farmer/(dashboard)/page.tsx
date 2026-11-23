@@ -4,7 +4,6 @@ import { Link } from "@/i18n/navigation";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { formatBDT } from "@/lib/utils";
-import { ArrowRightIcon } from "@/components/icons";
 import {
   EmptyState,
   PageHeader,
@@ -12,6 +11,7 @@ import {
   StatusBadge,
   toneFor,
 } from "@/components/dashboard/ui";
+import { rowActionClass } from "@/components/dashboard/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -184,10 +184,8 @@ export default async function FarmerDashboard() {
                         })}
                       </span>
                     )}
-                    <span className="flex items-center gap-1 text-[13px] font-bold text-brand">
-                      {t("open")}
-                      <ArrowRightIcon className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-                    </span>
+                    {/* The whole card is the link; this just looks like its button. */}
+                    <span className={rowActionClass()}>{t("open")}</span>
                   </div>
                 </Link>
               );

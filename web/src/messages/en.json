@@ -2724,7 +2724,7 @@
       "assign": "Assign",
       "assignedTo": "Assigned to:",
       "unknown": "Unknown",
-      "view": "View Investment →"
+      "view": "View Investment"
     },
     "common": {
       "cancel": "Cancel",
@@ -2784,7 +2784,7 @@
     "expressInterest": {
       "choosePlanTitle": "Choose a plan first",
       "choosePlanBody": "To express interest, open a plan and click \"Show Interest\".",
-      "explorePlans": "Explore Investment Plans →",
+      "explorePlans": "Explore Investment Plans",
       "unavailableTitle": "Plan not available",
       "unavailableBody": "This plan may have closed or been removed."
     },
@@ -2814,7 +2814,7 @@
       "ackContact": "I agree to be contacted by Krishi regarding this investment opportunity.",
       "riskDisclosure": "Risk Disclosure",
       "submitting": "Submitting…",
-      "submit": "Submit Interest →",
+      "submit": "Submit Interest",
       "privacy": "Your information is used to review your interest and coordinate the next steps."
     },
     "farmerActions": {
@@ -2840,7 +2840,7 @@
       "unitsCount": "{count, plural, one {# Unit} other {# Units}}",
       "animalBudget": "Animal Budget",
       "actionRequired": "Action Required: Purchase the animals",
-      "actionCta": "Request Funds & Log Purchase →"
+      "actionCta": "Request Funds & Log Purchase"
     },
     "forms": {
       "failedSave": "Failed to save",
@@ -2889,7 +2889,7 @@
       "farmer": "Farmer",
       "plan": "Plan",
       "rejectedLabel": "Rejected:",
-      "viewInvestment": "View investment →",
+      "viewInvestment": "View investment",
       "rejectReason": "Reason for rejection"
     },
     "interestCard": {
@@ -2901,7 +2901,7 @@
       "unitsCount": "{count, plural, one {# Unit} other {# Units}}",
       "processing": "Processing…",
       "reason": "Reason:",
-      "viewStatus": "View status page →"
+      "viewStatus": "View status page"
     },
     "interestStatus": {
       "pendingTitle": "Interest received",
@@ -2935,7 +2935,7 @@
       "stepActivation": "Activation",
       "required": "Required",
       "afterPayment": "After Payment",
-      "continueOnboarding": "Continue Investment Onboarding →",
+      "continueOnboarding": "Continue Investment Onboarding",
       "exploreOtherPlans": "Explore Other Plans",
       "returnToPlans": "Return to Investment Plans",
       "pendingNote": "Submitting interest does not guarantee approval or final unit allocation.",
@@ -3012,7 +3012,7 @@
       "title": "My Interests",
       "subtitle": "Plans you have expressed interest in. Click any entry to see its current status.",
       "empty": "You haven't expressed interest in any plans yet.",
-      "explorePlans": "Explore Investment Plans →",
+      "explorePlans": "Explore Investment Plans",
       "reference": "Reference",
       "plan": "Plan",
       "units": "Units",
@@ -3020,7 +3020,7 @@
       "submitted": "Submitted",
       "actions": "Actions",
       "unknownPlan": "Unknown plan",
-      "view": "View →",
+      "view": "View",
       "statusLabel": {
         "submitted": "Submitted",
         "under_review": "Under Review",
@@ -3036,7 +3036,7 @@
       "title": "My Investments",
       "subtitle": "Track your active livestock investments and their progress.",
       "empty": "You don't have any active investments yet.",
-      "explorePlans": "Explore Investment Plans →",
+      "explorePlans": "Explore Investment Plans",
       "unknownPlan": "Unknown Plan",
       "investedAmount": "Invested Amount",
       "units": "Units",
@@ -3044,7 +3044,7 @@
       "duration": "Duration",
       "months": "{count, plural, one {# Month} other {# Months}}",
       "estRoi": "Est. ROI",
-      "view": "View Investment →"
+      "view": "View Investment"
     },
     "onboardingWizard": {
       "orManual": "or pay by bank / mobile transfer",
@@ -3059,10 +3059,10 @@
       "stepActivation": "Activation",
       "kycTitle": "Account KYC Required",
       "kycBody": "Verify your identity to proceed with the deposit.",
-      "kycCta": "Go to Account KYC →",
+      "kycCta": "Go to Account KYC",
       "withdrawalTitle": "Withdrawal Preference",
       "withdrawalBody": "Where should we send your returns and principal?",
-      "withdrawalCta": "Set Up Withdrawal Method →",
+      "withdrawalCta": "Set Up Withdrawal Method",
       "depositTitle": "Fund Your Investment",
       "depositBody": "Transfer exactly <strong>{amount}</strong> to one of the platform accounts below, then enter the Transaction ID (TXN).",
       "bankTransfer": "Bank Transfer",
@@ -3205,7 +3205,7 @@
       "colStatus": "Status",
       "colAdded": "Added",
       "colActions": "Actions",
-      "view": "View →"
+      "view": "View"
     },
     "stewardFundRequests": {
       "title": "Fund Requests",
@@ -3250,7 +3250,7 @@
       "typeIndividualLong": "Individual Steward",
       "defaultExperience": "Coordinates livestock care and investment operations in this region.",
       "noReviews": "No reviews yet",
-      "exploreOpportunities": "Explore Investment Opportunities →",
+      "exploreOpportunities": "Explore Investment Opportunities",
       "backToStewards": "Back to Stewards",
       "aboutEyebrow": "About the Steward",
       "aboutHeading": "Local knowledge. Responsible coordination.",
@@ -3273,7 +3273,7 @@
       "months": "{count, plural, one {# month} other {# months}}",
       "estimatedRoi": "Estimated ROI",
       "perUnit": "Investment per Unit",
-      "viewPlan": "View Plan →",
+      "viewPlan": "View Plan",
       "supportHeading": "How This Steward Supports the Journey",
       "support1Title": "Coordination",
       "support1Body": "Coordinates farmers and livestock activities.",
