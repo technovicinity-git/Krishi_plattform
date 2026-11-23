@@ -200,7 +200,10 @@ export async function getLedger(scope: LedgerScope, filters: LedgerFilters = {})
     }
   }
 
-  // ── Fund requests released to farmers (Krishi money out to a farmer) ─────
+  // ── Fund requests released to farmers ─────────────────────────────────────
+  // Approval credits the farmer's wallet; the cash leaves Krishi when the
+  // farmer withdraws it (counted under withdrawals). So for the platform it's
+  // internal, for the farmer it's money in.
   if ((platform || role === "farmer") && wants("fund_release")) {
     let q = db
       .from("fund_requests")
@@ -208,7 +211,7 @@ export async function getLedger(scope: LedgerScope, filters: LedgerFilters = {})
       .order("created_at", { ascending: false })
       .limit(PER_SOURCE_LIMIT);
     if (userId) q = q.eq("farmer_id", userId);
-    // Platform: only money that actually left Krishi.
+    // Platform: only requests that were credited to the farmer.
     if (platform) q = q.in("status", ["approved", "disbursed"]);
     if (lo) q = q.gte("created_at", lo);
     if (hi) q = q.lte("created_at", hi);
@@ -221,7 +224,7 @@ export async function getLedger(scope: LedgerScope, filters: LedgerFilters = {})
         id: `fr-${r.id}`,
         at: r.reviewed_at ?? r.created_at,
         kind: "fund_release",
-        direction: platform ? "out" : "in",
+        direction: platform ? "internal" : "in",
         amount: num(r.amount),
         status: r.status === "approved" || r.status === "disbursed" ? "completed" : r.status,
         reference: r.reference,

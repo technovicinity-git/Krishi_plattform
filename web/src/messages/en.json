@@ -1668,7 +1668,7 @@
       "kindPlatform": {
         "deposit": "Investor payment",
         "refund": "Refund to investor",
-        "fund_release": "Funds to farmer",
+        "fund_release": "Funds credited to farmer",
         "remittance": "Sale money received",
         "payout": "Payout credited",
         "share": "Share credited",
@@ -2352,6 +2352,7 @@
       "cancelMessage": "The money goes back to your available balance.",
       "cancelFailed": "Could not cancel the withdrawal",
       "type": {
+        "fund_release": "Funds for your batch",
         "settlement_payout": "Investment payout",
         "settlement_share": "Profit share",
         "withdrawal": "Withdrawal",
