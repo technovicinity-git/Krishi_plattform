@@ -5,6 +5,8 @@ import { getSignedKycUrls } from "@/lib/admin/storage";
 import { BackLink } from "@/components/ui/BackLink";
 import { KycDocPreview } from "@/components/kyc/KycDocPreview";
 import { KycReviewActions } from "@/components/admin/KycReviewActions";
+import { AccountStatusControl } from "@/components/admin/AccountStatusControl";
+import { getAccountStatus } from "@/lib/admin/account-status";
 
 function formatDateTime(iso: string | null): string {
   if (!iso) return "—";
@@ -39,6 +41,7 @@ export default async function AdminInvestorDetailPage({
     .maybeSingle();
 
   if (!user) notFound();
+  const accountStatus = await getAccountStatus(user.id);
 
   const { data: kyc } = await db
     .from("kyc_profiles")
@@ -73,6 +76,17 @@ export default async function AdminInvestorDetailPage({
           </span>
         </div>
       </div>
+
+      {accountStatus && (
+        <AccountStatusControl
+          userId={user.id}
+          name={user.full_name ?? "Investor"}
+          status={accountStatus.status}
+          reason={accountStatus.reason}
+          changedAt={accountStatus.changedAt}
+          changedBy={accountStatus.changedBy}
+        />
+      )}
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
         <div className="flex flex-col gap-6">

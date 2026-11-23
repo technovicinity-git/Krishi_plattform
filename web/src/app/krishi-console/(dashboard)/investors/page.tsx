@@ -137,7 +137,9 @@ export default async function AdminInvestorsPage({
                   >
                     <td className="px-5 py-4">
                       <span className="text-[13px] font-semibold text-ink">
-                        {inv.full_name ?? "—"}
+                        {inv.full_name ?? "—"} {inv.status === "suspended" && (
+                        <span className="ml-2 inline-flex rounded-[4px] bg-[#FAF0ED] px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.02em] text-danger">Suspended</span>
+                      )}
                       </span>
                     </td>
                     <td className="px-5 py-4 text-[13px] text-ink-secondary">

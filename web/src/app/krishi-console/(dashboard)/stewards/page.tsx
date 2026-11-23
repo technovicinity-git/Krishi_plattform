@@ -35,7 +35,7 @@ export default async function AdminStewardsPage({
 
   let query = db
     .from("users")
-    .select("id, full_name, phone, email, steward_approval_status, created_at")
+    .select("id, full_name, phone, email, status, steward_approval_status, created_at")
     .eq("role", "steward")
     .order("created_at", { ascending: false })
     .limit(200);
@@ -100,7 +100,9 @@ export default async function AdminStewardsPage({
                     className="border-b border-border-light last:border-b-0 hover:bg-cream/60"
                   >
                     <td className="px-5 py-4 text-[13px] font-semibold text-ink">
-                      {s.full_name ?? "—"}
+                      {s.full_name ?? "—"} {s.status === "suspended" && (
+                        <span className="ml-2 inline-flex rounded-[4px] bg-[#FAF0ED] px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.02em] text-danger">Suspended</span>
+                      )}
                     </td>
                     <td className="px-5 py-4 text-[13px] text-ink-secondary">
                       {s.phone ?? "—"}
