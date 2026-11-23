@@ -62,6 +62,23 @@ export default async function AdminPlansPage() {
         .in("plan_id", planIds)
     : { data: [] as { plan_id: string; units_offered: number; units_funded: number; status: string }[] };
 
+  // Batches per plan (in progress / all), for the "Batches" column.
+  const { data: batchRows } = planIds.length
+    ? await db
+        .from("investments")
+        .select("current_stage, offering:steward_plan_offerings!offering_id!inner ( plan_id )")
+        .in("offering.plan_id", planIds)
+    : { data: [] };
+  const batches = new Map<string, { active: number; total: number }>();
+  for (const b of batchRows ?? []) {
+    const planId = (b.offering as unknown as { plan_id: string } | null)?.plan_id;
+    if (!planId) continue;
+    const cur = batches.get(planId) ?? { active: 0, total: 0 };
+    cur.total += 1;
+    if (b.current_stage !== "settled") cur.active += 1;
+    batches.set(planId, cur);
+  }
+
   const catMap = new Map((categories ?? []).map((c) => [c.id, c.name_en]));
   const distMap = new Map((districts ?? []).map((d) => [d.id, d.name_en]));
 
@@ -118,6 +135,9 @@ export default async function AdminPlansPage() {
                 </th>
                 <th className="px-5 py-3 text-center text-[11px] font-bold uppercase tracking-[0.02em] text-ink-muted">
                   Offerings
+                </th>
+                <th className="px-5 py-3 text-center text-[11px] font-bold uppercase tracking-[0.02em] text-ink-muted">
+                  Batches
                 </th>
                 <th className="px-5 py-3 text-left text-[11px] font-bold uppercase tracking-[0.02em] text-ink-muted">
                   Status
@@ -186,6 +206,21 @@ export default async function AdminPlansPage() {
                         </span>
                       )}
                     </td>
+                    <td className="px-5 py-3 text-center text-[12px]">
+                      {batches.get(plan.id) ? (
+                        <Link
+                          href={`/krishi-console/investments?view=all&plan=${plan.id}`}
+                          className="font-semibold text-brand hover:underline"
+                        >
+                          {batches.get(plan.id)!.active} in progress
+                          <span className="block text-[10px] font-normal text-ink-muted">
+                            {batches.get(plan.id)!.total} total
+                          </span>
+                        </Link>
+                      ) : (
+                        <span className="text-ink-muted">—</span>
+                      )}
+                    </td>
                     <td className="px-5 py-3">
                       <span
                         className={`inline-flex items-center rounded-[4px] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.02em] ${statusStyle}`}
@@ -200,6 +235,14 @@ export default async function AdminPlansPage() {
                       >
                         Edit →
                       </Link>
+                      {batches.get(plan.id) && (
+                        <Link
+                          href={`/krishi-console/investments?view=all&plan=${plan.id}`}
+                          className="ml-3 text-[12px] font-semibold text-brand hover:underline"
+                        >
+                          Progress →
+                        </Link>
+                      )}
                     </td>
                   </tr>
                 );

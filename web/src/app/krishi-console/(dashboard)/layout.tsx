@@ -71,6 +71,7 @@ export default async function AdminDashboardLayout({
           items: [
             { label: "KYC Queue", href: "/krishi-console/kyc", icon: "shield", badge: kyc ?? 0 },
             { label: "Deposits", href: "/krishi-console/deposits", icon: "coins", badge: (deposits ?? 0) + (orphanPayments ?? 0) },
+            { label: "Batches", href: "/krishi-console/investments", icon: "briefcase" },
             { label: "Sales", href: "/krishi-console/sales", icon: "tag", badge: sales ?? 0 },
             { label: "Withdrawals", href: "/krishi-console/withdrawals", icon: "wallet", badge: withdrawals ?? 0 },
             { label: "Transactions", href: "/krishi-console/transactions", icon: "coins" },
