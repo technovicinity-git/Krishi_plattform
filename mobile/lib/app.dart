@@ -230,7 +230,11 @@ class _Splash extends StatelessWidget {
         backgroundColor: KColors.greenDeep,
         body: Center(
           child: Column(mainAxisSize: MainAxisSize.min, children: [
-            Icon(Icons.eco_rounded, color: Colors.white, size: 56),
+            CircleAvatar(
+              radius: 52,
+              backgroundColor: Colors.white,
+              child: Padding(padding: EdgeInsets.all(8), child: Image(image: AssetImage('assets/logo_mark.png'))),
+            ),
             SizedBox(height: 12),
             Text('Krishi', style: TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.w800)),
             SizedBox(height: 24),
