@@ -4,6 +4,7 @@ import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDialog } from "@/components/ui/dialog-provider";
 import { compressImage } from "@/lib/images/compress";
+import { otherAllocation } from "@/lib/plans/allocation";
 
 interface Category {
   id: string;
@@ -98,6 +99,34 @@ export function PlanForm({
   const [careAllocation, setCareAllocation] = useState(
     initial ? String(initial.care_allocation) : "50000",
   );
+  // Animal + Care must equal the unit price, so typing one fills the other.
+  // When the unit price changes, the allocation typed last is kept and the
+  // other one is recalculated.
+  const [lastAllocation, setLastAllocation] = useState<"animal" | "care">("animal");
+  const changeUnitPrice = (v: string) => {
+    setUnitPrice(v);
+    if (lastAllocation === "animal") {
+      const care = otherAllocation(v, animalAllocation);
+      if (care !== null) setCareAllocation(care);
+    } else {
+      const animal = otherAllocation(v, careAllocation);
+      if (animal !== null) setAnimalAllocation(animal);
+    }
+  };
+  const changeAnimal = (v: string) => {
+    setAnimalAllocation(v);
+    setLastAllocation("animal");
+    const care = otherAllocation(unitPrice, v);
+    if (care !== null) setCareAllocation(care);
+  };
+  const changeCare = (v: string) => {
+    setCareAllocation(v);
+    setLastAllocation("care");
+    const animal = otherAllocation(unitPrice, v);
+    if (animal !== null) setAnimalAllocation(animal);
+  };
+  const allocationSum = Number(animalAllocation || 0) + Number(careAllocation || 0);
+  const allocationOff = Math.abs(allocationSum - Number(unitPrice || 0)) > 0.01;
   const [roiMin, setRoiMin] = useState(initial ? String(initial.estimated_roi_min) : "15");
   const [roiMax, setRoiMax] = useState(initial ? String(initial.estimated_roi_max) : "20");
   const [riskInfo, setRiskInfo] = useState(initial?.risk_information ?? "");
@@ -368,7 +397,7 @@ export function PlanForm({
           <Field
             label="Unit Price (৳)"
             value={unitPrice}
-            onChange={setUnitPrice}
+            onChange={changeUnitPrice}
             type="number"
             required
             hint="Total amount per unit"
@@ -376,17 +405,22 @@ export function PlanForm({
           <Field
             label="Animal Allocation (৳)"
             value={animalAllocation}
-            onChange={setAnimalAllocation}
+            onChange={changeAnimal}
             type="number"
             required
+            hint="Type this or Care; the other fills in"
           />
           <Field
             label="Care Allocation (৳)"
             value={careAllocation}
-            onChange={setCareAllocation}
+            onChange={changeCare}
             type="number"
             required
-            hint="Must add up with Animal to equal Unit Price"
+            hint={
+              allocationOff
+                ? `Animal + Care = ৳${allocationSum.toLocaleString("en-IN")}, not ৳${Number(unitPrice || 0).toLocaleString("en-IN")}`
+                : "Animal + Care = Unit Price"
+            }
           />
           <Field
             label="Duration (months)"

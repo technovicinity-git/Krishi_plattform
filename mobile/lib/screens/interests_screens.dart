@@ -168,25 +168,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with WidgetsBinding
                   ),
                   const SizedBox(height: 12),
                   if (o.step != 'closed')
-                    Row(children: [
-                      for (var i = 0; i < steps.length; i++)
-                        Expanded(
-                          child: Column(children: [
-                            CircleAvatar(
-                              radius: 14,
-                              backgroundColor: i < at ? KColors.brand : (i == at ? KColors.greenDeep : KColors.stone),
-                              child: i < at
-                                  ? const Icon(Icons.check, size: 16, color: Colors.white)
-                                  : Text('${i + 1}', style: TextStyle(fontSize: 12, color: i == at ? Colors.white : KColors.inkSecondary)),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              [l.stepKyc, l.stepPayout, l.stepPayment, l.stepReview][i],
-                              style: TextStyle(fontSize: 11.5, fontWeight: i == at ? FontWeight.w700 : FontWeight.w500),
-                            ),
-                          ]),
-                        ),
-                    ]),
+                    StepProgress(current: at, labels: [l.stepKyc, l.stepPayout, l.stepPayment, l.stepReview]),
                   const SizedBox(height: 14),
                   ...switch (o.step) {
                     'kyc' => [
@@ -495,5 +477,75 @@ class _KycScreenState extends State<KycScreen> {
         ],
       ),
     );
+  }
+}
+
+/// Steps joined by a line that fills up to the current step (0-based;
+/// `labels.length` means all done). Finished steps show a tick.
+class StepProgress extends StatelessWidget {
+  const StepProgress({super.key, required this.current, required this.labels});
+  final int current;
+  final List<String> labels;
+
+  static const _circle = 28.0;
+
+  @override
+  Widget build(BuildContext context) {
+    final count = labels.length;
+    final filled = (current.clamp(0, count - 1)) / (count - 1);
+    return LayoutBuilder(builder: (context, c) {
+      // The line runs between the centres of the first and last column.
+      final inset = c.maxWidth / count / 2;
+      final track = c.maxWidth - inset * 2;
+      return Stack(children: [
+        Positioned(
+          left: inset,
+          top: _circle / 2 - 1.5,
+          child: Container(width: track, height: 3, decoration: BoxDecoration(color: KColors.stone, borderRadius: BorderRadius.circular(2))),
+        ),
+        Positioned(
+          left: inset,
+          top: _circle / 2 - 1.5,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 400),
+            width: track * filled,
+            height: 3,
+            decoration: BoxDecoration(color: KColors.greenDeep, borderRadius: BorderRadius.circular(2)),
+          ),
+        ),
+        Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          for (var i = 0; i < count; i++)
+            Expanded(
+              child: Column(children: [
+                Container(
+                  width: _circle,
+                  height: _circle,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: i < current ? KColors.greenDeep : (i == current ? KColors.brand : KColors.stone),
+                    // A ring in the page colour so the line passes behind the circle.
+                    border: Border.all(color: KColors.cream, width: 3),
+                  ),
+                  child: i < current
+                      ? const Icon(Icons.check, size: 14, color: Colors.white)
+                      : Text('${i + 1}',
+                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: i == current ? Colors.white : KColors.inkSecondary)),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  labels[i],
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 11.5,
+                    fontWeight: i == current ? FontWeight.w700 : FontWeight.w500,
+                    color: i < current ? KColors.greenDeep : (i == current ? KColors.brand : KColors.inkMuted),
+                  ),
+                ),
+              ]),
+            ),
+        ]),
+      ]);
+    });
   }
 }

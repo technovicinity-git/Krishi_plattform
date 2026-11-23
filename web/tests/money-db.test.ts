@@ -28,9 +28,11 @@ async function settle(saleId: string, input: { capital: number; released: number
   return b;
 }
 
+/** Settlement credits for a batch (fund releases to the farmer are credited separately). */
 async function credits(investmentId: string) {
   const r = await db.query<{ user_id: string; type: string; amount: string }>(
-    `select user_id, type, amount::text from wallet_transactions where investment_id = $1`,
+    `select user_id, type, amount::text from wallet_transactions
+      where investment_id = $1 and type in ('settlement_payout', 'settlement_share')`,
     [investmentId],
   );
   return r.rows;

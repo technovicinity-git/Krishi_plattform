@@ -70,6 +70,7 @@ export default async function FarmerDashboardLayout({
             { label: tn("expenses"), href: "/farmer/expenses", icon: "receipt" },
             { label: tn("sales"), href: "/farmer/sales", icon: "tag", badge: salesTodo ?? 0 },
             { label: tp("wallet"), href: "/farmer/wallet", icon: "wallet" },
+            { label: tp("transactions"), href: "/farmer/transactions", icon: "coins" },
             { label: tn("livestock"), href: "/farmer/livestock", icon: "leaf" },
           ],
         },

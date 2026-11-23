@@ -8,6 +8,9 @@ import {
 } from "@/components/admin/StewardOfferingsSection";
 import { planImageUrl, type OfferingQueryRow } from "@/lib/admin/plan-helpers";
 import { BackLink } from "@/components/ui/BackLink";
+import Link from "next/link";
+import { formatBDT } from "@/lib/utils";
+import { StatusBadge, toneFor } from "@/components/dashboard/ui";
 
 export default async function EditPlanPage({
   params,
@@ -86,6 +89,29 @@ export default async function EditPlanPage({
 
   const approvedCount = offerings.filter((o) => o.status === "approved").length;
 
+  // Batches investors have started on this plan, newest first.
+  const { data: batchData } = await db
+    .from("investments")
+    .select(`
+      id, reference, amount, current_stage, created_at,
+      investor:users!investor_id ( full_name ),
+      farmer:users!farmer_id ( full_name ),
+      offering:steward_plan_offerings!offering_id!inner ( plan_id, users!steward_id ( full_name ) )
+    `)
+    .eq("offering.plan_id", plan.id)
+    .order("created_at", { ascending: false })
+    .limit(50);
+  const planBatches = (batchData ?? []) as unknown as {
+    id: string;
+    reference: string;
+    amount: number | string;
+    current_stage: string | null;
+    created_at: string;
+    investor: { full_name: string | null } | null;
+    farmer: { full_name: string | null } | null;
+    offering: { users: { full_name: string | null } | null } | null;
+  }[];
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-3">
@@ -152,6 +178,46 @@ export default async function EditPlanPage({
         }))}
         offerings={offerings}
       />
+
+      <section className="rounded-2xl border border-border-light bg-white">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border-light px-6 py-4">
+          <div>
+            <h2 className="text-[15px] font-semibold text-ink">Batches on this plan</h2>
+            <p className="text-[12px] text-ink-muted">Follow each batch from purchase to settlement.</p>
+          </div>
+          {planBatches.length > 0 && (
+            <Link href={`/krishi-console/investments?view=all&plan=${plan.id}`} className="text-[12.5px] font-semibold text-brand hover:underline">
+              Open in Batches →
+            </Link>
+          )}
+        </div>
+        {planBatches.length === 0 ? (
+          <p className="px-6 py-5 text-[13px] text-ink-muted">No batches yet. They appear when an investor&apos;s payment is approved.</p>
+        ) : (
+          <ul className="divide-y divide-border-light">
+            {planBatches.map((b) => (
+              <li key={b.id}>
+                <Link
+                  href={`/krishi-console/investments/${b.id}`}
+                  className="flex flex-wrap items-center justify-between gap-3 px-6 py-3 hover:bg-cream/60"
+                >
+                  <div className="flex min-w-0 flex-col">
+                    <span className="font-mono text-[12px] font-bold text-ink">{b.reference}</span>
+                    <span className="text-[12px] text-ink-muted">
+                      {b.investor?.full_name ?? "—"} · steward {b.offering?.users?.full_name ?? "—"} · farmer {b.farmer?.full_name ?? "not assigned"}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-[13px] font-semibold text-ink">{formatBDT(Number(b.amount))}</span>
+                    <StatusBadge tone={toneFor(b.current_stage ?? "")}>{(b.current_stage ?? "").replace(/_/g, " ")}</StatusBadge>
+                    <span className="text-[12px] font-semibold text-brand">View progress →</span>
+                  </div>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
     </div>
   );
 }

@@ -52,6 +52,7 @@ export default async function PortalLayout({
             { label: ts("items.investments"), href: "/portal/investments", icon: "briefcase" },
             { label: ts("items.interests"), href: "/portal/interests", icon: "inbox" },
             { label: tp("wallet"), href: "/portal/wallet", icon: "wallet" },
+            { label: tp("transactions"), href: "/portal/transactions", icon: "coins" },
             { label: ts("items.livestock"), href: "/portal/livestock", icon: "leaf" },
             { label: ts("items.reports"), href: "/portal/reports", icon: "chart" },
           ],

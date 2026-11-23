@@ -92,12 +92,10 @@ export default async function OnboardingWizardPage({
       )}
 
       {/* Stepper */}
-      <div className="mb-10 grid grid-cols-4 gap-2">
-        <StepIcon n={1} label={t("stepKyc")} active={currentStep === 1} done={currentStep > 1} />
-        <StepIcon n={2} label={t("stepWithdrawal")} active={currentStep === 2} done={currentStep > 2} />
-        <StepIcon n={3} label={t("stepDeposit")} active={currentStep === 3} done={currentStep > 3} />
-        <StepIcon n={4} label={t("stepActivation")} active={currentStep === 4} done={currentStep > 4} />
-      </div>
+      <Stepper
+        current={currentStep}
+        labels={[t("stepKyc"), t("stepWithdrawal"), t("stepDeposit"), t("stepActivation")]}
+      />
 
       {/* Content based on step */}
       <div className="rounded-xl border border-border-light bg-white p-8">
@@ -201,13 +199,47 @@ export default async function OnboardingWizardPage({
   );
 }
 
-function StepIcon({ n, label, active, done }: { n: number, label: string, active: boolean, done: boolean }) {
+/**
+ * Steps with a line joining them. The line fills up to the current step;
+ * finished steps show a tick. `current` is 1-based (past the last = all done).
+ */
+function Stepper({ current, labels }: { current: number; labels: string[] }) {
+  const last = labels.length;
+  // Share of the track between the first and last circle that is filled.
+  const filled = Math.min(Math.max(current - 1, 0), last - 1) / (last - 1);
+  // The track runs between the centres of the first and last column.
+  const inset = `${50 / last}%`;
   return (
-    <div className="flex flex-col items-center gap-2">
-      <div className={`flex h-8 w-8 items-center justify-center rounded-full text-[12px] font-bold ${done ? "bg-green-deep text-white" : active ? "bg-brand text-white" : "bg-stone text-ink-muted"}`}>
-        {done ? "✓" : n}
-      </div>
-      <span className={`text-[10px] font-semibold uppercase ${active ? "text-brand" : "text-ink-muted"}`}>{label}</span>
-    </div>
+    <ol className="relative mb-10 grid" style={{ gridTemplateColumns: `repeat(${last}, minmax(0, 1fr))` }}>
+      <div aria-hidden className="absolute top-4 h-[3px] -translate-y-1/2 rounded-full bg-stone" style={{ left: inset, right: inset }} />
+      <div
+        aria-hidden
+        className="absolute top-4 h-[3px] -translate-y-1/2 rounded-full bg-green-deep transition-[width] duration-500"
+        style={{ left: inset, width: `calc((100% - 2 * ${inset}) * ${filled})` }}
+      />
+      {labels.map((label, i) => {
+        const n = i + 1;
+        const done = current > n;
+        const active = current === n;
+        return (
+          <li key={label} className="relative z-10 flex flex-col items-center gap-2 px-1" aria-current={active ? "step" : undefined}>
+            <div
+              className={`flex h-8 w-8 items-center justify-center rounded-full text-[12px] font-bold ring-4 ring-cream ${
+                done ? "bg-green-deep text-white" : active ? "bg-brand text-white" : "bg-stone text-ink-muted"
+              }`}
+            >
+              {done ? "✓" : n}
+            </div>
+            <span
+              className={`text-center text-[10.5px] font-semibold uppercase leading-tight ${
+                done ? "text-green-deep" : active ? "text-brand" : "text-ink-muted"
+              }`}
+            >
+              {label}
+            </span>
+          </li>
+        );
+      })}
+    </ol>
   );
 }

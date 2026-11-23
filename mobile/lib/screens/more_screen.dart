@@ -93,6 +93,13 @@ class MoreScreen extends StatelessWidget {
                     const Divider(indent: 16, endIndent: 16),
                   ],
                   ListTile(
+                    leading: const Icon(Icons.receipt_long_outlined),
+                    title: Text(l.transactions),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => context.push('/transactions'),
+                  ),
+                  const Divider(indent: 16, endIndent: 16),
+                  ListTile(
                     leading: const Icon(Icons.notifications_outlined),
                     title: Text(l.notificationsTitle),
                     trailing: me.unreadNotifications > 0
