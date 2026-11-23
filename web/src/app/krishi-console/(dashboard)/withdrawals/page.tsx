@@ -15,6 +15,7 @@ const TONE: Record<string, BadgeTone> = {
 
 interface Row {
   id: string;
+  user_id: string;
   reference: string;
   amount: number;
   method: string;
@@ -63,6 +64,7 @@ export default async function AdminWithdrawalsPage({
     .limit(200);
   const rows = (data ?? []) as unknown as Row[];
   const pendingTotal = view === "pending" ? rows.reduce((s, r) => s + Number(r.amount), 0) : 0;
+  const wallets = view === "pending" ? await walletChecks([...new Set(rows.map((r) => r.user_id))]) : new Map<string, WalletCheck>();
 
   return (
     <div className="flex flex-col gap-6">
@@ -147,6 +149,10 @@ export default async function AdminWithdrawalsPage({
               {w.rejection_reason && <div className="text-[12.5px] text-danger">{w.rejection_reason}</div>}
               {w.admin_note && <div className="text-[12.5px] text-ink-secondary">{w.admin_note}</div>}
 
+              {w.status === "pending" && wallets.get(w.user_id) && (
+                <WalletCheckPanel wallet={wallets.get(w.user_id)!} amount={Number(w.amount)} />
+              )}
+
               {w.status === "pending" && (
                 <WithdrawalActions id={w.id} amount={Number(w.amount)} name={w.user?.full_name ?? "the user"} />
               )}
@@ -154,6 +160,108 @@ export default async function AdminWithdrawalsPage({
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+/* ─── Wallet check ──────────────────────────────────────────────────── */
+
+interface WalletCheck {
+  /** Free to withdraw now: waiting requests are already held (taken out). */
+  withdrawable: number;
+  /** Held for this user's requests that are waiting to be paid. */
+  held: number;
+  /** Where the money came from, and what has gone out. */
+  settlements: number;
+  fundReleases: number;
+  adjustments: number;
+  paidOut: number;
+}
+
+/**
+ * Each user's wallet, for checking withdrawal requests. A request puts a hold
+ * on the wallet straight away (a negative "withdrawal" entry), so the balance
+ * is what is still free; a rejected or cancelled request gives it back.
+ */
+async function walletChecks(userIds: string[]): Promise<Map<string, WalletCheck>> {
+  const out = new Map<string, WalletCheck>();
+  if (userIds.length === 0) return out;
+  const db = createAdminClient();
+  const [txs, { data: pending }] = await Promise.all([
+    (async () => {
+      const all: { user_id: string; type: string; amount: number | string }[] = [];
+      for (let from = 0; ; from += 1000) {
+        const { data } = await db
+          .from("wallet_transactions")
+          .select("user_id, type, amount")
+          .in("user_id", userIds)
+          .order("id")
+          .range(from, from + 999);
+        all.push(...(data ?? []));
+        if ((data ?? []).length < 1000) return all;
+      }
+    })(),
+    db.from("withdrawal_requests").select("user_id, amount").in("user_id", userIds).eq("status", "pending"),
+  ]);
+  for (const id of userIds) {
+    out.set(id, { withdrawable: 0, held: 0, settlements: 0, fundReleases: 0, adjustments: 0, paidOut: 0 });
+  }
+  for (const t of txs) {
+    const w = out.get(t.user_id)!;
+    const amount = Number(t.amount);
+    w.withdrawable += amount;
+    if (t.type === "settlement_payout" || t.type === "settlement_share") w.settlements += amount;
+    else if (t.type === "fund_release") w.fundReleases += amount;
+    else if (t.type === "adjustment") w.adjustments += amount;
+  }
+  for (const r of pending ?? []) out.get(r.user_id)!.held += Number(r.amount);
+  // Paid out = withdrawal holds that are not still waiting.
+  for (const [id, w] of out) {
+    const holds = txs.filter((t) => t.user_id === id && (t.type === "withdrawal" || t.type === "withdrawal_reversal"))
+      .reduce((s, t) => s + Number(t.amount), 0);
+    w.paidOut = Math.max(0, -holds - w.held);
+    for (const k of ["withdrawable", "held", "settlements", "fundReleases", "adjustments", "paidOut"] as const) {
+      w[k] = Math.round(w[k] * 100) / 100;
+    }
+  }
+  return out;
+}
+
+function WalletCheckPanel({ wallet, amount }: { wallet: WalletCheck; amount: number }) {
+  // Before any of the waiting requests were held.
+  const before = wallet.withdrawable + wallet.held;
+  const ok = wallet.withdrawable >= 0;
+  return (
+    <div className={`rounded-xl border px-4 py-3 ${ok ? "border-[#CFE3D3] bg-[#F3F8F4]" : "border-[#F1C9C1] bg-[#FBEDEA]"}`}>
+      <div className="flex items-center justify-between gap-3">
+        <span className="text-[11px] font-bold uppercase tracking-[0.05em] text-ink-muted">Wallet check</span>
+        <span className={`text-[12px] font-bold ${ok ? "text-green-deep" : "text-danger"}`}>
+          {ok ? "OK: the wallet covers this request" : `Short by ${formatBDT(-wallet.withdrawable)}`}
+        </span>
+      </div>
+      <dl className="mt-2.5 grid grid-cols-3 gap-3 text-[12px]">
+        <div>
+          <dt className="text-ink-muted">Balance before requests</dt>
+          <dd className="text-[15px] font-bold text-ink">{formatBDT(before)}</dd>
+        </div>
+        <div>
+          <dt className="text-ink-muted">Held for requests</dt>
+          <dd className="text-[15px] font-bold text-ink">
+            {formatBDT(wallet.held)}
+            {wallet.held > amount && <span className="ml-1 text-[11px] font-normal text-ink-muted">(this + others)</span>}
+          </dd>
+        </div>
+        <div>
+          <dt className="text-ink-muted">Still withdrawable</dt>
+          <dd className={`text-[15px] font-bold ${ok ? "text-green-deep" : "text-danger"}`}>{formatBDT(wallet.withdrawable)}</dd>
+        </div>
+      </dl>
+      <div className="mt-2.5 flex flex-wrap gap-x-4 gap-y-1 border-t border-black/5 pt-2 text-[11.5px] text-ink-secondary">
+        <span>Settlements {formatBDT(wallet.settlements)}</span>
+        {wallet.fundReleases !== 0 && <span>Fund releases {formatBDT(wallet.fundReleases)}</span>}
+        {wallet.adjustments !== 0 && <span>Adjustments {formatBDT(wallet.adjustments)}</span>}
+        <span>Paid out before {formatBDT(wallet.paidOut)}</span>
+      </div>
     </div>
   );
 }
