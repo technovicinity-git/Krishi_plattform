@@ -1,6 +1,6 @@
 import { cookies, headers } from "next/headers";
 import { NextResponse } from "next/server";
-import { verifySession, signSession, type SessionPayload } from "./jwt";
+import { verifySession, signSession, MOBILE_SESSION_TTL, type SessionPayload } from "./jwt";
 
 export const SESSION_COOKIE = "krishi_session";
 
@@ -50,4 +50,27 @@ export function clearSessionCookie(response: NextResponse): void {
     maxAge: 0,
     path: "/",
   });
+}
+/** True when the request comes from the mobile app (it sends X-Krishi-Client: mobile). */
+export function isMobileClient(request: Request): boolean {
+  return request.headers.get("x-krishi-client") === "mobile";
+}
+
+/**
+ * Signs the person in. The website gets the session cookie; the mobile app
+ * gets the token in the JSON body (it keeps it in secure storage and sends it
+ * as a bearer token).
+ */
+export async function signedInResponse(
+  request: Request,
+  body: Record<string, unknown>,
+  payload: SessionPayload,
+): Promise<NextResponse> {
+  if (isMobileClient(request)) {
+    const token = await signSession(payload, MOBILE_SESSION_TTL);
+    return NextResponse.json({ ...body, role: payload.role, token });
+  }
+  const response = NextResponse.json(body);
+  await setSessionCookie(response, payload);
+  return response;
 }

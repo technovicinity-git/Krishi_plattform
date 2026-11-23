@@ -3,6 +3,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { investmentRoleFor } from "@/lib/investments/access";
 import { getInvestmentDetail } from "@/lib/investments/detail";
 import { totalLossBlocker } from "@/lib/investments/total-loss";
+import { getReviewForInvestment } from "@/lib/reviews";
 
 export const runtime = "nodejs";
 
@@ -57,6 +58,9 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
         })
       : "not_steward";
 
+  // Investors rate the steward once the batch is settled (POST /api/reviews).
+  const review = access.role === "investor" ? await getReviewForInvestment(id) : null;
+
   // Phone numbers only for the people who need to call each other.
   const showPhones = access.role !== "investor";
   return json({
@@ -76,6 +80,8 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
       accountNumber: a.account_number,
       branchName: a.branch_name,
     })),
+    review,
+    canReview: access.role === "investor" && inv.currentStage === "settled",
     canCloseTotalLoss: lossBlocker === null,
     totalLossBlocker: lossBlocker === "not_steward" ? null : lossBlocker,
   });

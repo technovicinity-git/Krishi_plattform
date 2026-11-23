@@ -3,7 +3,7 @@ import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { verifyOtpHash } from "@/lib/auth/otp";
 import { hashPassword } from "@/lib/auth/password";
-import { setSessionCookie } from "@/lib/auth/session";
+import { signedInResponse } from "@/lib/auth/session";
 import { toE164, isValidBDPhone } from "@/lib/auth/phone";
 import { LIMITS, clientIp, tooManyRequests, withinLimits } from "@/lib/security/rate-limit";
 
@@ -126,9 +126,7 @@ export async function POST(request: Request) {
     await admin.from("dev_otps").delete().eq("phone", e164);
 
     // Set session
-    const response = NextResponse.json({ success: true });
-    await setSessionCookie(response, { sub: user.id, role: "farmer" });
-    return response;
+    return signedInResponse(request, { success: true }, { sub: user.id, role: "farmer" });
   } catch (err) {
     console.error("[auth/farmer-activate] unexpected:", err);
     return NextResponse.json({ error: "Server error" }, { status: 500 });

@@ -3,7 +3,7 @@ import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { hashPassword } from "@/lib/auth/password";
 import { generateOtp, hashOtp, getOtpExpiry } from "@/lib/auth/otp";
-import { setSessionCookie } from "@/lib/auth/session";
+import { signedInResponse } from "@/lib/auth/session";
 import { toE164, isValidBDPhone } from "@/lib/auth/phone";
 import { showOtpOnScreen } from "@/lib/auth/dev-flags";
 import { LIMITS, clientIp, tooManyRequests, withinLimits } from "@/lib/security/rate-limit";
@@ -99,12 +99,11 @@ export async function POST(request: Request) {
 
     // TODO: send SMS via the local provider in production.
 
-    const response = NextResponse.json({ success: true });
-    await setSessionCookie(response, {
+    // In development/staging the code is also returned so it can be shown on screen.
+    return signedInResponse(request, { success: true, ...(showOtpOnScreen() ? { devOtp: otp } : {}) }, {
       sub: user.id,
       role: "investor",
     });
-    return response;
   } catch (err) {
     console.error("[register] unexpected:", err);
     return NextResponse.json({ error: "Server error" }, { status: 500 });

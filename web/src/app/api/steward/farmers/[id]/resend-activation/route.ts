@@ -66,7 +66,7 @@ export async function POST(
 
     // TODO: send SMS via the local provider in production.
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, ...(showOtpOnScreen() ? { devOtp: otp } : {}) });
   } catch (err) {
     console.error("[resend-activation] unexpected:", err);
     return NextResponse.json({ error: "Server error" }, { status: 500 });

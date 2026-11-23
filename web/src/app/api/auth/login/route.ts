@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { verifyPassword } from "@/lib/auth/password";
-import { setSessionCookie } from "@/lib/auth/session";
+import { setSessionCookie, isMobileClient } from "@/lib/auth/session";
 import { signSession, MOBILE_SESSION_TTL } from "@/lib/auth/jwt";
 import { toE164, isValidBDPhone } from "@/lib/auth/phone";
 import { LIMITS, clientIp, tooManyRequests, withinLimits } from "@/lib/security/rate-limit";
@@ -59,7 +59,7 @@ export async function POST(request: Request) {
     }
 
     const role = user.role as "investor" | "steward" | "farmer" | "admin";
-    if (parsed.data.client === "mobile") {
+    if (parsed.data.client === "mobile" || isMobileClient(request)) {
       // The app is for investors, stewards and farmers; admins use the console.
       if (role === "admin") {
         return NextResponse.json({ error: "Admins sign in on the Krishi console" }, { status: 403 });
