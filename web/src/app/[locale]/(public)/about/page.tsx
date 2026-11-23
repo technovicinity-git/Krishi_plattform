@@ -11,6 +11,7 @@ import { HonestReturns } from "@/components/about/HonestReturns";
 import { IsIsNot } from "@/components/about/IsIsNot";
 import { MeetStewardsCta } from "@/components/about/MeetStewardsCta";
 import { AboutFinalCta } from "@/components/about/AboutFinalCta";
+import { RevealOnScroll } from "@/components/home/RevealOnScroll";
 
 export default function AboutPage() {
   return (
@@ -28,6 +29,7 @@ export default function AboutPage() {
       <IsIsNot />
       <MeetStewardsCta />
       <AboutFinalCta />
+      <RevealOnScroll auto />
     </>
   );
 }

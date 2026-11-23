@@ -3,8 +3,16 @@ import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { Heading } from "@/components/ui/Heading";
 import { Eyebrow } from "@/components/ui/Eyebrow";
+import { NavIcon, type NavIconName } from "@/components/dashboard/NavIcon";
 
 const ITEMS = ["records", "updates", "expenses", "sale"] as const;
+
+const ICON: Record<(typeof ITEMS)[number], NavIconName> = {
+  records: "clipboard",
+  updates: "eye",
+  expenses: "receipt",
+  sale: "coins",
+};
 
 export function Transparency() {
   const t = useTranslations("aboutPage.transparency");
@@ -24,11 +32,16 @@ export function Transparency() {
             {ITEMS.map((key, i) => (
               <article
                 key={key}
-                className="flex flex-col gap-4 rounded-[8px] border border-border-light bg-cream p-7"
+                className="group flex flex-col gap-4 rounded-xl border border-border-light bg-cream p-7 transition-[translate,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-brand/30 hover:shadow-[0_12px_28px_-16px_rgba(0,0,0,0.2)]"
               >
-                <span className="text-[11px] font-bold uppercase leading-none tracking-[0.02em] text-brand">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
+                <div className="flex items-center justify-between">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-brand-tint text-brand transition-colors duration-300 group-hover:bg-brand group-hover:text-white">
+                    <NavIcon name={ICON[key]} className="h-5 w-5" />
+                  </span>
+                  <span className="text-[11px] font-bold uppercase leading-none tracking-[0.02em] text-ink-muted">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                </div>
                 <h3 className="text-[12px] font-semibold uppercase leading-[1.4] tracking-[0.02em] text-ink">
                   {t(`items.${key}.title`)}
                 </h3>
