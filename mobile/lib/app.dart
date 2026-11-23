@@ -20,6 +20,7 @@ import 'screens/plans_screens.dart';
 import 'screens/profile_screen.dart';
 import 'screens/shell.dart';
 import 'screens/steward_screens.dart';
+import 'screens/transactions_screen.dart';
 import 'screens/wallet_screen.dart';
 import 'ui/theme.dart';
 
@@ -118,6 +119,7 @@ class _KrishiAppState extends State<KrishiApp> {
         GoRoute(path: '/farmers', parentNavigatorKey: _rootKey, builder: (_, _) => const FarmersScreen()),
         GoRoute(path: '/steward-plans', parentNavigatorKey: _rootKey, builder: (_, _) => const StewardPlansScreen()),
         GoRoute(path: '/profile', parentNavigatorKey: _rootKey, builder: (_, _) => const ProfileScreen()),
+        GoRoute(path: '/transactions', parentNavigatorKey: _rootKey, builder: (_, _) => const TransactionsScreen()),
         GoRoute(path: '/notifications', parentNavigatorKey: _rootKey, builder: (_, _) => const NotificationsScreen()),
         GoRoute(path: '/payout', parentNavigatorKey: _rootKey, builder: (_, _) => const PayoutScreen()),
       ],

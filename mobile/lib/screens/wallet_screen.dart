@@ -62,6 +62,11 @@ class _WalletScreenState extends State<WalletScreen> {
         title: Text(l.walletTitle),
         actions: [
           IconButton(
+            tooltip: l.transactions,
+            icon: const Icon(Icons.receipt_long_outlined),
+            onPressed: () => context.push('/transactions'),
+          ),
+          IconButton(
             tooltip: l.downloadStatement,
             icon: const Icon(Icons.picture_as_pdf_outlined),
             onPressed: () => openStatement(context, '/api/reports/wallet', 'krishi-wallet.pdf'),
