@@ -74,8 +74,8 @@ class HomeScreen extends StatelessWidget {
             : me.kycStatus == 'not_started'
                 ? l.kycStartBody
                 : (me.kycRejectionReason ?? l.kycFixBody),
-        action: waiting ? null : l.openWebsite,
-        onTap: waiting ? null : () => openWebsite(lang == 'en' ? '/en/portal/kyc' : '/portal/kyc'),
+        action: waiting ? null : l.verifyNow,
+        onTap: waiting ? null : () => context.push('/kyc'),
       ));
     }
     for (final p in d.toPay) {
@@ -83,8 +83,8 @@ class HomeScreen extends StatelessWidget {
         tone: Tone.success,
         title: l.payTitle(planName(lang, p['planEn'] as String?, p['planBn'] as String?, '${p['reference']}')),
         text: l.payBody('${p['reference']}'),
-        action: l.openWebsite,
-        onTap: () => openWebsite(lang == 'en' ? '/en${p['path']}' : '${p['path']}'),
+        action: l.continuePayment,
+        onTap: () => context.push('/onboarding/${p['reference']}'),
       ));
     }
     for (final p in d.needsPurchase) {
@@ -116,8 +116,7 @@ class HomeScreen extends StatelessWidget {
         tone: Tone.info,
         title: l.awaitingFarmerTitle(d.awaitingFarmer),
         text: l.awaitingFarmerBody,
-        action: l.openWebsite,
-        onTap: () => openWebsite(lang == 'en' ? '/en/steward/investments' : '/steward/investments'),
+        onTap: () => context.go('/batches'),
       ));
     }
     return [for (final c in cards) Padding(padding: const EdgeInsets.only(bottom: 10), child: c)];
@@ -143,7 +142,7 @@ class HomeScreen extends StatelessWidget {
       ]),
       if (d.interestsWaiting > 0) ...[
         const SizedBox(height: 10),
-        InfoBanner(text: l.interestsWaiting(d.interestsWaiting), tone: Tone.info),
+        InfoBanner(text: l.interestsWaiting(d.interestsWaiting), tone: Tone.info, onTap: () => context.push('/interests')),
       ],
     ]);
   }

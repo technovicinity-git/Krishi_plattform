@@ -1004,4 +1004,583 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get role_farmer => 'Farmer';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get fullName => 'Full name';
+
+  @override
+  String get passwordHint =>
+      'At least 8 characters, with a letter and a number';
+
+  @override
+  String get passwordRule =>
+      'Use at least 8 characters with a letter and a number';
+
+  @override
+  String get confirmPassword => 'Confirm password';
+
+  @override
+  String get passwordsDontMatch => 'The passwords don\'t match';
+
+  @override
+  String get haveAccount => 'Already have an account? Sign in';
+
+  @override
+  String get noAccountYet => 'New to Krishi?';
+
+  @override
+  String get signUpInvestor => 'Create an investor account';
+
+  @override
+  String get becomeSteward => 'Become a steward';
+
+  @override
+  String get farmerActivateLink => 'I\'m a farmer with an activation code';
+
+  @override
+  String get browsePlans => 'Browse plans';
+
+  @override
+  String get registerTitle => 'Create your account';
+
+  @override
+  String get registerSubtitle =>
+      'Invest in real livestock raised by trusted farmers.';
+
+  @override
+  String get createAccount => 'Create account';
+
+  @override
+  String get verifyTitle => 'Verify your phone';
+
+  @override
+  String verifyBody(Object phone) {
+    return 'Enter the 6-digit code sent to $phone.';
+  }
+
+  @override
+  String get codeLabel => '6-digit code';
+
+  @override
+  String get verify => 'Verify';
+
+  @override
+  String devCode(Object code) {
+    return 'Test code: $code';
+  }
+
+  @override
+  String get useAnotherNumber => 'Use a different number';
+
+  @override
+  String get forgotTitle => 'Reset your password';
+
+  @override
+  String get forgotBody => 'Enter your phone number. We\'ll send a code.';
+
+  @override
+  String get sendCode => 'Send code';
+
+  @override
+  String resetBody(Object phone) {
+    return 'Enter the code sent to $phone and choose a new password.';
+  }
+
+  @override
+  String get newPassword => 'New password';
+
+  @override
+  String get resetPassword => 'Reset password';
+
+  @override
+  String get passwordResetDone =>
+      'Password changed. Sign in with your new password.';
+
+  @override
+  String get activateTitle => 'Activate your farmer account';
+
+  @override
+  String get activateBody =>
+      'Enter the code your steward gave you and choose a password.';
+
+  @override
+  String get activate => 'Activate';
+
+  @override
+  String get stewardSignupTitle => 'Become a Krishi steward';
+
+  @override
+  String get stewardSignupBody =>
+      'Manage livestock plans and the farmers who raise them. Krishi reviews every application.';
+
+  @override
+  String get continueLabel => 'Continue';
+
+  @override
+  String get stewardDetailsTitle => 'About your work';
+
+  @override
+  String get stewardType => 'You are';
+
+  @override
+  String get individual => 'An individual';
+
+  @override
+  String get organization => 'An organization';
+
+  @override
+  String get division => 'Division';
+
+  @override
+  String get district => 'District';
+
+  @override
+  String get upazila => 'Upazila / area';
+
+  @override
+  String get livestockYouRaise => 'Livestock you work with';
+
+  @override
+  String get experience => 'Your experience';
+
+  @override
+  String get experienceHint =>
+      'Years with livestock, training, farmers you work with (at least 10 characters)';
+
+  @override
+  String get submitForReview => 'Submit for review';
+
+  @override
+  String get stewardPendingTitle => 'Waiting for Krishi\'s approval';
+
+  @override
+  String get stewardPendingBody =>
+      'Thanks for applying. Krishi is reviewing your details and will notify you. This usually takes a few working days.';
+
+  @override
+  String get stewardRejectedTitle => 'Your application wasn\'t approved';
+
+  @override
+  String get checkAgain => 'Check again';
+
+  @override
+  String get cat_cattle => 'Cattle';
+
+  @override
+  String get cat_goats => 'Goats';
+
+  @override
+  String get cat_sheep => 'Sheep';
+
+  @override
+  String get cat_dumba => 'Dumba';
+
+  @override
+  String get cat_garoleSheep => 'Garole sheep';
+
+  @override
+  String get cat_other => 'Other';
+
+  @override
+  String get navPlans => 'Plans';
+
+  @override
+  String get plansTitle => 'Investment plans';
+
+  @override
+  String get searchPlans => 'Search plans';
+
+  @override
+  String get allCategories => 'All';
+
+  @override
+  String get planStatus_open => 'Open';
+
+  @override
+  String get planStatus_coming_soon => 'Coming soon';
+
+  @override
+  String get planStatus_fully_funded => 'Fully funded';
+
+  @override
+  String get planStatus_all => 'All';
+
+  @override
+  String unitsLeft(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '# units left',
+      one: '# unit left',
+      zero: 'No units left',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get unitPrice => 'Unit price';
+
+  @override
+  String get noPlans => 'No plans match.';
+
+  @override
+  String get noPlansHint => 'Try another category or status.';
+
+  @override
+  String get planAbout => 'About this plan';
+
+  @override
+  String get whereMoneyGoes => 'Where each unit\'s money goes';
+
+  @override
+  String get allocAnimals => 'Buying animals';
+
+  @override
+  String get allocCare => 'Feed, care and vet';
+
+  @override
+  String get risks => 'Risks';
+
+  @override
+  String get reviewsTitle => 'Investor reviews';
+
+  @override
+  String get noReviews => 'No reviews yet.';
+
+  @override
+  String ratingCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '# reviews',
+      one: '# review',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get investInPlan => 'Invest in this plan';
+
+  @override
+  String get signInToInvest => 'Sign in to invest';
+
+  @override
+  String get interestTitle => 'How many units?';
+
+  @override
+  String get unitsLabel => 'Units';
+
+  @override
+  String get totalAmount => 'Total';
+
+  @override
+  String get sendInterest => 'Send interest';
+
+  @override
+  String get interestSent =>
+      'Interest sent. The steward will review it and you\'ll get a notification.';
+
+  @override
+  String haveInterest(Object reference, Object status) {
+    return 'You have an interest on this plan: $reference ($status).';
+  }
+
+  @override
+  String fundedOf(int funded, int offered) {
+    return '$funded of $offered units funded';
+  }
+
+  @override
+  String get soldOut => 'All units are taken';
+
+  @override
+  String get myInterests => 'My interests';
+
+  @override
+  String get noInterests => 'No interests yet';
+
+  @override
+  String get noInterestsHint => 'Browse plans and send an interest to start.';
+
+  @override
+  String get continuePayment => 'Continue';
+
+  @override
+  String get openBatch => 'Open batch';
+
+  @override
+  String interestNotApproved(Object reason) {
+    return 'Not approved: $reason';
+  }
+
+  @override
+  String get onboardingTitle => 'Start your investment';
+
+  @override
+  String get stepKyc => 'Identity';
+
+  @override
+  String get stepPayout => 'Payout';
+
+  @override
+  String get stepPayment => 'Payment';
+
+  @override
+  String get stepReview => 'Check';
+
+  @override
+  String get kycNeeded => 'Verify your identity with your NID before paying.';
+
+  @override
+  String get kycPendingNote =>
+      'Your documents are being checked. You\'ll get a notification when you can continue.';
+
+  @override
+  String kycRejectedNote(Object reason) {
+    return 'Krishi asked for a change: $reason';
+  }
+
+  @override
+  String get verifyNow => 'Verify now';
+
+  @override
+  String get payoutNeeded => 'Add where Krishi should send your returns.';
+
+  @override
+  String get amountToPay => 'Amount to pay';
+
+  @override
+  String get payOnline => 'Pay online';
+
+  @override
+  String get payOnlineHint =>
+      'Card, bKash, Nagad or Rocket through SSLCommerz. Come back to the app when you\'re done.';
+
+  @override
+  String get orTransfer =>
+      'Or send a bank or mobile transfer to Krishi, then report it.';
+
+  @override
+  String get reportTransfer => 'I\'ve sent the money';
+
+  @override
+  String depositReview(Object reference) {
+    return 'Krishi is checking your payment $reference. You\'ll get a notification.';
+  }
+
+  @override
+  String depositNotAccepted(Object reason) {
+    return 'Your last payment wasn\'t accepted: $reason';
+  }
+
+  @override
+  String get onboardingDone => 'Your batch has started.';
+
+  @override
+  String get interestClosed => 'This interest is no longer open for payment.';
+
+  @override
+  String notEnoughUnits(int count) {
+    return 'Only $count units are left on this plan.';
+  }
+
+  @override
+  String get refresh => 'Refresh';
+
+  @override
+  String get transferTitle => 'Report your transfer';
+
+  @override
+  String get dateSent => 'Date sent';
+
+  @override
+  String get senderNumber => 'Sent from (mobile number)';
+
+  @override
+  String get transferProof => 'Screenshot or photo of the transfer';
+
+  @override
+  String get kycTitle => 'Verify your identity';
+
+  @override
+  String get kycIntro =>
+      'Krishi needs your National ID to keep investments safe. Photos must be clear and readable.';
+
+  @override
+  String get nidNumber => 'NID number';
+
+  @override
+  String get nidHint => '10 to 17 digits';
+
+  @override
+  String get presentAddress => 'Present address';
+
+  @override
+  String get permanentAddress => 'Permanent address';
+
+  @override
+  String get sameAsPresent => 'Same as present address';
+
+  @override
+  String get nidFront => 'NID front';
+
+  @override
+  String get nidBack => 'NID back';
+
+  @override
+  String get yourPhoto => 'Your photo';
+
+  @override
+  String get submit => 'Submit';
+
+  @override
+  String get kycSubmitted => 'Submitted. Krishi will review your documents.';
+
+  @override
+  String get interestsToReview => 'Interests';
+
+  @override
+  String get guest => 'Guest';
+
+  @override
+  String get approveInterestTitle => 'Approve this interest?';
+
+  @override
+  String approveInterestBody(Object name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '# units',
+      one: '# unit',
+    );
+    return '$name can then pay for $_temp0.';
+  }
+
+  @override
+  String get farmersTitle => 'Farmers';
+
+  @override
+  String get addFarmer => 'Add farmer';
+
+  @override
+  String get farmerAddress => 'Address';
+
+  @override
+  String get farmerAdded =>
+      'Farmer added. Krishi sent them an activation code.';
+
+  @override
+  String activationCode(Object code) {
+    return 'Activation code: $code';
+  }
+
+  @override
+  String get resendCode => 'Resend code';
+
+  @override
+  String get codeSent => 'A new code was sent.';
+
+  @override
+  String get pendingActivation => 'Not activated yet';
+
+  @override
+  String activeBatchesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '# active batches',
+      one: '# active batch',
+      zero: 'No active batches',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noFarmers => 'No farmers yet';
+
+  @override
+  String get noFarmersHint => 'Add the farmers who will raise your batches.';
+
+  @override
+  String get assignFarmer => 'Assign a farmer';
+
+  @override
+  String get chooseFarmer => 'Choose a farmer';
+
+  @override
+  String get farmerAssigned => 'Farmer assigned.';
+
+  @override
+  String get noActiveFarmers =>
+      'No activated farmers yet. Add a farmer and ask them to activate their account.';
+
+  @override
+  String get myPlansTitle => 'My plans';
+
+  @override
+  String get noStewardPlans => 'No plans yet';
+
+  @override
+  String get noStewardPlansHint =>
+      'Krishi adds you to plans; they appear here.';
+
+  @override
+  String openInterestsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '# interests to review',
+      one: '# interest to review',
+      zero: 'No interests to review',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get offeringStatus_approved => 'Live';
+
+  @override
+  String get offeringStatus_pending_approval => 'Pending approval';
+
+  @override
+  String get offeringStatus_paused => 'Paused';
+
+  @override
+  String get offeringStatus_closed => 'Closed';
+
+  @override
+  String get offeringStatus_rejected => 'Not approved';
+
+  @override
+  String get profileTitle => 'Profile';
+
+  @override
+  String get changePassword => 'Change password';
+
+  @override
+  String get currentPassword => 'Current password';
+
+  @override
+  String get passwordChanged => 'Password changed.';
+
+  @override
+  String get downloadStatement => 'Download statement (PDF)';
+
+  @override
+  String get rateSteward => 'Rate your steward';
+
+  @override
+  String get yourReview => 'Your review';
+
+  @override
+  String get reviewComment => 'Comment';
+
+  @override
+  String get submitReview => 'Submit review';
+
+  @override
+  String get reviewThanks => 'Thanks for your review.';
 }

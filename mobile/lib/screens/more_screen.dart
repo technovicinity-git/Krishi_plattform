@@ -61,6 +61,38 @@ class MoreScreen extends StatelessWidget {
               Card(
                 child: Column(children: [
                   ListTile(
+                    leading: const Icon(Icons.person_outline),
+                    title: Text(l.profileTitle),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => context.push('/profile'),
+                  ),
+                  const Divider(indent: 16, endIndent: 16),
+                  if (me.isInvestor) ...[
+                    ListTile(
+                      leading: const Icon(Icons.inbox_outlined),
+                      title: Text(l.myInterests),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: () => context.push('/interests'),
+                    ),
+                    const Divider(indent: 16, endIndent: 16),
+                  ],
+                  if (me.isSteward) ...[
+                    ListTile(
+                      leading: const Icon(Icons.groups_outlined),
+                      title: Text(l.farmersTitle),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: () => context.push('/farmers'),
+                    ),
+                    const Divider(indent: 16, endIndent: 16),
+                    ListTile(
+                      leading: const Icon(Icons.assignment_outlined),
+                      title: Text(l.myPlansTitle),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: () => context.push('/steward-plans'),
+                    ),
+                    const Divider(indent: 16, endIndent: 16),
+                  ],
+                  ListTile(
                     leading: const Icon(Icons.notifications_outlined),
                     title: Text(l.notificationsTitle),
                     trailing: me.unreadNotifications > 0
@@ -83,8 +115,12 @@ class MoreScreen extends StatelessWidget {
                       leading: const Icon(Icons.verified_user_outlined),
                       title: Text(l.kycStatus),
                       subtitle: Text(label(lang, 'status', me.kycStatus)),
-                      trailing: const Icon(Icons.open_in_new, size: 18),
-                      onTap: () => openWebsite(lang == 'en' ? '/en/portal/kyc' : '/portal/kyc'),
+                      trailing: me.kycStatus == 'verified' || me.kycStatus == 'pending' || me.kycStatus == 'under_review'
+                          ? null
+                          : const Icon(Icons.chevron_right),
+                      onTap: me.kycStatus == 'verified' || me.kycStatus == 'pending' || me.kycStatus == 'under_review'
+                          ? null
+                          : () => context.push('/kyc'),
                     ),
                   ],
                 ]),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../core/files.dart';
 import '../core/format.dart';
 import '../core/models.dart';
 import '../l10n/app_localizations.dart';
@@ -8,6 +9,7 @@ import '../ui/widgets.dart';
 import 'animal_sheet.dart';
 import 'decisions.dart';
 import 'forms.dart';
+import 'steward_screens.dart';
 
 /// One batch: summary, what the viewer can do, sale & settlement, money,
 /// animals, fund requests, expenses and the timeline.
@@ -22,6 +24,7 @@ class BatchDetailScreen extends StatefulWidget {
 class _BatchDetailScreenState extends State<BatchDetailScreen> {
   final _loader = GlobalKey<LoaderState<InvestmentDetail>>();
   String? _title;
+  String? _reference;
 
   Future<void> _reload() async => _loader.currentState?.reload();
 
@@ -40,12 +43,27 @@ class _BatchDetailScreenState extends State<BatchDetailScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: Text(_title ?? '')),
+        appBar: AppBar(
+          title: Text(_title ?? ''),
+          actions: [
+            if (_reference != null)
+              IconButton(
+                tooltip: context.l.downloadStatement,
+                icon: const Icon(Icons.picture_as_pdf_outlined),
+                onPressed: () => openStatement(context, '/api/reports/investment/${widget.id}', 'krishi-$_reference.pdf'),
+              ),
+          ],
+        ),
         body: Loader<InvestmentDetail>(
           key: _loader,
           load: () async {
             final b = InvestmentDetail(await context.api.get('/api/mobile/v1/investments/${widget.id}'));
-            if (mounted) setState(() => _title = b.plan(context.lang));
+            if (mounted) {
+              setState(() {
+                _title = b.plan(context.lang);
+                _reference = b.reference;
+              });
+            }
             return b;
           },
           builder: (context, b, _) => ListView(
@@ -56,6 +74,7 @@ class _BatchDetailScreenState extends State<BatchDetailScreen> {
                   _Header(b: b),
                   ..._gap(_actions(context, b)),
                   if (b.sale != null) ...[const SizedBox(height: 12), _SaleCard(b: b, onDecide: _decided)],
+                  if (b.canReview) ...[const SizedBox(height: 12), _ReviewCard(b: b, onSaved: _reload)],
                   const SizedBox(height: 12),
                   _MoneyCard(b: b),
                   const SizedBox(height: 12),
@@ -141,7 +160,13 @@ class _BatchDetailScreenState extends State<BatchDetailScreen> {
     }
 
     if (b.isSteward) {
-      if (b.stage == 'awaiting_farmer') notes.add(InfoBanner(text: l.assignFarmerOnWeb, tone: Tone.info));
+      if (b.stage == 'awaiting_farmer') {
+        buttons.add(FilledButton.icon(
+          onPressed: () => _open(AssignFarmerSheet(investmentId: b.id)),
+          icon: const Icon(Icons.person_add_alt_1),
+          label: Text(l.assignFarmer),
+        ));
+      }
       final allGone = b.animals.isNotEmpty && b.animals.every((a) => a.status == 'dead' || a.status == 'death_reported');
       if (b.canCloseTotalLoss) {
         buttons.add(FilledButton.icon(
@@ -601,4 +626,100 @@ class _Timeline extends StatelessWidget {
         'admin' => l.appName,
         _ => role,
       };
+}
+
+/// Investor: rate the steward once the batch is settled (one review, editable).
+class _ReviewCard extends StatelessWidget {
+  const _ReviewCard({required this.b, required this.onSaved});
+  final InvestmentDetail b;
+  final VoidCallback onSaved;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = context.l;
+    final review = b.review;
+    final rating = (review?['rating'] as num?)?.toInt() ?? 0;
+    Future<void> open() async {
+      final saved = await showFormSheet<bool>(context, builder: (_) => _ReviewForm(investmentId: b.id, review: review));
+      if (saved == true && context.mounted) {
+        showSnack(context, l.reviewThanks);
+        onSaved();
+      }
+    }
+
+    return SectionCard(
+      title: review == null ? l.rateSteward : l.yourReview,
+      trailing: review == null ? null : TextButton(onPressed: open, child: Text(l.editPayout)),
+      child: review == null
+          ? FilledButton.icon(onPressed: open, icon: const Icon(Icons.star_outline_rounded), label: Text(l.rateSteward))
+          : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Row(children: [
+                for (var i = 0; i < 5; i++)
+                  Icon(i < rating ? Icons.star_rounded : Icons.star_outline_rounded, color: const Color(0xFFE0A100)),
+              ]),
+              if ((review['comment'] as String?)?.isNotEmpty == true) ...[
+                const SizedBox(height: 6),
+                Text('${review['comment']}', style: const TextStyle(color: KColors.inkSecondary)),
+              ],
+            ]),
+    );
+  }
+}
+
+class _ReviewForm extends StatefulWidget {
+  const _ReviewForm({required this.investmentId, this.review});
+  final String investmentId;
+  final Json? review;
+  @override
+  State<_ReviewForm> createState() => _ReviewFormState();
+}
+
+class _ReviewFormState extends State<_ReviewForm> {
+  late int _rating = (widget.review?['rating'] as num?)?.toInt() ?? 0;
+  late final _comment = TextEditingController(text: (widget.review?['comment'] as String?) ?? '');
+  bool _busy = false;
+  String? _error;
+
+  Future<void> _send() async {
+    setState(() {
+      _busy = true;
+      _error = null;
+    });
+    try {
+      await context.api.post('/api/reviews', {
+        'investment_id': widget.investmentId,
+        'rating': _rating,
+        'comment': _comment.text.trim(),
+      });
+      if (mounted) Navigator.of(context).pop(true);
+    } catch (e) {
+      if (mounted) setState(() => _error = errorText(context, e));
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = context.l;
+    return FormSheet(
+      title: l.rateSteward,
+      submitLabel: l.submitReview,
+      busy: _busy,
+      error: _error,
+      enabled: _rating > 0,
+      onSubmit: _send,
+      children: [
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          for (var i = 1; i <= 5; i++)
+            IconButton(
+              iconSize: 40,
+              onPressed: () => setState(() => _rating = i),
+              icon: Icon(i <= _rating ? Icons.star_rounded : Icons.star_outline_rounded, color: const Color(0xFFE0A100)),
+            ),
+        ]),
+        TextField(controller: _comment, minLines: 3, maxLines: 5, decoration: InputDecoration(labelText: l.optional(l.reviewComment))),
+      ],
+    );
+  }
 }

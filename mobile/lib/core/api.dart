@@ -32,6 +32,8 @@ class Api {
           final token = _auth.token;
           if (token != null) options.headers['Authorization'] = 'Bearer $token';
           options.headers['Accept-Language'] = _auth.locale;
+          // Sign-in routes return a token (not a cookie) to the app.
+          options.headers['X-Krishi-Client'] = 'mobile';
           handler.next(options);
         },
       ),
@@ -48,11 +50,26 @@ class Api {
     ),
   );
 
+  /// Downloads a file (e.g. a PDF statement) as bytes.
+  Future<List<int>> download(String path, {Map<String, dynamic>? query}) async {
+    try {
+      final res = await _dio.get<List<int>>(path, queryParameters: query, options: Options(responseType: ResponseType.bytes));
+      return res.data ?? const [];
+    } on DioException catch (e) {
+      final status = e.response?.statusCode;
+      if (status == 401) _auth.onUnauthorized();
+      throw ApiException(status == null ? 'network' : 'Download failed ($status)', status: status);
+    }
+  }
+
   Future<Map<String, dynamic>> get(String path, {Map<String, dynamic>? query}) =>
       _send(() => _dio.get(path, queryParameters: query));
 
   Future<Map<String, dynamic>> post(String path, [Object? body]) =>
       _send(() => _dio.post(path, data: body ?? const {}));
+
+  Future<Map<String, dynamic>> put(String path, [Object? body]) =>
+      _send(() => _dio.put(path, data: body ?? const {}));
 
   Future<Map<String, dynamic>> patch(String path, [Object? body]) =>
       _send(() => _dio.patch(path, data: body ?? const {}));

@@ -30,14 +30,19 @@ class _ApprovalsScreenState extends State<ApprovalsScreen> {
       appBar: AppBar(title: Text(l.approvalsTitle)),
       body: Loader<Json>(
         key: _loader,
-        load: () => context.api.get('/api/mobile/v1/steward/pending'),
+        load: () async {
+          final api = context.api;
+          final results = await Future.wait([api.get('/api/mobile/v1/steward/pending'), api.get('/api/steward/interests')]);
+          return {...results[0], 'interests': results[1]['items'] ?? const []};
+        },
         builder: (context, data, _) {
           List<Json> list(String key) => (data[key] as List).map((e) => Json.from(e as Map)).toList();
           final deaths = list('deathReports');
           final sales = list('sales');
           final funds = list('fundRequests');
           final expenses = list('expenses');
-          if (deaths.isEmpty && sales.isEmpty && funds.isEmpty && expenses.isEmpty) {
+          final interests = list('interests');
+          if (deaths.isEmpty && sales.isEmpty && funds.isEmpty && expenses.isEmpty && interests.isEmpty) {
             return ListView(children: [
               EmptyView(icon: Icons.task_alt, title: l.nothingToApprove, body: l.nothingToApproveHint),
             ]);
@@ -47,6 +52,9 @@ class _ApprovalsScreenState extends State<ApprovalsScreen> {
             children: [
               ResponsiveBody(
                 child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                  if (interests.isNotEmpty) _Group(title: l.interestsToReview, count: interests.length, children: [
+                    for (final i in interests) _interest(context, i),
+                  ]),
                   if (deaths.isNotEmpty) _Group(title: l.deathReportsTitle, count: deaths.length, children: [
                     for (final d in deaths) _death(context, d),
                   ]),
@@ -66,6 +74,72 @@ class _ApprovalsScreenState extends State<ApprovalsScreen> {
         },
       ),
     );
+  }
+
+  /// An investor's (or guest's) interest in one of the steward's plans.
+  Widget _interest(BuildContext context, Json i) {
+    final l = context.l;
+    final lang = context.lang;
+    final investor = (i['investor'] as Map?)?.cast<String, dynamic>();
+    final offering = (i['offering'] as Map?)?.cast<String, dynamic>();
+    final plan = (offering?['investment_plans'] as Map?)?.cast<String, dynamic>();
+    final name = '${investor?['full_name'] ?? i['guest_name'] ?? l.guest}';
+    final phone = investor?['phone'] ?? i['guest_phone'];
+    final units = (i['requested_units'] as num?)?.toInt() ?? 0;
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(14),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          Text('${planName(lang, plan?['name_en'] as String?, plan?['name_bn'] as String?)} · ${i['reference']}',
+              style: const TextStyle(fontSize: 12, color: KColors.brand, fontWeight: FontWeight.w600)),
+          const SizedBox(height: 6),
+          Row(children: [
+            Expanded(child: Text(name, style: const TextStyle(fontSize: 15.5, fontWeight: FontWeight.w700))),
+            Text(l.unitsCount(units), style: const TextStyle(fontWeight: FontWeight.w800)),
+          ]),
+          Text(
+            [if (investor == null) l.guest, if (phone != null) '$phone', dateText(lang, i['created_at'])].join(' · '),
+            style: const TextStyle(color: KColors.inkSecondary, fontSize: 13),
+          ),
+          if (phone != null)
+            Align(
+              alignment: Alignment.centerLeft,
+              child: TextButton.icon(onPressed: () => callPhone('$phone'), icon: const Icon(Icons.call_outlined, size: 18), label: Text(l.call)),
+            ),
+          const SizedBox(height: 6),
+          DecisionButtons(
+            onApprove: () async {
+              if (!await confirmDialog(context,
+                  title: l.approveInterestTitle, body: l.approveInterestBody(name, units), confirm: l.approve)) {
+                return;
+              }
+              if (context.mounted) _decided(_decideInterest(context, '${i['id']}', approve: true));
+            },
+            onReject: () => _decided(_decideInterest(context, '${i['id']}', approve: false)),
+          ),
+        ]),
+      ),
+    );
+  }
+
+  Future<bool> _decideInterest(BuildContext context, String id, {required bool approve}) async {
+    String? reason;
+    if (!approve) {
+      reason = await reasonDialog(context);
+      if (reason == null) return false;
+    }
+    if (!context.mounted) return false;
+    try {
+      await context.api.patch('/api/steward/interests/$id', {
+        'action': approve ? 'approve' : 'reject',
+        'rejection_reason': ?reason,
+      });
+      if (context.mounted) showSnack(context, context.l.saved);
+      return true;
+    } catch (e) {
+      if (context.mounted) showSnack(context, errorText(context, e), error: true);
+      return false;
+    }
   }
 
   Widget _death(BuildContext context, Json d) {

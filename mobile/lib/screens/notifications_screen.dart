@@ -82,9 +82,19 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                         final me = context.session.me;
                         if (me != null) context.session.setUnread((me.unreadNotifications - 1).clamp(0, 1 << 30));
                       }
+                      final href = n.j['href'] is String ? n.j['href'] as String : '';
+                      final onboarding = RegExp(r'/onboarding/([A-Z0-9-]+)').firstMatch(href);
                       if (n.investmentId != null) {
                         context.push('/batches/${n.investmentId}');
-                      } else if (n.j['href'] is String && (n.j['href'] as String).contains('wallet')) {
+                      } else if (onboarding != null) {
+                        context.push('/onboarding/${onboarding.group(1)}');
+                      } else if (href.contains('/portal/interests') || href.contains('/interest/')) {
+                        context.push('/interests');
+                      } else if (href.contains('/portal/kyc')) {
+                        context.push('/kyc');
+                      } else if (href.contains('/steward/interests')) {
+                        context.go('/approvals');
+                      } else if (href.contains('wallet')) {
                         context.go('/wallet');
                       }
                     },
