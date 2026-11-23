@@ -5,7 +5,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { mapSale, SALE_COLUMNS, type InvestmentSale } from "@/lib/investments/detail";
 import { formatBDT } from "@/lib/utils";
 import { Link } from "@/i18n/navigation";
-import { EmptyState, PageHeader, StatCard, StatusBadge, type BadgeTone } from "@/components/dashboard/ui";
+import { EmptyState, PageHeader, RowAction, StatCard, StatusBadge, type BadgeTone } from "@/components/dashboard/ui";
 import { RecordSaleButton, SendMoneyButton } from "@/components/investment/FarmerSaleActions";
 
 export const dynamic = "force-dynamic";
@@ -37,7 +37,11 @@ export default async function FarmerSalesPage() {
 
   const db = createAdminClient();
   const bn = (await getLocale()) === "bn";
-  const [t, ts] = await Promise.all([getTranslations("app.farmerSales"), getTranslations("app.saleStatus")]);
+  const [t, ts, tf] = await Promise.all([
+    getTranslations("app.farmerSales"),
+    getTranslations("app.saleStatus"),
+    getTranslations("app.fundRequests"),
+  ]);
 
   const { data: invRows } = await db
     .from("investments")
@@ -120,6 +124,12 @@ export default async function FarmerSalesPage() {
     );
   };
 
+  const viewBatch = (id: string) => (
+    <RowAction href={`/farmer/investments/${id}`} icon="briefcase" localized>
+      {tf("viewInvestment")}
+    </RowAction>
+  );
+
   const nothing = readyToSell.length + toSend.length + waiting.length + settled.length === 0;
 
   return (
@@ -146,6 +156,7 @@ export default async function FarmerSalesPage() {
                 {s.remitRejectionReason && <span className="text-danger">{t("notConfirmed", { reason: s.remitRejectionReason })}</span>}
               </div>
               <SendMoneyButton investmentId={id} amount={s.saleAmount + s.fundsReturned} accounts={accounts} />
+              {viewBatch(id)}
             </Row>
           ))}
         </Section>
@@ -168,6 +179,7 @@ export default async function FarmerSalesPage() {
                 ) : (
                   <RecordSaleButton investmentId={b.id} units={b.units} animals={animals} again={Boolean(rejected)} />
                 )}
+                {viewBatch(b.id)}
               </Row>
             );
           })}
@@ -183,6 +195,7 @@ export default async function FarmerSalesPage() {
                 <span className="font-mono">{s.reference}</span> · {s.kind === "total_loss" ? t("totalLoss") : formatBDT(s.saleAmount)}
               </span>
               <StatusBadge tone={SALE_TONE[s.status] ?? "neutral"}>{ts.has(s.status) ? ts(s.status) : s.status}</StatusBadge>
+              {viewBatch(id)}
             </Row>
           ))}
         </Section>
@@ -204,6 +217,7 @@ export default async function FarmerSalesPage() {
                     {st?.outcome === "loss" ? t("lossNoShare") : t("yourShareLabel")}
                   </span>
                 </div>
+                {viewBatch(id)}
               </Row>
             );
           })}
@@ -227,7 +241,7 @@ function Section({ title, hint, children }: { title: string; hint?: string; chil
 
 function Row({ children }: { children: React.ReactNode }) {
   return (
-    <li className="grid grid-cols-1 items-center gap-3 px-6 py-4 sm:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_auto]">
+    <li className="grid grid-cols-1 items-center gap-3 px-6 py-4 sm:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_auto_auto] [&>*:last-child]:justify-self-start sm:[&>*:last-child]:justify-self-end">
       {children}
     </li>
   );
