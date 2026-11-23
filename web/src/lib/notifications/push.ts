@@ -80,11 +80,10 @@ export async function sendPush(items: PushNotification[]): Promise<void> {
     const t = { bn: await translators("bn"), en: await translators("en") };
     const dead: string[] = [];
 
-    await Promise.all(
-      items.flatMap((n) =>
-        tokens
-          .filter((tk) => tk.user_id === n.userId)
-          .map(async (tk) => {
+    const jobs = items.flatMap((n) =>
+      tokens
+        .filter((tk) => tk.user_id === n.userId)
+        .map((tk) => async () => {
             const locale: MobileLocale = tk.locale === "en" ? "en" : "bn";
             const { title, body } = notificationText(t[locale], locale, n);
             const res = await fetch(`https://fcm.googleapis.com/v1/projects/${sa.project_id}/messages:send`, {
@@ -114,8 +113,12 @@ export async function sendPush(items: PushNotification[]): Promise<void> {
               console.error(`[push] ${n.kind} failed (${res.status}):`, text.slice(0, 300));
             }
           }),
-      ),
     );
+    // A few dozen at a time, so a message to everyone does not open
+    // thousands of connections at once.
+    for (let i = 0; i < jobs.length; i += 50) {
+      await Promise.allSettled(jobs.slice(i, i + 50).map((job) => job()));
+    }
     if (dead.length) await db.from("push_tokens").delete().in("token", dead);
   } catch (err) {
     console.error("[push] failed:", err);

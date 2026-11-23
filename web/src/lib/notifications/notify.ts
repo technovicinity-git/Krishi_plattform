@@ -63,7 +63,9 @@ export type NotificationKind =
   | "settlement_corrected_request_payout"
   | "settlement_correction_reversed"
   | "settlement_recalculated_payout"
-  | "settlement_recalculated_share";
+  | "settlement_recalculated_share"
+  // Written by an admin in the console (title/body in params).
+  | "custom";
 
 export interface NotificationParams {
   reference?: string;
@@ -74,6 +76,10 @@ export interface NotificationParams {
   planBn?: string;
   reason?: string;
   title?: string;
+  /** Custom notifications: Bangla title, and the message in each language. */
+  titleBn?: string;
+  body?: string;
+  bodyBn?: string;
 }
 
 export interface NotifyTarget {
