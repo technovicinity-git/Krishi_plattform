@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentAdmin } from "@/lib/admin/current-admin";
 import { logAdminAction } from "@/lib/admin/audit";
 import { notify } from "@/lib/notifications/notify";
+import { pushConfigured, sendPush } from "@/lib/notifications/push";
 
 export const runtime = "nodejs";
 // A message to everyone sends one push per phone.
@@ -15,6 +16,8 @@ const optional = (max: number) =>
 const schema = z
   .object({
     audience: z.enum(["all", "investor", "steward", "farmer", "user"]),
+    // both: in the notification list and a push; inapp: list only; push: phones only.
+    channels: z.enum(["both", "inapp", "push"]).default("both"),
     userId: z.string().uuid().optional(),
     titleEn: z.string().trim().min(2, "Write a title").max(80),
     titleBn: optional(80),
@@ -24,9 +27,10 @@ const schema = z
   .refine((d) => d.audience !== "user" || Boolean(d.userId), { message: "Choose a person", path: ["userId"] });
 
 /**
- * POST — sends a notification written by an admin to a group or one person:
- * in-app (bell / app list) and a push to their phones, in each reader's
- * language when a Bangla version is given. Only active accounts receive it.
+ * POST — sends a notification written by an admin to a group or one person,
+ * in-app (bell / app list), as a push to their phones, or both; in each
+ * reader's language when a Bangla version is given. Only active accounts
+ * receive it.
  */
 export async function POST(request: Request) {
   const admin = await getCurrentAdmin();
@@ -37,6 +41,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: parsed.error.issues[0]?.message ?? "Invalid input" }, { status: 400 });
   }
   const d = parsed.data;
+  if (d.channels === "push" && !pushConfigured()) {
+    return NextResponse.json(
+      { error: "Push notifications are not set up on the server (FIREBASE_SERVICE_ACCOUNT)." },
+      { status: 400 },
+    );
+  }
   const db = createAdminClient();
 
   // Page through: the API returns at most 1,000 rows per request.
@@ -58,9 +68,20 @@ export async function POST(request: Request) {
   }
 
   const params = { title: d.titleEn, titleBn: d.titleBn, body: d.bodyEn, bodyBn: d.bodyBn };
+  const clean = Object.fromEntries(Object.entries(params).filter(([, v]) => v)) as Record<string, string>;
+  let pushed = 0;
+  let pushFailed = 0;
   // In chunks, so each insert and push batch stays small.
   for (let i = 0; i < ids.length; i += 500) {
-    await notify("custom", ids.slice(i, i + 500).map((userId) => ({ userId })), params);
+    const chunk = ids.slice(i, i + 500);
+    if (d.channels !== "push") {
+      await notify("custom", chunk.map((userId) => ({ userId })), params, { push: false });
+    }
+    if (d.channels !== "inapp") {
+      const r = await sendPush(chunk.map((userId) => ({ userId, kind: "custom", params: clean, href: null })));
+      pushed += r.sent;
+      pushFailed += r.failed;
+    }
   }
 
   const { data: row } = await db
@@ -74,6 +95,8 @@ export async function POST(request: Request) {
       body_en: d.bodyEn,
       body_bn: d.bodyBn ?? null,
       recipients: ids.length,
+      channels: d.channels,
+      pushed,
     })
     .select("id")
     .single();
@@ -83,9 +106,15 @@ export async function POST(request: Request) {
     action: "notification.sent",
     targetType: "notification_broadcast",
     targetId: row?.id,
-    metadata: { audience: d.audience, userId: d.userId ?? null, title: d.titleEn, recipients: ids.length },
+    metadata: { audience: d.audience, channels: d.channels, userId: d.userId ?? null, title: d.titleEn, recipients: ids.length, pushed },
     request,
   });
 
-  return NextResponse.json({ ok: true, recipients: ids.length });
+  return NextResponse.json({
+    ok: true,
+    recipients: ids.length,
+    pushed,
+    pushFailed,
+    pushConfigured: pushConfigured(),
+  });
 }

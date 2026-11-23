@@ -23,7 +23,13 @@ export async function GET(request: Request) {
     .order("full_name")
     .limit(10);
 
+  const ids = (data ?? []).map((u) => u.id);
+  const { data: phones } = ids.length
+    ? await createAdminClient().from("push_tokens").select("user_id").in("user_id", ids)
+    : { data: [] };
+  const withApp = new Set((phones ?? []).map((p) => p.user_id));
+
   return NextResponse.json({
-    items: (data ?? []).map((u) => ({ id: u.id, name: u.full_name, phone: u.phone, role: u.role })),
+    items: (data ?? []).map((u) => ({ id: u.id, name: u.full_name, phone: u.phone, role: u.role, hasApp: withApp.has(u.id) })),
   });
 }

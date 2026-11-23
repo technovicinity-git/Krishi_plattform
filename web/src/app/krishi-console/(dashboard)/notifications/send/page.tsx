@@ -3,6 +3,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { BackLink } from "@/components/ui/BackLink";
 import { EmptyState, PageHeader, Panel } from "@/components/dashboard/ui";
 import { SendNotificationForm } from "@/components/admin/SendNotificationForm";
+import { pushConfigured, usersWithPhones } from "@/lib/notifications/push";
 
 export const dynamic = "force-dynamic";
 
@@ -14,6 +15,12 @@ const AUDIENCE_LABEL: Record<string, string> = {
   user: "One person",
 };
 
+const CHANNEL_LABEL: Record<string, string> = {
+  both: "App + push",
+  inapp: "In-app only",
+  push: "Push only",
+};
+
 interface Sent {
   id: string;
   audience: string;
@@ -21,6 +28,8 @@ interface Sent {
   title_bn: string | null;
   body_en: string;
   recipients: number;
+  channels: string;
+  pushed: number;
   created_at: string;
   admin: { full_name: string | null } | null;
   person: { full_name: string | null; phone: string | null } | null;
@@ -35,15 +44,19 @@ export default async function SendNotificationPage() {
     if (role) q = q.eq("role", role);
     return q;
   };
-  const [all, investor, steward, farmer, { data: history }] = await Promise.all([
+  const [all, investor, steward, farmer, appAll, appInvestor, appSteward, appFarmer, { data: history }] = await Promise.all([
     count(),
     count("investor"),
     count("steward"),
     count("farmer"),
+    usersWithPhones("all"),
+    usersWithPhones("all", "investor"),
+    usersWithPhones("all", "steward"),
+    usersWithPhones("all", "farmer"),
     db
       .from("notification_broadcasts")
       .select(`
-        id, audience, title_en, title_bn, body_en, recipients, created_at,
+        id, audience, title_en, title_bn, body_en, recipients, channels, pushed, created_at,
         admin:users!admin_id ( full_name ),
         person:users!user_id ( full_name, phone )
       `)
@@ -61,12 +74,14 @@ export default async function SendNotificationPage() {
           </BackLink>
         }
         title="Send a notification"
-        description="Write a message for investors, stewards, farmers or one person. It appears in their notifications and arrives as a push on their phones."
+        description="Write a message for investors, stewards, farmers or one person. Show it in their notifications, send it as a push to their phones, or both."
       />
 
       <Panel>
         <SendNotificationForm
           counts={{ all: all.count ?? 0, investor: investor.count ?? 0, steward: steward.count ?? 0, farmer: farmer.count ?? 0 }}
+          withApp={{ all: appAll, investor: appInvestor, steward: appSteward, farmer: appFarmer }}
+          pushReady={pushConfigured()}
         />
       </Panel>
 
@@ -80,7 +95,7 @@ export default async function SendNotificationPage() {
             <table className="w-full min-w-[760px]">
               <thead className="border-b border-border-light bg-cream">
                 <tr>
-                  {["Sent", "To", "Message", "Reached", "By"].map((h) => (
+                  {["Sent", "To", "Message", "Delivery", "By"].map((h) => (
                     <th key={h} className="px-5 py-3 text-left text-[11px] font-bold uppercase tracking-[0.02em] text-ink-muted">
                       {h}
                     </th>
@@ -111,7 +126,11 @@ export default async function SendNotificationPage() {
                       <div className="line-clamp-2 text-[12px] text-ink-secondary">{s.body_en}</div>
                       {s.title_bn && <div className="mt-0.5 text-[11px] text-ink-muted">+ Bangla version</div>}
                     </td>
-                    <td className="px-5 py-3.5 text-[13px] font-semibold text-ink">{s.recipients.toLocaleString("en-US")}</td>
+                    <td className="px-5 py-3.5 text-[12px] text-ink-secondary">
+                      <div className="font-semibold text-ink">{CHANNEL_LABEL[s.channels] ?? s.channels}</div>
+                      {s.channels !== "push" && <div>{s.recipients.toLocaleString("en-US")} in-app</div>}
+                      {s.channels !== "inapp" && <div>{s.pushed.toLocaleString("en-US")} phone{s.pushed === 1 ? "" : "s"} reached</div>}
+                    </td>
                     <td className="px-5 py-3.5 text-[12.5px] text-ink-secondary">{s.admin?.full_name ?? "—"}</td>
                   </tr>
                 ))}

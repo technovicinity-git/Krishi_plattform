@@ -13,7 +13,17 @@ interface Person {
   name: string | null;
   phone: string | null;
   role: string;
+  /** Has the app with notifications on (can receive a push). */
+  hasApp: boolean;
 }
+
+type Channels = "both" | "inapp" | "push";
+
+const CHANNELS: { key: Channels; label: string; hint: string }[] = [
+  { key: "both", label: "App + push", hint: "In their notifications, and a push to their phones" },
+  { key: "inapp", label: "In-app only", hint: "In their notifications on the website and app; no push" },
+  { key: "push", label: "Push only", hint: "A push to their phones; not kept in their notifications" },
+];
 
 const AUDIENCES: { key: Audience; label: string }[] = [
   { key: "all", label: "Everyone" },
@@ -27,11 +37,24 @@ const input =
   "w-full rounded-[8px] border border-border-light bg-white px-3 py-2.5 text-[13.5px] text-ink placeholder:text-ink-muted focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20";
 const label = "text-[12px] font-semibold text-ink-secondary";
 
-/** Write a notification and send it to a group or one person (in-app + push). */
-export function SendNotificationForm({ counts }: { counts: Record<Exclude<Audience, "user">, number> }) {
+type Group = Exclude<Audience, "user">;
+
+/** Write a notification and send it to a group or one person: in-app, push, or both. */
+export function SendNotificationForm({
+  counts,
+  withApp,
+  pushReady,
+}: {
+  counts: Record<Group, number>;
+  /** People in each group with the app and notifications on. */
+  withApp: Record<Group, number>;
+  /** The server can send pushes (Firebase key set). */
+  pushReady: boolean;
+}) {
   const router = useRouter();
   const dialog = useDialog();
   const [audience, setAudience] = useState<Audience>("all");
+  const [channels, setChannels] = useState<Channels>(pushReady ? "both" : "inapp");
   const [person, setPerson] = useState<Person | null>(null);
   const [search, setSearch] = useState("");
   const [results, setResults] = useState<Person[]>([]);
@@ -64,7 +87,12 @@ export function SendNotificationForm({ counts }: { counts: Record<Exclude<Audien
   // Results only while searching; stale ones are hidden, not cleared.
   const shown = audience === "user" && !person && search.trim().length >= 2 ? results : [];
 
-  const recipients = audience === "user" ? (person ? 1 : 0) : counts[audience];
+  const people = audience === "user" ? (person ? 1 : 0) : counts[audience];
+  const phones = audience === "user" ? (person?.hasApp ? 1 : 0) : withApp[audience];
+  // Push only reaches people with the app.
+  const recipients = channels === "push" ? phones : people;
+  const how =
+    channels === "both" ? "in their notifications and as a push to their phones" : channels === "inapp" ? "in their notifications (no push)" : "as a push to their phones";
   const who =
     audience === "user"
       ? person?.name ?? person?.phone ?? "this person"
@@ -78,7 +106,7 @@ export function SendNotificationForm({ counts }: { counts: Record<Exclude<Audien
     if (audience === "user" && !person) return setError("Choose the person to send to.");
     const ok = await dialog.confirm({
       title: `Send to ${recipients.toLocaleString("en-US")} ${recipients === 1 ? "person" : "people"}?`,
-      message: `“${titleEn.trim()}” goes to ${who}, in the app and as a push to their phones. It can't be taken back.`,
+      message: `“${titleEn.trim()}” goes to ${who}, ${how}. It can't be taken back.`,
       confirmLabel: "Send",
     });
     if (!ok) return;
@@ -87,14 +115,23 @@ export function SendNotificationForm({ counts }: { counts: Record<Exclude<Audien
       const res = await fetch("/api/admin/notifications/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ audience, userId: person?.id, titleEn, titleBn, bodyEn, bodyBn }),
+        body: JSON.stringify({ audience, channels, userId: person?.id, titleEn, titleBn, bodyEn, bodyBn }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         setError(data.error ?? "Could not send. Try again.");
         return;
       }
-      await dialog.alert({ title: "Sent", message: `Delivered to ${data.recipients.toLocaleString("en-US")} ${data.recipients === 1 ? "person" : "people"}.` });
+      const parts: string[] = [];
+      if (channels !== "push") parts.push(`In-app: ${data.recipients.toLocaleString("en-US")} ${data.recipients === 1 ? "person" : "people"}.`);
+      if (channels !== "inapp") {
+        parts.push(
+          data.pushConfigured
+            ? `Push: reached ${data.pushed.toLocaleString("en-US")} phone${data.pushed === 1 ? "" : "s"}${data.pushFailed ? `, ${data.pushFailed} failed` : ""}.`
+            : "Push: not sent (push is not set up on the server).",
+        );
+      }
+      await dialog.alert({ title: "Sent", message: parts.join(" ") });
       setTitleEn("");
       setTitleBn("");
       setBodyEn("");
@@ -141,7 +178,8 @@ export function SendNotificationForm({ counts }: { counts: Record<Exclude<Audien
                 <div className="min-w-0 text-[13px]">
                   <div className="truncate font-semibold text-ink">{person.name ?? "—"}</div>
                   <div className="text-[12px] text-ink-muted">
-                    {person.phone ?? "No phone"} · <span className="capitalize">{person.role}</span>
+                    {person.phone ?? "No phone"} · <span className="capitalize">{person.role}</span> ·{" "}
+                    {person.hasApp ? "has the app" : "no app: push won't reach them"}
                   </div>
                 </div>
                 <button type="button" onClick={() => setPerson(null)} className="text-[12px] font-semibold text-brand hover:underline">
@@ -169,6 +207,7 @@ export function SendNotificationForm({ counts }: { counts: Record<Exclude<Audien
                           <span className="truncate font-semibold text-ink">{r.name ?? "—"}</span>
                           <span className="shrink-0 text-[12px] text-ink-muted">
                             {r.phone} · <span className="capitalize">{r.role}</span>
+                            {r.hasApp && " · app"}
                           </span>
                         </button>
                       </li>
@@ -181,6 +220,48 @@ export function SendNotificationForm({ counts }: { counts: Record<Exclude<Audien
               </>
             )}
           </div>
+        )}
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <span className={label}>Deliver as</span>
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+          {CHANNELS.map((c) => {
+            const disabled = c.key !== "inapp" && !pushReady;
+            return (
+              <button
+                key={c.key}
+                type="button"
+                disabled={disabled}
+                onClick={() => setChannels(c.key)}
+                className={cn(
+                  "flex flex-col gap-0.5 rounded-[10px] border px-3.5 py-3 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-50",
+                  channels === c.key ? "border-brand bg-brand-tint ring-1 ring-brand/30" : "border-border-light bg-white hover:bg-stone",
+                )}
+              >
+                <span className="text-[13px] font-bold text-ink">{c.label}</span>
+                <span className="text-[11.5px] leading-snug text-ink-muted">{c.hint}</span>
+              </button>
+            );
+          })}
+        </div>
+        {pushReady ? (
+          channels !== "inapp" && (
+            <p className="text-[12px] text-ink-muted">
+              {audience === "user"
+                ? person
+                  ? person.hasApp
+                    ? "This person has the app, so the push will reach their phone."
+                    : "This person hasn't signed in to the app with notifications on, so a push won't reach them."
+                  : "Choose a person to see whether they have the app."
+                : `${phones.toLocaleString("en-US")} of ${people.toLocaleString("en-US")} have the app with notifications on; only they get the push.`}
+            </p>
+          )
+        ) : (
+          <p className="rounded-[8px] bg-[#FBF5E6] px-3 py-2 text-[12px] text-[#9A6B12]">
+            Push notifications are not set up on this server yet: add the Firebase key as FIREBASE_SERVICE_ACCOUNT (on one
+            line). Until then you can send in-app notifications only.
+          </p>
         )}
       </div>
 

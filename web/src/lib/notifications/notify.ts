@@ -95,6 +95,8 @@ export async function notify(
   kind: NotificationKind,
   targets: NotifyTarget | NotifyTarget[],
   params: NotificationParams = {},
+  /** push: false keeps it in-app only (no push to phones). */
+  options: { push?: boolean } = {},
 ): Promise<void> {
   const list = (Array.isArray(targets) ? targets : [targets]).filter(
     (t): t is { userId: string; href?: string | null } => Boolean(t.userId),
@@ -112,7 +114,7 @@ export async function notify(
       .insert(list.map((t) => ({ user_id: t.userId, kind, params: clean, href: t.href ?? null })));
     if (error) console.error(`[notify] ${kind} failed:`, error);
     // Also to their phones. Admin queue alerts stay in the console.
-    if (!error && !kind.startsWith("admin_")) {
+    if (!error && options.push !== false && !kind.startsWith("admin_")) {
       const { sendPush } = await import("./push");
       await sendPush(list.map((t) => ({ userId: t.userId, kind, params: clean as Record<string, string | number>, href: t.href ?? null })));
     }
