@@ -91,7 +91,7 @@ export async function listPublicOfferings(filters: PlanFilters = {}) {
       units_funded,
       status,
       thana_id,
-      thanas ( name_en, name_bn ),
+      thanas${filters.thanaSlug ? "!inner" : ""} ( name_en, name_bn, slug ),
       investment_plans!inner (
         id, slug, name_en, name_bn, image_path,
         duration_months, unit_price, animal_allocation, care_allocation,
