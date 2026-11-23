@@ -740,5 +740,7 @@
   "detailsSaved": "Details saved.",
   "weightsFromRecords": "Weights come from weight records: add a record to update them.",
   "downloadCsv": "Download CSV",
-  "csvNoApp": "Saved, but no app on this phone opens CSV files. Install a spreadsheet app such as Google Sheets."
+  "csvNoApp": "Saved, but no app on this phone opens CSV files. Install a spreadsheet app such as Google Sheets.",
+  "payoutUpdated": "Last changed {date}",
+  "@payoutUpdated": {"placeholders": {"date": {"type": "String"}}}
 }

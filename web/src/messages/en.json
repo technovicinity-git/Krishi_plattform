@@ -2341,6 +2341,7 @@
       }
     },
     "wallet": {
+      "payoutUpdated": "Last changed {date}",
       "title": "Wallet",
       "subtitle": "Money from settled batches stays here until you withdraw it.",
       "available": "Available",

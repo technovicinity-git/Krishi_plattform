@@ -67,6 +67,8 @@ export interface WithdrawalPreference {
   bankBranch: string | null;
   bankRoutingNumber: string | null;
   accountHolderName: string;
+  /** When the payout account was last changed. */
+  updatedAt: string;
 }
 
 export async function getWithdrawalPreference(
@@ -91,5 +93,6 @@ export async function getWithdrawalPreference(
     bankBranch: data.bank_branch,
     bankRoutingNumber: data.bank_routing_number,
     accountHolderName: data.account_holder_name,
+    updatedAt: data.updated_at,
   };
 }

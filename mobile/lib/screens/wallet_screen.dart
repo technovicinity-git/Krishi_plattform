@@ -120,8 +120,16 @@ class _WalletScreenState extends State<WalletScreen> {
                   ),
                   child: w.payout == null
                       ? Text(l.noPayout, style: const TextStyle(color: KColors.inkSecondary))
-                      : Text('${payoutText(w.payout!)} · ${w.payout!['accountHolderName'] ?? ''}',
-                          style: const TextStyle(fontWeight: FontWeight.w600)),
+                      : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                          Text('${payoutText(w.payout!)} · ${w.payout!['accountHolderName'] ?? ''}',
+                              style: const TextStyle(fontWeight: FontWeight.w600)),
+                          if (w.payout!['updatedAt'] != null)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 4),
+                              child: Text(l.payoutUpdated(dateText(context.lang, w.payout!['updatedAt'])),
+                                  style: const TextStyle(color: KColors.inkMuted, fontSize: 12)),
+                            ),
+                        ]),
                 ),
                 const SizedBox(height: 12),
                 SectionCard(

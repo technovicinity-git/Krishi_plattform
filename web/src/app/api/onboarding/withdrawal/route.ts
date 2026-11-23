@@ -59,6 +59,17 @@ export async function POST(request: Request) {
       bank_routing_number: data.method === "bank" ? data.bankRoutingNumber : null,
     };
 
+    // Re-saving the same details is not a change: keep "last changed" as it was.
+    const { data: existing } = await admin
+      .from("withdrawal_preferences")
+      .select("method, account_holder_name, mfs_provider, mobile_number, bank_name, bank_account_number, bank_branch, bank_routing_number")
+      .eq("user_id", session.sub)
+      .maybeSingle();
+    const unchanged =
+      existing !== null &&
+      (Object.keys(existing) as (keyof typeof existing)[]).every((k) => (existing[k] ?? null) === (row[k] ?? null));
+    if (unchanged) return NextResponse.json({ success: true });
+
     const { error } = await admin
       .from("withdrawal_preferences")
       .upsert(row, { onConflict: "user_id" });

@@ -135,6 +135,7 @@ export async function WalletView({
               <div className="flex flex-col gap-1">
                 <span className="text-[14px] font-semibold text-ink">{destination}</span>
                 <span className="text-[12.5px] text-ink-secondary">{wallet.payout.accountHolderName}</span>
+                <span className="mt-1 text-[11.5px] text-ink-muted">{t("payoutUpdated", { date: fmtDate(wallet.payout.updatedAt) })}</span>
               </div>
             ) : (
               <p className="text-[13px] text-ink-muted">{t("noPayoutShort")}</p>

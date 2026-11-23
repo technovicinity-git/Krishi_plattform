@@ -2893,6 +2893,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Saved, but no app on this phone opens CSV files. Install a spreadsheet app such as Google Sheets.'**
   String get csvNoApp;
+
+  /// No description provided for @payoutUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Last changed {date}'**
+  String payoutUpdated(String date);
 }
 
 class _AppLocalizationsDelegate

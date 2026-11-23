@@ -1600,4 +1600,9 @@ class AppLocalizationsBn extends AppLocalizations {
   @override
   String get csvNoApp =>
       'সংরক্ষিত হয়েছে, কিন্তু এই ফোনে CSV খোলার কোনো অ্যাপ নেই। Google Sheets-এর মতো একটি স্প্রেডশিট অ্যাপ ইনস্টল করুন।';
+
+  @override
+  String payoutUpdated(String date) {
+    return 'সর্বশেষ পরিবর্তন $date';
+  }
 }

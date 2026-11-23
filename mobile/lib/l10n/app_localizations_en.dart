@@ -1617,4 +1617,9 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get csvNoApp =>
       'Saved, but no app on this phone opens CSV files. Install a spreadsheet app such as Google Sheets.';
+
+  @override
+  String payoutUpdated(String date) {
+    return 'Last changed $date';
+  }
 }
