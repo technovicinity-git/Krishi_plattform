@@ -8,6 +8,7 @@ import { Link } from "@/i18n/navigation";
 import { planImageUrl } from "@/lib/admin/plan-helpers";
 import { listPublicOfferings, type OfferingListItem } from "@/lib/public/plans";
 import { formatBDT } from "@/lib/utils";
+import { delay } from "./motion";
 
 export async function Opportunities() {
   const t = await getTranslations("home.opportunities");
@@ -19,7 +20,7 @@ export async function Opportunities() {
     <Section size="xl" className="bg-cream">
       <Container>
         <div className="flex flex-col gap-[72px]">
-          <div className="flex flex-col gap-7">
+          <div data-reveal className="flex flex-col gap-7">
             <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
               <div className="flex flex-col gap-3.5">
                 <Eyebrow>{t("eyebrow")}</Eyebrow>
@@ -46,7 +47,8 @@ export async function Opportunities() {
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {items.map((item) => (
+              {items.map((item, i) => (
+                <div key={item.offeringId} data-reveal style={delay(i * 120)} className="transition-transform duration-300 hover:-translate-y-1">
                 <HomePlanCard
                   key={item.offeringId}
                   item={item}
@@ -69,6 +71,7 @@ export async function Opportunities() {
                         : tPlans("card.fullyFunded")
                   }
                 />
+                </div>
               ))}
             </div>
           )}

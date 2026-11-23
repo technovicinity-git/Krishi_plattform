@@ -9,7 +9,7 @@ export function RiskDisclosure() {
   return (
     <Section size="md" className="bg-stone">
       <Container>
-        <div className="mx-auto max-w-[1000px] rounded-xl border-l-4 border-brand bg-white p-10">
+        <div data-reveal className="mx-auto max-w-[1000px] rounded-xl border-l-4 border-brand bg-white p-10">
           <div className="flex flex-col gap-5">
             <div className="flex items-center gap-3">
               <AlertTriangleIcon className="text-brand" />

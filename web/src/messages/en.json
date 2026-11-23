@@ -26,19 +26,23 @@
       "ctaPrimary": "Explore Investment Plans",
       "ctaSecondary": "How It Works",
       "imageAlt": "Healthy cattle grazing on a green field in Bangladesh",
-      "metricInvestedLabel": "Total Invested Value",
-      "metricAssetsLabel": "Verified Cattle Assets",
-      "metricHealthLabel": "Health Trust Rate"
+      "metricInvestedLabel": "Of the profit to you, plus your capital back",
+      "metricAssetsLabel": "Photo, weight & health updates from the farm",
+      "metricHealthLabel": "Investors, stewards & farmers verified",
+      "metricLive": "Live",
+      "metricVerified": "NID",
+      "stagesTitle": "Every batch, five steps",
+      "stagesBody": "You see each one in your portal."
     },
     "ecosystem": {
       "eyebrow": "A Transparent Investment Ecosystem",
       "heading": "Connecting capital to local soil",
       "steps": {
-        "investor": { "title": "Investor", "description": "Selects a verified livestock plan, reviews allocation details, and commits capital — entirely digital." },
-        "platform": { "title": "Krishi Platform", "description": "Allocates assets, secures custom insurance and smart contracts for structured fund separation." },
-        "steward": { "title": "Verified Steward", "description": "Monitors feeding schedules, conducts biosecurity inspections, and logs verified health updates." },
-        "farmer": { "title": "Partner Farmer", "description": "Provides daily on-ground care on certified premium grasslands across regional clusters." },
-        "distribution": { "title": "Profit Distribution", "description": "Livestock sold at optimal seasonal cycles. Capital and net returns distributed automatically." }
+        "investor": { "title": "Investor", "description": "Chooses a plan, sends an interest and pays for their units, all online. Follows the batch in the portal." },
+        "platform": { "title": "Krishi Platform", "description": "Holds the capital, releases money only for approved purchases and requests, and settles every batch." },
+        "steward": { "title": "Verified Steward", "description": "Assigns the farmer, approves every fund request and expense, and confirms the sale." },
+        "farmer": { "title": "Partner Farmer", "description": "Buys and raises the animals, logs weights, health and expenses with photos, and sells at market." },
+        "distribution": { "title": "Profit Distribution", "description": "After the sale, the profit is split 60% farmer, 30% investor, 5% steward, 5% Krishi, straight to wallets." }
       }
     },
     "opportunities": {
@@ -58,32 +62,38 @@
     },
     "transparency": {
       "eyebrow": "Where does your money go?",
-      "heading": "Not a penny remains unmonitored",
-      "paragraph": "Krishi operates on structured separation of funds. Out of every ৳1,00,000 unit, the animal cost is locked at purchase. The care fund is held in escrow, released only when local farmers submit photo-verified logs of food and medical requirements.",
+      "heading": "Every taka has a job",
+      "paragraph": "Each unit has a fixed split, set per plan: one part buys the animals, the rest is the care fund for feed, medicine and transport. Care money is only released when the farmer asks for it and the steward approves.",
       "checklist": {
-        "item1": "Biosecure medical emergency reserve locked at the time of purchase",
-        "item2": "Food expenses tied directly to verified local commodity market rates",
-        "item3": "Steward verification required before releasing each monthly care payout"
+        "item1": "Care money released only against steward-approved requests",
+        "item2": "Every expense logged with a receipt photo and checked by the steward",
+        "item3": "Unspent care money goes back to Krishi with the sale money"
       },
       "breakdown": {
-        "label": "Unit Allocation Breakdown",
-        "total": "৳1,00,000 per Unit",
+        "label": "How one unit is split",
+        "perUnit": "{price} per unit",
+        "examplePlan": "Example: {plan}",
+        "saleTitle": "When the batch is sold",
+        "saleNote": "Profit after costs is shared. Investors also get their capital back. On a loss, nobody takes a share.",
+        "shareFarmer": "Farmer",
+        "shareInvestor": "Investor",
+        "shareSteward": "Steward",
+        "sharePlatform": "Krishi",
         "rows": {
-          "animal": { "title": "Animal Purchase Fund", "amount": "৳50,000 · 50%", "note": "Sent directly to verified partner farm pools" },
-          "care": { "title": "Fodder, Care & Medical Escrow", "amount": "৳40,000 · 40%", "note": "Disbursed monthly based on verified health updates" },
-          "reserve": { "title": "Emergency Risk Reserve", "amount": "৳10,000 · 10%", "note": "Platform-level custom pool protection" }
+          "animal": { "title": "Buying the animals", "amount": "৳50,000 · 50%", "note": "Paid when the farmer confirms the purchase" },
+          "care": { "title": "Care fund", "amount": "৳40,000 · 40%", "note": "Feed, medicine and transport, released per approved request" }
         }
       }
     },
     "lifecycle": {
       "eyebrow": "Transparency In Motion",
-      "heading": "Your Premium Livestock Lifecycle",
+      "heading": "From your payment to your payout",
       "stages": {
-        "capital": { "title": "Capital Allocated", "description": "Your capital secures a specific animal tag and enters structured escrow. No pooling." },
-        "onboarded": { "title": "Livestock Onboarded", "description": "Steward confirms bio-tagging and registers the animal under your portfolio ID." },
-        "updates": { "title": "Monthly Updates", "description": "Live feeds, photo logs, and veterinary records visible in your investor portal." },
-        "sale": { "title": "Optimal Sale Timing", "description": "Market-ready at peak of regional trade season for maximum return on capital." },
-        "settlement": { "title": "Settlement & Returns", "description": "Capital and net returns settled automatically to your verified Krishi wallet." }
+        "capital": { "title": "Capital Allocated", "description": "Your payment is checked and your batch is created: your own animals, not a pool." },
+        "onboarded": { "title": "Livestock Onboarded", "description": "The farmer buys the animals; each one gets its own record with weight and tag." },
+        "updates": { "title": "Monthly Updates", "description": "Photos, weights, health checks and every expense appear in your portal." },
+        "sale": { "title": "Optimal Sale Timing", "description": "Sold at market when ready; the steward confirms the price and buyer." },
+        "settlement": { "title": "Settlement & Returns", "description": "Your capital and your share of the profit land in your Krishi wallet." }
       }
     },
     "dashboard": {
@@ -95,14 +105,14 @@
     "trust": {
       "eyebrow": "Verification Protocol",
       "heading": "Built on trust and verification",
-      "subtitle": "Every participant, transaction, and animal is validated before capital moves.",
+      "subtitle": "Every person is verified and every taka is approved before it moves.",
       "items": {
-        "kyc": { "title": "Mandatory KYC Protocols", "description": "All investors and farming partners undergo strict NID validation and banking checks before any capital is allocated." },
-        "participants": { "title": "Verified Participants", "description": "Stewards are vetted agricultural graduates or veterinarians with certified experience in regional husbandry." },
-        "escrow": { "title": "Structured Escrow Process", "description": "No capital is held loosely. Daily expenditure is drawn from specific care funds based on approved verification tags." },
-        "photoUpdates": { "title": "Regular Photo Updates", "description": "Farmers upload weekly time-stamped images with biosecure tag markers to prove actual livestock growth states." },
-        "expenseApprovals": { "title": "Controlled Expense Approvals", "description": "Steward checks verify fodder weight and vaccine certificates before any veterinary fund payout is authorised." },
-        "settlements": { "title": "Transparent Settlements", "description": "After the matured sale, market receipts are posted for full investor audit access at settlement." }
+        "kyc": { "title": "Mandatory KYC Protocols", "description": "Investors verify their NID before investing. Farmers are registered with their NID by their steward." },
+        "participants": { "title": "Verified Participants", "description": "Krishi reviews and approves every steward before they can manage a plan or farmers." },
+        "escrow": { "title": "Capital Held by Krishi", "description": "Your money stays with Krishi and is released only for confirmed purchases and approved requests." },
+        "photoUpdates": { "title": "Regular Photo Updates", "description": "Farmers post dated photos, weights and health records for each animal you own." },
+        "expenseApprovals": { "title": "Controlled Expense Approvals", "description": "The steward approves every fund request and checks every expense before it counts." },
+        "settlements": { "title": "Transparent Settlements", "description": "Sale, costs and every share are shown line by line, with a PDF statement you can download." }
       }
     },
     "riskDisclosure": {
