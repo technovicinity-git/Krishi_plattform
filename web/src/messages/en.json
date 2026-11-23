@@ -2159,6 +2159,9 @@
       }
     },
     "livestock": {
+      "avgGainActive": "{count, plural, one {# animal} other {# animals}} in care",
+      "avgGainAll": "{count, plural, one {# animal} other {# animals}}, including sold",
+      "avgGainNone": "Needs a purchase weight and a later weighing",
       "title": "Livestock",
       "subtitle": "Every animal across your batches, with its latest weight and health record.",
       "active": "Active",

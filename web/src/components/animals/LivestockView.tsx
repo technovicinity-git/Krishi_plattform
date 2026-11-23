@@ -33,8 +33,15 @@ export async function LivestockView({
   const bn = (await getLocale()) === "bn";
 
   const count = (s: string) => animals.filter((a) => a.status === s).length;
-  const gains = animals.filter((a) => a.status === "active").map(weightGain).filter((g): g is number => g !== null);
+  // Average gain: animals still in care; when there are none with weights
+  // (e.g. all sold), every animal that was weighed, except ones that died.
+  const gainsOf = (list: typeof animals) => list.map(weightGain).filter((g): g is number => g !== null);
+  const activeGains = gainsOf(animals.filter((a) => a.status === "active" || a.status === "death_reported"));
+  const gains = activeGains.length ? activeGains : gainsOf(animals.filter((a) => a.status !== "dead"));
   const avgGain = gains.length ? Math.round((gains.reduce((s, g) => s + g, 0) / gains.length) * 10) / 10 : null;
+  const avgGainHint = gains.length
+    ? t(activeGains.length ? "avgGainActive" : "avgGainAll", { count: gains.length })
+    : t("avgGainNone");
   // Animals with a death report waiting for the steward still count as active.
   const inFilter = (s: string) => s === filter || (filter === "active" && s === "death_reported");
   const shown = filter === "all" ? animals : animals.filter((a) => inFilter(a.status));
@@ -47,7 +54,11 @@ export async function LivestockView({
         <StatCard label={t("active")} value={count("active") + count("death_reported")} tone="brand" icon="leaf" />
         <StatCard label={t("sold")} value={count("sold")} />
         <StatCard label={t("dead")} value={count("dead")} />
-        <StatCard label={t("avgGain")} value={avgGain !== null ? ta("kg", { value: avgGain }) : "—"} />
+        <StatCard
+          label={t("avgGain")}
+          value={avgGain !== null ? `${avgGain > 0 ? "+" : ""}${ta("kg", { value: avgGain })}` : "—"}
+          hint={avgGainHint}
+        />
       </div>
 
       <Tabs

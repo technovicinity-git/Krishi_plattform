@@ -232,9 +232,21 @@ class Animal {
   List<AnimalRecord> get records => _list(j['records']).map(AnimalRecord.new).toList();
   bool get active => status == 'active';
 
-  double? get gain => purchaseWeightKg == null || currentWeightKg == null
-      ? null
-      : ((currentWeightKg! - purchaseWeightKg!) * 10).round() / 10;
+  /// kg gained since purchase. Without a purchase weight, the first weighing
+  /// is the starting point (once there is a later one), as on the website.
+  double? get gain {
+    final current = currentWeightKg;
+    if (current == null) return null;
+    var start = purchaseWeightKg;
+    if (start == null) {
+      final weighings = records.where((r) => r.kind == 'weight' && r.weightKg != null).toList()
+        ..sort((a, b) => a.recordedOn.compareTo(b.recordedOn));
+      if (weighings.length < 2) return null;
+      start = weighings.first.weightKg;
+    }
+    if (start == null) return null;
+    return ((current - start) * 10).round() / 10;
+  }
 
   /// Livestock list only: which batch the animal is in.
   Json get batch => (j['batch'] as Map?)?.cast<String, dynamic>() ?? const {};
