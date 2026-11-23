@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../core/files.dart';
 import '../core/format.dart';
 import '../core/models.dart';
 import '../ui/theme.dart';
@@ -33,7 +34,16 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     final l = context.l;
     final lang = context.lang;
     return Scaffold(
-      appBar: AppBar(title: Text(l.transactions)),
+      appBar: AppBar(
+        title: Text(l.transactions),
+        actions: [
+          IconButton(
+            tooltip: l.downloadCsv,
+            icon: const Icon(Icons.download_outlined),
+            onPressed: () => openTransactionsCsv(context, kind: _kind),
+          ),
+        ],
+      ),
       body: Loader<Json>(
         key: _loader,
         load: () => context.api.get('/api/mobile/v1/transactions', query: {'type': ?_kind}),

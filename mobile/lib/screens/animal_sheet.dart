@@ -50,6 +50,7 @@ class _AnimalSheet extends StatelessWidget {
             child: Column(children: [
               if (a.earTag != null) KeyValue(l.earTagLabel, a.earTag!),
               if (a.breed != null) KeyValue(l.breed, a.breed!),
+              if (a.sex != null) KeyValue(l.sexLabel, a.sex == 'female' ? l.sexFemale : l.sexMale),
               KeyValue(l.bought, a.purchasePrice != null ? bdt(a.purchasePrice!) : '—'),
               KeyValue(l.startWeight, a.purchaseWeightKg != null ? kg(a.purchaseWeightKg!) : '—'),
               KeyValue(
@@ -64,6 +65,24 @@ class _AnimalSheet extends StatelessWidget {
             ]),
           ),
         ),
+        if (a.notes?.isNotEmpty == true) ...[
+          const SizedBox(height: 10),
+          Text(a.notes!, style: const TextStyle(color: KColors.inkSecondary, fontSize: 13)),
+        ],
+        if (role == 'farmer') ...[
+          const SizedBox(height: 14),
+          OutlinedButton.icon(
+            onPressed: () async {
+              final saved = await showFormSheet<bool>(context, builder: (_) => AnimalEditForm(animal: a));
+              if (saved == true && context.mounted) {
+                showSnack(context, l.detailsSaved);
+                Navigator.of(context).pop(true);
+              }
+            },
+            icon: const Icon(Icons.edit_outlined),
+            label: Text(l.editDetails),
+          ),
+        ],
         if (canRecord) ...[
           const SizedBox(height: 14),
           FilledButton.icon(

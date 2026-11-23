@@ -729,5 +729,16 @@
   "yourReview": "Your review",
   "reviewComment": "Comment",
   "submitReview": "Submit review",
-  "reviewThanks": "Thanks for your review."
+  "reviewThanks": "Thanks for your review.",
+  "editDetails": "Edit details",
+  "editAnimalTitle": "Edit {tag}",
+  "@editAnimalTitle": {"placeholders": {"tag": {"type": "String"}}},
+  "sexLabel": "Sex",
+  "sexMale": "Male",
+  "sexFemale": "Female",
+  "notesLabel": "Notes",
+  "detailsSaved": "Details saved.",
+  "weightsFromRecords": "Weights come from weight records: add a record to update them.",
+  "downloadCsv": "Download CSV",
+  "csvNoApp": "Saved, but no app on this phone opens CSV files. Install a spreadsheet app such as Google Sheets."
 }

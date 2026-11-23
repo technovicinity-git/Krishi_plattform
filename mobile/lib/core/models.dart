@@ -222,6 +222,7 @@ class Animal {
   String? get earTag => _str(j['earTag']);
   String? get breed => _str(j['breed']);
   String? get sex => _str(j['sex']);
+  String? get notes => _str(j['notes']);
   double? get purchasePrice => _numOrNull(j['purchasePrice']);
   double? get purchaseWeightKg => _numOrNull(j['purchaseWeightKg']);
   double? get currentWeightKg => _numOrNull(j['currentWeightKg']);

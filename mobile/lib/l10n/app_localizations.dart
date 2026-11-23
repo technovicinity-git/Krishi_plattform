@@ -2833,6 +2833,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Thanks for your review.'**
   String get reviewThanks;
+
+  /// No description provided for @editDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit details'**
+  String get editDetails;
+
+  /// No description provided for @editAnimalTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit {tag}'**
+  String editAnimalTitle(String tag);
+
+  /// No description provided for @sexLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Sex'**
+  String get sexLabel;
+
+  /// No description provided for @sexMale.
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get sexMale;
+
+  /// No description provided for @sexFemale.
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get sexFemale;
+
+  /// No description provided for @notesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get notesLabel;
+
+  /// No description provided for @detailsSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Details saved.'**
+  String get detailsSaved;
+
+  /// No description provided for @weightsFromRecords.
+  ///
+  /// In en, this message translates to:
+  /// **'Weights come from weight records: add a record to update them.'**
+  String get weightsFromRecords;
+
+  /// No description provided for @downloadCsv.
+  ///
+  /// In en, this message translates to:
+  /// **'Download CSV'**
+  String get downloadCsv;
+
+  /// No description provided for @csvNoApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved, but no app on this phone opens CSV files. Install a spreadsheet app such as Google Sheets.'**
+  String get csvNoApp;
 }
 
 class _AppLocalizationsDelegate

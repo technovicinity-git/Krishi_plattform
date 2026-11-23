@@ -555,3 +555,50 @@ class _TotalLossFormState extends State<TotalLossForm> with _Submit {
     );
   }
 }
+
+// ─── Farmer: edit an animal's details ───────────────────────────────────────
+
+/// Ear tag, breed, sex and notes. Weights come from weight records.
+class AnimalEditForm extends StatefulWidget {
+  const AnimalEditForm({super.key, required this.animal});
+  final Animal animal;
+  @override
+  State<AnimalEditForm> createState() => _AnimalEditFormState();
+}
+
+class _AnimalEditFormState extends State<AnimalEditForm> with _Submit {
+  late final _earTag = TextEditingController(text: widget.animal.earTag ?? '');
+  late final _breed = TextEditingController(text: widget.animal.breed ?? '');
+  late final _notes = TextEditingController(text: widget.animal.notes ?? '');
+  late String _sex = widget.animal.sex ?? '';
+
+  @override
+  Widget build(BuildContext context) {
+    final l = context.l;
+    return FormSheet(
+      title: l.editAnimalTitle(widget.animal.tag),
+      submitLabel: l.save,
+      busy: busy,
+      error: error,
+      enabled: true,
+      onSubmit: () => submit(() => context.api.patch('/api/animals/${widget.animal.id}', {
+            'ear_tag': _earTag.text.trim(),
+            'breed': _breed.text.trim(),
+            'sex': _sex,
+            'notes': _notes.text.trim(),
+          })),
+      children: [
+        TextField(controller: _earTag, maxLength: 40, decoration: _dec(l.optional(l.earTagLabel))),
+        TextField(controller: _breed, maxLength: 80, decoration: _dec(l.optional(l.breed))),
+        ChoiceField(
+          label: l.optional(l.sexLabel),
+          value: _sex,
+          options: {'': '—', 'male': l.sexMale, 'female': l.sexFemale},
+          onChanged: (v) => setState(() => _sex = v ?? ''),
+        ),
+        TextField(controller: _notes, minLines: 2, maxLines: 5, maxLength: 1000, decoration: _dec(l.optional(l.notesLabel))),
+        Text(l.weightsFromRecords, style: const TextStyle(color: KColors.inkMuted, fontSize: 12.5)),
+      ],
+    );
+  }
+}
