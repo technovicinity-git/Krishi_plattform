@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDialog } from "@/components/ui/dialog-provider";
+import { RowActions, rowActionClass } from "@/components/dashboard/ui";
+import { NavIcon } from "@/components/dashboard/NavIcon";
 
 interface Category {
   id: string;
@@ -69,9 +71,12 @@ export function CategoryManager({ categories }: { categories: Category[] }) {
           <button
             type="button"
             onClick={() => setShowAdd(true)}
-            className="inline-flex h-[42px] items-center justify-center rounded-[8px] bg-brand px-5 text-[13px] font-bold text-white hover:bg-brand-hover"
+            className="inline-flex h-[42px] items-center justify-center gap-1.5 rounded-[8px] bg-brand px-5 text-[13px] font-bold text-white hover:bg-brand-hover"
           >
-            + Add category
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="h-4 w-4" aria-hidden="true">
+              <path d="M10 4v12M4 10h12" />
+            </svg>
+            Add category
           </button>
         </div>
       )}
@@ -142,26 +147,22 @@ export function CategoryManager({ categories }: { categories: Category[] }) {
                     {cat.isActive ? "Active" : "Inactive"}
                   </span>
                 </td>
-                <td className="px-5 py-4 text-right">
-                  <button
-                    type="button"
-                    onClick={() => setEditingId(cat.id)}
-                    className="mr-4 text-[12px] font-semibold text-ink-nav hover:text-ink"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleToggleActive(cat)}
-                    disabled={busyId === cat.id}
-                    className="text-[12px] font-semibold text-brand hover:underline disabled:opacity-60"
-                  >
-                    {busyId === cat.id
-                      ? "…"
-                      : cat.isActive
-                        ? "Deactivate"
-                        : "Activate"}
-                  </button>
+                <td className="px-5 py-4">
+                  <RowActions>
+                    <button
+                      type="button"
+                      onClick={() => handleToggleActive(cat)}
+                      disabled={busyId === cat.id}
+                      className={rowActionClass(cat.isActive ? "danger" : "default")}
+                    >
+                      <NavIcon name={cat.isActive ? "power" : "check"} className="h-[15px] w-[15px]" />
+                      {busyId === cat.id ? "Saving…" : cat.isActive ? "Deactivate" : "Activate"}
+                    </button>
+                    <button type="button" onClick={() => setEditingId(cat.id)} className={rowActionClass()}>
+                      <NavIcon name="edit" className="h-[15px] w-[15px]" />
+                      Edit
+                    </button>
+                  </RowActions>
                 </td>
               </tr>
             ))}

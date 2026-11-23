@@ -25,13 +25,31 @@ export type NavIconName =
   | "lock"
   | "bell"
   | "edit"
-  | "eye";
+  | "eye"
+  | "power"
+  | "check"
+  | "eyeOff";
 
 const PATHS: Record<NavIconName, React.ReactNode> = {
   edit: (
     <>
       <path d="M12.5 4.5l3 3L7 16H4v-3l8.5-8.5z" />
       <path d="M11 6l3 3" />
+    </>
+  ),
+  power: (
+    <>
+      <path d="M10 3v6" />
+      <path d="M6 5.5a6 6 0 1 0 8 0" />
+    </>
+  ),
+  check: <path d="M4.5 10.5l3.5 3.5 7.5-8" />,
+  eyeOff: (
+    <>
+      <path d="M3 3l14 14" />
+      <path d="M8.2 5.3A7.6 7.6 0 0 1 10 5c4.8 0 7.5 5 7.5 5a13.6 13.6 0 0 1-2.2 2.8" />
+      <path d="M5.4 6.8C3.5 8.2 2.5 10 2.5 10s2.7 5 7.5 5c1.2 0 2.3-.3 3.2-.8" />
+      <path d="M8.5 8.6a2.2 2.2 0 0 0 3 3" />
     </>
   ),
   eye: (

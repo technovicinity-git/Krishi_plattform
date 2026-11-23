@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { fieldClass } from "@/components/dashboard/Modal";
+import { rowActionClass } from "@/components/dashboard/ui";
+import { NavIcon } from "@/components/dashboard/NavIcon";
 
 /** Hide a review (with reason) or show it again. */
 export function ReviewModeration({ id, hidden }: { id: string; hidden: boolean }) {
@@ -39,9 +41,10 @@ export function ReviewModeration({ id, hidden }: { id: string; hidden: boolean }
         type="button"
         disabled={busy}
         onClick={() => send({ action: "show" })}
-        className="text-[12px] font-semibold text-brand hover:underline disabled:opacity-50"
+        className={rowActionClass()}
       >
-        {busy ? "..." : "Show again"}
+        <NavIcon name="eye" className="h-[15px] w-[15px]" />
+        {busy ? "Saving…" : "Show again"}
       </button>
     );
   }
@@ -60,14 +63,14 @@ export function ReviewModeration({ id, hidden }: { id: string; hidden: boolean }
           type="button"
           disabled={busy || reason.trim().length < 5}
           onClick={() => send({ action: "hide", reason: reason.trim() })}
-          className="h-[32px] rounded-[6px] bg-danger px-3 text-[12px] font-bold text-white disabled:opacity-50"
+          className="inline-flex h-8 items-center rounded-[7px] bg-danger px-3 text-[12px] font-bold text-white disabled:opacity-50"
         >
           Hide review
         </button>
         <button
           type="button"
           onClick={() => setHiding(false)}
-          className="h-[32px] rounded-[6px] border border-border-light px-3 text-[12px] font-semibold text-ink-secondary"
+          className={rowActionClass()}
         >
           Cancel
         </button>
@@ -77,8 +80,9 @@ export function ReviewModeration({ id, hidden }: { id: string; hidden: boolean }
     <button
       type="button"
       onClick={() => setHiding(true)}
-      className="text-[12px] font-semibold text-danger hover:underline"
+      className={rowActionClass("danger")}
     >
+      <NavIcon name="eyeOff" className="h-[15px] w-[15px]" />
       Hide
     </button>
   );

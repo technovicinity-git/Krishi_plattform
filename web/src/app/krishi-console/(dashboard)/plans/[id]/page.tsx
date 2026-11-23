@@ -11,7 +11,7 @@ import { BackLink } from "@/components/ui/BackLink";
 import Link from "next/link";
 import { NavIcon } from "@/components/dashboard/NavIcon";
 import { formatBDT } from "@/lib/utils";
-import { StatusBadge, toneFor, RowAction } from "@/components/dashboard/ui";
+import { StatusBadge, toneFor, RowAction, rowActionClass } from "@/components/dashboard/ui";
 
 export default async function EditPlanPage({
   params,
@@ -212,7 +212,7 @@ export default async function EditPlanPage({
                     <span className="text-[13px] font-semibold text-ink">{formatBDT(Number(b.amount))}</span>
                     <StatusBadge tone={toneFor(b.current_stage ?? "")}>{(b.current_stage ?? "").replace(/_/g, " ")}</StatusBadge>
                     {/* The whole row is the link; this just looks like the row's button. */}
-                    <span className="inline-flex h-8 items-center gap-1.5 rounded-[7px] border border-border-light bg-white px-3 text-[12px] font-semibold text-ink-nav">
+                    <span className={rowActionClass()}>
                       <NavIcon name="chart" className="h-[15px] w-[15px]" />
                       Progress
                     </span>
