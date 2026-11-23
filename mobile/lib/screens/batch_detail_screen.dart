@@ -222,7 +222,7 @@ class _Header extends StatelessWidget {
           const SizedBox(height: 14),
           KeyValue(l.invested, bdt(b.amount), bold: true),
           KeyValue(l.unitsCount(b.units), l.monthsCount(b.durationMonths)),
-          KeyValue(l.estReturn, '${b.roiMin.toStringAsFixed(0)}–${b.roiMax.toStringAsFixed(0)}%'),
+          KeyValue(l.estReturn, roiText(b.roiMin, b.roiMax)),
           const Divider(height: 22),
           _Person(role: l.steward, name: b.stewardName),
           _Person(role: l.farmer, name: b.farmerName ?? l.notAssigned, phone: b.farmerPhone),

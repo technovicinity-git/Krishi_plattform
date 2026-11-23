@@ -1583,4 +1583,38 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reviewThanks => 'Thanks for your review.';
+
+  @override
+  String get editDetails => 'Edit details';
+
+  @override
+  String editAnimalTitle(String tag) {
+    return 'Edit $tag';
+  }
+
+  @override
+  String get sexLabel => 'Sex';
+
+  @override
+  String get sexMale => 'Male';
+
+  @override
+  String get sexFemale => 'Female';
+
+  @override
+  String get notesLabel => 'Notes';
+
+  @override
+  String get detailsSaved => 'Details saved.';
+
+  @override
+  String get weightsFromRecords =>
+      'Weights come from weight records: add a record to update them.';
+
+  @override
+  String get downloadCsv => 'Download CSV';
+
+  @override
+  String get csvNoApp =>
+      'Saved, but no app on this phone opens CSV files. Install a spreadsheet app such as Google Sheets.';
 }

@@ -1566,4 +1566,38 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get reviewThanks => 'আপনার মতামতের জন্য ধন্যবাদ।';
+
+  @override
+  String get editDetails => 'বিবরণ সম্পাদনা';
+
+  @override
+  String editAnimalTitle(String tag) {
+    return '$tag সম্পাদনা';
+  }
+
+  @override
+  String get sexLabel => 'লিঙ্গ';
+
+  @override
+  String get sexMale => 'পুরুষ';
+
+  @override
+  String get sexFemale => 'স্ত্রী';
+
+  @override
+  String get notesLabel => 'নোট';
+
+  @override
+  String get detailsSaved => 'বিবরণ সংরক্ষিত হয়েছে।';
+
+  @override
+  String get weightsFromRecords =>
+      'ওজন আসে ওজনের রেকর্ড থেকে: হালনাগাদ করতে একটি রেকর্ড যোগ করুন।';
+
+  @override
+  String get downloadCsv => 'CSV ডাউনলোড';
+
+  @override
+  String get csvNoApp =>
+      'সংরক্ষিত হয়েছে, কিন্তু এই ফোনে CSV খোলার কোনো অ্যাপ নেই। Google Sheets-এর মতো একটি স্প্রেডশিট অ্যাপ ইনস্টল করুন।';
 }

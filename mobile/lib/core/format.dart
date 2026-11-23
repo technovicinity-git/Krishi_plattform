@@ -49,3 +49,10 @@ String label(String locale, String group, String? key) {
   if (key == null || key.isEmpty) return '—';
   return kLabels[locale]?['$group.$key'] ?? kLabels['en']?['$group.$key'] ?? key.replaceAll('_', ' ');
 }
+
+/// An estimated return range: "15–20%", or "20%" when both ends are equal.
+String roiText(num min, num max) {
+  final a = min.toStringAsFixed(0);
+  final b = max.toStringAsFixed(0);
+  return a == b ? '$a%' : '$a–$b%';
+}
