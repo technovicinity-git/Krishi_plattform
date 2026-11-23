@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../core/format.dart';
+import '../core/notification_route.dart';
 import '../core/models.dart';
 import '../ui/theme.dart';
 import '../ui/widgets.dart';
@@ -82,21 +83,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                         final me = context.session.me;
                         if (me != null) context.session.setUnread((me.unreadNotifications - 1).clamp(0, 1 << 30));
                       }
-                      final href = n.j['href'] is String ? n.j['href'] as String : '';
-                      final onboarding = RegExp(r'/onboarding/([A-Z0-9-]+)').firstMatch(href);
-                      if (n.investmentId != null) {
-                        context.push('/batches/${n.investmentId}');
-                      } else if (onboarding != null) {
-                        context.push('/onboarding/${onboarding.group(1)}');
-                      } else if (href.contains('/portal/interests') || href.contains('/interest/')) {
-                        context.push('/interests');
-                      } else if (href.contains('/portal/kyc')) {
-                        context.push('/kyc');
-                      } else if (href.contains('/steward/interests')) {
-                        context.go('/approvals');
-                      } else if (href.contains('wallet')) {
-                        context.go('/wallet');
-                      }
+                      final route = notificationRoute(n.j['href'] as String?, n.investmentId);
+                      if (route == null) return;
+                      route.replace ? context.go(route.path) : context.push(route.path);
                     },
                   ),
                 ),

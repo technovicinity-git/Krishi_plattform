@@ -8,8 +8,10 @@ const ORDER: Record<string, number> = {
   awaiting_purchase: 1,
   growing_care: 2,
   sale_pending: 3,
-  sold: 3,
-  settled: 4,
+  // Sale confirmed: the sale step is done and settlement is in progress.
+  sold: 4,
+  // Settled is the end of the journey, so every step shows as done.
+  settled: 5,
 };
 
 export function StageTimeline({ currentStage }: { currentStage: string }) {

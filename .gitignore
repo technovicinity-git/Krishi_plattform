@@ -47,3 +47,6 @@ Thumbs.db
 .vscode/*
 !.vscode/extensions.json
 .idea/
+# Firebase service account keys are secrets: keep them out of git.
+*firebase-adminsdk*.json
+*service-account*.json

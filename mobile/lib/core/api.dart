@@ -74,6 +74,9 @@ class Api {
   Future<Map<String, dynamic>> patch(String path, [Object? body]) =>
       _send(() => _dio.patch(path, data: body ?? const {}));
 
+  Future<Map<String, dynamic>> delete(String path, [Object? body]) =>
+      _send(() => _dio.delete(path, data: body ?? const {}));
+
   /// Multipart form with optional photos. Null or empty fields are skipped;
   /// a list value is sent as repeated fields (e.g. animal_ids).
   Future<Map<String, dynamic>> postForm(
