@@ -461,3 +461,24 @@ export function ledgerCsv(entries: TxEntry[], platform: boolean): string {
   ]);
   return [head, ...rows].map((r) => r.map(cell).join(",")).join("\n") + "\n";
 }
+
+/**
+ * An investor's profit in the shown period: payouts received minus the
+ * capital of the batches those payouts settled. Batches still running are
+ * left out, so paying for a new batch does not look like a loss.
+ */
+export async function investorProfit(
+  entries: { kind: string; status: string; direction: string; amount: number; investmentId: string | null }[],
+) {
+  const payouts = entries.filter((e) => e.kind === "payout" && e.status === "completed");
+  const ids = [...new Set(payouts.map((e) => e.investmentId).filter((id): id is string => Boolean(id)))];
+  // Settlement corrections on those batches change what was paid out.
+  const corrections = entries.filter((e) => e.kind === "adjustment" && e.investmentId && ids.includes(e.investmentId));
+  const received =
+    payouts.reduce((s, e) => s + e.amount, 0) +
+    corrections.reduce((s, e) => s + (e.direction === "out" ? -e.amount : e.amount), 0);
+  if (ids.length === 0) return { amount: Math.round(received * 100) / 100, batches: 0 };
+  const { data } = await createAdminClient().from("investments").select("amount").in("id", ids);
+  const capital = (data ?? []).reduce((s, r) => s + Number(r.amount), 0);
+  return { amount: Math.round((received - capital) * 100) / 100, batches: ids.length };
+}

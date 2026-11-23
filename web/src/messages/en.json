@@ -1659,6 +1659,8 @@
   },
   "app": {
     "txn": {
+      "sum_profit": "Profit earned",
+      "sum_profitHint": "Payouts minus the capital of {count, plural, =0 {settled batches} one {# settled batch} other {# settled batches}}",
       "title": "Transactions",
       "subtitle_investor": "Every payment you made to Krishi and every taka Krishi paid back or credited to you.",
       "subtitle_farmer": "Funds Krishi released to you, sale money you sent, profit shares and withdrawals.",

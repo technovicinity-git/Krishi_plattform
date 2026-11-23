@@ -8,6 +8,7 @@ import {
   getLedger,
   kindsFor,
   parseLedgerFilters,
+  investorProfit,
   type LedgerScope,
   type TxEntry,
   type TxKind,
@@ -57,6 +58,7 @@ export async function TransactionsView({
     getLocale(),
   ]);
   const platform = scope.kind === "platform";
+  const profit = scope.kind === "user" && scope.role === "investor" ? await investorProfit(entries) : null;
   const roleKey = platform ? "platform" : scope.role;
   const kinds = kindsFor(scope);
   const LinkTag = localized ? Link : NextLink;
@@ -148,7 +150,7 @@ export async function TransactionsView({
         }
       />
 
-      <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
+      <div className={cn("grid grid-cols-2 gap-4", profit ? "lg:grid-cols-3 xl:grid-cols-5" : "xl:grid-cols-4")}>
         {platform ? (
           <>
             <StatCard label={t("moneyIn")} value={formatBDT(summary.totalIn)} tone="brand" icon="coins" />
@@ -166,6 +168,15 @@ export async function TransactionsView({
               hint={i === 0 ? t("pendingCount", { count: summary.pending }) : undefined}
             />
           ))
+        )}
+        {profit && (
+          <StatCard
+            label={t("sum_profit")}
+            value={formatBDT(profit.amount)}
+            tone="brand"
+            icon="chart"
+            hint={t("sum_profitHint", { count: profit.batches })}
+          />
         )}
       </div>
 
@@ -269,3 +280,4 @@ export async function TransactionsView({
     </div>
   );
 }
+
