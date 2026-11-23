@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'api.dart';
 import 'models.dart';
+import 'push.dart';
 
 /// Who is signed in, their token and the app language. The token lives in
 /// the platform's secure storage (Keychain / Keystore).
@@ -39,7 +42,10 @@ class Session extends ChangeNotifier implements ApiAuth {
       final prefs = await SharedPreferences.getInstance();
       _locale = prefs.getString(_localeKey) ?? 'bn';
       _token = await _storage.read(key: _tokenKey);
-      if (_token != null) await refreshMe();
+      if (_token != null) {
+        await refreshMe();
+        unawaited(Push.register(api, _locale));
+      }
     } catch (_) {
       // Offline or storage unavailable: show the sign-in screen.
       _token = null;
@@ -73,6 +79,7 @@ class Session extends ChangeNotifier implements ApiAuth {
     sessionExpired = false;
     await _storage.write(key: _tokenKey, value: token);
     await refreshMe();
+    unawaited(Push.register(api, _locale));
   }
 
   /// Investor sign-up. Signs in straight away; the phone is verified next.
@@ -115,6 +122,8 @@ class Session extends ChangeNotifier implements ApiAuth {
   }
 
   Future<void> signOut() async {
+    // Stop pushes to this phone (works without a session).
+    unawaited(Push.unregister(api));
     _token = null;
     me = null;
     await _storage.delete(key: _tokenKey);
@@ -127,6 +136,8 @@ class Session extends ChangeNotifier implements ApiAuth {
     notifyListeners();
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_localeKey, value);
+    // Pushes follow the app language.
+    if (signedIn) unawaited(Push.register(api, value));
   }
 
   void setUnread(int count) {

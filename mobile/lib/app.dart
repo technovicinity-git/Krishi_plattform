@@ -1,8 +1,13 @@
+import 'dart:async';
+
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import 'core/notification_route.dart';
+import 'core/push.dart';
 import 'core/session.dart';
 import 'l10n/app_localizations.dart';
 import 'screens/approvals_screen.dart';
@@ -43,12 +48,25 @@ class KrishiApp extends StatefulWidget {
 
 class _KrishiAppState extends State<KrishiApp> {
   final _rootKey = GlobalKey<NavigatorState>();
+  final _messenger = GlobalKey<ScaffoldMessengerState>();
   late final GoRouter _router;
+  late final Session _session;
+
+  // Push notifications: a tap waiting for sign-in, and the stream listeners.
+  Map<String, dynamic>? _pendingOpen;
+  final List<StreamSubscription<dynamic>> _subs = [];
 
   @override
   void initState() {
     super.initState();
-    final session = context.read<Session>();
+    final session = _session = context.read<Session>();
+    _subs
+      ..add(Push.opened.stream.listen(_openFromPush))
+      ..add(Push.foreground.stream.listen(_showForeground));
+    session.addListener(_flushPendingOpen);
+    Push.launchData().then((data) {
+      if (data != null && data.isNotEmpty) _openFromPush(data);
+    });
     _router = GoRouter(
       navigatorKey: _rootKey,
       initialLocation: '/home',
@@ -127,6 +145,63 @@ class _KrishiAppState extends State<KrishiApp> {
   }
 
   @override
+  void dispose() {
+    for (final s in _subs) {
+      s.cancel();
+    }
+    _session.removeListener(_flushPendingOpen);
+    super.dispose();
+  }
+
+  /// Opens the screen a tapped notification is about (or the list).
+  void _openFromPush(Map<String, dynamic> data) {
+    if (!_session.ready || !_session.signedIn) {
+      _pendingOpen = data;
+      return;
+    }
+    final route = notificationRoute(data['href'] as String?, data['investmentId'] as String?);
+    if (route == null) {
+      _router.push('/notifications');
+    } else if (route.replace) {
+      _router.go(route.path);
+    } else {
+      _router.push(route.path);
+    }
+    _session.refreshMe().catchError((_) {});
+  }
+
+  /// A tap that arrived before sign-in finished: open it once signed in.
+  void _flushPendingOpen() {
+    final data = _pendingOpen;
+    if (data == null || !_session.ready || !_session.signedIn) return;
+    _pendingOpen = null;
+    // After the router has left the splash screen.
+    WidgetsBinding.instance.addPostFrameCallback((_) => _openFromPush(data));
+  }
+
+  /// A notification while the app is open: count it and show it briefly.
+  void _showForeground(RemoteMessage message) {
+    final me = _session.me;
+    if (me == null) return;
+    _session.setUnread(me.unreadNotifications + 1);
+    final n = message.notification;
+    final messenger = _messenger.currentState;
+    if (n == null || messenger == null) return;
+    final l = AppLocalizations.of(messenger.context);
+    messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 6),
+        content: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
+          if (n.title != null) Text(n.title!, style: const TextStyle(fontWeight: FontWeight.w700)),
+          if (n.body != null && n.body!.isNotEmpty) Text(n.body!),
+        ]),
+        action: SnackBarAction(label: l.view, onPressed: () => _openFromPush(message.data)),
+      ));
+  }
+
+  @override
   Widget build(BuildContext context) {
     final locale = context.select<Session, String>((s) => s.locale);
     return MaterialApp.router(
@@ -142,6 +217,7 @@ class _KrishiAppState extends State<KrishiApp> {
         GlobalCupertinoLocalizations.delegate,
       ],
       routerConfig: _router,
+      scaffoldMessengerKey: _messenger,
     );
   }
 }

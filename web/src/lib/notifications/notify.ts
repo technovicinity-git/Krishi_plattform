@@ -105,6 +105,11 @@ export async function notify(
       .from("notifications")
       .insert(list.map((t) => ({ user_id: t.userId, kind, params: clean, href: t.href ?? null })));
     if (error) console.error(`[notify] ${kind} failed:`, error);
+    // Also to their phones. Admin queue alerts stay in the console.
+    if (!error && !kind.startsWith("admin_")) {
+      const { sendPush } = await import("./push");
+      await sendPush(list.map((t) => ({ userId: t.userId, kind, params: clean as Record<string, string | number>, href: t.href ?? null })));
+    }
   } catch (err) {
     console.error(`[notify] ${kind} failed:`, err);
   }
