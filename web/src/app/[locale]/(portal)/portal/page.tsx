@@ -6,9 +6,8 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getWallet } from "@/lib/wallet";
 import { localizeUpdate, type TimelineI18n } from "@/lib/investments/timeline";
 import { formatBDT } from "@/lib/utils";
-import { ArrowRightIcon } from "@/components/icons";
-import { EmptyState, PageHeader, StatCard, StatusBadge, toneFor } from "@/components/dashboard/ui";
-import { rowActionClass } from "@/components/dashboard/ui";
+import { EmptyState, PageHeader, StatCard, StatusBadge, rowActionClass, toneFor } from "@/components/dashboard/ui";
+import { cn } from "@/lib/cn";
 
 export const dynamic = "force-dynamic";
 
@@ -27,6 +26,8 @@ interface InvestmentRow {
 }
 
 const CLOSED_STAGES = ["settled"];
+/** A batch's stages, in order, for the progress bar on each card. */
+const STEPS = ["awaiting_farmer", "awaiting_purchase", "growing_care", "sale_pending", "sold", "settled"];
 const KYC_DONE = ["verified"];
 const KYC_WAITING = ["pending", "under_review"];
 
@@ -98,6 +99,8 @@ export default async function InvestorDashboard() {
   const interests = (interestRows ?? []) as unknown as InterestRow[];
   const toPay = interests.filter((i) => i.status === "approved");
   const waitingInterests = interests.filter((i) => i.status === "submitted" || i.status === "under_review");
+  // Paid; Krishi is checking the payment before the batch starts.
+  const checking = interests.filter((i) => i.status === "onboarding");
 
   // Latest activity across all the investor's batches.
   const ids = investments.map((i) => i.id);
@@ -127,7 +130,7 @@ export default async function InvestorDashboard() {
         description={t("subtitle")}
       />
 
-      {(kycNeeded || toPay.length > 0) && (
+      {(kycNeeded || toPay.length > 0 || checking.length > 0 || waitingInterests.length > 0) && (
         <div className="flex flex-col gap-3">
           {kycNeeded && (
             <ActionCard
@@ -156,6 +159,25 @@ export default async function InvestorDashboard() {
               cta={t("payCta")}
             />
           ))}
+          {checking.map((i) => (
+            <ActionCard
+              key={i.id}
+              href={`/onboarding/${i.reference}`}
+              tone="info"
+              title={t("checkingTitle", { plan: planName(i.offering?.investment_plans, i.reference) })}
+              body={t("checkingBody", { reference: i.reference })}
+              cta={t("checkingCta")}
+            />
+          ))}
+          {waitingInterests.length > 0 && (
+            <ActionCard
+              href="/portal/interests"
+              tone="neutral"
+              title={t("waitingTitle", { count: waitingInterests.length })}
+              body={t("waitingBody")}
+              cta={t("waitingCta")}
+            />
+          )}
         </div>
       )}
 
@@ -168,7 +190,7 @@ export default async function InvestorDashboard() {
           icon="leaf"
           href="/portal/livestock"
         />
-        <StatCard label={t("statWallet")} value={formatBDT(wallet.balance)} icon="wallet" href="/portal/wallet" />
+        <StatCard label={t("statWallet")} value={formatBDT(wallet.balance)} hint={t("statWalletHint")} icon="wallet" href="/portal/wallet" />
         <StatCard
           label={t("statReturns")}
           value={`${returns > 0 ? "+" : returns < 0 ? "−" : ""}${formatBDT(Math.abs(returns))}`}
@@ -206,7 +228,7 @@ export default async function InvestorDashboard() {
                 <Link
                   key={i.id}
                   href={`/portal/investments/${i.id}`}
-                  className="group flex flex-col gap-4 rounded-2xl border border-border-light bg-white p-6 transition-colors hover:border-brand/50"
+                  className="group flex flex-col gap-4 rounded-2xl border border-border-light bg-white p-6 transition-[translate,box-shadow,border-color] duration-300 hover:-translate-y-0.5 hover:border-brand/50 hover:shadow-[0_12px_28px_-18px_rgba(0,0,0,0.25)]"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex min-w-0 flex-col gap-1">
@@ -216,6 +238,20 @@ export default async function InvestorDashboard() {
                       </h3>
                     </div>
                     <StatusBadge tone={toneFor(stage)}>{tst.has(stage) ? tst(stage) : stage}</StatusBadge>
+                  </div>
+                  {/* Where this batch is */}
+                  <div className="flex flex-col gap-1.5">
+                    <div className="flex gap-1">
+                      {STEPS.map((s, n) => (
+                        <span
+                          key={s}
+                          className={cn("h-1.5 flex-1 rounded-full", n <= Math.max(0, STEPS.indexOf(stage)) ? "bg-brand" : "bg-stone")}
+                        />
+                      ))}
+                    </div>
+                    <span className="text-[11px] text-ink-muted">
+                      {t("stepOf", { step: Math.max(0, STEPS.indexOf(stage)) + 1, total: STEPS.length })}
+                    </span>
                   </div>
                   <dl className="grid grid-cols-3 gap-3 rounded-xl bg-cream px-4 py-3 text-[12px]">
                     <div className="flex flex-col gap-0.5">
@@ -293,7 +329,7 @@ function ActionCard({
   cta,
 }: {
   href: string;
-  tone: "warning" | "info" | "success";
+  tone: "warning" | "info" | "success" | "neutral";
   title: string;
   body: string;
   cta: string;
@@ -303,20 +339,20 @@ function ActionCard({
       ? "border-[#EBD9A8] bg-[#FBF5E6]"
       : tone === "info"
         ? "border-[#C9DCEA] bg-[#EAF1F6]"
-        : "border-brand/30 bg-brand-tint";
+        : tone === "neutral"
+          ? "border-border-light bg-white"
+          : "border-brand/30 bg-brand-tint";
   return (
     <Link
       href={href}
-      className={`group flex flex-col gap-3 rounded-2xl border px-5 py-4 transition-colors sm:flex-row sm:items-center sm:justify-between ${style}`}
+      className={`group flex flex-col gap-3 rounded-2xl border px-5 py-4 transition-shadow hover:shadow-[0_10px_24px_-18px_rgba(0,0,0,0.3)] sm:flex-row sm:items-center sm:justify-between ${style}`}
     >
       <div className="flex flex-col gap-0.5">
         <span className="text-[14px] font-semibold text-ink">{title}</span>
         <span className="text-[12.5px] text-ink-secondary">{body}</span>
       </div>
-      <span className="flex shrink-0 items-center gap-1 text-[13px] font-bold text-brand">
-        {cta}
-        <ArrowRightIcon className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-      </span>
+      {/* The whole card is the link; this just looks like its button. */}
+      <span className={cn(rowActionClass(tone === "success" || tone === "warning" ? "primary" : "default"), "self-start sm:self-auto")}>{cta}</span>
     </Link>
   );
 }
