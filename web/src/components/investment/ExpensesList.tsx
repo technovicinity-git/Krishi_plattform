@@ -140,9 +140,10 @@ export function ExpensesList({
                         <button
                           onClick={() => handleAction(e.id, "reject")}
                           disabled={loadingId === e.id || !reason.trim()}
+                          aria-busy={loadingId === e.id}
                           className="h-[34px] rounded-[6px] bg-danger px-3 text-[12px] font-bold text-white disabled:opacity-50"
                         >
-                          {tc("confirm")}
+                          {loadingId === e.id ? tc("rejecting") : tc("confirm")}
                         </button>
                         <button
                           onClick={() => setRejectId(null)}
@@ -163,9 +164,10 @@ export function ExpensesList({
                         <button
                           onClick={() => handleAction(e.id, "approve")}
                           disabled={loadingId === e.id}
+                          aria-busy={loadingId === e.id}
                           className="h-[34px] rounded-[6px] bg-brand px-3 text-[12px] font-bold text-white hover:bg-brand-hover disabled:opacity-50"
                         >
-                          {loadingId === e.id ? "..." : tc("approve")}
+                          {loadingId === e.id ? tc("approving") : tc("approve")}
                         </button>
                       </div>
                     ))}

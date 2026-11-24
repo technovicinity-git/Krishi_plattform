@@ -36,7 +36,6 @@ export function JoinOptions() {
           className="inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-[8px] border border-border-light bg-white text-[14px] font-semibold text-ink transition-colors hover:bg-stone"
         >
           {t("investorCta")}
-          <span aria-hidden="true">→</span>
         </Link>
       </article>
 
@@ -56,7 +55,6 @@ export function JoinOptions() {
           className="inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-[8px] border border-border-light bg-white text-[14px] font-semibold text-ink transition-colors hover:bg-stone"
         >
           {t("stewardCta")}
-          <span aria-hidden="true">→</span>
         </Link>
       </article>
 
@@ -66,6 +64,12 @@ export function JoinOptions() {
         <p className="text-[13px] leading-[1.6] text-ink-secondary">
           {t("farmerBody")}
         </p>
+        <Link
+          href="/farmer/activate"
+          className="mt-1 inline-flex h-[40px] w-fit items-center justify-center rounded-[8px] border border-border-light bg-white px-4 text-[13px] font-semibold text-ink transition-colors hover:border-brand/40 hover:bg-brand-tint hover:text-green-deep"
+        >
+          {t("farmerCta")}
+        </Link>
       </div>
 
       {/* Footer link */}

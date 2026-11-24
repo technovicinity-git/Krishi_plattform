@@ -106,16 +106,20 @@ export function releasedFunds(requests: Array<{ status: string; amount: number }
 /**
  * Money taken out of a batch's capital, and how much of it was really spent.
  *
- * - purchase: the animal purchase cost recorded when the farmer confirmed the
- *   purchase. An "animal_purchase" fund request pays toward that same
- *   purchase (whenever it was made), so the larger of the two counts.
+ * - purchase: what the animals really cost, as recorded when the farmer
+ *   confirmed the purchase. An "animal_purchase" fund request pays toward that
+ *   same purchase (whenever it was made). If the request was larger than the
+ *   recorded cost, the difference was not spent: it is part of `leftover` and
+ *   goes back with the sale money. Until a purchase is recorded, the request
+ *   counts as spent.
  * - otherRequests: approved fund requests for care (feed, medical, ...).
- * - released: purchase + otherRequests, everything paid out of the capital.
+ * - released: everything paid out of the capital (the larger of the purchase
+ *   request and the recorded cost, plus care requests).
  *   `includePending` also counts requests still waiting for the steward
  *   (used to cap new requests).
  * - careSpent: approved care expenses, up to the care money released.
- * - leftover: care money released but not spent; the farmer sends it back
- *   with the sale money.
+ * - leftover: purchase or care money released but not spent; the farmer sends
+ *   it back with the sale money.
  * - spent: purchase + careSpent, what counts against the investor.
  *
  * Without `expenses`, all released care money counts as spent.
@@ -148,7 +152,10 @@ export function capitalSpent(input: {
   const otherRequests = counted
     .filter((r) => r.purpose !== "animal_purchase")
     .reduce((s, r) => s + Number(r.amount), 0);
-  const purchase = Math.max(Number(input.purchaseCost) || 0, animalRequests);
+  const recorded = Number(input.purchaseCost) || 0;
+  // Paid out for the purchase vs what the animals actually cost.
+  const purchaseReleased = Math.max(recorded, animalRequests);
+  const purchase = recorded > 0 ? recorded : animalRequests;
   // Animal-purchase expenses belong to the purchase, which is counted above.
   const careExpenses = input.expenses
     ? input.expenses
@@ -159,9 +166,9 @@ export function capitalSpent(input: {
   return {
     purchase: round2(purchase),
     otherRequests: round2(otherRequests),
-    released: round2(purchase + otherRequests),
+    released: round2(purchaseReleased + otherRequests),
     careSpent: round2(careSpent),
-    leftover: round2(otherRequests - careSpent),
+    leftover: round2(purchaseReleased - purchase + otherRequests - careSpent),
     spent: round2(purchase + careSpent),
   };
 }

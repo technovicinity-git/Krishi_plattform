@@ -112,9 +112,10 @@ function DeathReport({ animal }: { animal: Animal }) {
               type="button"
               onClick={() => send("reject")}
               disabled={loading || !reason.trim()}
+              aria-busy={loading}
               className="inline-flex h-[36px] items-center justify-center rounded-[8px] bg-danger px-4 text-[12.5px] font-bold text-white disabled:opacity-60"
             >
-              {t("sendReject")}
+              {loading ? tc("rejecting") : t("sendReject")}
             </button>
             <button
               type="button"
@@ -131,9 +132,10 @@ function DeathReport({ animal }: { animal: Animal }) {
               type="button"
               onClick={() => send("approve")}
               disabled={loading}
+              aria-busy={loading}
               className="inline-flex h-[36px] items-center justify-center rounded-[8px] bg-brand px-4 text-[12.5px] font-bold text-white hover:bg-brand-hover disabled:opacity-60"
             >
-              {t("confirmDeathBtn")}
+              {loading ? tc("approving") : t("confirmDeathBtn")}
             </button>
             <button
               type="button"

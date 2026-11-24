@@ -128,6 +128,17 @@ export function LoginForm() {
             {t("createAccount")}
           </Link>
         </p>
+        {/* Farmers are added by their steward and activate with a code. */}
+        <Link
+          href="/farmer/activate"
+          className="inline-flex min-h-[42px] w-full items-center justify-center gap-2 rounded-[8px] border border-border-light bg-white px-3 py-2 text-center text-[13.5px] font-semibold leading-snug text-ink-secondary transition-colors hover:border-brand/40 hover:bg-brand-tint hover:text-green-deep"
+        >
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="h-4 w-4">
+            <path d="M5 15c0-6 4-10 11-10 0 7-4 11-10 11-.4 0-.7 0-1-.1" />
+            <path d="M4 16c3-3 5-5 8-7" />
+          </svg>
+          {t("farmerActivate")}
+        </Link>
         {/* The admin console has no language prefix, so this is a plain link. */}
         <NextLink
           href="/krishi-console/login"

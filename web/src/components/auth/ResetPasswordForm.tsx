@@ -194,7 +194,6 @@ export function ResetPasswordForm() {
           className="inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-[8px] bg-brand text-[15px] font-bold text-white transition-colors hover:bg-brand-hover disabled:opacity-60"
         >
           {submitting ? t("otpSubmitting") : t("otpSubmit")}
-          {!submitting && <span aria-hidden="true">→</span>}
         </button>
 
         <div className="flex flex-col gap-3 border-t border-border-light pt-6">
@@ -262,7 +261,6 @@ export function ResetPasswordForm() {
         className="inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-[8px] bg-brand text-[15px] font-bold text-white transition-colors hover:bg-brand-hover disabled:opacity-60"
       >
         {submitting ? t("pwSubmitting") : t("pwSubmit")}
-        {!submitting && <span aria-hidden="true">→</span>}
       </button>
 
       <div className="flex justify-center border-t border-border-light pt-6">

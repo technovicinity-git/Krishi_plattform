@@ -113,7 +113,7 @@ class _ApprovalsScreenState extends State<ApprovalsScreen> {
                   title: l.approveInterestTitle, body: l.approveInterestBody(name, units), confirm: l.approve)) {
                 return;
               }
-              if (context.mounted) _decided(_decideInterest(context, '${i['id']}', approve: true));
+              if (context.mounted) await _decided(_decideInterest(context, '${i['id']}', approve: true));
             },
             onReject: () => _decided(_decideInterest(context, '${i['id']}', approve: false)),
           ),

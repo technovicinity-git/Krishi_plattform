@@ -108,9 +108,10 @@ export function FundRequestsList({
                       <button
                         onClick={() => handleAction(r.id, "reject")}
                         disabled={loadingId === r.id || !reason}
-                        className="h-[34px] rounded-[6px] bg-danger px-3 text-[12px] font-bold text-white disabled:opacity-50"
+                        aria-busy={loadingId === r.id}
+                          className="h-[34px] rounded-[6px] bg-danger px-3 text-[12px] font-bold text-white disabled:opacity-50"
                       >
-                        {tc("confirm")}
+                        {loadingId === r.id ? tc("rejecting") : tc("confirm")}
                       </button>
                       <button
                         onClick={() => setRejectId(null)}
@@ -131,9 +132,10 @@ export function FundRequestsList({
                       <button
                         onClick={() => handleAction(r.id, "approve")}
                         disabled={loadingId === r.id}
-                        className="h-[34px] rounded-[6px] bg-brand px-3 text-[12px] font-bold text-white hover:bg-brand-hover disabled:opacity-50"
+                        aria-busy={loadingId === r.id}
+                          className="h-[34px] rounded-[6px] bg-brand px-3 text-[12px] font-bold text-white hover:bg-brand-hover disabled:opacity-50"
                       >
-                        {loadingId === r.id ? "..." : tc("approve")}
+                        {loadingId === r.id ? tc("approving") : tc("approve")}
                       </button>
                     </div>
                   ))}

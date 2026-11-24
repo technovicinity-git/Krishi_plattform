@@ -111,3 +111,32 @@ body {
   .reveal-on .is-in .k-grow-x, .reveal-on .is-in.k-grow-x { transform: scaleX(1); }
   .reveal-on .is-in .k-grow-y, .reveal-on .is-in.k-grow-y { transform: scaleY(1); }
 }
+
+/* ─── Busy buttons ───────────────────────────────────────────────────
+   A button with aria-busy="true" shows a small spinner before its label
+   (approve, reject, settle, pay...), so people see the action is running.
+   Set it only on the button that was pressed; disable the others. */
+@keyframes k-spin {
+  to { transform: rotate(360deg); }
+}
+button[aria-busy="true"] {
+  cursor: progress;
+}
+button[aria-busy="true"]::before {
+  content: "";
+  display: inline-block;
+  flex-shrink: 0;
+  width: 0.95em;
+  height: 0.95em;
+  margin-right: 0.45em;
+  vertical-align: -0.15em;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 9999px;
+  animation: k-spin 0.7s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  button[aria-busy="true"]::before {
+    animation-duration: 1.6s;
+  }
+}

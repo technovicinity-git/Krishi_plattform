@@ -82,9 +82,10 @@ export function PaymentRefundActions({
         type="button"
         onClick={checkStatus}
         disabled={busy}
+        aria-busy={busy}
         className="inline-flex h-[36px] items-center justify-center rounded border border-border-light bg-white px-4 text-[12px] font-bold text-ink-secondary hover:bg-stone disabled:opacity-60"
       >
-        {busy ? "Checking..." : "Check refund status"}
+        {busy ? "Checking…" : "Check refund status"}
       </button>
     );
   }
@@ -143,9 +144,10 @@ export function PaymentRefundActions({
           type="button"
           onClick={submit}
           disabled={busy || reason.trim().length < 5 || (mode === "manual" && !reference.trim())}
+          aria-busy={busy}
           className="flex-1 rounded bg-[#A13D2B] py-1.5 text-[11px] font-bold text-white disabled:opacity-50"
         >
-          {busy ? "..." : mode === "gateway" ? `Refund ${formatBDT(amount)}` : "Mark refunded"}
+          {busy ? "Refunding…" : mode === "gateway" ? `Refund ${formatBDT(amount)}` : "Mark refunded"}
         </button>
         <button
           type="button"

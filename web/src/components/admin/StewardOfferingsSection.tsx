@@ -57,6 +57,8 @@ export function StewardOfferingsSection({
   const router = useRouter();
   const { alert, confirm } = useDialog();
   const [isPending, startTransition] = useTransition();
+  // The offering and the status being set, while the request runs.
+  const [acting, setActing] = useState<{ id: string; status: string } | null>(null);
 
   const [showAdd, setShowAdd] = useState(false);
   const [newStewardId, setNewStewardId] = useState("");
@@ -116,6 +118,7 @@ export function StewardOfferingsSection({
     status: string,
     rejectionReason?: string,
   ) => {
+    setActing({ id: offeringId, status });
     const res = await fetch(`/api/admin/offerings/${offeringId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -132,9 +135,11 @@ export function StewardOfferingsSection({
         title: "Could not update offering",
         message: data.error ?? "Unknown error",
       });
+      setActing(null);
       return;
     }
     startTransition(() => router.refresh());
+    setActing(null);
   };
 
   const handleApprove = (o: OfferingRow) =>
@@ -350,13 +355,15 @@ export function StewardOfferingsSection({
                               label="Approve"
                               tone="primary"
                               onClick={() => handleApprove(o)}
-                              disabled={isPending}
+                              disabled={isPending || acting !== null}
+                              busy={acting?.id === o.id && acting.status === "approved"}
                             />
                             <ActionButton
                               label="Reject"
                               tone="danger"
                               onClick={() => handleReject(o)}
-                              disabled={isPending}
+                              disabled={isPending || acting !== null}
+                              busy={acting?.id === o.id && acting.status === "rejected"}
                             />
                           </>
                         )}
@@ -365,13 +372,15 @@ export function StewardOfferingsSection({
                             <ActionButton
                               label="Pause"
                               onClick={() => handlePause(o)}
-                              disabled={isPending}
+                              disabled={isPending || acting !== null}
+                              busy={acting?.id === o.id && acting.status === "paused"}
                             />
                             <ActionButton
                               label="Close"
                               tone="danger"
                               onClick={() => handleClose(o)}
-                              disabled={isPending}
+                              disabled={isPending || acting !== null}
+                              busy={acting?.id === o.id && acting.status === "closed"}
                             />
                           </>
                         )}
@@ -381,13 +390,15 @@ export function StewardOfferingsSection({
                               label="Resume"
                               tone="primary"
                               onClick={() => handleResume(o)}
-                              disabled={isPending}
+                              disabled={isPending || acting !== null}
+                              busy={acting?.id === o.id && acting.status === "approved"}
                             />
                             <ActionButton
                               label="Close"
                               tone="danger"
                               onClick={() => handleClose(o)}
-                              disabled={isPending}
+                              disabled={isPending || acting !== null}
+                              busy={acting?.id === o.id && acting.status === "closed"}
                             />
                           </>
                         )}
@@ -427,11 +438,14 @@ function ActionButton({
   onClick,
   tone = "neutral",
   disabled,
+  busy,
 }: {
   label: string;
   onClick: () => void;
   tone?: "primary" | "danger" | "neutral";
   disabled?: boolean;
+  /** Shows a spinner: this action is running. */
+  busy?: boolean;
 }) {
   const styles: Record<string, string> = {
     primary: "border-[#D6E5D3] bg-[#EEF5EB] text-[#2F5C2A] hover:bg-[#E2EEDE]",
@@ -443,6 +457,7 @@ function ActionButton({
       type="button"
       onClick={onClick}
       disabled={disabled}
+      aria-busy={busy}
       className={`inline-flex h-[28px] items-center rounded-[4px] border px-2.5 text-[11px] font-semibold disabled:opacity-50 ${styles[tone]}`}
     >
       {label}

@@ -99,12 +99,34 @@ describe("capitalSpent", () => {
     expect(spent.spent).toBe(850000);
   });
 
-  it("uses the animal-purchase request if it is larger than the recorded cost", () => {
+  it("returns animal-purchase money the purchase did not use (KR-SALE-00021 case)", () => {
+    // Invested 1,00,000; animal-purchase request 70,000; animal bought for 65,000; sold for 1,20,000.
     const spent = capitalSpent({
-      purchaseCost: 700000,
-      requests: [{ status: "approved", amount: 750000, purpose: "animal_purchase" }],
+      purchaseCost: 65000,
+      requests: [{ status: "approved", amount: 70000, purpose: "animal_purchase" }],
+      expenses: [],
     });
-    expect(spent.spent).toBe(750000);
+    expect(spent).toMatchObject({ purchase: 65000, released: 70000, leftover: 5000, spent: 65000 });
+
+    // The farmer sends 1,20,000 + the unused 5,000.
+    const b = computeSettlement({ capital: 100000, fundsReleased: spent.released - spent.leftover, saleAmount: 120000 });
+    expect(b).toMatchObject({
+      unspent: 35000,
+      totalReturn: 155000,
+      netResult: 55000,
+      investorPayout: 116500,
+      farmerShare: 33000,
+      stewardShare: 2750,
+      platformShare: 2750,
+    });
+  });
+
+  it("counts an animal-purchase request as spent until a purchase is recorded", () => {
+    const spent = capitalSpent({
+      purchaseCost: 0,
+      requests: [{ status: "approved", amount: 70000, purpose: "animal_purchase" }],
+    });
+    expect(spent).toMatchObject({ purchase: 70000, leftover: 0, spent: 70000 });
   });
 
   it("counts an animal-purchase request inside the purchase, even one made later (KR-INV-000016 case)", () => {
