@@ -206,10 +206,11 @@ export function SalePanel({
                 <button
                   type="button"
                   disabled={busy || reason.trim().length < 5}
+                  aria-busy={busy}
                   onClick={() => review("reject")}
                   className="inline-flex h-[42px] flex-1 items-center justify-center rounded-[8px] bg-danger text-[13px] font-bold text-white disabled:opacity-50"
                 >
-                  {t("rejectSale")}
+                  {busy ? tc("rejecting") : t("rejectSale")}
                 </button>
                 <button
                   type="button"
@@ -226,10 +227,11 @@ export function SalePanel({
               <button
                 type="button"
                 disabled={busy}
+                aria-busy={busy}
                 onClick={() => review("approve")}
                 className="inline-flex h-[44px] flex-1 items-center justify-center rounded-[8px] bg-brand text-[14px] font-bold text-white hover:bg-brand-hover disabled:opacity-50"
               >
-                {busy ? tc("saving") : t("confirmSale")}
+                {busy ? tc("approving") : t("confirmSale")}
               </button>
               <button
                 type="button"

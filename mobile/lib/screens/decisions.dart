@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../core/format.dart';
@@ -53,29 +55,61 @@ class Decisions {
   }
 }
 
-/// Approve / reject buttons for one pending item.
-class DecisionButtons extends StatelessWidget {
+/// Approve / reject buttons for one pending item. While an action runs, the
+/// pressed button shows a spinner and both are locked, so nothing is sent twice.
+class DecisionButtons extends StatefulWidget {
   const DecisionButtons({super.key, required this.onApprove, required this.onReject, this.approveLabel});
-  final VoidCallback onApprove;
-  final VoidCallback onReject;
+  final FutureOr<void> Function() onApprove;
+  final FutureOr<void> Function() onReject;
   final String? approveLabel;
 
   @override
-  Widget build(BuildContext context) => Row(children: [
-        Expanded(
-          child: FilledButton(
-            style: FilledButton.styleFrom(minimumSize: const Size(0, 42)),
-            onPressed: onApprove,
-            child: Text(approveLabel ?? context.l.approve),
-          ),
+  State<DecisionButtons> createState() => _DecisionButtonsState();
+}
+
+class _DecisionButtonsState extends State<DecisionButtons> {
+  /// "approve" or "reject" while that action runs.
+  String? _busy;
+
+  Future<void> _run(String which, FutureOr<void> Function() action) async {
+    if (_busy != null) return;
+    setState(() => _busy = which);
+    try {
+      await action();
+    } finally {
+      if (mounted) setState(() => _busy = null);
+    }
+  }
+
+  Widget _label(String text, bool busy, Color color) => busy
+      ? Row(mainAxisSize: MainAxisSize.min, children: [
+          SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: color)),
+          const SizedBox(width: 8),
+          Flexible(child: Text(text, overflow: TextOverflow.ellipsis)),
+        ])
+      : Text(text);
+
+  @override
+  Widget build(BuildContext context) {
+    final l = context.l;
+    final scheme = Theme.of(context).colorScheme;
+    final locked = _busy != null;
+    return Row(children: [
+      Expanded(
+        child: FilledButton(
+          style: FilledButton.styleFrom(minimumSize: const Size(0, 42)),
+          onPressed: locked ? null : () => _run('approve', widget.onApprove),
+          child: _label(widget.approveLabel ?? l.approve, _busy == 'approve', scheme.onPrimary),
         ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: OutlinedButton(
-            style: OutlinedButton.styleFrom(minimumSize: const Size(0, 42)),
-            onPressed: onReject,
-            child: Text(context.l.notAccepted),
-          ),
+      ),
+      const SizedBox(width: 10),
+      Expanded(
+        child: OutlinedButton(
+          style: OutlinedButton.styleFrom(minimumSize: const Size(0, 42)),
+          onPressed: locked ? null : () => _run('reject', widget.onReject),
+          child: _label(l.notAccepted, _busy == 'reject', scheme.primary),
         ),
-      ]);
+      ),
+    ]);
+  }
 }

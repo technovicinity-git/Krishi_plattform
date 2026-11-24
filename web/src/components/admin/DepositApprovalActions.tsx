@@ -9,10 +9,12 @@ export function DepositApprovalActions({ depositId, canReject = true }: { deposi
   const router = useRouter();
   const { confirm, alert } = useDialog();
   const [loading, setLoading] = useState(false);
+  const [acting, setActing] = useState<"approve" | "reject" | null>(null);
   const [showReject, setShowReject] = useState(false);
   const [reason, setReason] = useState("");
 
   const handleApprove = async () => {
+    setActing("approve");
     const ok = await confirm({
       title: "Approve Deposit?",
       message: "This will activate the investment and mark the units as funded.",
@@ -33,10 +35,12 @@ export function DepositApprovalActions({ depositId, canReject = true }: { deposi
         variant: "danger",
       });
       setLoading(false);
+      setActing(null);
     }
   };
 
   const handleReject = async () => {
+    setActing("reject");
     if (!reason.trim()) return;
     setLoading(true);
     try {
@@ -55,6 +59,7 @@ export function DepositApprovalActions({ depositId, canReject = true }: { deposi
         variant: "danger",
       });
       setLoading(false);
+      setActing(null);
     }
   };
 
@@ -69,7 +74,7 @@ export function DepositApprovalActions({ depositId, canReject = true }: { deposi
           className="h-[36px] w-full rounded border border-[#F0C9C0] bg-white px-2 text-[12px] focus:outline-none"
         />
         <div className="flex gap-2">
-          <button onClick={handleReject} disabled={loading || reason.trim().length < 3} className="flex-1 rounded bg-[#A13D2B] py-1.5 text-[11px] font-bold text-white disabled:opacity-50">Confirm Reject</button>
+          <button onClick={handleReject} disabled={loading || reason.trim().length < 3} aria-busy={acting === "reject"} className="inline-flex flex-1 items-center justify-center rounded bg-[#A13D2B] py-1.5 text-[11px] font-bold text-white disabled:opacity-50">{acting === "reject" ? "Rejecting…" : "Confirm Reject"}</button>
           <button onClick={() => setShowReject(false)} className="rounded border border-[#F0C9C0] bg-white px-3 py-1.5 text-[11px] font-bold text-[#A13D2B]">Cancel</button>
         </div>
       </div>
@@ -90,9 +95,10 @@ export function DepositApprovalActions({ depositId, canReject = true }: { deposi
       <button
         onClick={handleApprove}
         disabled={loading}
+        aria-busy={acting === "approve"}
         className="inline-flex h-[36px] items-center justify-center rounded bg-brand px-4 text-[12px] font-bold text-white hover:bg-brand-hover disabled:opacity-60"
       >
-        {loading ? "..." : "Approve"}
+        {acting === "approve" ? "Approving…" : "Approve"}
       </button>
     </div>
   );

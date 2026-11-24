@@ -102,9 +102,10 @@ export function WithdrawalActions({
               type="button"
               onClick={pay}
               disabled={busy || txnId.trim().length < 3}
+              aria-busy={busy}
               className="inline-flex h-[40px] flex-1 items-center justify-center rounded-[8px] bg-green-deep text-[13px] font-bold text-white disabled:opacity-50"
             >
-              {busy ? "Saving..." : "Confirm paid"}
+              {busy ? "Saving…" : "Confirm paid"}
             </button>
             <button
               type="button"
@@ -132,9 +133,10 @@ export function WithdrawalActions({
               type="button"
               onClick={() => post("reject", { reason: reason.trim() })}
               disabled={busy || reason.trim().length < 5}
+              aria-busy={busy}
               className="inline-flex h-[40px] flex-1 items-center justify-center rounded-[8px] bg-danger text-[13px] font-bold text-white disabled:opacity-50"
             >
-              {busy ? "Saving..." : "Reject & return money"}
+              {busy ? "Returning money…" : "Reject & return money"}
             </button>
             <button
               type="button"

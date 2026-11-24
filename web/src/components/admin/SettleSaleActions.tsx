@@ -99,9 +99,10 @@ export function SettleSaleActions({
               type="button"
               onClick={() => post("reject-remittance", { reason: reason.trim() }, "reject")}
               disabled={busy !== null || reason.trim().length < 5}
+              aria-busy={busy === "reject"}
               className="inline-flex h-[44px] flex-1 items-center justify-center rounded-[8px] bg-danger text-[14px] font-bold text-white hover:bg-[#8A2F20] disabled:opacity-60"
             >
-              {busy === "reject" ? "Sending back..." : totalLoss ? "Send back to steward" : "Send back to farmer"}
+              {busy === "reject" ? "Sending back…" : totalLoss ? "Send back to steward" : "Send back to farmer"}
             </button>
             <button
               type="button"
@@ -133,9 +134,10 @@ export function SettleSaleActions({
               type="button"
               onClick={settle}
               disabled={busy !== null}
+              aria-busy={busy === "settle"}
               className="inline-flex h-[46px] flex-1 items-center justify-center rounded-[8px] bg-green-deep text-[14px] font-bold text-white hover:bg-[#24492F] disabled:opacity-60"
             >
-              {busy === "settle" ? "Settling..." : totalLoss ? "Settle as total loss" : "Confirm payment & settle"}
+              {busy === "settle" ? "Settling…" : totalLoss ? "Settle as total loss" : "Confirm payment & settle"}
             </button>
             <button
               type="button"

@@ -104,9 +104,10 @@ export function StewardApprovalActions({
             type="button"
             onClick={handleApprove}
             disabled={submitting !== null}
+            aria-busy={submitting === "approve"}
             className="inline-flex h-[46px] flex-1 items-center justify-center rounded-[8px] bg-green-deep text-[14px] font-bold text-white transition-colors hover:bg-[#24492F] disabled:opacity-60"
           >
-            {submitting === "approve" ? "Approving..." : "Approve Steward"}
+            {submitting === "approve" ? "Approving…" : "Approve Steward"}
           </button>
           <button
             type="button"
@@ -138,9 +139,10 @@ export function StewardApprovalActions({
               type="button"
               onClick={handleReject}
               disabled={submitting !== null || reason.trim().length < 10}
+              aria-busy={submitting === "reject"}
               className="inline-flex h-[46px] flex-1 items-center justify-center rounded-[8px] bg-danger text-[14px] font-bold text-white transition-colors hover:bg-[#8A2F20] disabled:opacity-60"
             >
-              {submitting === "reject" ? "Rejecting..." : "Confirm Rejection"}
+              {submitting === "reject" ? "Rejecting…" : "Confirm Rejection"}
             </button>
             <button
               type="button"

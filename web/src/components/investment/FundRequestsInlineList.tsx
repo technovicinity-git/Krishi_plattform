@@ -159,9 +159,10 @@ export function FundRequestsInlineList({
                         <button
                           onClick={() => handleAction(r.id, "reject")}
                           disabled={loadingId === r.id || !reason}
+                          aria-busy={loadingId === r.id}
                           className="rounded bg-[#A13D2B] px-3 py-1 text-[11px] font-bold text-white disabled:opacity-50"
                         >
-                          {tc("confirm")}
+                          {loadingId === r.id ? tc("rejecting") : tc("confirm")}
                         </button>
                         <button
                           onClick={() => {
@@ -186,9 +187,10 @@ export function FundRequestsInlineList({
                       <button
                         onClick={() => handleAction(r.id, "approve")}
                         disabled={loadingId === r.id}
-                        className="rounded bg-brand px-3 py-1.5 text-[11px] font-bold text-white hover:bg-brand-hover disabled:opacity-50"
+                        aria-busy={loadingId === r.id}
+                          className="rounded bg-brand px-3 py-1.5 text-[11px] font-bold text-white hover:bg-brand-hover disabled:opacity-50"
                       >
-                        {loadingId === r.id ? "..." : tc("approve")}
+                        {loadingId === r.id ? tc("approving") : tc("approve")}
                       </button>
                     </div>
                   )}

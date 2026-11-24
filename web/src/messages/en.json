@@ -2808,6 +2808,9 @@
       "view": "View Investment"
     },
     "common": {
+      "approving": "Approving…",
+      "rejecting": "Rejecting…",
+      "working": "Working…",
       "cancel": "Cancel",
       "confirm": "Confirm",
       "reject": "Reject",

@@ -17,6 +17,7 @@ export function InterestApprovalCard({ interest }: Props) {
   const locale = useLocale();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [acting, setActing] = useState<"approve" | "reject" | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const investorName =
@@ -30,6 +31,7 @@ export function InterestApprovalCard({ interest }: Props) {
   const handleAction = async (action: "approve" | "reject") => {
     setError(null);
     setLoading(true);
+    setActing(action);
 
     try {
       const res = await fetch(`/api/steward/interests/${interest.id}`, {
@@ -42,6 +44,7 @@ export function InterestApprovalCard({ interest }: Props) {
       if (!res.ok) {
         setError(data.error || t("failed"));
         setLoading(false);
+        setActing(null);
         return;
       }
 
@@ -49,6 +52,7 @@ export function InterestApprovalCard({ interest }: Props) {
     } catch {
       setError(tc("networkError"));
       setLoading(false);
+        setActing(null);
     }
   };
 
@@ -86,16 +90,18 @@ export function InterestApprovalCard({ interest }: Props) {
         <button
           onClick={() => handleAction("approve")}
           disabled={loading}
+          aria-busy={acting === "approve"}
           className="flex-1 rounded bg-brand py-2 text-[12px] font-bold text-white hover:bg-brand-hover disabled:opacity-60"
         >
-          {loading ? t("processing") : tc("approve")}
+          {acting === "approve" ? tc("approving") : tc("approve")}
         </button>
         <button
           onClick={() => handleAction("reject")}
           disabled={loading}
+          aria-busy={acting === "reject"}
           className="flex-1 rounded border border-[#F0C9C0] bg-white py-2 text-[12px] font-bold text-[#A13D2B] hover:bg-[#FAF0ED] disabled:opacity-60"
         >
-          {tc("reject")}
+          {acting === "reject" ? tc("rejecting") : tc("reject")}
         </button>
       </div>
     </div>
