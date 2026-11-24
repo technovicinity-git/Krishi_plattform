@@ -1660,6 +1660,30 @@
     }
   },
   "app": {
+    "monthlyPay": {
+      "title": "Your monthly pay",
+      "hint": "Krishi pays you every month for this batch, from the farmer being assigned until it is settled. At settlement it is taken from your 5% profit share; if the share is smaller, you keep the monthly pay.",
+      "noRate": "No monthly pay is set for this batch yet.",
+      "rate": "Monthly pay",
+      "perMonth": "{amount} / month",
+      "started": "Started",
+      "starts": "Starts",
+      "startsOnAssign": "When a farmer is assigned",
+      "received": "Received",
+      "receivedValue": "{count, plural, =0 {Nothing yet} one {# month · {amount}} other {# months · {amount}}}",
+      "waiting": "Waiting to be sent",
+      "waitingValue": "{count, plural, one {# month · {amount}} other {# months · {amount}}}",
+      "nextDue": "This month ends",
+      "month": "Month {n}",
+      "atSettlement": "at settlement",
+      "reversed": "Taken back",
+      "settledTitle": "At settlement",
+      "share": "Your 5% profit share",
+      "monthlyTotal": "Monthly pay ({count, plural, one {# month} other {# months}})",
+      "topup": "Rest of the share, paid at settlement",
+      "kept": "Monthly pay above the share (you keep it)",
+      "total": "You got from this batch"
+    },
     "farmerBatches": {
       "title": "Batches",
       "subtitle": "Every batch your steward has assigned to you, running and finished.",
@@ -1674,14 +1698,18 @@
       "units": "{count, plural, one {# unit} other {# units}}"
     },
     "txn": {
+      "sum_monthly_pay": "Monthly pay",
+      "revenueHint": "5% shares {share} minus monthly pay losses {loss}",
       "sum_profit": "Profit earned",
       "sum_profitHint": "Payouts minus the capital of {count, plural, =0 {settled batches} one {# settled batch} other {# settled batches}}",
       "title": "Transactions",
       "subtitle_investor": "Every payment you made to Krishi and every taka Krishi paid back or credited to you.",
       "subtitle_farmer": "Funds Krishi released to you, sale money you sent, profit shares and withdrawals.",
-      "subtitle_steward": "Profit shares credited to your wallet, adjustments and withdrawals.",
+      "subtitle_steward": "Monthly pay and profit shares credited to your wallet, adjustments and withdrawals.",
       "subtitle_platform": "Money into and out of Krishi across the platform, plus wallet credits.",
       "kind": {
+        "monthly_pay": "Monthly pay",
+        "platform_loss": "Krishi loss",
         "deposit": "Payment to Krishi",
         "refund": "Refund",
         "fund_release": "Funds released",
@@ -1693,6 +1721,8 @@
         "platform_share": "Krishi's share"
       },
       "kindPlatform": {
+        "monthly_pay": "Monthly pay to steward",
+        "platform_loss": "Loss on steward monthly pay",
         "deposit": "Investor payment",
         "refund": "Refund to investor",
         "fund_release": "Funds credited to farmer",
@@ -2213,6 +2243,7 @@
       "unreadCount": "{count, plural, =0 {No unread notifications} one {# unread} other {# unread}}"
     },
     "notify": {
+      "monthly_pay_sent": {"title": "Monthly pay received", "body": "{amount} for {plan} ({reference}) added to your wallet."},
       "payment_refund_started": {"title": "Refund started: {amount}", "body": "Your online payment for {reference} is being refunded: {reason}. It can take a few working days to reach your account."},
       "payment_refunded": {"title": "Refunded: {amount}", "body": "Your online payment for {reference} was refunded."},
       "settlement_recalculated_payout": {"title": "Settlement corrected: {plan}", "body": "{reference} was recalculated: only approved expenses count as spent. Your payout is now {amount}; your wallet was adjusted."},
@@ -2395,6 +2426,7 @@
       "cancelMessage": "The money goes back to your available balance.",
       "cancelFailed": "Could not cancel the withdrawal",
       "type": {
+        "monthly_pay": "Monthly pay",
         "fund_release": "Funds for your batch",
         "settlement_payout": "Investment payout",
         "settlement_share": "Profit share",
@@ -2591,8 +2623,8 @@
       "runningHint": "{count, plural, =0 {All have a farmer} one {# needs a farmer} other {# need a farmer}}",
       "statWallet": "Wallet balance",
       "statWalletHint": "Available to withdraw",
-      "statShares": "Your shares earned",
-      "statSharesHint": "From {count, plural, one {# settled batch} other {# settled batches}}",
+      "statShares": "Your earnings",
+      "statSharesHint": "Monthly pay and profit shares from {count, plural, one {# batch} other {# batches}}",
       "pipeline": "Batches by stage",
       "pipelineHint": "{count, plural, one {# settled} other {# settled}} so far",
       "viewBatches": "View batches",

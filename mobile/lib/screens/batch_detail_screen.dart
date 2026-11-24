@@ -77,6 +77,7 @@ class _BatchDetailScreenState extends State<BatchDetailScreen> {
                   if (b.canReview) ...[const SizedBox(height: 12), _ReviewCard(b: b, onSaved: _reload)],
                   const SizedBox(height: 12),
                   _MoneyCard(b: b),
+                  if (b.monthlyPay != null) ...[const SizedBox(height: 12), _MonthlyPayCard(pay: b.monthlyPay!)],
                   const SizedBox(height: 12),
                   _AnimalsCard(b: b, onChanged: _reload, onDecide: _decided),
                   const SizedBox(height: 12),
@@ -404,6 +405,62 @@ class _MoneyCard extends StatelessWidget {
         KeyValue(l.expensesApproved, bdt(s.expensesApproved)),
         if (s.leftover > 0) KeyValue(l.leftoverFunds, bdt(s.leftover), valueColor: KColors.warning),
         KeyValue(l.spentOnBatch, bdt(s.capitalSpent), bold: true),
+      ]),
+    );
+  }
+}
+
+/// Steward: their monthly pay for this batch and how it met the 5% share.
+class _MonthlyPayCard extends StatelessWidget {
+  const _MonthlyPayCard({required this.pay});
+  final MonthlyPay pay;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = context.l;
+    final lang = context.lang;
+    final settled = pay.settled;
+    num n(Object? v) => v is num ? v : num.tryParse('$v') ?? 0;
+    return SectionCard(
+      title: l.mpTitle,
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        Text(l.mpHint, style: const TextStyle(fontSize: 12.5, color: KColors.inkSecondary, height: 1.4)),
+        const SizedBox(height: 8),
+        if (pay.rate != null) KeyValue(l.mpRate, l.mpPerMonth(bdt(pay.rate!))),
+        if (pay.start != null) KeyValue(pay.started ? l.mpStarted : l.mpStarts, dateText(lang, pay.start)),
+        KeyValue(l.mpReceived, l.mpMonths(pay.sentMonths, bdt(pay.sentTotal))),
+        if (pay.dueMonths > 0)
+          KeyValue(l.mpWaiting, l.mpMonths(pay.dueMonths, bdt(pay.dueTotal)), valueColor: KColors.warning),
+        if (pay.nextDueAt != null) KeyValue(l.mpNextDue, dateText(lang, pay.nextDueAt)),
+        for (final p in pay.payments) ...[
+          const Divider(height: 14),
+          Row(children: [
+            Expanded(
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(l.mpMonth((p['monthNo'] as num).toInt()), style: const TextStyle(fontWeight: FontWeight.w600)),
+                Text(
+                  '${dateText(lang, p['periodStart'])} – ${dateText(lang, p['periodEnd'])}'
+                  '${p['atSettlement'] == true ? ' · ${l.mpAtSettlement}' : ''}',
+                  style: const TextStyle(fontSize: 12, color: KColors.inkMuted),
+                ),
+              ]),
+            ),
+            p['status'] == 'reversed'
+                ? Text(l.mpReversed, style: const TextStyle(fontSize: 12, color: KColors.inkMuted))
+                : Text('+${bdt(n(p['amount']))}',
+                    style: const TextStyle(fontWeight: FontWeight.w600, color: KColors.greenDeep)),
+          ]),
+        ],
+        if (settled != null) ...[
+          const Divider(height: 20),
+          Text(l.mpSettledTitle, style: const TextStyle(fontWeight: FontWeight.w700)),
+          const SizedBox(height: 4),
+          KeyValue(l.mpShare, bdt(n(settled['share']))),
+          KeyValue(l.mpMonthlyTotal(n(settled['months']).toInt()), bdt(n(settled['monthlyTotal']))),
+          if (n(settled['topup']) > 0) KeyValue(l.mpTopup, bdt(n(settled['topup']))),
+          if (n(settled['platformLoss']) > 0) KeyValue(l.mpKept, bdt(n(settled['platformLoss']))),
+          KeyValue(l.mpTotal, bdt(n(settled['stewardTotal'])), bold: true, valueColor: KColors.greenDeep),
+        ],
       ]),
     );
   }

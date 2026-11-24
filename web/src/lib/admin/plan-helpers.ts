@@ -27,6 +27,7 @@ const baseSchema = z
     care_allocation: z.coerce.number().min(0),
     estimated_roi_min: z.coerce.number().min(0).max(500),
     estimated_roi_max: z.coerce.number().min(0).max(500),
+    steward_monthly_pay: z.coerce.number().min(0).max(10_000_000),
     risk_information: z.string().trim().max(3000).optional().or(z.literal("")),
     status: z.enum(["draft", "open", "coming_soon", "fully_funded", "closed"]),
   })
@@ -58,6 +59,8 @@ export interface ParsedPlanInput {
   care_allocation: number;
   estimated_roi_min: number;
   estimated_roi_max: number;
+  /** Paid to the steward for every month of each batch (from Krishi). */
+  steward_monthly_pay: number;
   risk_information: string | null;
   image_path: string | null;
   status: "draft" | "open" | "coming_soon" | "fully_funded" | "closed";
@@ -91,6 +94,7 @@ export async function parsePlanFormData(
     care_allocation: String(fields.care_allocation ?? ""),
     estimated_roi_min: String(fields.estimated_roi_min ?? ""),
     estimated_roi_max: String(fields.estimated_roi_max ?? ""),
+    steward_monthly_pay: String(fields.steward_monthly_pay ?? "0"),
     risk_information: String(fields.risk_information ?? ""),
     status: String(fields.status ?? "draft"),
   };
@@ -166,6 +170,7 @@ export async function parsePlanFormData(
       care_allocation: parsed.data.care_allocation,
       estimated_roi_min: parsed.data.estimated_roi_min,
       estimated_roi_max: parsed.data.estimated_roi_max,
+      steward_monthly_pay: Math.round(parsed.data.steward_monthly_pay * 100) / 100,
       risk_information: parsed.data.risk_information || null,
       image_path: imagePath,
       status: parsed.data.status,

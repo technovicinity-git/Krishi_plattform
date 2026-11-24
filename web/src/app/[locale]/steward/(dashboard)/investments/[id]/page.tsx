@@ -22,6 +22,8 @@ import { TotalLossCard } from "@/components/investment/TotalLossCard";
 import { totalLossBlocker } from "@/lib/investments/total-loss";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { AssignFarmerPanel } from "@/components/steward/AssignFarmerPanel";
+import { StewardMonthlyPayPanel } from "@/components/steward/StewardMonthlyPayPanel";
+import { getBatchMonthlyPay } from "@/lib/investments/monthly-pay";
 
 export const dynamic = "force-dynamic";
 
@@ -37,6 +39,7 @@ export default async function StewardInvestmentDetailPage({
   const inv = await getInvestmentDetail(id);
   if (!inv || inv.steward.id !== user.id) notFound();
 
+  const monthlyPay = await getBatchMonthlyPay(id);
   const t = await getTranslations("app.investmentDetail");
   const tst = await getTranslations("app.stage");
   const locale = await getLocale();
@@ -123,14 +126,17 @@ export default async function StewardInvestmentDetailPage({
           <ExpensesList expenses={inv.expenses} isSteward />
           <UpdatesList updates={inv.updates} />
         </div>
-        <Panel title={t("summary")} className="h-fit">
-          <DetailRow label={t("investor")} value={inv.investor.fullName ?? "—"} />
-          <DetailRow label={t("investorPhone")} value={inv.investor.phone ?? "—"} />
-          <DetailRow label={t("farmer")} value={inv.farmer?.fullName ?? t("unassigned")} />
-          <DetailRow label={t("farmerPhone")} value={inv.farmer?.phone ?? "—"} />
-          <DetailRow label={t("invested")} value={formatBDT(inv.amount)} />
-          <DetailRow label={t("duration")} value={t("months", { count: inv.offering.durationMonths })} />
-        </Panel>
+        <div className="flex flex-col gap-6">
+          <Panel title={t("summary")} className="h-fit">
+            <DetailRow label={t("investor")} value={inv.investor.fullName ?? "—"} />
+            <DetailRow label={t("investorPhone")} value={inv.investor.phone ?? "—"} />
+            <DetailRow label={t("farmer")} value={inv.farmer?.fullName ?? t("unassigned")} />
+            <DetailRow label={t("farmerPhone")} value={inv.farmer?.phone ?? "—"} />
+            <DetailRow label={t("invested")} value={formatBDT(inv.amount)} />
+            <DetailRow label={t("duration")} value={t("months", { count: inv.offering.durationMonths })} />
+          </Panel>
+          {monthlyPay && (monthlyPay.rate || monthlyPay.payments.length > 0) && <StewardMonthlyPayPanel pay={monthlyPay} />}
+        </div>
       </div>
     </div>
   );

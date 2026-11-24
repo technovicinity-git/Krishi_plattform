@@ -28,6 +28,7 @@ export type NotificationKind =
   | "remittance_rejected"
   | "settled_investor"
   | "settled_share"
+  | "monthly_pay_sent"
   | "withdrawal_paid"
   | "withdrawal_rejected"
   | "kyc_approved"

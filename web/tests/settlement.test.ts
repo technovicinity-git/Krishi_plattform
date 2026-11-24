@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { capitalSpent, computeSettlement, PROFIT_SPLIT, releasedFunds } from "@/lib/investments/settlement";
+import { capitalSpent, computeSettlement, matchStewardPay, PROFIT_SPLIT, releasedFunds } from "@/lib/investments/settlement";
 
 describe("computeSettlement", () => {
   it("splits a profit 60/30/5/5 and returns the investor's capital", () => {
@@ -202,5 +202,37 @@ describe("capitalSpent", () => {
     ];
     expect(capitalSpent({ purchaseCost: 100000, requests }).spent).toBe(100000);
     expect(capitalSpent({ purchaseCost: 100000, requests, includePending: true }).spent).toBe(130000);
+  });
+});
+
+describe("matchStewardPay", () => {
+  it("tops up the steward when the 5% share is larger than the monthly pay", () => {
+    // 4 months × ৳500 against a ৳2,750 share (profit ৳55,000).
+    expect(matchStewardPay(2750, 2000)).toEqual({
+      share: 2750,
+      monthlyTotal: 2000,
+      topup: 750,
+      platformLoss: 0,
+      stewardTotal: 2750,
+    });
+  });
+
+  it("records Krishi's loss when the monthly pay is larger than the share", () => {
+    expect(matchStewardPay(1000, 2000)).toEqual({
+      share: 1000,
+      monthlyTotal: 2000,
+      topup: 0,
+      platformLoss: 1000,
+      stewardTotal: 2000,
+    });
+  });
+
+  it("makes all monthly pay a loss when the batch made no profit", () => {
+    const b = computeSettlement({ capital: 100000, fundsReleased: 100000, saleAmount: 90000 });
+    expect(matchStewardPay(b.stewardShare, 2500)).toMatchObject({ topup: 0, platformLoss: 2500, stewardTotal: 2500 });
+  });
+
+  it("pays the whole share when there was no monthly pay", () => {
+    expect(matchStewardPay(2750, 0)).toMatchObject({ topup: 2750, platformLoss: 0 });
   });
 });

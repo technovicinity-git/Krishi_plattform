@@ -330,11 +330,32 @@ class InvestmentDetail {
   bool get canReview => j['canReview'] == true;
   Json? get review => (j['review'] as Map?)?.cast<String, dynamic>();
   String? get totalLossBlocker => _str(j['totalLossBlocker']);
+  /// Steward only: their monthly pay for this batch.
+  MonthlyPay? get monthlyPay =>
+      j['monthlyPay'] is Map ? MonthlyPay((j['monthlyPay'] as Map).cast<String, dynamic>()) : null;
 
   bool get isFarmer => viewerRole == 'farmer';
   bool get isSteward => viewerRole == 'steward';
   bool get raising => stage == 'growing_care';
   bool get anyDeathPending => animals.any((a) => a.status == 'death_reported');
+}
+
+/// A steward's monthly pay for one batch (paid by Krishi, matched with the
+/// 5% share at settlement).
+class MonthlyPay {
+  MonthlyPay(this.j);
+  final Json j;
+
+  double? get rate => j['rate'] == null ? null : _num(j['rate']);
+  String? get start => _str(j['start']);
+  bool get started => j['started'] == true;
+  int get sentMonths => (j['sentMonths'] as num?)?.toInt() ?? 0;
+  double get sentTotal => _num(j['sentTotal']);
+  int get dueMonths => (j['dueMonths'] as num?)?.toInt() ?? 0;
+  double get dueTotal => _num(j['dueTotal']);
+  String? get nextDueAt => _str(j['nextDueAt']);
+  List<Json> get payments => _list(j['payments']);
+  Json? get settled => (j['settled'] as Map?)?.cast<String, dynamic>();
 }
 
 class WalletData {

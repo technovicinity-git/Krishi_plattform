@@ -25,9 +25,11 @@ export type TxKind =
   | "remittance"
   | "payout"
   | "share"
+  | "monthly_pay"
   | "adjustment"
   | "withdrawal"
-  | "platform_share";
+  | "platform_share"
+  | "platform_loss";
 
 export const TX_KINDS: TxKind[] = [
   "deposit",
@@ -36,9 +38,11 @@ export const TX_KINDS: TxKind[] = [
   "remittance",
   "payout",
   "share",
+  "monthly_pay",
   "adjustment",
   "withdrawal",
   "platform_share",
+  "platform_loss",
 ];
 
 export type TxDirection = "in" | "out" | "internal";
@@ -269,12 +273,12 @@ export async function getLedger(scope: LedgerScope, filters: LedgerFilters = {})
     }
   }
 
-  // ── Wallet credits: settlement payouts, profit shares, adjustments ───────
-  if (wants("payout") || wants("share") || wants("adjustment")) {
+  // ── Wallet credits: settlement payouts, profit shares, monthly pay, adjustments
+  if (wants("payout") || wants("share") || wants("monthly_pay") || wants("adjustment")) {
     let q = db
       .from("wallet_transactions")
       .select("id, user_id, type, amount, description, investment_id, created_at")
-      .in("type", ["settlement_payout", "settlement_share", "adjustment"])
+      .in("type", ["settlement_payout", "settlement_share", "monthly_pay", "adjustment"])
       .order("created_at", { ascending: false })
       .limit(PER_SOURCE_LIMIT);
     if (userId) q = q.eq("user_id", userId);
@@ -282,7 +286,8 @@ export async function getLedger(scope: LedgerScope, filters: LedgerFilters = {})
     if (hi) q = q.lte("created_at", hi);
     const { data } = await q;
     for (const t of data ?? []) {
-      const kind: TxKind = t.type === "settlement_payout" ? "payout" : t.type === "settlement_share" ? "share" : "adjustment";
+      const kind: TxKind =
+        t.type === "settlement_payout" ? "payout" : t.type === "settlement_share" ? "share" : t.type === "monthly_pay" ? "monthly_pay" : "adjustment";
       if (!wants(kind)) continue;
       const amount = num(t.amount);
       userIds.add(t.user_id);
@@ -364,6 +369,36 @@ export async function getLedger(scope: LedgerScope, filters: LedgerFilters = {})
     }
   }
 
+  // ── Krishi's loss on steward monthly pay (platform only) ──────────────────
+  // Monthly pay above the steward's 5% share: Krishi carried the difference.
+  if (platform && wants("platform_loss")) {
+    let q = db
+      .from("investment_settlements")
+      .select("id, investment_id, sale_id, platform_loss, steward_share, steward_monthly_total, settled_at")
+      .gt("platform_loss", 0)
+      .order("settled_at", { ascending: false })
+      .limit(PER_SOURCE_LIMIT);
+    if (lo) q = q.gte("settled_at", lo);
+    if (hi) q = q.lte("settled_at", hi);
+    const { data } = await q;
+    for (const s of data ?? []) {
+      investmentIds.add(s.investment_id);
+      entries.push({
+        ...base,
+        id: `pl-${s.id}`,
+        at: s.settled_at,
+        kind: "platform_loss",
+        direction: "internal",
+        amount: num(s.platform_loss),
+        status: "completed",
+        reference: null,
+        detail: `Monthly pay ৳${num(s.steward_monthly_total).toLocaleString("en-IN")} vs 5% share ৳${num(s.steward_share).toLocaleString("en-IN")}`,
+        investmentId: s.investment_id,
+        adminHref: "/krishi-console/steward-pay?view=losses",
+      });
+    }
+  }
+
   // ── Names and batch references ───────────────────────────────────────────
   const [names, invRefs] = await Promise.all([
     platform ? loadNames(db, [...userIds]) : Promise.resolve<Names>(new Map()),
@@ -438,7 +473,7 @@ export function kindsFor(scope: LedgerScope): TxKind[] {
   if (scope.kind === "platform") return TX_KINDS;
   if (scope.role === "investor") return ["deposit", "refund", "payout", "adjustment", "withdrawal"];
   if (scope.role === "farmer") return ["fund_release", "remittance", "share", "adjustment", "withdrawal"];
-  return ["share", "adjustment", "withdrawal"];
+  return ["monthly_pay", "share", "adjustment", "withdrawal"];
 }
 
 /** CSV of the ledger (for spreadsheets). */

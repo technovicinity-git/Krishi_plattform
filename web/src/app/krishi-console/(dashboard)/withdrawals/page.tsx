@@ -184,6 +184,7 @@ interface WalletCheck {
   /** Where the money came from, and what has gone out. */
   settlements: number;
   fundReleases: number;
+  monthlyPay: number;
   adjustments: number;
   paidOut: number;
 }
@@ -214,7 +215,7 @@ async function walletChecks(userIds: string[]): Promise<Map<string, WalletCheck>
     db.from("withdrawal_requests").select("user_id, amount").in("user_id", userIds).eq("status", "pending"),
   ]);
   for (const id of userIds) {
-    out.set(id, { withdrawable: 0, held: 0, settlements: 0, fundReleases: 0, adjustments: 0, paidOut: 0 });
+    out.set(id, { withdrawable: 0, held: 0, settlements: 0, fundReleases: 0, monthlyPay: 0, adjustments: 0, paidOut: 0 });
   }
   for (const t of txs) {
     const w = out.get(t.user_id)!;
@@ -222,6 +223,7 @@ async function walletChecks(userIds: string[]): Promise<Map<string, WalletCheck>
     w.withdrawable += amount;
     if (t.type === "settlement_payout" || t.type === "settlement_share") w.settlements += amount;
     else if (t.type === "fund_release") w.fundReleases += amount;
+    else if (t.type === "monthly_pay") w.monthlyPay += amount;
     else if (t.type === "adjustment") w.adjustments += amount;
   }
   for (const r of pending ?? []) out.get(r.user_id)!.held += Number(r.amount);
@@ -230,7 +232,7 @@ async function walletChecks(userIds: string[]): Promise<Map<string, WalletCheck>
     const holds = txs.filter((t) => t.user_id === id && (t.type === "withdrawal" || t.type === "withdrawal_reversal"))
       .reduce((s, t) => s + Number(t.amount), 0);
     w.paidOut = Math.max(0, -holds - w.held);
-    for (const k of ["withdrawable", "held", "settlements", "fundReleases", "adjustments", "paidOut"] as const) {
+    for (const k of ["withdrawable", "held", "settlements", "fundReleases", "monthlyPay", "adjustments", "paidOut"] as const) {
       w[k] = Math.round(w[k] * 100) / 100;
     }
   }
@@ -269,6 +271,7 @@ function WalletCheckPanel({ wallet, amount }: { wallet: WalletCheck; amount: num
       <div className="mt-2.5 flex flex-wrap gap-x-4 gap-y-1 border-t border-black/5 pt-2 text-[11.5px] text-ink-secondary">
         <span>Settlements {formatBDT(wallet.settlements)}</span>
         {wallet.fundReleases !== 0 && <span>Fund releases {formatBDT(wallet.fundReleases)}</span>}
+        {wallet.monthlyPay !== 0 && <span>Monthly pay {formatBDT(wallet.monthlyPay)}</span>}
         {wallet.adjustments !== 0 && <span>Adjustments {formatBDT(wallet.adjustments)}</span>}
         <span>Paid out before {formatBDT(wallet.paidOut)}</span>
       </div>

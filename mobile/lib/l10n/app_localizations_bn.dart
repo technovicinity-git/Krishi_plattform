@@ -1630,4 +1630,81 @@ class AppLocalizationsBn extends AppLocalizations {
   String minimumNotReachedBody(String min, String balance) {
     return 'সর্বনিম্ন উত্তোলন $min। আপনার ব্যালেন্স $balance।';
   }
+
+  @override
+  String get mpTitle => 'আপনার মাসিক পারিশ্রমিক';
+
+  @override
+  String get mpHint =>
+      'এই ব্যাচের জন্য কৃষক নিযুক্ত হওয়া থেকে নিষ্পত্তি পর্যন্ত কৃষি আপনাকে প্রতি মাসে পারিশ্রমিক দেয়। নিষ্পত্তির সময় এটি আপনার ৫% লাভের ভাগ থেকে সমন্বয় করা হয়; ভাগ কম হলেও মাসিক পারিশ্রমিক আপনারই থাকে।';
+
+  @override
+  String get mpRate => 'মাসিক পারিশ্রমিক';
+
+  @override
+  String mpPerMonth(String amount) {
+    return '$amount / মাস';
+  }
+
+  @override
+  String get mpStarted => 'শুরু হয়েছে';
+
+  @override
+  String get mpStarts => 'শুরু হবে';
+
+  @override
+  String get mpReceived => 'পেয়েছেন';
+
+  @override
+  String mpMonths(int count, String amount) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count মাস · $amount',
+      zero: 'এখনো কিছু নয়',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get mpWaiting => 'পাঠানোর অপেক্ষায়';
+
+  @override
+  String get mpNextDue => 'এই মাস শেষ হবে';
+
+  @override
+  String mpMonth(int n) {
+    return 'মাস $n';
+  }
+
+  @override
+  String get mpAtSettlement => 'নিষ্পত্তির সময়';
+
+  @override
+  String get mpReversed => 'ফেরত নেওয়া হয়েছে';
+
+  @override
+  String get mpSettledTitle => 'নিষ্পত্তির সময়';
+
+  @override
+  String get mpShare => 'আপনার ৫% লাভের ভাগ';
+
+  @override
+  String mpMonthlyTotal(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'মাসিক পারিশ্রমিক ($count মাস)',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get mpTopup => 'ভাগের বাকি অংশ, নিষ্পত্তিতে দেওয়া হয়েছে';
+
+  @override
+  String get mpKept => 'ভাগের চেয়ে বেশি মাসিক পারিশ্রমিক (আপনারই থাকবে)';
+
+  @override
+  String get mpTotal => 'এই ব্যাচ থেকে আপনি পেয়েছেন';
 }

@@ -68,6 +68,24 @@ export async function POST(
     return NextResponse.json({ error: "Failed to settle" }, { status: 500 });
   }
 
+  // Monthly pay: months not sent yet were sent at settlement, and the
+  // steward's 5% was matched against the total (see settle_monthly_pay).
+  const [{ data: st }, { data: atSettle }] = await Promise.all([
+    db
+      .from("investment_settlements")
+      .select("steward_months, steward_monthly_total, steward_topup, platform_loss")
+      .eq("id", settlementId)
+      .maybeSingle(),
+    db
+      .from("steward_monthly_payments")
+      .select("amount")
+      .eq("investment_id", preview.sale.investmentId)
+      .eq("status", "sent")
+      .eq("at_settlement", true),
+  ]);
+  const stewardTopup = st?.steward_topup === null || st?.steward_topup === undefined ? b.stewardShare : Number(st.steward_topup);
+  const paidAtSettlement = (atSettle ?? []).reduce((t, r) => t + Number(r.amount), 0);
+
   const fmt = (n: number) => `৳${n.toLocaleString("en-IN")}`;
   const totalLoss = preview.sale.kind === "total_loss";
   await db.from("investment_updates").insert({
@@ -109,8 +127,11 @@ export async function POST(
     if (b.farmerShare > 0) {
       await notify("settled_share", { userId: parties.farmerId, href: "/farmer/wallet" }, { ...params, amount: b.farmerShare });
     }
-    if (b.stewardShare > 0) {
-      await notify("settled_share", { userId: parties.stewardId, href: "/steward/wallet" }, { ...params, amount: b.stewardShare });
+    if (paidAtSettlement > 0) {
+      await notify("monthly_pay_sent", { userId: parties.stewardId, href: "/steward/wallet" }, { ...params, amount: paidAtSettlement });
+    }
+    if (stewardTopup > 0) {
+      await notify("settled_share", { userId: parties.stewardId, href: "/steward/wallet" }, { ...params, amount: stewardTopup });
     }
   }
 
@@ -125,6 +146,11 @@ export async function POST(
       outcome: b.outcome,
       net_result: b.netResult,
       investor_payout: b.investorPayout,
+      steward_share: b.stewardShare,
+      steward_monthly_total: st?.steward_monthly_total ?? null,
+      steward_months: st?.steward_months ?? null,
+      steward_topup: st?.steward_topup ?? null,
+      platform_loss: st?.platform_loss ?? null,
     },
     request,
   });

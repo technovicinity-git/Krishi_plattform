@@ -64,12 +64,19 @@ export async function PATCH(
       );
     }
 
+    // Running batches of this plan that have no monthly pay yet take the rate.
+    const { data: batchesUpdated } = await db.rpc("apply_plan_monthly_pay", { p_plan_id: id });
+
     await logAdminAction({
       adminId: admin.id,
       action: "plan.update",
       targetType: "investment_plan",
       targetId: id,
-      metadata: { slug: parsed.data.slug },
+      metadata: {
+        slug: parsed.data.slug,
+        steward_monthly_pay: parsed.data.steward_monthly_pay,
+        batches_given_monthly_pay: batchesUpdated ?? 0,
+      },
       request,
     });
 

@@ -4,6 +4,7 @@ import { investmentRoleFor } from "@/lib/investments/access";
 import { getInvestmentDetail } from "@/lib/investments/detail";
 import { totalLossBlocker } from "@/lib/investments/total-loss";
 import { getReviewForInvestment } from "@/lib/reviews";
+import { getBatchMonthlyPay } from "@/lib/investments/monthly-pay";
 
 export const runtime = "nodejs";
 
@@ -61,6 +62,31 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
   // Investors rate the steward once the batch is settled (POST /api/reviews).
   const review = access.role === "investor" ? await getReviewForInvestment(id) : null;
 
+  // The steward's own monthly pay for this batch.
+  const pay = access.role === "steward" ? await getBatchMonthlyPay(id) : null;
+  const monthlyPay =
+    pay && (pay.rate || pay.payments.length > 0)
+      ? {
+          rate: pay.rate,
+          start: pay.start,
+          started: pay.started,
+          sentMonths: pay.sentMonths,
+          sentTotal: pay.sentTotal,
+          dueMonths: pay.due.length,
+          dueTotal: pay.due.reduce((s, d) => s + d.amount, 0),
+          nextDueAt: pay.rate ? pay.nextDueAt : null,
+          payments: pay.payments.map((p) => ({
+            monthNo: p.monthNo,
+            periodStart: p.periodStart,
+            periodEnd: p.periodEnd,
+            amount: p.amount,
+            status: p.status,
+            atSettlement: p.atSettlement,
+          })),
+          settled: pay.settled,
+        }
+      : null;
+
   // Phone numbers only for the people who need to call each other.
   const showPhones = access.role !== "investor";
   return json({
@@ -81,6 +107,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
       branchName: a.branch_name,
     })),
     review,
+    monthlyPay,
     canReview: access.role === "investor" && inv.currentStage === "settled",
     canCloseTotalLoss: lossBlocker === null,
     totalLossBlocker: lossBlocker === "not_steward" ? null : lossBlocker,
