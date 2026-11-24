@@ -6,13 +6,13 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { cn } from "@/lib/cn";
 import { formatBDT } from "@/lib/utils";
 import { NavIcon, type NavIconName } from "@/components/dashboard/NavIcon";
+import { FarmerBatchCard } from "@/components/farmer/FarmerBatchCard";
 import {
   EmptyState,
   PageHeader,
   RowAction,
   StatCard,
   StatusBadge,
-  rowActionClass,
   toneFor,
 } from "@/components/dashboard/ui";
 
@@ -44,9 +44,6 @@ interface SaleRow {
   rejection_reason: string | null;
   remit_rejection_reason: string | null;
 }
-
-/** The farmer's part of a batch, in order. "sold" still needs the farmer: send the money. */
-const STEPS = ["awaiting_purchase", "growing_care", "sale_pending", "sold", "settled"] as const;
 
 interface Todo {
   key: string;
@@ -222,9 +219,16 @@ export default async function FarmerDashboard() {
 
       {/* Running batches */}
       <div className="flex flex-col gap-4">
-        <div className="flex flex-col gap-0.5">
-          <h2 className="text-[17px] font-semibold text-ink">{t("running")}</h2>
-          <p className="text-[13px] text-ink-muted">{t("assignmentsHint")}</p>
+        <div className="flex items-end justify-between gap-3">
+          <div className="flex flex-col gap-0.5">
+            <h2 className="text-[17px] font-semibold text-ink">{t("running")}</h2>
+            <p className="text-[13px] text-ink-muted">{t("assignmentsHint")}</p>
+          </div>
+          {assignments.length > 0 && (
+            <RowAction href="/farmer/investments?view=all" localized icon="briefcase">
+              {t("viewAll")}
+            </RowAction>
+          )}
         </div>
 
         {running.length === 0 ? (
@@ -233,67 +237,25 @@ export default async function FarmerDashboard() {
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             {running.map((a) => {
               const plan = a.offering?.investment_plans;
-              const step = Math.max(0, STEPS.indexOf(a.current_stage as (typeof STEPS)[number]));
               const sale = sales.get(a.id);
-              const highlight = todos.some((x) => x.href.endsWith(a.id));
               return (
-                <Link
+                <FarmerBatchCard
                   key={a.id}
-                  href={`/farmer/investments/${a.id}`}
-                  className={cn(
-                    "group flex flex-col gap-4 rounded-2xl border bg-white p-6 transition-[translate,box-shadow,border-color] duration-300 hover:-translate-y-0.5 hover:border-brand/50 hover:shadow-[0_12px_28px_-18px_rgba(0,0,0,0.25)]",
-                    highlight ? "border-[#EBD9A8] ring-1 ring-[#EBD9A8]/60" : "border-border-light",
-                  )}
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex min-w-0 flex-col gap-1">
-                      <span className="font-mono text-[11px] font-semibold text-ink-muted">{a.reference}</span>
-                      <h3 className="font-serif text-[21px] leading-tight text-ink">{planName(a)}</h3>
-                    </div>
-                    <StatusBadge tone={toneFor(a.current_stage)}>
-                      {tst.has(a.current_stage) ? tst(a.current_stage) : a.current_stage}
-                    </StatusBadge>
-                  </div>
-
-                  {/* Where this batch is */}
-                  <div className="flex flex-col gap-1.5">
-                    <div className="flex gap-1">
-                      {STEPS.map((s, i) => (
-                        <span key={s} className={cn("h-1.5 flex-1 rounded-full", i <= step ? "bg-brand" : "bg-stone")} />
-                      ))}
-                    </div>
-                    <span className="text-[11px] text-ink-muted">{t("stepOf", { step: step + 1, total: STEPS.length })}</span>
-                  </div>
-
-                  <dl className="grid grid-cols-3 gap-3 rounded-xl bg-cream px-4 py-3 text-[12px]">
-                    <div className="flex min-w-0 flex-col gap-0.5">
-                      <dt className="text-ink-muted">{t("steward")}</dt>
-                      <dd className="truncate font-semibold text-ink">{a.offering?.users?.full_name ?? "—"}</dd>
-                    </div>
-                    <div className="flex flex-col gap-0.5">
-                      <dt className="text-ink-muted">{t("animalBudget")}</dt>
-                      <dd className="font-semibold text-ink">{formatBDT((plan?.animal_allocation ?? 0) * a.units)}</dd>
-                    </div>
-                    <div className="flex flex-col gap-0.5">
-                      <dt className="text-ink-muted">{t("careBudget")}</dt>
-                      <dd className="font-semibold text-ink">{formatBDT((plan?.care_allocation ?? 0) * a.units)}</dd>
-                    </div>
-                  </dl>
-
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="text-[12px] text-ink-muted">
-                      {sale?.status === "remittance_submitted"
-                        ? t("waitingKrishi")
-                        : `${t("started")} ${new Date(a.created_at).toLocaleDateString(bn ? "bn-BD" : "en-GB", {
-                            day: "2-digit",
-                            month: "short",
-                            year: "numeric",
-                          })}`}
-                    </span>
-                    {/* The whole card is the link; this just looks like its button. */}
-                    <span className={rowActionClass()}>{t("open")}</span>
-                  </div>
-                </Link>
+                  batch={{
+                    id: a.id,
+                    reference: a.reference,
+                    units: a.units,
+                    stage: a.current_stage,
+                    createdAt: a.created_at,
+                    planEn: plan?.name_en ?? null,
+                    planBn: plan?.name_bn ?? null,
+                    stewardName: a.offering?.users?.full_name ?? null,
+                    animalAllocation: Number(plan?.animal_allocation ?? 0),
+                    careAllocation: Number(plan?.care_allocation ?? 0),
+                  }}
+                  highlight={todos.some((x) => x.href.endsWith(a.id))}
+                  note={sale?.status === "remittance_submitted" ? t("waitingKrishi") : undefined}
+                />
               );
             })}
           </div>

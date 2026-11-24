@@ -1657,6 +1657,19 @@
     }
   },
   "app": {
+    "farmerBatches": {
+      "title": "ব্যাচ",
+      "subtitle": "আপনার স্টুয়ার্ড আপনাকে যত ব্যাচ দিয়েছেন, চলমান ও সম্পন্ন।",
+      "running": "চলমান",
+      "finished": "সম্পন্ন",
+      "all": "সব",
+      "emptyRunning": "কোনো চলমান ব্যাচ নেই",
+      "emptyFinished": "এখনো কোনো সম্পন্ন ব্যাচ নেই",
+      "emptyAll": "এখনো কোনো ব্যাচ নেই",
+      "emptyHint": "আপনার স্টুয়ার্ড কোনো ব্যাচ দিলে তা এখানে দেখা যাবে।",
+      "animals": "{count}টি পশু",
+      "units": "{count} ইউনিট"
+    },
     "txn": {
       "sum_profit": "অর্জিত মুনাফা",
       "sum_profitHint": "{count, plural, =0 {নিষ্পন্ন ব্যাচের} other {#টি নিষ্পন্ন ব্যাচের}} মূলধন বাদে প্রাপ্য",
@@ -2556,6 +2569,7 @@
       "transactions": "লেনদেন"
     },
     "farmerNav": {
+      "batches": "ব্যাচ",
       "dashboard": "ড্যাশবোর্ড",
       "fundRequests": "তহবিল অনুরোধ",
       "expenses": "খরচ",
@@ -2594,6 +2608,7 @@
       "attention": "আপনার মনোযোগ প্রয়োজন"
     },
     "farmerDash": {
+      "viewAll": "সব ব্যাচ দেখুন",
       "statWallet": "ওয়ালেট ব্যালেন্স",
       "statWalletHint": "উত্তোলনযোগ্য",
       "statShares": "অর্জিত লাভের ভাগ",
