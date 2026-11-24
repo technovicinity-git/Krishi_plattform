@@ -131,7 +131,6 @@ export function OTPForm() {
         className="inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-[8px] bg-brand text-[15px] font-bold text-white transition-colors hover:bg-brand-hover disabled:opacity-60"
       >
         {submitting ? t("submitting") : t("submit")}
-        {!submitting && <span aria-hidden="true">→</span>}
       </button>
 
       <div className="flex flex-col gap-4 border-t border-border-light pt-6">
