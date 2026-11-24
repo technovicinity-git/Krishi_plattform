@@ -20,6 +20,8 @@ import { AnimalsPanel } from "@/components/animals/AnimalsPanel";
 import { ReportDownload } from "@/components/reports/ReportDownload";
 import { TotalLossCard } from "@/components/investment/TotalLossCard";
 import { totalLossBlocker } from "@/lib/investments/total-loss";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { AssignFarmerPanel } from "@/components/steward/AssignFarmerPanel";
 
 export const dynamic = "force-dynamic";
 
@@ -40,6 +42,18 @@ export default async function StewardInvestmentDetailPage({
   const locale = await getLocale();
   const bn = locale === "bn";
   const planName = bn ? inv.offering.planNameBn : inv.offering.planNameEn;
+
+  // Waiting for a farmer: this steward's active farmers, to assign one here.
+  const awaitingFarmer = inv.currentStage === "awaiting_farmer";
+  const { data: farmers } = awaitingFarmer
+    ? await createAdminClient()
+        .from("users")
+        .select("id, full_name")
+        .eq("role", "farmer")
+        .eq("assigned_steward_id", user.id)
+        .eq("status", "active")
+        .order("full_name", { ascending: true })
+    : { data: [] };
 
   // Every animal died (or is reported dead): offer to close as a total loss.
   const saleOpen = inv.sale && inv.sale.status !== "rejected";
@@ -74,6 +88,8 @@ export default async function StewardInvestmentDetailPage({
       />
 
       <StageTimeline currentStage={inv.currentStage} />
+
+      {awaitingFarmer && <AssignFarmerPanel investmentId={inv.id} farmers={farmers ?? []} />}
 
       <StatsGrid
         items={[
