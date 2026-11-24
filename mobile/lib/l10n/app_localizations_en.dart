@@ -1617,4 +1617,34 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get csvNoApp =>
       'Saved, but no app on this phone opens CSV files. Install a spreadsheet app such as Google Sheets.';
+
+  @override
+  String payoutUpdated(String date) {
+    return 'Last changed $date';
+  }
+
+  @override
+  String get signOutAll => 'Sign out of all devices';
+
+  @override
+  String get signOutAllHint => 'Every phone and browser, including this one';
+
+  @override
+  String get signOutAllBody =>
+      'You will be signed out everywhere, including this phone. Use this if a phone was lost or you signed in somewhere you shouldn\'t have.';
+
+  @override
+  String get payoutNeededTitle => 'Add a payout account first';
+
+  @override
+  String get payoutNeededBody =>
+      'Tell Krishi where to send your money (bKash, Nagad, Rocket or a bank account). Then you can withdraw.';
+
+  @override
+  String get minimumNotReachedTitle => 'Not enough to withdraw yet';
+
+  @override
+  String minimumNotReachedBody(String min, String balance) {
+    return 'The minimum withdrawal is $min. Your balance is $balance.';
+  }
 }

@@ -3,6 +3,8 @@ import { requireAdmin } from "@/lib/admin/current-admin";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { BackLink } from "@/components/ui/BackLink";
 import { RowAction } from "@/components/dashboard/ui";
+import { AccountStatusControl } from "@/components/admin/AccountStatusControl";
+import { getAccountStatus } from "@/lib/admin/account-status";
 
 function formatDateTime(iso: string | null): string {
   if (!iso) return "—";
@@ -34,6 +36,7 @@ export default async function AdminFarmerDetailPage({
     .maybeSingle();
 
   if (!farmer) notFound();
+  const accountStatus = await getAccountStatus(farmer.id);
 
   const { data: kyc } = await db
     .from("kyc_profiles")
@@ -65,13 +68,26 @@ export default async function AdminFarmerDetailPage({
             className={`inline-flex items-center rounded-[4px] px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.02em] ${
               isActive
                 ? "bg-[#E8F0EA] text-green-deep"
-                : "bg-[#FEF6E5] text-[#C48A2E]"
+                : farmer.status === "suspended"
+                  ? "bg-[#FAF0ED] text-danger"
+                  : "bg-[#FEF6E5] text-[#C48A2E]"
             }`}
           >
-            {isActive ? "Active" : "Pending Activation"}
+            {isActive ? "Active" : farmer.status === "suspended" ? "Suspended" : "Pending Activation"}
           </span>
         </div>
       </div>
+
+      {accountStatus && (
+        <AccountStatusControl
+          userId={farmer.id}
+          name={farmer.full_name ?? "Farmer"}
+          status={accountStatus.status}
+          reason={accountStatus.reason}
+          changedAt={accountStatus.changedAt}
+          changedBy={accountStatus.changedBy}
+        />
+      )}
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <div className="flex flex-col gap-3 rounded-2xl border border-border-light bg-white p-6">

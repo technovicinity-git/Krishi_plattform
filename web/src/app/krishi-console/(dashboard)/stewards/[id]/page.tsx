@@ -3,6 +3,8 @@ import { requireAdmin } from "@/lib/admin/current-admin";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { StewardApprovalActions } from "@/components/admin/StewardApprovalActions";
 import { BackLink } from "@/components/ui/BackLink";
+import { AccountStatusControl } from "@/components/admin/AccountStatusControl";
+import { getAccountStatus } from "@/lib/admin/account-status";
 
 function formatDateTime(iso: string | null): string {
   if (!iso) return "—";
@@ -32,6 +34,7 @@ export default async function AdminStewardDetailPage({
     .maybeSingle();
 
   if (!steward) notFound();
+  const accountStatus = await getAccountStatus(steward.id);
 
   const status = steward.steward_approval_status ?? "pending";
   const style =
@@ -56,6 +59,17 @@ export default async function AdminStewardDetailPage({
           </span>
         </div>
       </div>
+
+      {accountStatus && (
+        <AccountStatusControl
+          userId={steward.id}
+          name={steward.full_name ?? "Steward"}
+          status={accountStatus.status}
+          reason={accountStatus.reason}
+          changedAt={accountStatus.changedAt}
+          changedBy={accountStatus.changedBy}
+        />
+      )}
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
         <div className="flex flex-col gap-3 rounded-2xl border border-border-light bg-white p-6">

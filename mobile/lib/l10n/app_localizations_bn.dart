@@ -1600,4 +1600,34 @@ class AppLocalizationsBn extends AppLocalizations {
   @override
   String get csvNoApp =>
       'সংরক্ষিত হয়েছে, কিন্তু এই ফোনে CSV খোলার কোনো অ্যাপ নেই। Google Sheets-এর মতো একটি স্প্রেডশিট অ্যাপ ইনস্টল করুন।';
+
+  @override
+  String payoutUpdated(String date) {
+    return 'সর্বশেষ পরিবর্তন $date';
+  }
+
+  @override
+  String get signOutAll => 'সব ডিভাইস থেকে সাইন আউট';
+
+  @override
+  String get signOutAllHint => 'এই ফোনসহ সব ফোন ও ব্রাউজার';
+
+  @override
+  String get signOutAllBody =>
+      'এই ফোনসহ সব জায়গা থেকে আপনি সাইন আউট হবেন। ফোন হারালে বা কোথাও ভুল করে সাইন ইন থাকলে এটি ব্যবহার করুন।';
+
+  @override
+  String get payoutNeededTitle => 'আগে পেমেন্ট অ্যাকাউন্ট যোগ করুন';
+
+  @override
+  String get payoutNeededBody =>
+      'কৃষি কোথায় আপনার টাকা পাঠাবে তা জানান (বিকাশ, নগদ, রকেট বা ব্যাংক অ্যাকাউন্ট)। তারপর টাকা তুলতে পারবেন।';
+
+  @override
+  String get minimumNotReachedTitle => 'এখনো তোলার মতো যথেষ্ট টাকা নেই';
+
+  @override
+  String minimumNotReachedBody(String min, String balance) {
+    return 'সর্বনিম্ন উত্তোলন $min। আপনার ব্যালেন্স $balance।';
+  }
 }

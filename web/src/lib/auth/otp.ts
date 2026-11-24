@@ -31,3 +31,13 @@ export async function verifyOtpHash(
 export function getOtpExpiry(): Date {
   return new Date(Date.now() + OTP_TTL_MINUTES * 60 * 1000);
 }
+
+/**
+ * Farmer activation codes: the steward hands the code over (often by phone),
+ * so it has to last. Still single-use, with 5 tries.
+ */
+const ACTIVATION_TTL_HOURS = 48;
+
+export function getActivationExpiry(): Date {
+  return new Date(Date.now() + ACTIVATION_TTL_HOURS * 60 * 60 * 1000);
+}

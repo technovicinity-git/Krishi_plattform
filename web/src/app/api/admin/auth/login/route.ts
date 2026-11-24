@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { verifyPassword } from "@/lib/auth/password";
+import { verifyAgainstNothing, verifyPassword } from "@/lib/auth/password";
 import { setSessionCookie } from "@/lib/auth/session";
 import { logAdminAction } from "@/lib/admin/audit";
 
@@ -77,6 +77,9 @@ export async function POST(request: Request) {
         succeeded = true;
         adminId = user.id;
       }
+    } else {
+      // Same time as a real check, so unknown emails are not revealed.
+      await verifyAgainstNothing(password);
     }
 
     // Log attempt (never store the password)

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { hashPassword } from "@/lib/auth/password";
+import { endAllSessions } from "@/lib/auth/session";
 import { toE164, isValidBDPhone } from "@/lib/auth/phone";
 import { LIMITS, clientIp, tooManyRequests, withinLimits } from "@/lib/security/rate-limit";
 
@@ -66,10 +67,11 @@ export async function POST(request: Request) {
 
     const newHash = await hashPassword(parsed.data.newPassword);
 
-    const { error: updateError } = await admin
+    const { data: updated, error: updateError } = await admin
       .from("users")
       .update({ password_hash: newHash })
-      .eq("phone", e164);
+      .eq("phone", e164)
+      .select("id");
 
     if (updateError) {
       console.error("[auth/reset-password] update failed:", updateError);
@@ -78,6 +80,9 @@ export async function POST(request: Request) {
         { status: 500 },
       );
     }
+
+    // A forgotten password may mean a lost or stolen phone: sign out everywhere.
+    for (const u of updated ?? []) await endAllSessions(u.id);
 
     // Consume the OTP + clean dev row
     await admin

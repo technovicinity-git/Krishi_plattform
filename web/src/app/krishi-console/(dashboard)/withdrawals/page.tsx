@@ -64,7 +64,14 @@ export default async function AdminWithdrawalsPage({
     .limit(200);
   const rows = (data ?? []) as unknown as Row[];
   const pendingTotal = view === "pending" ? rows.reduce((s, r) => s + Number(r.amount), 0) : 0;
-  const wallets = view === "pending" ? await walletChecks([...new Set(rows.map((r) => r.user_id))]) : new Map<string, WalletCheck>();
+  const userIds = [...new Set(rows.map((r) => r.user_id))];
+  const [wallets, { data: prefRows }] = await Promise.all([
+    view === "pending" ? walletChecks(userIds) : Promise.resolve(new Map<string, WalletCheck>()),
+    view === "pending" && userIds.length
+      ? createAdminClient().from("withdrawal_preferences").select("user_id, updated_at").in("user_id", userIds)
+      : Promise.resolve({ data: [] as { user_id: string; updated_at: string }[] }),
+  ]);
+  const payoutChanged = new Map((prefRows ?? []).map((p) => [p.user_id, p.updated_at]));
 
   return (
     <div className="flex flex-col gap-6">
@@ -134,6 +141,9 @@ export default async function AdminWithdrawalsPage({
                   </>
                 )}
                 <div className="text-[12px] text-ink-secondary">{w.account_holder_name}</div>
+                {w.status === "pending" && payoutChanged.get(w.user_id) && (
+                  <PayoutChanged changedAt={payoutChanged.get(w.user_id)!} requestedAt={w.created_at} />
+                )}
               </div>
 
               <div className="flex flex-wrap justify-between gap-2 text-[12px] text-ink-muted">
@@ -263,5 +273,33 @@ function WalletCheckPanel({ wallet, amount }: { wallet: WalletCheck; amount: num
         <span>Paid out before {formatBDT(wallet.paidOut)}</span>
       </div>
     </div>
+  );
+}
+
+/** Hours before a request in which a payout account change deserves a second look. */
+const RECENT_CHANGE_HOURS = 72;
+
+/**
+ * When the payout account was last changed. A change shortly before the
+ * request is a common sign of a taken-over account: check with the person
+ * (on their known phone) before paying.
+ */
+function PayoutChanged({ changedAt, requestedAt }: { changedAt: string; requestedAt: string }) {
+  const hoursBefore = (new Date(requestedAt).getTime() - new Date(changedAt).getTime()) / 3_600_000;
+  // The request keeps its own copy of the account, so a later change does not affect it.
+  if (hoursBefore < 0) {
+    return (
+      <div className="mt-1 text-[11.5px] text-ink-muted">
+        Account changed {formatDateTime(changedAt)}, after this request. Pay the account shown here.
+      </div>
+    );
+  }
+  return hoursBefore < RECENT_CHANGE_HOURS ? (
+    <div className="mt-2 rounded-lg border border-[#EBD9A8] bg-[#FBF5E6] px-3 py-2 text-[12px] text-[#9A6B12]">
+      <strong>Account changed {formatDateTime(changedAt)}</strong>, {Math.max(1, Math.round(hoursBefore))}h before this
+      request. Confirm it with the person before paying.
+    </div>
+  ) : (
+    <div className="mt-1 text-[11.5px] text-ink-muted">Account last changed {formatDateTime(changedAt)}</div>
   );
 }

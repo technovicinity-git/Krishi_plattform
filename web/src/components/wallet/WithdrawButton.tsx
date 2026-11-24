@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { formatBDT } from "@/lib/utils";
 import { WITHDRAWAL_MIN } from "@/lib/wallet/config";
 import { buttonClass } from "@/components/dashboard/ui";
+import { Link } from "@/i18n/navigation";
 import {
   FieldLabel,
   FormError,
@@ -14,14 +15,21 @@ import {
   fieldClass,
 } from "@/components/dashboard/Modal";
 
-/** Opens a dialog to withdraw part or all of the wallet balance. */
+/**
+ * Opens a dialog to withdraw part or all of the wallet balance. Never just
+ * greyed out: without a payout account, or below the minimum, it explains
+ * what is needed instead.
+ */
 export function WithdrawButton({
   balance,
   destination,
+  payoutHref,
 }: {
   balance: number;
   /** e.g. "bKash •••5678"; null when no payout account is set. */
   destination: string | null;
+  /** Where to add the payout account, e.g. "/farmer/wallet/payout". */
+  payoutHref: string;
 }) {
   const t = useTranslations("app.wallet");
   const tc = useTranslations("app.common");
@@ -32,7 +40,8 @@ export function WithdrawButton({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const canWithdraw = balance >= WITHDRAWAL_MIN && destination !== null;
+  // Why withdrawing is not possible yet, if it is not.
+  const [blocked, setBlocked] = useState<"payout" | "minimum" | null>(null);
   const value = Number(amount);
   const valid = value >= WITHDRAWAL_MIN && value <= balance;
 
@@ -67,12 +76,36 @@ export function WithdrawButton({
     <>
       <button
         type="button"
-        disabled={!canWithdraw}
-        onClick={() => setOpen(true)}
+        onClick={() =>
+          destination === null ? setBlocked("payout") : balance < WITHDRAWAL_MIN ? setBlocked("minimum") : setOpen(true)
+        }
         className={buttonClass("primary")}
       >
         {t("withdraw")}
       </button>
+
+      {blocked && (
+        <Modal
+          title={blocked === "payout" ? t("payoutNeededTitle") : t("minimumNotReachedTitle")}
+          onClose={() => setBlocked(null)}
+        >
+          <p className="text-[14px] leading-relaxed text-ink-secondary">
+            {blocked === "payout"
+              ? t("payoutNeededBody")
+              : t("minimumNotReachedBody", { min: formatBDT(WITHDRAWAL_MIN), balance: formatBDT(balance) })}
+          </p>
+          <div className="mt-5 flex justify-end gap-2">
+            <button type="button" onClick={() => setBlocked(null)} className={buttonClass("secondary")}>
+              {tc("close")}
+            </button>
+            {blocked === "payout" && (
+              <Link href={payoutHref} className={buttonClass("primary")}>
+                {t("addPayout")}
+              </Link>
+            )}
+          </div>
+        </Modal>
+      )}
 
       {open && destination && (
         <Modal

@@ -163,6 +163,21 @@ class MoreScreen extends StatelessWidget {
                   ),
                   const Divider(indent: 16, endIndent: 16),
                   ListTile(
+                    leading: const Icon(Icons.devices_outlined),
+                    title: Text(l.signOutAll),
+                    subtitle: Text(l.signOutAllHint),
+                    onTap: () async {
+                      if (await confirmDialog(context, title: l.signOutAll, body: l.signOutAllBody, confirm: l.signOutAll, danger: true)) {
+                        try {
+                          await session.signOutEverywhere();
+                        } catch (e) {
+                          if (context.mounted) showSnack(context, errorText(context, e), error: true);
+                        }
+                      }
+                    },
+                  ),
+                  const Divider(indent: 16, endIndent: 16),
+                  ListTile(
                     leading: const Icon(Icons.logout, color: KColors.danger),
                     title: Text(l.signOut, style: const TextStyle(color: KColors.danger, fontWeight: FontWeight.w600)),
                     onTap: () async {

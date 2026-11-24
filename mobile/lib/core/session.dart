@@ -121,6 +121,19 @@ class Session extends ChangeNotifier implements ApiAuth {
     await _useToken(data);
   }
 
+  /// After a password change the server signs out every other device and
+  /// returns a fresh token for this one.
+  Future<void> replaceToken(String token) async {
+    _token = token;
+    await _storage.write(key: _tokenKey, value: token);
+  }
+
+  /// Signs this account out on every phone and browser, including this one.
+  Future<void> signOutEverywhere() async {
+    await api.post('/api/auth/logout-all');
+    await signOut();
+  }
+
   Future<void> signOut() async {
     // Stop pushes to this phone (works without a session).
     unawaited(Push.unregister(api));

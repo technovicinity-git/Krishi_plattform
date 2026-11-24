@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { hashPassword, verifyPassword } from "@/lib/auth/password";
+import { endAllSessions, isMobileClient, mobileToken, setSessionCookie } from "@/lib/auth/session";
 
 export const runtime = "nodejs";
 
@@ -67,7 +68,15 @@ export async function POST(request: Request) {
       );
     }
 
-    return NextResponse.json({ success: true });
+    // Sign out every other browser and phone; this device stays signed in.
+    const v = await endAllSessions(user.id);
+    const session = { sub: user.id, role: user.role, v };
+    if (isMobileClient(request)) {
+      return NextResponse.json({ success: true, token: await mobileToken(session) });
+    }
+    const response = NextResponse.json({ success: true });
+    await setSessionCookie(response, session);
+    return response;
   } catch (err) {
     console.error("[account/change-password] unexpected:", err);
     return NextResponse.json({ error: "Server error" }, { status: 500 });

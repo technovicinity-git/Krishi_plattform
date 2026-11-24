@@ -47,7 +47,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       _passwordError = null;
     });
     try {
-      await context.api.post('/api/account/change-password', {'currentPassword': _current.text, 'newPassword': _new.text});
+      final session = context.read<Session>();
+      final data = await context.api.post('/api/account/change-password', {'currentPassword': _current.text, 'newPassword': _new.text});
+      // Other devices are now signed out; this one keeps going with a new token.
+      final token = data['token'];
+      if (token is String) await session.replaceToken(token);
       _current.clear();
       _new.clear();
       if (mounted) showSnack(context, context.l.passwordChanged);

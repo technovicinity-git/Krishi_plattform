@@ -114,14 +114,18 @@ export default async function AdminFarmersPage({
                 const active = farmer.status === "active";
                 const style = active
                   ? "bg-[#E8F0EA] text-green-deep"
-                  : "bg-[#FEF6E5] text-[#C48A2E]";
+                  : farmer.status === "suspended"
+                    ? "bg-[#FAF0ED] text-danger"
+                    : "bg-[#FEF6E5] text-[#C48A2E]";
                 return (
                   <tr
                     key={farmer.id}
                     className="border-b border-border-light last:border-b-0 hover:bg-cream/60"
                   >
                     <td className="px-5 py-4 text-[13px] font-semibold text-ink">
-                      {farmer.full_name ?? "—"}
+                      {farmer.full_name ?? "—"} {farmer.status === "suspended" && (
+                        <span className="ml-2 inline-flex rounded-[4px] bg-[#FAF0ED] px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.02em] text-danger">Suspended</span>
+                      )}
                     </td>
                     <td className="px-5 py-4 text-[13px] text-ink-secondary">
                       {farmer.phone ?? "—"}
@@ -135,7 +139,7 @@ export default async function AdminFarmersPage({
                       <span
                         className={`inline-flex items-center rounded-[4px] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.02em] ${style}`}
                       >
-                        {active ? "Active" : "Pending Activation"}
+                        {active ? "Active" : farmer.status === "suspended" ? "Suspended" : "Pending Activation"}
                       </span>
                     </td>
                     <td className="px-5 py-4 text-[13px] text-ink-secondary">
