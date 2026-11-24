@@ -63,7 +63,7 @@ export async function WalletView({
         actions={
           <div className="flex flex-wrap items-center gap-3">
             <ReportDownload endpoint="/api/reports/wallet" />
-            <WithdrawButton balance={wallet.balance} destination={destination} />
+            <WithdrawButton balance={wallet.balance} destination={destination} payoutHref={`${basePath}/payout`} />
           </div>
         }
       />

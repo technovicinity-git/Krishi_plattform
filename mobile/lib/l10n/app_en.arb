@@ -745,5 +745,10 @@
   "@payoutUpdated": {"placeholders": {"date": {"type": "String"}}},
   "signOutAll": "Sign out of all devices",
   "signOutAllHint": "Every phone and browser, including this one",
-  "signOutAllBody": "You will be signed out everywhere, including this phone. Use this if a phone was lost or you signed in somewhere you shouldn't have."
+  "signOutAllBody": "You will be signed out everywhere, including this phone. Use this if a phone was lost or you signed in somewhere you shouldn't have.",
+  "payoutNeededTitle": "Add a payout account first",
+  "payoutNeededBody": "Tell Krishi where to send your money (bKash, Nagad, Rocket or a bank account). Then you can withdraw.",
+  "minimumNotReachedTitle": "Not enough to withdraw yet",
+  "minimumNotReachedBody": "The minimum withdrawal is {min}. Your balance is {balance}.",
+  "@minimumNotReachedBody": {"placeholders": {"min": {"type": "String"}, "balance": {"type": "String"}}}
 }

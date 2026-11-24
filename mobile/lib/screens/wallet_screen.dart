@@ -31,6 +31,28 @@ class _WalletScreenState extends State<WalletScreen> {
   Future<void> _reload() async => _loader.currentState?.reload();
 
   Future<void> _withdraw(WalletData w) async {
+    final l = context.l;
+    // No payout account yet: say so and offer to add one.
+    if (w.payout == null) {
+      final add = await confirmDialog(context, title: l.payoutNeededTitle, body: l.payoutNeededBody, confirm: l.addPayout);
+      if (add && mounted) {
+        final saved = await context.push<bool>('/payout');
+        if (saved == true) _reload();
+      }
+      return;
+    }
+    // Not enough to withdraw yet.
+    if (w.balance < w.minimum) {
+      await showDialog<void>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text(l.minimumNotReachedTitle),
+          content: Text(l.minimumNotReachedBody(bdt(w.minimum), bdt(w.balance))),
+          actions: [FilledButton(onPressed: () => Navigator.pop(ctx), child: Text(l.close))],
+        ),
+      );
+      return;
+    }
     final done = await showFormSheet<bool>(context, builder: (_) => _WithdrawForm(wallet: w));
     if (done == true && mounted) {
       showSnack(context, context.l.withdrawRequested);
@@ -81,6 +103,18 @@ class _WalletScreenState extends State<WalletScreen> {
           children: [
             ResponsiveBody(
               child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                if (w.payout == null) ...[
+                  InfoBanner(
+                    tone: Tone.warning,
+                    text: l.noPayout,
+                    action: l.addPayout,
+                    onTap: () async {
+                      final saved = await context.push<bool>('/payout');
+                      if (saved == true) _reload();
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                ],
                 Card(
                   color: KColors.greenDeep,
                   child: Padding(
@@ -93,7 +127,7 @@ class _WalletScreenState extends State<WalletScreen> {
                       const SizedBox(height: 14),
                       FilledButton.icon(
                         style: FilledButton.styleFrom(backgroundColor: Colors.white, foregroundColor: KColors.greenDeep),
-                        onPressed: w.payout == null || w.balance < w.minimum ? null : () => _withdraw(w),
+                        onPressed: () => _withdraw(w),
                         icon: const Icon(Icons.south_west_rounded),
                         label: Text(l.withdraw),
                       ),

@@ -2917,6 +2917,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You will be signed out everywhere, including this phone. Use this if a phone was lost or you signed in somewhere you shouldn\'t have.'**
   String get signOutAllBody;
+
+  /// No description provided for @payoutNeededTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a payout account first'**
+  String get payoutNeededTitle;
+
+  /// No description provided for @payoutNeededBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell Krishi where to send your money (bKash, Nagad, Rocket or a bank account). Then you can withdraw.'**
+  String get payoutNeededBody;
+
+  /// No description provided for @minimumNotReachedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Not enough to withdraw yet'**
+  String get minimumNotReachedTitle;
+
+  /// No description provided for @minimumNotReachedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The minimum withdrawal is {min}. Your balance is {balance}.'**
+  String minimumNotReachedBody(String min, String balance);
 }
 
 class _AppLocalizationsDelegate
