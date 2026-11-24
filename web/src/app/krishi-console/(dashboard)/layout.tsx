@@ -18,7 +18,7 @@ export default async function AdminDashboardLayout({
   const admin = await requireAdmin();
   const db = createAdminClient();
 
-  const [{ count: kyc }, { count: deposits }, { count: stewards }, { count: sales }, { count: withdrawals }, unread, { count: orphanPayments }] = await Promise.all([
+  const [{ count: kyc }, { count: deposits }, { count: stewards }, { count: sales }, { count: withdrawals }, unread, { count: orphanPayments }, { count: payDue }] = await Promise.all([
     db.from("kyc_profiles").select("*", { count: "exact", head: true }).eq("status", "pending"),
     db.from("deposits").select("*", { count: "exact", head: true }).eq("status", "pending"),
     db
@@ -37,6 +37,8 @@ export default async function AdminDashboardLayout({
     getUnreadCount(admin.id),
     // Paid online but no deposit was recorded: only visible under Deposits → Online payments.
     db.from("online_payments").select("*", { count: "exact", head: true }).eq("status", "paid").is("deposit_id", null),
+    // Steward monthly pay months that have ended and are not sent yet.
+    db.from("steward_monthly_pay_due").select("*", { count: "exact", head: true }),
   ]);
 
   return (
@@ -74,6 +76,7 @@ export default async function AdminDashboardLayout({
             { label: "Batches", href: "/krishi-console/investments", icon: "briefcase" },
             { label: "Sales", href: "/krishi-console/sales", icon: "tag", badge: sales ?? 0 },
             { label: "Withdrawals", href: "/krishi-console/withdrawals", icon: "wallet", badge: withdrawals ?? 0 },
+            { label: "Steward pay", href: "/krishi-console/steward-pay", icon: "coins", badge: payDue ?? 0 },
             { label: "Transactions", href: "/krishi-console/transactions", icon: "coins" },
           ],
         },

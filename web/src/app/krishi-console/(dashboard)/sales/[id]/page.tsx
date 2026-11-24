@@ -14,6 +14,8 @@ import { UpdatesList } from "@/components/investment/UpdatesList";
 import { SettleSaleActions } from "@/components/admin/SettleSaleActions";
 import { AnimalsPanel } from "@/components/animals/AnimalsPanel";
 import { ReportDownload } from "@/components/reports/ReportDownload";
+import { BatchMonthlyPayPanel } from "@/components/admin/BatchMonthlyPayPanel";
+import { getBatchMonthlyPay } from "@/lib/investments/monthly-pay";
 
 export const dynamic = "force-dynamic";
 
@@ -39,6 +41,8 @@ export default async function AdminSaleDetailPage({
   const awaitingDecision = sale.status === "remittance_submitted";
   const preview = awaitingDecision ? await previewSettlement(sale.id) : null;
   const b = preview?.ok ? preview.breakdown : null;
+  const mp = preview?.ok ? preview.monthlyPay : null;
+  const monthlyPay = await getBatchMonthlyPay(row.investment_id);
   const outcomeText = b
     ? b.outcome === "profit"
       ? `Profit ${formatBDT(b.netResult)}; investor receives ${formatBDT(b.investorPayout)}.`
@@ -68,6 +72,23 @@ export default async function AdminSaleDetailPage({
           {b && (
             <Panel title="Settlement preview" description="What will be saved when you confirm the payment.">
               <SettlementSummary breakdown={b} preview />
+              {mp && mp.monthlyTotal > 0 && (
+                <div className="mt-5 rounded-xl border border-border-light bg-cream px-4 py-3">
+                  <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.05em] text-ink-muted">Steward monthly pay</p>
+                  <DetailRow
+                    label={`${mp.months} month${mp.months === 1 ? "" : "s"} × ${formatBDT(mp.rate)}`}
+                    value={formatBDT(mp.monthlyTotal)}
+                  />
+                  <DetailRow label="Already sent" value={formatBDT(mp.sentTotal)} />
+                  {mp.sendNow > 0 && <DetailRow label="Sent now (months not sent yet)" value={formatBDT(mp.sendNow)} />}
+                  <DetailRow label="Steward's 5% share" value={formatBDT(mp.share)} />
+                  <DetailRow label="Steward gets now (share minus monthly pay)" value={formatBDT(mp.topup)} />
+                  <DetailRow
+                    label="Krishi loss"
+                    value={<span className={mp.platformLoss > 0 ? "text-danger" : undefined}>{formatBDT(mp.platformLoss)}</span>}
+                  />
+                </div>
+              )}
             </Panel>
           )}
 
@@ -85,6 +106,9 @@ export default async function AdminSaleDetailPage({
               outcomeText={outcomeText}
               totalLoss={sale.kind === "total_loss" && sale.fundsReturned === 0}
             />
+          )}
+          {monthlyPay && (monthlyPay.start || monthlyPay.payments.length > 0) && (
+            <BatchMonthlyPayPanel investmentId={inv.id} pay={monthlyPay} stewardName={inv.steward.fullName ?? "the steward"} />
           )}
           <Panel title="Investment" className="h-fit">
             <DetailRow label="Investor" value={inv.investor.fullName ?? "—"} />

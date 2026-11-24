@@ -161,6 +161,7 @@ export default async function EditPlanPage({
           care_allocation: Number(plan.care_allocation),
           estimated_roi_min: Number(plan.estimated_roi_min),
           estimated_roi_max: Number(plan.estimated_roi_max),
+          steward_monthly_pay: Number(plan.steward_monthly_pay ?? 0),
           risk_information: plan.risk_information ?? "",
           image_path: plan.image_path,
           status: plan.status,

@@ -59,7 +59,8 @@ export default async function StewardDashboardPage() {
   const awaitingFarmer = running.filter((i) => i.current_stage === "awaiting_farmer").length;
   const wallet = walletRows ?? [];
   const balance = wallet.reduce((s, w) => s + Number(w.amount), 0);
-  const shares = wallet.filter((w) => w.type === "settlement_share");
+  // Earnings: profit shares and monthly pay.
+  const shares = wallet.filter((w) => w.type === "settlement_share" || w.type === "monthly_pay");
   const sharesTotal = shares.reduce((s, w) => s + Number(w.amount), 0);
   const deathCount = deaths?.length ?? 0;
 

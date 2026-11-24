@@ -42,6 +42,7 @@ export interface PlanFormInitial {
   care_allocation: number;
   estimated_roi_min: number;
   estimated_roi_max: number;
+  steward_monthly_pay: number;
   risk_information: string;
   image_path: string | null;
   status: "draft" | "open" | "coming_soon" | "fully_funded" | "closed";
@@ -129,6 +130,7 @@ export function PlanForm({
   const allocationOff = Math.abs(allocationSum - Number(unitPrice || 0)) > 0.01;
   const [roiMin, setRoiMin] = useState(initial ? String(initial.estimated_roi_min) : "15");
   const [roiMax, setRoiMax] = useState(initial ? String(initial.estimated_roi_max) : "20");
+  const [stewardPay, setStewardPay] = useState(initial ? String(initial.steward_monthly_pay) : "0");
   const [riskInfo, setRiskInfo] = useState(initial?.risk_information ?? "");
   const [status, setStatus] = useState<PlanFormInitial["status"]>(
     initial?.status ?? "draft",
@@ -211,6 +213,7 @@ export function PlanForm({
       fd.append("care_allocation", careAllocation);
       fd.append("estimated_roi_min", roiMin);
       fd.append("estimated_roi_max", roiMax);
+      fd.append("steward_monthly_pay", stewardPay || "0");
       fd.append("risk_information", riskInfo);
       fd.append("status", status);
       if (finalFile) {
@@ -442,6 +445,14 @@ export function PlanForm({
             onChange={setRoiMax}
             type="number"
             required
+          />
+          <Field
+            label="Steward monthly pay (৳)"
+            value={stewardPay}
+            onChange={setStewardPay}
+            type="number"
+            required
+            hint="Per batch, every month from farmer assigned to settlement. Taken from the steward's 5% share; if it's more, Krishi covers the difference."
           />
         </div>
 

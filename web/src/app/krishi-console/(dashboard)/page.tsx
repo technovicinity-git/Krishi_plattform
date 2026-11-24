@@ -60,6 +60,7 @@ export default async function AdminDashboardPage() {
     settlements,
     walletRows,
     { data: audit },
+    { data: payDue },
   ] = await Promise.all([
     db.from("users").select("*", count).eq("role", "investor"),
     db.from("users").select("*", count).eq("role", "steward"),
@@ -75,8 +76,8 @@ export default async function AdminDashboardPage() {
     allRows<{ amount: number | string; current_stage: string | null }>((f, t) =>
       db.from("investments").select("amount, current_stage").order("id").range(f, t),
     ),
-    allRows<{ platform_share: number | string }>((f, t) =>
-      db.from("investment_settlements").select("platform_share").order("id").range(f, t),
+    allRows<{ platform_share: number | string; platform_loss: number | string | null }>((f, t) =>
+      db.from("investment_settlements").select("platform_share, platform_loss").order("id").range(f, t),
     ),
     allRows<{ amount: number | string }>((f, t) => db.from("wallet_transactions").select("amount").order("id").range(f, t)),
     db
@@ -84,12 +85,18 @@ export default async function AdminDashboardPage() {
       .select("id, action, created_at, admin:users!admin_id ( full_name )")
       .order("created_at", { ascending: false })
       .limit(8),
+    // Steward monthly pay months that ended and are not sent yet.
+    db.from("steward_monthly_pay_due").select("amount").limit(1000),
   ]);
 
   const running = investments.filter((i) => i.current_stage !== "settled");
   const runningCapital = running.reduce((s, i) => s + Number(i.amount), 0);
   const settledCount = investments.length - running.length;
-  const earnings = settlements.reduce((s, r) => s + Number(r.platform_share), 0);
+  const share = settlements.reduce((s, r) => s + Number(r.platform_share), 0);
+  // Krishi's loss where steward monthly pay was more than the steward's 5%.
+  const payLoss = settlements.reduce((s, r) => s + Number(r.platform_loss ?? 0), 0);
+  const earnings = share - payLoss;
+  const payDueTotal = (payDue ?? []).reduce((s, r) => s + Number(r.amount), 0);
   const owed = walletRows.reduce((s, r) => s + Number(r.amount), 0);
   const withdrawalTotal = (withdrawals ?? []).reduce((s, w) => s + Number(w.amount), 0);
 
@@ -101,6 +108,13 @@ export default async function AdminDashboardPage() {
       hint: withdrawalTotal > 0 ? formatBDT(withdrawalTotal) : undefined,
       count: withdrawals?.length ?? 0,
       href: "/krishi-console/withdrawals",
+    },
+    {
+      icon: "coins",
+      label: "Steward monthly pay to send",
+      hint: payDueTotal > 0 ? formatBDT(payDueTotal) : undefined,
+      count: payDue?.length ?? 0,
+      href: "/krishi-console/steward-pay",
     },
     { icon: "coins", label: "Deposits to verify", count: depositsPending.count ?? 0, href: "/krishi-console/deposits" },
     { icon: "coins", label: "Online payments with no deposit", count: onlineUnmatched.count ?? 0, href: "/krishi-console/deposits?view=online" },
@@ -143,9 +157,13 @@ export default async function AdminDashboardPage() {
           localized={false}
           label="Krishi earnings"
           value={formatBDT(earnings)}
-          hint="5% of profit on settled batches"
+          hint={
+            payLoss > 0
+              ? `5% of profit ${formatBDT(share)} minus ${formatBDT(payLoss)} steward monthly pay losses`
+              : "5% of profit on settled batches"
+          }
           icon="chart"
-          href="/krishi-console/transactions"
+          href={payLoss > 0 ? "/krishi-console/steward-pay?view=losses" : "/krishi-console/transactions"}
         />
         <StatCard
           localized={false}

@@ -35,7 +35,7 @@ describe("transactions", () => {
   });
 
   it("offers each viewer only the kinds that can happen to them", () => {
-    expect(kindsFor({ kind: "user", userId: "u", role: "steward" })).toEqual(["share", "adjustment", "withdrawal"]);
+    expect(kindsFor({ kind: "user", userId: "u", role: "steward" })).toEqual(["monthly_pay", "share", "adjustment", "withdrawal"]);
     expect(kindsFor({ kind: "user", userId: "u", role: "investor" })).toContain("refund");
     expect(kindsFor({ kind: "platform" })).toContain("platform_share");
   });

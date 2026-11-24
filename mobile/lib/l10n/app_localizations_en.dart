@@ -1647,4 +1647,83 @@ class AppLocalizationsEn extends AppLocalizations {
   String minimumNotReachedBody(String min, String balance) {
     return 'The minimum withdrawal is $min. Your balance is $balance.';
   }
+
+  @override
+  String get mpTitle => 'Your monthly pay';
+
+  @override
+  String get mpHint =>
+      'Krishi pays you every month for this batch, from the farmer being assigned until it is settled. At settlement it is taken from your 5% profit share; if the share is smaller, you keep the monthly pay.';
+
+  @override
+  String get mpRate => 'Monthly pay';
+
+  @override
+  String mpPerMonth(String amount) {
+    return '$amount / month';
+  }
+
+  @override
+  String get mpStarted => 'Started';
+
+  @override
+  String get mpStarts => 'Starts';
+
+  @override
+  String get mpReceived => 'Received';
+
+  @override
+  String mpMonths(int count, String amount) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count months · $amount',
+      one: '1 month · $amount',
+      zero: 'Nothing yet',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get mpWaiting => 'Waiting to be sent';
+
+  @override
+  String get mpNextDue => 'This month ends';
+
+  @override
+  String mpMonth(int n) {
+    return 'Month $n';
+  }
+
+  @override
+  String get mpAtSettlement => 'at settlement';
+
+  @override
+  String get mpReversed => 'Taken back';
+
+  @override
+  String get mpSettledTitle => 'At settlement';
+
+  @override
+  String get mpShare => 'Your 5% profit share';
+
+  @override
+  String mpMonthlyTotal(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Monthly pay ($count months)',
+      one: 'Monthly pay (1 month)',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get mpTopup => 'Rest of the share, paid at settlement';
+
+  @override
+  String get mpKept => 'Monthly pay above the share (you keep it)';
+
+  @override
+  String get mpTotal => 'You got from this batch';
 }

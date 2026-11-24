@@ -173,3 +173,35 @@ export function capitalSpent(input: {
   };
 }
 
+
+/**
+ * Steward monthly pay against the steward's profit share, at settlement.
+ *
+ * The steward is paid a monthly amount for every month of a batch (from the
+ * farmer being assigned until settlement; the month in progress at
+ * settlement counts as a full month). That pay is an advance on the 5% share:
+ * - share larger: the steward gets the rest of the share as a top-up.
+ * - monthly pay larger: the steward keeps it; the difference is Krishi's loss.
+ * Monthly pay is never taken back. Investor and farmer are not affected.
+ * (Mirrors public.settle_monthly_pay in the database.)
+ */
+export interface StewardPayMatch {
+  share: number;
+  monthlyTotal: number;
+  topup: number;
+  platformLoss: number;
+  /** What the steward ends up with from this batch: the larger of the two. */
+  stewardTotal: number;
+}
+
+export function matchStewardPay(share: number, monthlyTotal: number): StewardPayMatch {
+  const s = round2(Math.max(0, share));
+  const m = round2(Math.max(0, monthlyTotal));
+  return {
+    share: s,
+    monthlyTotal: m,
+    topup: round2(Math.max(0, s - m)),
+    platformLoss: round2(Math.max(0, m - s)),
+    stewardTotal: round2(Math.max(s, m)),
+  };
+}

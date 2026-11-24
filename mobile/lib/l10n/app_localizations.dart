@@ -2941,6 +2941,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The minimum withdrawal is {min}. Your balance is {balance}.'**
   String minimumNotReachedBody(String min, String balance);
+
+  /// No description provided for @mpTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your monthly pay'**
+  String get mpTitle;
+
+  /// No description provided for @mpHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Krishi pays you every month for this batch, from the farmer being assigned until it is settled. At settlement it is taken from your 5% profit share; if the share is smaller, you keep the monthly pay.'**
+  String get mpHint;
+
+  /// No description provided for @mpRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly pay'**
+  String get mpRate;
+
+  /// No description provided for @mpPerMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} / month'**
+  String mpPerMonth(String amount);
+
+  /// No description provided for @mpStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Started'**
+  String get mpStarted;
+
+  /// No description provided for @mpStarts.
+  ///
+  /// In en, this message translates to:
+  /// **'Starts'**
+  String get mpStarts;
+
+  /// No description provided for @mpReceived.
+  ///
+  /// In en, this message translates to:
+  /// **'Received'**
+  String get mpReceived;
+
+  /// No description provided for @mpMonths.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Nothing yet} =1{1 month · {amount}} other{{count} months · {amount}}}'**
+  String mpMonths(int count, String amount);
+
+  /// No description provided for @mpWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting to be sent'**
+  String get mpWaiting;
+
+  /// No description provided for @mpNextDue.
+  ///
+  /// In en, this message translates to:
+  /// **'This month ends'**
+  String get mpNextDue;
+
+  /// No description provided for @mpMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Month {n}'**
+  String mpMonth(int n);
+
+  /// No description provided for @mpAtSettlement.
+  ///
+  /// In en, this message translates to:
+  /// **'at settlement'**
+  String get mpAtSettlement;
+
+  /// No description provided for @mpReversed.
+  ///
+  /// In en, this message translates to:
+  /// **'Taken back'**
+  String get mpReversed;
+
+  /// No description provided for @mpSettledTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'At settlement'**
+  String get mpSettledTitle;
+
+  /// No description provided for @mpShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Your 5% profit share'**
+  String get mpShare;
+
+  /// No description provided for @mpMonthlyTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Monthly pay (1 month)} other{Monthly pay ({count} months)}}'**
+  String mpMonthlyTotal(int count);
+
+  /// No description provided for @mpTopup.
+  ///
+  /// In en, this message translates to:
+  /// **'Rest of the share, paid at settlement'**
+  String get mpTopup;
+
+  /// No description provided for @mpKept.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly pay above the share (you keep it)'**
+  String get mpKept;
+
+  /// No description provided for @mpTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'You got from this batch'**
+  String get mpTotal;
 }
 
 class _AppLocalizationsDelegate

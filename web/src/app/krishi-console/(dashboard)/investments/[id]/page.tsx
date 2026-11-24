@@ -13,6 +13,8 @@ import { ExpensesList } from "@/components/investment/ExpensesList";
 import { UpdatesList } from "@/components/investment/UpdatesList";
 import { AnimalsPanel } from "@/components/animals/AnimalsPanel";
 import { ReportDownload } from "@/components/reports/ReportDownload";
+import { BatchMonthlyPayPanel } from "@/components/admin/BatchMonthlyPayPanel";
+import { getBatchMonthlyPay } from "@/lib/investments/monthly-pay";
 
 export const dynamic = "force-dynamic";
 
@@ -33,7 +35,7 @@ const STAGE_LABEL: Record<string, string> = {
 export default async function AdminInvestmentDetailPage({ params }: { params: Promise<{ id: string }> }) {
   await requireAdmin();
   const { id } = await params;
-  const inv = await getInvestmentDetail(id);
+  const [inv, monthlyPay] = await Promise.all([getInvestmentDetail(id), getBatchMonthlyPay(id)]);
   if (!inv) notFound();
 
   const s = inv.stats;
@@ -123,6 +125,9 @@ export default async function AdminInvestmentDetailPage({ params }: { params: Pr
             <DetailRow label="Spent on the batch" value={formatBDT(s.capitalSpent)} />
             <DetailRow label="Not yet spent" value={formatBDT(Math.max(0, inv.amount - s.capitalSpent))} />
           </Panel>
+          {monthlyPay && (
+            <BatchMonthlyPayPanel investmentId={inv.id} pay={monthlyPay} stewardName={inv.steward.fullName ?? "the steward"} />
+          )}
           <Panel title="Plan" className="h-fit">
             <DetailRow label="Duration" value={`${inv.offering.durationMonths} months`} />
             <DetailRow label="Est. return" value={`${inv.offering.roiMin}–${inv.offering.roiMax}%`} />

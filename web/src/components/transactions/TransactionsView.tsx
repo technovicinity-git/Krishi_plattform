@@ -27,7 +27,7 @@ const STATUS_TONE: Record<string, BadgeTone> = {
 const SUMMARY: Record<string, TxKind[]> = {
   investor: ["deposit", "payout", "withdrawal", "refund"],
   farmer: ["fund_release", "remittance", "share", "withdrawal"],
-  steward: ["share", "withdrawal", "adjustment"],
+  steward: ["monthly_pay", "share", "withdrawal", "adjustment"],
 };
 
 /**
@@ -156,7 +156,15 @@ export async function TransactionsView({
             <StatCard label={t("moneyIn")} value={formatBDT(summary.totalIn)} tone="brand" icon="coins" />
             <StatCard label={t("moneyOut")} value={formatBDT(summary.totalOut)} icon="wallet" />
             <StatCard label={t("held")} value={formatBDT(summary.totalIn - summary.totalOut)} />
-            <StatCard label={t("revenue")} value={formatBDT(summary.byKind.platform_share ?? 0)} hint={t("pendingCount", { count: summary.pending })} />
+            <StatCard
+              label={t("revenue")}
+              value={formatBDT((summary.byKind.platform_share ?? 0) - (summary.byKind.platform_loss ?? 0))}
+              hint={
+                summary.byKind.platform_loss
+                  ? t("revenueHint", { share: formatBDT(summary.byKind.platform_share ?? 0), loss: formatBDT(summary.byKind.platform_loss) })
+                  : t("pendingCount", { count: summary.pending })
+              }
+            />
           </>
         ) : (
           SUMMARY[scope.role].map((k, i) => (
