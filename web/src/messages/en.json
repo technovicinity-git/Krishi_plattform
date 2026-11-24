@@ -1099,7 +1099,8 @@
       "submitting": "Logging in...",
       "noAccount": "Don't have an account?",
       "createAccount": "Create one",
-      "adminLink": "Admin login"
+      "adminLink": "Admin login",
+      "farmerActivate": "I'm a farmer with an activation code"
     },
     "register": {
       "eyebrow": "Investor Registration",
@@ -1403,6 +1404,7 @@
     "stewardCta": "Apply as a Steward",
     "farmerTitle": "Joining as a Farmer?",
     "farmerBody": "Farmer accounts are created or invited by a Steward. Follow the activation instructions from your Steward, then log in with your phone number and password.",
+    "farmerCta": "I have an activation code",
     "haveAccount": "Already have an account?",
     "loginLink": "Log In"
   },
